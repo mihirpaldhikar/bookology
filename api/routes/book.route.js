@@ -32,7 +32,6 @@ router.post('/publish', verifyToken, async (request, response, next) => {
                 book_image_url: request.body.book_image_url,
                 is_used: request.body.is_used
             });
-            console.log(authData)
             await booksCollection.insertOne(bookletData, (error, result) => {
                 if (error) {
                     response.status(500).json({
