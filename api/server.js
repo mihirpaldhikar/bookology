@@ -39,6 +39,7 @@ async function main() {
 
     // All Routes:
     await server.use('/users', require('./routes/users.route'));
+    await server.use('/auth', require('./routes/auth.route'));
 
     await server.listen(process.env.SERVER_PORT, () => {
         console.log(
