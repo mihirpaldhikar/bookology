@@ -37,6 +37,9 @@ async function main() {
     }));
 
 
+    // All Routes:
+    await server.use('/users', require('./routes/users.route'));
+
     await server.listen(process.env.SERVER_PORT, () => {
         console.log(
             `Server running in ${process.env.NODE_ENV} on Port ${process.env.SERVER_PORT}`
