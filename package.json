@@ -4,7 +4,8 @@
   "description": "The backbone of Bookology",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=development nodemon ./api/server",
+    "start": "cross-env NODE_ENV=production node ./api/server"
   },
   "keywords": [
     "Bookology"
