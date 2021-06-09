@@ -6,7 +6,7 @@ const booksCollection = databaseManager.mongoManager.db('Bookology').collection(
 const jwt = require('jsonwebtoken');
 const {verifyToken} = require('../functions/verify.function');
 
-router.get('/', async (request, response, next) => {
+router.get('/', verifyToken, async (request, response, next) => {
     await booksCollection.find().toArray(function (error, booklets) {
         response.json({
             booklets: booklets.map(booklet => {

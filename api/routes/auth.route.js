@@ -4,21 +4,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const {mongoManager} = require('../configs/database.config');
 const userCollection = mongoManager.db('Bookology').collection('Users')
+const bookCollection = mongoManager.db('Bookology').collection('Books');
 const moment = require('moment');
 const MailService = require('../services/email.service');
+const {verifyToken} = require('../functions/verify.function');
+const MongoDB = require('mongodb');
 
 router.post('/signup', async (request, response, next) => {
-    if (request.headers.authorization === undefined ||
-        request.headers.authorization !== process.env.ACCESS_TOKEN) {
-        response.status(401).json({
-            result: {
-                message: "Permission denied. Authorization token undefined or invalid.",
-                status_code: 401
-            }
-        });
-
-        return false;
-    }
 
     const userData = User.setUser({
         username: request.body.username,
@@ -73,4 +65,32 @@ router.post('/signup', async (request, response, next) => {
     })
 });
 
+router.post('/delete', verifyToken, async (request, response, next) => {
+    jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (error, authData) => {
+        if (error) {
+            response.sendStatus(403);
+        } else {
+
+            if (await userCollection.findOne({_id: MongoDB.ObjectID(authData.user_id)}) === null) {
+                response.status(404).json({
+                    result: {
+                        message: "User not deleted. user not found.",
+                        status_code: 404
+                    }
+                });
+                return false;
+            }
+            await userCollection.findOneAndDelete({_id: MongoDB.ObjectID(authData.user_id)});
+            await bookCollection.deleteMany({uploader_id: MongoDB.ObjectID(authData.user_id)});
+            response.status(200).json({
+                result: {
+                    message: "User successfully deleted.",
+                    status_code: 200,
+                }
+            });
+
+            await MailService.sendDeleteEmail(authData.email, authData.user_id);
+        }
+    });
+});
 module.exports = router;
