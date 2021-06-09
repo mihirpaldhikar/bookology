@@ -5,6 +5,7 @@ const User = require('../models/user.model');
 const {mongoManager} = require('../configs/database.config');
 const userCollection = mongoManager.db('Bookology').collection('Users')
 const moment = require('moment');
+const MailService = require('../services/email.service');
 
 router.post('/signup', async (request, response, next) => {
     if (request.headers.authorization === undefined ||
@@ -65,6 +66,8 @@ router.post('/signup', async (request, response, next) => {
                     status_code: 201
                 }
             });
+
+            MailService.sendWelcomeEmail(request.body.username, request.body.email, result.insertedId)
 
         });
     })
