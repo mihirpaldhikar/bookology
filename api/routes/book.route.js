@@ -4,10 +4,11 @@ const databaseManager = require('../configs/database.config');
 const Book = require('../models/book.model');
 const booksCollection = databaseManager.mongoManager.db('Bookology').collection('Books');
 const jwt = require('jsonwebtoken');
-const {verifyToken} = require('../functions/verify.function');
+const {verifyToken} = require('../middlewares/verify.middleware');
+const Crypto = require('../managers/encryption.manager');
 
 router.get('/', verifyToken, async (request, response, next) => {
-  await booksCollection.find().toArray(function(error, booklets) {
+  await booksCollection.find().toArray(function (error, booklets) {
     response.json({
       booklets: booklets.map((booklet) => {
         return Book.setBooklet(booklet);
@@ -23,7 +24,7 @@ router.post('/publish', verifyToken, async (request, response, next) => {
       return false;
     } else {
       const bookletData = Book.setBooklet({
-        uploader_id: authData.user_id,
+        uploader_id: Crypto.decrypt(authData.user_id),
         isbn: request.body.isbn,
         book_name: request.body.book_name,
         orignal_price: request.body.orignal_price,

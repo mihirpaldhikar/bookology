@@ -12,6 +12,7 @@
 *.tgz
 *.http
 *.env.json
+google-services.json
 
 **/node_modules/
 **/build/
@@ -34,6 +35,7 @@
 **/.firebase/
 **/lib-cov
 **/.grunt
+**/secrets/
 
 **/lib/generated_plugin_registrant.dart
 **/app.*.symbols

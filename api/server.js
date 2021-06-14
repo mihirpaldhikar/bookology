@@ -6,6 +6,7 @@ require('colors');
 const RateLimit = require('express-rate-limit');
 const server = express();
 const databaseManager = require('./configs/database.config');
+const firebaseManager = require('./configs/firebase.config');
 
 dotenv.config({path: 'api.config.env'});
 
@@ -16,7 +17,7 @@ async function main() {
 
 
   await databaseManager.connectDatabase();
-
+  await firebaseManager.firebaseAdmin;
   const requestLimiter = await new RateLimit({
     windowMs: 60 * 1000,
     max: 100,

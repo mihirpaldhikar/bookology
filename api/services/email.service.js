@@ -6,14 +6,14 @@ const SENDER_ID = process.env.SENDER_ID;
 
 sendGrid.setApiKey(API_KEY);
 
-function sendWelcomeEmail(username, email, userID) {
+function sendWelcomeEmail(username, email, verificationLink) {
   const data = {
     to: email,
     from: SENDER_ID,
     templateId: WELCOME_TEMPLATE_ID,
     dynamic_template_data: {
       username: username,
-      user_id: userID,
+      verification_link: verificationLink,
     },
   };
 
