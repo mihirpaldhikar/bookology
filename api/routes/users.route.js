@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const {mongoManager} = require('../configs/database.config');
 const User = require('../models/user.model');
-const userCollection = mongoManager.db('Bookology').collection('Users');
+const {UserCollection} = require('../managers/collection.manager');
 const {authorizeToken} = require('../middlewares/authorize.middleware');
 const Crypto = require('../managers/encryption.manager');
 const Book = require('../models/book.model');
 
 router.get('/', authorizeToken, async (request, response, next) => {
   if (request.query.show_books) {
-    await userCollection.aggregate([
+    await UserCollection.aggregate([
       {
         $lookup: {
           from: 'Books',
@@ -45,7 +44,7 @@ router.get('/', authorizeToken, async (request, response, next) => {
     return false;
   }
 
-  await userCollection.find().toArray(function(error, users) {
+  await UserCollection.find().toArray(function (error, users) {
     response.json({
       users: users.map((user) => {
         return User.getUser(user);

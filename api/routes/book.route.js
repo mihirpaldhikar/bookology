@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const databaseManager = require('../configs/database.config');
 const Book = require('../models/book.model');
-const booksCollection = databaseManager.mongoManager.db('Bookology').collection('Books');
+const {BooksCollection} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
 const {verifyToken} = require('../middlewares/verify.middleware');
 const Crypto = require('../managers/encryption.manager');
 
 router.get('/', verifyToken, async (request, response, next) => {
-  await booksCollection.find().toArray(function (error, booklets) {
+  await BooksCollection.find().toArray(function (error, booklets) {
     response.json({
       booklets: booklets.map((booklet) => {
         return Book.setBooklet(booklet);
@@ -34,7 +33,7 @@ router.post('/publish', verifyToken, async (request, response, next) => {
         book_image_url: request.body.book_image_url,
         is_used: request.body.is_used,
       });
-      await booksCollection.insertOne(bookletData, (error, result) => {
+      await BooksCollection.insertOne(bookletData, (error, result) => {
         if (error) {
           response.status(500).json({
             result: {

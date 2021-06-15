@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
-const {mongoManager} = require('../configs/database.config');
 const {firebaseAdmin} = require('../configs/firebase.config');
-const userCollection = mongoManager.db('Bookology').collection('Users');
-const bookCollection = mongoManager.db('Bookology').collection('Books');
+const {UserCollection, BookCollection} = require('../managers/collection.manager');
 const moment = require('moment');
 const MailService = require('../services/email.service');
 const {verifyToken} = require('../middlewares/verify.middleware');
@@ -26,8 +24,8 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
     last_name: request.body.last_name,
   });
 
-  if (await userCollection.countDocuments() !== 0) {
-    if (await userCollection.findOne({username: request.body.username}) !== null) {
+  if (await UserCollection.countDocuments() !== 0) {
+    if (await UserCollection.findOne({username: request.body.username}) !== null) {
       response.status(409).json({
         result: {
           message: 'The username is already taken. Please choose other username.',
@@ -40,7 +38,7 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
   }
 
 
-  await userCollection.insertOne(userData, async (error, result) => {
+  await UserCollection.insertOne(userData, async (error, result) => {
     if (error) {
       response.status(500).json({
         result: {
@@ -77,7 +75,7 @@ router.post('/delete', verifyToken, async (request, response, next) => {
     if (error) {
       response.sendStatus(403);
     } else {
-      if (await userCollection.findOne({_id: Crypto.decrypt(authData.user_id)}) === null) {
+      if (await UserCollection.findOne({_id: Crypto.decrypt(authData.user_id)}) === null) {
         response.status(404).json({
           result: {
             message: 'An error occurred while deleting user. User not found.',
@@ -86,8 +84,8 @@ router.post('/delete', verifyToken, async (request, response, next) => {
         });
         return false;
       }
-      await userCollection.findOneAndDelete({_id: Crypto.decrypt(authData.user_id)});
-      await bookCollection.deleteMany({uploader_id: Crypto.decrypt(authData.user_id)});
+      await UserCollection.findOneAndDelete({_id: Crypto.decrypt(authData.user_id)});
+      await BookCollection.deleteMany({uploader_id: Crypto.decrypt(authData.user_id)});
       await firebaseAdmin.auth().deleteUser(Crypto.decrypt(authData.user_id));
       await firebaseAdmin.firestore().collection('Secrets').doc(Crypto.decrypt(authData.user_id)).delete();
       response.status(200).json({
@@ -117,8 +115,8 @@ router.get('/verification/:token', async (request, response, next) => {
     }
 
 
-    await userCollection.findOneAndUpdate({_id: Crypto.decrypt(data.user_id)}, {$set: {email_verified: true}});
-    const user = await userCollection.findOne({_id: Crypto.decrypt(data.user_id)});
+    await UserCollection.findOneAndUpdate({_id: Crypto.decrypt(data.user_id)}, {$set: {email_verified: true}});
+    const user = await UserCollection.findOne({_id: Crypto.decrypt(data.user_id)});
     await firebaseAdmin.auth().updateUser(Crypto.decrypt(data.user_id), {
       displayName: `${user.first_name} ${user.last_name}`,
       photoURL: Crypto.decrypt(user.profile_picture_url),
