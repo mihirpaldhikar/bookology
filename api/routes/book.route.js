@@ -7,7 +7,7 @@ const {verifyToken} = require('../middlewares/verify.middleware');
 const Crypto = require('../managers/encryption.manager');
 
 router.get('/', verifyToken, async (request, response, next) => {
-  await BooksCollection.find().toArray(function (error, booklets) {
+  await BooksCollection.find().toArray(function(error, booklets) {
     response.json({
       booklets: booklets.map((booklet) => {
         return Book.setBooklet(booklet);

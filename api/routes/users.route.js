@@ -17,7 +17,7 @@ router.get('/', authorizeToken, async (request, response, next) => {
           as: 'books',
         },
       },
-    ]).toArray(function (error, results) {
+    ]).toArray(function(error, results) {
       response.json({
         users: results.map((result) => {
           return {
@@ -44,7 +44,7 @@ router.get('/', authorizeToken, async (request, response, next) => {
     return false;
   }
 
-  await UserCollection.find().toArray(function (error, users) {
+  await UserCollection.find().toArray(function(error, users) {
     response.json({
       users: users.map((user) => {
         return User.getUser(user);

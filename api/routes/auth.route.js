@@ -65,7 +65,7 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
 
       await MailService
           .sendWelcomeEmail(request.body.username, request.body.email,
-              `http://localhost:3000/auth/verification/${token}`);
+              `http://${process.env.DOMAIN_NAME}/auth/verification/${token}`);
     });
   });
 });
