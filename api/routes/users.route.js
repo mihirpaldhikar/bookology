@@ -10,25 +10,25 @@ const Book = require('../models/book.model');
 router.get('/', authorizeToken, async (request, response, next) => {
   if (request.query.show_books) {
     await userCollection.aggregate([
-        {
-            $lookup: {
-                from: 'Books',
-                localField: '_id',
-                foreignField: 'uploader_id',
-                as: 'books',
-            },
+      {
+        $lookup: {
+          from: 'Books',
+          localField: '_id',
+          foreignField: 'uploader_id',
+          as: 'books',
         },
+      },
     ]).toArray(function (error, results) {
-        response.json({
-            users: results.map((result) => {
-                return {
-                    user_id: result._id,
-                    username: result.username,
-                    auth_provider: result.auth_provider,
-                    email: Crypto.decrypt(result.email),
-                    profile_picture_url: Crypto.decrypt(result.profile_picture_url),
-                    first_name: result.first_name,
-                    last_name: result.last_name,
+      response.json({
+        users: results.map((result) => {
+          return {
+            user_id: result._id,
+            username: result.username,
+            auth_provider: result.auth_provider,
+            email: Crypto.decrypt(result.email),
+            profile_picture_url: Crypto.decrypt(result.profile_picture_url),
+            first_name: result.first_name,
+            last_name: result.last_name,
             joined_date: result.joined_date,
             joined_time: result.joined_time,
             username_slug: result.username_slug,
