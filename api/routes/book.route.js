@@ -27,6 +27,7 @@ router.post('/publish', verifyToken, async (request, response, next) => {
         uploader_id: Crypto.decrypt(authData.user_id),
         isbn: request.body.isbn,
         book_name: request.body.book_name,
+        description: request.body.description,
         orignal_price: request.body.orignal_price,
         current_price: request.body.current_price,
         book_condition: request.body.book_condition,

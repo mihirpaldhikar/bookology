@@ -18,6 +18,7 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
     _id: request.body.id,
     username: request.body.username,
     auth_provider: request.query.auth_provider ?? 'unknown',
+    bio: '',
     email: request.body.email,
     password: request.body.password,
     profile_picture_url: request.body.profile_picture_url,
@@ -52,9 +53,9 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
     }
     await jwt.sign({
       user_id: Crypto.encrypt(request.body.id),
-      email: Crypto.encrypt(request.body.email.toString()),
+      email: Crypto.encrypt(request.body.email),
       email_verified: false,
-      password: Crypto.encrypt(request.body.password.toString()),
+      password: Crypto.encrypt(request.body.password),
       created_on: moment().format('dddd DD MM YYYY hh mm ss'),
     }, process.env.JWT_EMAIL_VERIFICATION_TOKEN, {expiresIn: '300s'}, async (err, token) => {
       response.status(201).json({

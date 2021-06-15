@@ -3,19 +3,20 @@ const slugify = require('slugify');
 const {v4: uuidv4} = require('uuid');
 
 const setBooklet = (booklet) => {
-    return {
-        _id: uuidv4(),
-        uploader_id: booklet.uploader_id,
-        isbn: booklet.isbn,
-        book_name: booklet.book_name,
-        orignal_price: booklet.orignal_price,
-        current_price: booklet.current_price,
-        book_condition: booklet.book_condition,
-        book_image_url: booklet.book_image_url,
-        is_used: booklet.is_used,
-        upload_date: moment().format('dddd DD MMMM YYYY'),
-        upload_time: moment().format('hh:mm:ss'),
-        book_name_slug: slugify(booklet.book_name, {
+  return {
+    _id: uuidv4(),
+    uploader_id: booklet.uploader_id,
+    isbn: booklet.isbn,
+    book_name: booklet.book_name,
+    description: booklet.description,
+    orignal_price: booklet.orignal_price,
+    current_price: booklet.current_price,
+    book_condition: booklet.book_condition,
+    book_image_url: booklet.book_image_url,
+    is_used: booklet.is_used,
+    upload_date: moment().format('dddd DD MMMM YYYY'),
+    upload_time: moment().format('hh:mm:ss'),
+    book_name_slug: slugify(booklet.book_name, {
       lower: true,
       replacement: '_',
     }),
@@ -30,6 +31,7 @@ const getBooklet = (booklet) => {
     uploader_id: booklet.uploader_id,
     isbn: booklet.isbn,
     book_name: booklet.book_name,
+    description: booklet.description,
     orignal_price: booklet.orignal_price,
     current_price: booklet.current_price,
     book_condition: booklet.book_condition,
