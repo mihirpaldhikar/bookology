@@ -8,7 +8,7 @@ const Book = require('../models/book.model');
 
 router.get('/', authorizeToken, async (request, response, next) => {
   if (request.query.show_books) {
-    await UserCollection.aggregate([
+    await UserCollection().aggregate([
       {
         $lookup: {
           from: 'Books',
@@ -44,7 +44,7 @@ router.get('/', authorizeToken, async (request, response, next) => {
     return false;
   }
 
-  await UserCollection.find().toArray(function(error, users) {
+  await UserCollection().find().toArray(function(error, users) {
     response.json({
       users: users.map((user) => {
         return User.getUser(user);

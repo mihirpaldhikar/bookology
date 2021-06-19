@@ -1,26 +1,18 @@
+import 'package:bookology/managers/app.manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(Home());
+final bool _useFirebaseEmulators = false;
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Bookology'),
-        ),
-        body: Container(
-          child: Center(
-            child: Text('Bookology App.'),
-          ),
-        ),
-      ),
-    );
+Future<void> main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  if (_useFirebaseEmulators) {
+    await FirebaseAuth.instance.useEmulator('http://192.168.100.4:9099');
   }
+
+  await dotenv.load(fileName: 'app.config.env');
+  runApp(AppManager());
 }

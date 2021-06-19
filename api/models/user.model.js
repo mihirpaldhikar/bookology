@@ -31,7 +31,7 @@ const setUser = (user) => {
     bio: user.bio,
     verified: false,
     suspended: false,
-    email_verified: false,
+    email_verified: user.email_verified,
     email: encryptionManager.encrypt(user.email),
     password: encryptionManager.encrypt(user.password),
     profile_picture_url: encryptionManager.encrypt(user.profile_picture_url),
