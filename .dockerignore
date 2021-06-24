@@ -36,7 +36,7 @@ docker-args.txt
 **/.firebase/
 **/lib-cov
 **/.grunt
-**/secrets/
+**/frontend
 
 **/lib/generated_plugin_registrant.dart
 **/app.*.symbols
