@@ -82,7 +82,6 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
         await firebaseAdmin.auth().updateUser(userData._id, {
           emailVerified: true,
         });
-        console.log((await firebaseAdmin.firestore().collection(`Secrets`).doc(userData._id).get()).data());
         if ((await firebaseAdmin.firestore().collection(`Secrets`).doc(userData._id).get()).data() === undefined ) {
           await firebaseAdmin.firestore().collection(`Secrets`).doc(userData._id).set({
             user_id: userData._id,
