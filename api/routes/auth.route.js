@@ -173,15 +173,4 @@ router.get('/verification/:token', async (request, response, next) => {
   });
 });
 
-router.post('/pub', async (req, res) => {
-  await firebaseAdmin.auth().createUser({
-    email: 'mihir@google.com',
-    displayName: 'Mihir',
-    password: '1234567890',
-  });
-
-  res.json({
-    ok: 'ok',
-  });
-});
 module.exports = router;
