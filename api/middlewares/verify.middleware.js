@@ -1,5 +1,5 @@
 function verifyUser(req, res, next) {
-  const userIdentifierKey = req.headers['user_identifier_key'];
+  const userIdentifierKey = req.headers['user-identifier-key'];
 
   if (typeof userIdentifierKey !== 'undefined') {
     req.token = userIdentifierKey;

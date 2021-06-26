@@ -1,5 +1,5 @@
 function authorizeKey(request, response, next) {
-  const accessKey = request.headers['access_key'];
+  const accessKey = request.headers['access-key'];
   if (accessKey === 'undefined' || accessKey !== process.env.ACCESS_TOKEN) {
     response.status(403).json({
       result: {
