@@ -1,15 +1,19 @@
-function verifyToken(req, res, next) {
-  const bearerHeader = req.headers['authorization'];
+function verifyUser(req, res, next) {
+  const userIdentifierKey = req.headers['user_identifier_key'];
 
-  if (typeof bearerHeader !== 'undefined') {
-    const bearer = bearerHeader.split(' ');
-    req.token = bearer[1];
+  if (typeof userIdentifierKey !== 'undefined') {
+    req.token = userIdentifierKey;
     next();
   } else {
-    res.sendStatus(403);
+    res.status(403).json({
+      result: {
+        message: 'User Identifier Key not provided or invalid.',
+        status_code: 403,
+      },
+    });
   }
 }
 
 module.exports = {
-  verifyToken,
+  verifyUser,
 };

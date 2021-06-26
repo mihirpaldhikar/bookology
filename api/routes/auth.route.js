@@ -6,12 +6,12 @@ const {firebaseAdmin} = require('../configs/firebase.config');
 const Collections = require('../managers/collection.manager');
 const moment = require('moment');
 const MailService = require('../services/email.service');
-const {verifyToken} = require('../middlewares/verify.middleware');
-const {authorizeToken} = require('../middlewares/authorize.middleware');
+const {verifyUser} = require('../middlewares/verify.middleware');
+const {authorizeKey} = require('../middlewares/authorize.middleware');
 const Crypto = require('../managers/encryption.manager');
 
 
-router.post('/signup', authorizeToken, async (request, response, next) => {
+router.post('/signup', authorizeKey, async (request, response, next) => {
   const userData = User.setUser({
     _id: request.body.id,
     username: request.body.username,
@@ -67,7 +67,7 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
 
         await MailService
             .sendWelcomeEmail(request.body.username, request.body.email,
-                `http://${process.env.DOMAIN_NAME}/auth/verification/${token}`);
+                `https://${process.env.DOMAIN_NAME}/auth/verification/${token}`);
       });
     });
   } else {
@@ -100,7 +100,7 @@ router.post('/signup', authorizeToken, async (request, response, next) => {
   }
 });
 
-router.post('/delete', verifyToken, async (request, response, next) => {
+router.post('/delete', verifyUser, async (request, response, next) => {
   jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (error, authData) => {
     if (error) {
       response.sendStatus(403);

@@ -3,10 +3,10 @@ const router = express.Router();
 const Book = require('../models/book.model');
 const {BooksCollection} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
-const {verifyToken} = require('../middlewares/verify.middleware');
+const {verifyUser} = require('../middlewares/verify.middleware');
 const Crypto = require('../managers/encryption.manager');
 
-router.get('/', verifyToken, async (request, response, next) => {
+router.get('/', verifyUser, async (request, response, next) => {
   await BooksCollection.find().toArray(function(error, booklets) {
     response.json({
       booklets: booklets.map((booklet) => {
@@ -16,7 +16,7 @@ router.get('/', verifyToken, async (request, response, next) => {
   });
 });
 
-router.post('/publish', verifyToken, async (request, response, next) => {
+router.post('/publish', verifyUser, async (request, response, next) => {
   jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (err, authData) => {
     if (err) {
       response.sendStatus(403);

@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
 const {UserCollection} = require('../managers/collection.manager');
-const {authorizeToken} = require('../middlewares/authorize.middleware');
+const {authorizeKey} = require('../middlewares/authorize.middleware');
 const Crypto = require('../managers/encryption.manager');
 const Book = require('../models/book.model');
 
-router.get('/', authorizeToken, async (request, response, next) => {
+router.get('/', authorizeKey, async (request, response, next) => {
   if (request.query.show_books) {
     await UserCollection().aggregate([
       {
