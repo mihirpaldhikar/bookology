@@ -20,6 +20,7 @@ dependencies:
   font_awesome_flutter: ^9.1.0
   google_sign_in: ^5.0.4
   flutter_dotenv: ^5.0.0
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +30,4 @@ flutter:
   uses-material-design: true
   assets:
     - app.config.env
+    - assets/svg/google_logo.svg

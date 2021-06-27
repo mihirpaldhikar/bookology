@@ -1,8 +1,8 @@
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/ui/widgets/line_button.widget.dart';
+import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -64,9 +64,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       SizedBox(
                         height: 200,
                       ),
-                      LineButton(
-                        text: 'Continue With Google',
-                        icon: FontAwesomeIcons.google,
+                      OutLinedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SvgPicture.asset('assets/svg/google_logo.svg'),
+                            Text('Continue With Google')
+                          ],
+                        ),
                         outlineColor: Colors.black,
                         onPressed: () async {
                           setState(() {
@@ -89,21 +94,24 @@ class _AuthScreenState extends State<AuthScreen> {
                             }
                           });
                         },
-                        spaceInBetween: 30,
                         margin: EdgeInsets.only(
                           left: 20,
                           right: 20,
                           bottom: 30,
                         ),
                       ),
-                      LineButton(
-                        text: 'Login',
-                        icon: Icons.mail_outline_rounded,
+                      OutLinedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.mail_outline_rounded),
+                            Text('Login')
+                          ],
+                        ),
                         outlineColor: Colors.black,
                         onPressed: () {
                           Navigator.pushNamed(context, '/login');
                         },
-                        spaceInBetween: 100,
                         margin: EdgeInsets.only(
                           left: 20,
                           right: 20,
