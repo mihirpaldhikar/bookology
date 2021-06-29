@@ -1,5 +1,6 @@
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
@@ -19,136 +22,174 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final AuthHandler authHandler = new AuthHandler();
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 60,
+    return _isLoading
+        ? Scaffold(
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
-              children: [
-                Center(
-                  child: Text(
-                    'Welcome Back!',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+          )
+        : Scaffold(
+            body: SafeArea(
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    right: 30,
+                    left: 30,
                   ),
-                ),
-                SizedBox(
-                  height: 150,
-                ),
-                TextFormField(
-                  decoration: new InputDecoration(
-                      labelText: "Email",
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15),
-                        borderSide: new BorderSide(),
-                      ),
-                      prefixIcon: Icon(Icons.mail_outline_rounded)
-                      //fillColor: Colors.green
-                      ),
-                  controller: emailController,
-                  validator: (val) {
-                    if (val?.length == 0) {
-                      return "Email cannot be empty.";
-                    } else {
-                      if (!isEmail(val!)) {
-                        return "Email is not valid.";
-                      } else {
-                        return null;
-                      }
-                    }
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                TextFormField(
-                  decoration: new InputDecoration(
-                      labelText: "Password",
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(15),
-                        borderSide: new BorderSide(),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.lock_outlined,
-                      )
-                      //fillColor: Colors.green
-                      ),
-                  controller: passwordController,
-                  validator: (val) {
-                    if (val?.length == 0) {
-                      return "Password cannot be empty.";
-                    } else {
-                      if (!validatePassword(val!)) {
-                        return "Enter a valid password.";
-                      }
-                      return null;
-                    }
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        await auth
-                            .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text)
-                            .then(
-                          (value) {
-                            if (value != true) {
-                              authHandler.firebaseError(
-                                  value: value, context: context);
-                            } else {}
-                          },
-                        );
-                      } catch (e) {
-                        print(e);
-                      }
-                    }
-                  },
-                  child: Container(
-                    width: 100,
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 20,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 20,
+                          left: 0,
+                        ),
+                        child: OutLinedButton(
+                          child: Icon(
+                            Icons.close,
+                            textDirection: TextDirection.ltr,
                           ),
-                          child: Text(
-                            'Login',
-                            textAlign: TextAlign.justify,
+                          outlineColor: Colors.grey,
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/auth');
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Center(
+                        child: Text(
+                          'Welcome Back!',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_outlined,
-                        )
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 150,
+                      ),
+                      TextFormField(
+                        decoration: new InputDecoration(
+                            labelText: "Email",
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(15),
+                              borderSide: new BorderSide(),
+                            ),
+                            prefixIcon: Icon(Icons.mail_outline_rounded)
+                            //fillColor: Colors.green
+                            ),
+                        controller: emailController,
+                        validator: (val) {
+                          if (val?.length == 0) {
+                            return "Email cannot be empty.";
+                          } else {
+                            if (!isEmail(val!)) {
+                              return "Email is not valid.";
+                            } else {
+                              return null;
+                            }
+                          }
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      TextFormField(
+                        decoration: new InputDecoration(
+                            labelText: "Password",
+                            fillColor: Colors.white,
+                            border: new OutlineInputBorder(
+                              borderRadius: new BorderRadius.circular(15),
+                              borderSide: new BorderSide(),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.lock_outlined,
+                            )
+                            //fillColor: Colors.green
+                            ),
+                        controller: passwordController,
+                        validator: (val) {
+                          if (val?.length == 0) {
+                            return "Password cannot be empty.";
+                          } else {
+                            if (!validatePassword(val!)) {
+                              return "Enter a valid password.";
+                            }
+                            return null;
+                          }
+                        },
+                        keyboardType: TextInputType.visiblePassword,
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: 50,
+                          left: 50,
+                        ),
+                        child: OutLinedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await auth
+                                    .signInWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text)
+                                    .then(
+                                  (value) {
+                                    if (value != true) {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      authHandler.firebaseError(
+                                          value: value, context: context);
+                                    } else {
+                                      setState(() {
+                                        _isLoading = false;
+                                        Navigator.pushReplacementNamed(
+                                            context, '/home');
+                                      });
+                                    }
+                                  },
+                                );
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+                          },
+                          outlineColor: Colors.black,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Login'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(Icons.arrow_forward)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   String? emailValidator(String value) {

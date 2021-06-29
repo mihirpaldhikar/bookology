@@ -19,18 +19,24 @@ class ApiService {
     required String? authProvider,
   }) async {
     try {
-      final requestURL = Uri.parse(
-          '$apiURL/auth/signup?token=$apiToken&auth_provider=$authProvider');
+      final requestURL =
+          Uri.parse('$apiURL/auth/signup?auth_provider=$authProvider');
 
-      final response = await client.post(requestURL, body: {
-        "id": uuid,
-        "username": email.toString().split('@')[0],
-        "email": email,
-        "password": password,
-        "profile_picture_url": profilePhotoUrl,
-        "first_name": firstName,
-        "last_name": lastName,
-      });
+      final response = await client.post(
+        requestURL,
+        headers: {
+          "access-key": apiToken.toString(),
+        },
+        body: {
+          "id": uuid,
+          "username": email.toString().split('@')[0],
+          "email": email,
+          "password": password,
+          "profile_picture_url": profilePhotoUrl,
+          "first_name": firstName,
+          "last_name": lastName,
+        },
+      );
       final statusCode = jsonDecode(response.body)['result']['status_code'];
       final message = jsonDecode(response.body)['result']['message'];
       if (statusCode == 201) {

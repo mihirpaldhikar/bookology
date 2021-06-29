@@ -1,5 +1,7 @@
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,19 +32,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
           )
         : Scaffold(
             body: SafeArea(
-              child: Container(
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 60,
-                    ),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    right: 30,
+                    left: 30,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 20,
+                          left: 0,
+                        ),
+                        child: OutLinedButton(
+                          child: Icon(
+                            Icons.close,
+                            textDirection: TextDirection.ltr,
+                          ),
+                          outlineColor: Colors.grey,
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/auth');
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
                       Center(
                         child: Text(
-                          'Create New Account',
+                          'Create new Account',
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -99,10 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return "Password cannot be empty.";
                           } else {
                             if (!validatePassword(val!)) {
-                              return "Password must be at least 8 characters\nand "
-                                  "must contain "
-                                  "lower & capital \n"
-                                  "alphabets, numbers and special symbols.";
+                              return "Enter a valid password.";
                             }
                             return null;
                           }
@@ -112,64 +131,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(
                         height: 50,
                       ),
-                      OutlinedButton(
-                        onPressed: () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              await auth
-                                  .signUpWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                      firstName: ' ',
-                                      lastName: ' ',
-                                      profilePictureURL:
-                                          'https://randomuser.me/api/portraits/men/11.jpg')
-                                  .then(
-                                (value) {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if (value != true) {
-                                    authHandler.firebaseError(
-                                        value: value, context: context);
-                                  } else {
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: 50,
+                          left: 50,
+                        ),
+                        child: OutLinedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await auth
+                                    .signUpWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        firstName: ' ',
+                                        lastName: ' ',
+                                        profilePictureURL:
+                                            'https://randomuser.me/api/portraits/men/11.jpg')
+                                    .then(
+                                  (value) {
                                     setState(() {
                                       _isLoading = false;
                                     });
-                                    if (value == true) {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/verify');
+                                    if (value != true) {
+                                      authHandler.firebaseError(
+                                          value: value, context: context);
+                                    } else {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      if (value == true) {
+                                        Navigator.pushReplacementNamed(
+                                            context, '/verify');
+                                      }
                                     }
-                                  }
-                                },
-                              );
-                            } catch (e) {
-                              print(e);
+                                  },
+                                );
+                              } catch (e) {
+                                print(e);
+                              }
                             }
-                          }
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 10,
+                          },
+                          outlineColor: Colors.black,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Sign Up'),
+                                SizedBox(
+                                  width: 10,
                                 ),
-                                child: Text(
-                                  'Continue',
-                                  textAlign: TextAlign.justify,
-                                ),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_outlined,
-                              )
-                            ],
+                                Icon(Icons.arrow_forward)
+                              ],
+                            ),
                           ),
                         ),
                       ),

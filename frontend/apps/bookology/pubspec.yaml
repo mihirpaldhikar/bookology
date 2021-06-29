@@ -31,3 +31,4 @@ flutter:
   assets:
     - app.config.env
     - assets/svg/google_logo.svg
+    - assets/svg/verify_email.svg
