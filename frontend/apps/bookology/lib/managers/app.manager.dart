@@ -10,6 +10,7 @@ import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -52,37 +53,43 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
     final auth = Provider.of<AuthService>(context);
-    return MaterialApp(
-      title: 'Bookology',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xff651FFF, {
-          50: Color(0xFFEDE7F6),
-          100: Color(0xFFD1C4E9),
-          200: Color(0xFFB39DDB),
-          300: Color(0xFF9575CD),
-          400: Color(0xFF7E57C2),
-          500: Color(0xFF673AB7),
-          600: Color(0xFF5E35B1),
-          700: Color(0xFF512DA8),
-          800: Color(0xFF4527A0),
-          900: Color(0xFF311B92),
-        }),
-        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: Colors.transparent,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: MaterialApp(
+        title: 'Bookology',
+        theme: ThemeData(
+          primarySwatch: MaterialColor(0xff651FFF, {
+            50: Color(0xFFEDE7F6),
+            100: Color(0xFFD1C4E9),
+            200: Color(0xFFB39DDB),
+            300: Color(0xFF9575CD),
+            400: Color(0xFF7E57C2),
+            500: Color(0xFF673AB7),
+            600: Color(0xFF5E35B1),
+            700: Color(0xFF512DA8),
+            800: Color(0xFF4527A0),
+            900: Color(0xFF311B92),
+          }),
+          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+          bottomSheetTheme: BottomSheetThemeData(
+            backgroundColor: Colors.transparent,
+          ),
         ),
+        routes: {
+          '/home': (context) => HomeScreen(),
+          '/profile': (context) => ProfileScreen(),
+          '/publish': (context) => PublishScreen(),
+          '/login': (context) => LoginScreen(),
+          '/signup': (context) => SignUpScreen(),
+          '/auth': (context) => AuthScreen(),
+          '/verify': (context) => VerifyEmailScreen(),
+        },
+        home: auth.isUserSignedIn() ? HomeScreen() : AuthScreen(),
       ),
-      routes: {
-        '/home': (context) => HomeScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/publish': (context) => PublishScreen(),
-        '/login': (context) => LoginScreen(),
-        '/signup': (context) => SignUpScreen(),
-        '/auth': (context) => AuthScreen(),
-        '/verify': (context) => VerifyEmailScreen(),
-      },
-      home: auth.isUserSignedIn() ? HomeScreen() : AuthScreen(),
     );
   }
 }
