@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/book.model');
-const Collection = require('../managers/collection.manager');
+const {BooksCollection, UsersCollection} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
 
 router.get('/:bookId', verifyUser, async (request, response, next) => {
   try {
-    const book = await Collection.BooksCollection().findOne({_id: request.params.bookId});
+    const book = await BooksCollection.findOne({_id: request.params.bookId});
     if (book == null) {
       response.status(404).json({
         result: {
@@ -18,7 +18,7 @@ router.get('/:bookId', verifyUser, async (request, response, next) => {
       return false;
     }
 
-    const user = await Collection.UsersCollection().findOne({_id: book.uploader_id});
+    const user = await UsersCollection.findOne({_id: book.uploader_id});
 
     response.status(200).json(Book.getBookletWithUploader(book, user));
   } catch (error) {
@@ -55,7 +55,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
           book_condition: request.body.book_condition,
           book_images_urls: request.body.book_images_urls,
         });
-        await Collection.BooksCollection().insertOne(bookletData, (error, result) => {
+        await BooksCollection.insertOne(bookletData, (error, result) => {
           if (error) {
             response.status(500).json({
               result: {

@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const {firebaseAdmin} = require('../configs/firebase.config');
-const Collections = require('../managers/collection.manager');
+const {UsersCollection, BooksCollection} = require('../managers/collection.manager');
 const moment = require('moment');
 const MailService = require('../services/email.service');
 const {verifyUser} = require('../middlewares/verify.middleware');
@@ -27,8 +27,8 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
     });
 
     if (request.query.auth_provider === 'email-password') {
-      if (await Collections.UsersCollection().countDocuments() !== 0) {
-        if (await Collections.UsersCollection().findOne({username: request.body.username}) !== null) {
+      if (await UsersCollection.countDocuments() !== 0) {
+        if (await UsersCollection.findOne({username: request.body.username}) !== null) {
           response.status(409).json({
             result: {
               message: 'The username is already taken. Please choose other username.',
@@ -41,7 +41,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
       }
 
 
-      await Collections.UsersCollection().insertOne(userData, async (error, result) => {
+      await UsersCollection.insertOne(userData, async (error, result) => {
         if (error) {
           response.status(500).json({
             result: {
@@ -72,7 +72,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
         });
       });
     } else {
-      await Collections.UsersCollection().insertOne(userData, async (error, result) => {
+      await UsersCollection.insertOne(userData, async (error, result) => {
         jwt.sign({
           user_id: Crypto.encrypt(request.body.user_id),
           email: Crypto.encrypt(request.body.email),
@@ -114,7 +114,7 @@ router.post('/delete', verifyUser, async (request, response, next) => {
       if (error) {
         response.sendStatus(403);
       } else {
-        if (await Collections.UsersCollection.findOne({_id: Crypto.decrypt(authData.user_id)}) === null) {
+        if (await UsersCollection.findOne({_id: Crypto.decrypt(authData.user_id)}) === null) {
           response.status(404).json({
             result: {
               message: 'An error occurred while deleting user. User not found.',
@@ -123,8 +123,8 @@ router.post('/delete', verifyUser, async (request, response, next) => {
           });
           return false;
         }
-        await Collections.UsersCollection().findOneAndDelete({_id: Crypto.decrypt(authData.user_id)});
-        await Collections.BooksCollection().deleteMany({uploader_id: Crypto.decrypt(authData.user_id)});
+        await UsersCollection.findOneAndDelete({_id: Crypto.decrypt(authData.user_id)});
+        await BooksCollection.deleteMany({uploader_id: Crypto.decrypt(authData.user_id)});
         await firebaseAdmin.auth().deleteUser(Crypto.decrypt(authData.user_id));
         await firebaseAdmin.firestore().collection('Secrets').doc(Crypto.decrypt(authData.user_id)).delete();
         response.status(200).json({
@@ -163,10 +163,10 @@ router.get('/verification/:token', async (request, response, next) => {
       }
 
 
-      await Collections.UsersCollection()
+      await UsersCollection
         .findOneAndUpdate({_id: Crypto.decrypt(data.user_id)}, {$set: {email_verified: true}});
 
-      const user = await Collections.UsersCollection().findOne({_id: Crypto.decrypt(data.user_id)});
+      const user = await UsersCollection.findOne({_id: Crypto.decrypt(data.user_id)});
 
       await firebaseAdmin.auth().updateUser(Crypto.decrypt(data.user_id), {
         displayName: `${user.first_name} ${user.last_name}`,

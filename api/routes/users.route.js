@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
-const Collections = require('../managers/collection.manager');
+const {UsersCollection, BooksCollection} = require('../managers/collection.manager');
 const {verifyUser} = require('../middlewares/verify.middleware');
 
 
 router.get('/:username', verifyUser, async (request, response, next) => {
   try {
     if (request.query.with_books === 'true') {
-      const user = await Collections.UsersCollection().findOne({username: request.params.username});
+      const user = await UsersCollection.findOne({username: request.params.username});
 
       if (user == null) {
         response.status(404).json({
@@ -20,13 +20,13 @@ router.get('/:username', verifyUser, async (request, response, next) => {
         return false;
       }
 
-      await Collections.BooksCollection().find({uploader_id: user._id}).toArray(function(error, result) {
+      await BooksCollection.find({uploader_id: user._id}).toArray(function(error, result) {
         response.status(200).json(User.getUserProfileWithBooks(user, result));
       });
       return false;
     }
 
-    const user = await Collections.UsersCollection().findOne({username: request.params.username});
+    const user = await UsersCollection.findOne({username: request.params.username});
 
     response.status(200).json(User.getUserProfile(user));
   } catch (error) {
