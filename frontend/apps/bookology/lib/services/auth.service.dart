@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bookology/services/api.service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
@@ -64,6 +65,7 @@ class AuthService {
           lastName:
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
           authProvider: 'google');
+
       return result;
     } on FirebaseAuthException catch (error) {
       print(error);

@@ -1230,7 +1230,16 @@ class _CreateScreenState extends State<CreateScreen> {
                             child: Text('     Post      '),
                             outlineColor: Colors.green,
                             onPressed: () async {
-                              await apiService.postBookData();
+                              await apiService.postBookData(
+                                isbn: '1234567899',
+                                bookName: bookNameController.text,
+                                bookAuthor: bookAuthorController.text,
+                                bookPublisher: bookPublisherController.text,
+                                bookDescription: bookDescriptionController.text,
+                                bookCondition: _bookCondition,
+                                originalPrice: '124',
+                                sellingPrice: '123',
+                              );
                             },
                           ),
                         ],

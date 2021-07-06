@@ -34,11 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SearchBar(),
               ),
             ),
-            bottomNavigationBar: BottomNavigator(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
             floatingActionButton: FloatingActionButton.extended(
-              elevation: 0,
               tooltip: 'Create a new Book Post.',
               backgroundColor: Colors.white,
               shape: StadiumBorder(
