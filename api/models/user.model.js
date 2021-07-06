@@ -1,6 +1,7 @@
 const slugify = require('slugify');
 const encryptionManager = require('../managers/encryption.manager');
 const moment = require('moment');
+const Books = require('./book.model');
 
 const getUser = (user) => {
   return {
@@ -20,6 +21,46 @@ const getUser = (user) => {
     username_slug: user.username_slug,
     first_name_slug: user.first_name_slug,
     last_name_slug: user.last_name_slug,
+  };
+};
+
+const getUserProfile = (user) => {
+  return {
+    username: user.username,
+    bio: user.bio,
+    verified: user.verified,
+    suspended: user.suspended,
+    email: encryptionManager.decrypt(user.email),
+    profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
+    first_name: user.first_name,
+    last_name: user.last_name,
+    joined_date: user.joined_date,
+    joined_time: user.joined_time,
+    username_slug: user.username_slug,
+    first_name_slug: user.first_name_slug,
+    last_name_slug: user.last_name_slug,
+  };
+};
+
+
+const getUserProfileWithBooks = (user, books) => {
+  return {
+    username: user.username,
+    bio: user.bio,
+    verified: user.verified,
+    suspended: user.suspended,
+    email: encryptionManager.decrypt(user.email),
+    profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
+    first_name: user.first_name,
+    last_name: user.last_name,
+    joined_date: user.joined_date,
+    joined_time: user.joined_time,
+    username_slug: user.username_slug,
+    first_name_slug: user.first_name_slug,
+    last_name_slug: user.last_name_slug,
+    books: books.map((book) => {
+      return Books.getBooklet(book);
+    }),
   };
 };
 
@@ -57,5 +98,7 @@ const setUser = (user) => {
 
 module.exports = {
   getUser,
+  getUserProfile,
+  getUserProfileWithBooks,
   setUser,
 };

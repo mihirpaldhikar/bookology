@@ -1,56 +1,42 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
-const {UserCollection} = require('../managers/collection.manager');
-const {authorizeKey} = require('../middlewares/authorize.middleware');
-const Crypto = require('../managers/encryption.manager');
-const Book = require('../models/book.model');
+const Collections = require('../managers/collection.manager');
+const {verifyUser} = require('../middlewares/verify.middleware');
 
-router.get('/', authorizeKey, async (request, response, next) => {
-  if (request.query.show_books) {
-    await UserCollection().aggregate([
-      {
-        $lookup: {
-          from: 'Books',
-          localField: '_id',
-          foreignField: 'uploader_id',
-          as: 'books',
-        },
-      },
-    ]).toArray(function(error, results) {
-      response.json({
-        users: results.map((result) => {
-          return {
-            user_id: result._id,
-            username: result.username,
-            auth_provider: result.auth_provider,
-            email: Crypto.decrypt(result.email),
-            profile_picture_url: Crypto.decrypt(result.profile_picture_url),
-            first_name: result.first_name,
-            last_name: result.last_name,
-            joined_date: result.joined_date,
-            joined_time: result.joined_time,
-            username_slug: result.username_slug,
-            first_name_slug: result.first_name_slug,
-            last_name_slug: result.last_name_slug,
-            books: result.books.map((book) => {
-              return Book.getBooklet(book);
-            }),
-          };
-        }),
+
+router.get('/:username', verifyUser, async (request, response, next) => {
+  try {
+    if (request.query.with_books === 'true') {
+      const user = await Collections.UsersCollection().findOne({username: request.params.username});
+
+      if (user == null) {
+        response.status(404).json({
+          result: {
+            message: 'User not found with the username.',
+            status_code: 404,
+          },
+        });
+        return false;
+      }
+
+      await Collections.BooksCollection().find({uploader_id: user._id}).toArray(function(error, result) {
+        response.status(200).json(User.getUserProfileWithBooks(user, result));
       });
-    });
+      return false;
+    }
 
-    return false;
+    const user = await Collections.UsersCollection().findOne({username: request.params.username});
+
+    response.status(200).json(User.getUserProfile(user));
+  } catch (error) {
+    response.status(500).json({
+      result: {
+        message: 'An error internal error occurred',
+        status_code: 500,
+      },
+    });
   }
-
-  await UserCollection().find().toArray(function(error, users) {
-    response.json({
-      users: users.map((user) => {
-        return User.getUser(user);
-      }),
-    });
-  });
 });
 
 module.exports = router;
