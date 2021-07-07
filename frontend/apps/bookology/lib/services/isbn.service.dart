@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:bookology/models/isbn.model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class IsbnService {
   final isbnApiURL = dotenv.env['ISBN_API_URI'];
   final client = http.Client();
-  final isbnModel = new IsbnModel();
 
   IsbnService();
 

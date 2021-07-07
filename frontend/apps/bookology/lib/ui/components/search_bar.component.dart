@@ -1,6 +1,6 @@
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/components/account_dialog.component.dart';
-import 'package:bookology/ui/widgets/circular_image.widget..dart';
+import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,4 +1,4 @@
-package com.imihirpaldhikar.flutter.app.bookology.bookology
+package com.imihirpaldhikar.bookology
 
 import io.flutter.embedding.android.FlutterActivity
 

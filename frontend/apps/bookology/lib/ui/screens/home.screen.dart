@@ -1,6 +1,5 @@
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
-import 'package:bookology/ui/components/bottom_navigator.component.dart';
 import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';

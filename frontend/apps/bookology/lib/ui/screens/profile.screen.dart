@@ -1,5 +1,5 @@
 import 'package:bookology/services/api.service.dart';
-import 'package:bookology/ui/widgets/circular_image.widget..dart';
+import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,7 +21,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _fetchUserData();
   }
@@ -115,7 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _fetchUserData() async {
     final data = await apiService.userInfo();
-    print(data);
     setState(() {
       _isLoading = false;
       userName = data['username'];
