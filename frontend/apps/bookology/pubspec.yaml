@@ -21,6 +21,14 @@ dependencies:
   google_sign_in: ^5.0.4
   flutter_dotenv: ^5.0.0
   flutter_svg: ^0.22.0
+  url_launcher: ^6.0.7
+  barcode_scan2: ^4.1.3
+  app_settings: ^4.1.1
+  permission_handler: ^8.1.2
+  cached_network_image: ^3.0.0
+  image_picker: ^0.8.1+3
+  photo_view: ^0.11.1
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +40,4 @@ flutter:
     - app.config.env
     - assets/svg/google_logo.svg
     - assets/svg/verify_email.svg
+    - assets/svg/books.svg

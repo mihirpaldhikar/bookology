@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bookology/services/api.service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
@@ -64,6 +65,7 @@ class AuthService {
           lastName:
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
           authProvider: 'google');
+
       return result;
     } on FirebaseAuthException catch (error) {
       print(error);
@@ -96,10 +98,10 @@ class AuthService {
     }
   }
 
-  Future<dynamic> isEmailVerified() async {
+  dynamic isEmailVerified() {
     try {
-      await _firebaseAuth.currentUser?.reload();
-      if (await _firebaseAuth.currentUser?.emailVerified == true) {
+      _firebaseAuth.currentUser?.reload();
+      if (_firebaseAuth.currentUser?.emailVerified == true) {
         return true;
       }
 
@@ -110,9 +112,8 @@ class AuthService {
     }
   }
 
-  Future<dynamic> getUserInfo() async {
-    final data = _firebaseAuth.currentUser;
-    return data;
+  User? currentUser() {
+    return _firebaseAuth.currentUser;
   }
 
   bool isUserSignedIn() {
