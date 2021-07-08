@@ -53,7 +53,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
           return false;
         }
         await jwt.sign({
-          user_id: Crypto.encrypt(request.body.id),
+          user_id: request.body.id,
           email: Crypto.encrypt(request.body.email),
           email_verified: false,
           password: Crypto.encrypt(request.body.password),
@@ -74,7 +74,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
     } else {
       await UsersCollection.insertOne(userData, async (error, result) => {
         jwt.sign({
-          user_id: Crypto.encrypt(request.body.user_id),
+          user_id: userData._id,
           email: Crypto.encrypt(request.body.email),
           password: Crypto.encrypt(request.body.password),
           email_verified: true,
@@ -168,7 +168,7 @@ router.get('/verification/:token', async (request, response, next) => {
 
       const user = await UsersCollection.findOne({_id: Crypto.decrypt(data.user_id)});
 
-      await firebaseAdmin.auth().updateUser(Crypto.decrypt(data.user_id), {
+      await firebaseAdmin.auth().updateUser(data.user_id, {
         displayName: `${user.first_name} ${user.last_name}`,
         photoURL: Crypto.decrypt(user.profile_picture_url),
         emailVerified: true,
@@ -181,7 +181,7 @@ router.get('/verification/:token', async (request, response, next) => {
         created_on: moment().format('dddd DD MM YYYY hh mm ss'),
       }, process.env.JWT_SECRET_TOKEN, async (error, token) => {
         await firebaseAdmin.firestore().collection(`Secrets`).doc(Crypto.decrypt(data.user_id)).set({
-          user_id: Crypto.decrypt(data.user_id),
+          user_id: data.user_id,
           authorizeToken: token,
         });
         response.status(201).json({

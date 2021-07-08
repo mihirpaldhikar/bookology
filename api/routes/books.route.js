@@ -4,7 +4,7 @@ const Book = require('../models/book.model');
 const {BooksCollection, UsersCollection} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
-const EncryptionManager = require('../managers/encryption.manager');
+
 
 
 router.get('/', verifyUser, async (request, response, next) => {
@@ -65,7 +65,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
         return false;
       } else {
         const bookletData = Book.setBooklet({
-          uploader_id: EncryptionManager.decrypt(authData.user_id),
+          uploader_id: authData.user_id,
           isbn: request.body.isbn,
           book_name: request.body.book_name,
           book_author: request.body.book_author,
