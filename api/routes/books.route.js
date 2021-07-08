@@ -4,6 +4,27 @@ const Book = require('../models/book.model');
 const {BooksCollection, UsersCollection} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
+const EncryptionManager = require('../managers/encryption.manager');
+
+
+router.get('/', verifyUser, async (request, response, next) => {
+  try {
+    await BooksCollection.find().toArray(function(error, books) {
+      response.json({
+        books: books.map((book) => {
+          return Book.getBooklet(book);
+        }),
+      });
+    });
+  } catch (error) {
+    response.status(500).json({
+      result: {
+        message: 'An error internal error occurred',
+        status_code: 500,
+      },
+    });
+  }
+});
 
 router.get('/:bookId', verifyUser, async (request, response, next) => {
   try {
@@ -44,7 +65,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
         return false;
       } else {
         const bookletData = Book.setBooklet({
-          uploader_id: '2720',
+          uploader_id: EncryptionManager.decrypt(authData.user_id),
           isbn: request.body.isbn,
           book_name: request.body.book_name,
           book_author: request.body.book_author,

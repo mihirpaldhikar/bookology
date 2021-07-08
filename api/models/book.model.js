@@ -23,6 +23,7 @@ const setBooklet = (book) => {
       lower: true,
       replacement: '_',
     }),
+    location: book.location,
 
   };
 };
@@ -43,6 +44,7 @@ const getBooklet = (booklet) => {
     upload_date: booklet.upload_date,
     upload_time: booklet.upload_time,
     book_name_slug: booklet.book_name_slug,
+    location: booklet.location,
   };
 };
 
@@ -68,6 +70,7 @@ const getBookletWithUploader = (booklet, user) => {
       first_name: user.first_name,
       last_name: user.last_name,
     },
+    location: booklet.location,
   };
 };
 
