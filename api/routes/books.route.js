@@ -5,8 +5,6 @@ const {BooksCollection, UsersCollection} = require('../managers/collection.manag
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
 
-
-
 router.get('/', verifyUser, async (request, response, next) => {
   try {
     await BooksCollection.find().toArray(function(error, books) {

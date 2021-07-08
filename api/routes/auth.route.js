@@ -164,9 +164,9 @@ router.get('/verification/:token', async (request, response, next) => {
 
 
       await UsersCollection
-        .findOneAndUpdate({_id: Crypto.decrypt(data.user_id)}, {$set: {email_verified: true}});
+        .findOneAndUpdate({_id: data.user_id}, {$set: {email_verified: true}});
 
-      const user = await UsersCollection.findOne({_id: Crypto.decrypt(data.user_id)});
+      const user = await UsersCollection.findOne({_id: data.user_id});
 
       await firebaseAdmin.auth().updateUser(data.user_id, {
         displayName: `${user.first_name} ${user.last_name}`,
