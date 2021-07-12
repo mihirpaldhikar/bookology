@@ -8,11 +8,9 @@ const {verifyUser} = require('../middlewares/verify.middleware');
 router.get('/', verifyUser, async (request, response, next) => {
   try {
     await BooksCollection.find().toArray(function(error, books) {
-      response.json({
-        books: books.map((book) => {
-          return Book.getBooklet(book);
-        }),
-      });
+      response.status(200).json(books.map((book) => {
+        return book;
+      }));
     });
   } catch (error) {
     response.status(500).json({
