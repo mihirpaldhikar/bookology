@@ -71,6 +71,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
           selling_price: request.body.selling_price,
           book_condition: request.body.book_condition,
           book_images_urls: request.body.book_images_urls,
+          location: request.body.location,
         });
         await BooksCollection.insertOne(bookletData, (error, result) => {
           if (error) {
