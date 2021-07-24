@@ -17,6 +17,7 @@ const setBooklet = (book) => {
     additional_information: {
       description: book.description,
       condition: book.condition,
+      images_collection_id: book.images_collection_id,
       images: book.images,
     },
     pricing: {
@@ -34,7 +35,40 @@ const setBooklet = (book) => {
       }),
     },
     location: book.location,
+  };
+};
 
+
+const updateBook = (book) => {
+  return {
+    uploader_id: book.uploader_id,
+    book_information: {
+      isbn: book.isbn,
+      name: book.name,
+      author: book.author,
+      publisher: book.publisher,
+    },
+    additional_information: {
+      description: book.description,
+      condition: book.condition,
+      images_collection_id: book.images_collection_id,
+      images: book.images,
+    },
+    pricing: {
+      original_price: book.original_price,
+      selling_price: book.selling_price,
+    },
+    created_on: {
+      date: book.date,
+      time: book.time,
+    },
+    slugs: {
+      name: slugify(book.name, {
+        lower: true,
+        replacement: '_',
+      }),
+    },
+    location: book.location,
   };
 };
 
@@ -52,6 +86,7 @@ const getBooklet = (book) => {
     additional_information: {
       description: book.additional_information.description,
       condition: book.additional_information.condition,
+      images_collection_id: book.additional_information.images_collection_id,
       images: book.additional_information.images,
     },
     pricing: {
@@ -71,15 +106,17 @@ const getBooklet = (book) => {
 
 const getBookletWithUploader = (book, user) => {
   return {
+    book_id: book._id,
     book_information: {
-      isbn: book.isbn,
-      name: book.name,
-      author: book.author,
-      publisher: book.publisher,
+      isbn: book.book_information.isbn,
+      name: book.book_information.name,
+      author: book.book_information.author,
+      publisher: book.book_information.publisher,
     },
     additional_information: {
       description: book.additional_information.description,
       condition: book.additional_information.condition,
+      images_collection_id: book.additional_information.images_collection_id,
       images: book.additional_information.images,
     },
     pricing: {
@@ -95,11 +132,11 @@ const getBookletWithUploader = (book, user) => {
     },
     uploader: {
       user_id: user._id,
-      username: user.username,
-      verified: user.verified,
-      profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
-      first_name: user.first_name,
-      last_name: user.last_name,
+      username: user.user_information.username,
+      verified: user.user_information.verified,
+      profile_picture_url: encryptionManager.decrypt(user.user_information.profile_picture),
+      first_name: user.user_information.first_name,
+      last_name: user.user_information.last_name,
     },
     location: book.location,
   };
@@ -108,6 +145,7 @@ const getBookletWithUploader = (book, user) => {
 
 module.exports = {
   setBooklet,
+  updateBook,
   getBookletWithUploader,
   getBooklet,
 };

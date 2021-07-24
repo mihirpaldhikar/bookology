@@ -108,7 +108,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
   }
 });
 
-router.post('/delete', verifyUser, async (request, response, next) => {
+router.delete('/delete', verifyUser, async (request, response, next) => {
   try {
     jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (error, authData) => {
       if (error) {

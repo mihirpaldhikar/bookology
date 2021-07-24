@@ -109,9 +109,49 @@ const setUser = (user) => {
   };
 };
 
+const updateUser = (user) => {
+  return {
+    user_information: {
+      username: user.username,
+      verified: user.verified,
+      bio: user.bio,
+      profile_picture: encryptionManager.encrypt(user.profile_picture_url),
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    },
+    providers: {
+      auth: user.auth_provider,
+    },
+    additional_information: {
+      suspended: user.suspended,
+      email_verified: user.email_verified,
+    },
+    joined_on: {
+      date: user.date,
+      time: user.time,
+    },
+    slugs: {
+      username: slugify(user.username, {
+        lower: true,
+        replacement: '-',
+      }),
+      first_name: slugify(user.first_name, {
+        lower: true,
+        replacement: '-',
+      }),
+      last_name: slugify(user.last_name, {
+        lower: true,
+        replacement: '-',
+      }),
+    },
+  };
+};
+
 
 module.exports = {
   getUser,
   getUserWithBooks,
   setUser,
+  updateUser,
 };
