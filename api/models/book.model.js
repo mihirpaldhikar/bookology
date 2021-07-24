@@ -7,63 +7,92 @@ const {v4: uuidv4} = require('uuid');
 const setBooklet = (book) => {
   return {
     _id: uuidv4().replace(/-/g, ''),
-    isbn: book.isbn,
     uploader_id: book.uploader_id,
-    book_name: book.book_name,
-    book_author: book.book_author,
-    book_publisher: book.book_publisher,
-    description: book.description,
-    original_price: book.original_price,
-    selling_price: book.selling_price,
-    book_condition: book.book_condition,
-    book_images_urls: book.book_images_urls,
-    upload_date: moment().format('dddd DD MMMM YYYY'),
-    upload_time: moment().format('hh:mm:ss'),
-    book_name_slug: slugify(book.book_name, {
-      lower: true,
-      replacement: '_',
-    }),
+    book_information: {
+      isbn: book.isbn,
+      name: book.name,
+      author: book.author,
+      publisher: book.publisher,
+    },
+    additional_information: {
+      description: book.description,
+      condition: book.condition,
+      images: book.images,
+    },
+    pricing: {
+      original_price: book.original_price,
+      selling_price: book.selling_price,
+    },
+    created_on: {
+      date: moment().format('dddd DD MMMM YYYY'),
+      time: moment().format('hh:mm:ss'),
+    },
+    slugs: {
+      name: slugify(book.name, {
+        lower: true,
+        replacement: '_',
+      }),
+    },
     location: book.location,
 
   };
 };
 
 
-const getBooklet = (booklet) => {
+const getBooklet = (book) => {
   return {
-    book_id: booklet._id,
-    isbn: booklet.isbn,
-    uploader_id: booklet.uploader_id,
-    book_name: booklet.book_name,
-    book_author: booklet.book_author,
-    book_publisher: booklet.book_publisher,
-    description: booklet.description,
-    original_price: booklet.original_price,
-    selling_price: booklet.selling_price,
-    book_condition: booklet.book_condition,
-    book_images_urls: booklet.book_images_urls,
-    upload_date: booklet.upload_date,
-    upload_time: booklet.upload_time,
-    book_name_slug: booklet.book_name_slug,
-    location: booklet.location,
+    book_id: book._id,
+    uploader_id: book.uploader_id,
+    book_information: {
+      isbn: book.book_information.isbn,
+      name: book.book_information.name,
+      author: book.book_information.author,
+      publisher: book.book_information.publisher,
+    },
+    additional_information: {
+      description: book.additional_information.description,
+      condition: book.additional_information.condition,
+      images: book.additional_information.images,
+    },
+    pricing: {
+      original_price: book.pricing.original_price,
+      selling_price: book.pricing.selling_price,
+    },
+    created_on: {
+      date: book.created_on.date,
+      time: book.created_on.time,
+    },
+    slugs: {
+      name: book.slugs.name,
+    },
+    location: book.location,
   };
 };
 
-const getBookletWithUploader = (booklet, user) => {
+const getBookletWithUploader = (book, user) => {
   return {
-    book_id: booklet._id,
-    isbn: booklet.isbn,
-    book_name: booklet.book_name,
-    book_author: booklet.book_author,
-    book_publisher: booklet.book_publisher,
-    description: booklet.description,
-    original_price: booklet.original_price,
-    selling_price: booklet.selling_price,
-    book_condition: booklet.book_condition,
-    book_images_urls: booklet.book_images_urls,
-    upload_date: booklet.upload_date,
-    upload_time: booklet.upload_time,
-    book_name_slug: booklet.book_name_slug,
+    book_information: {
+      isbn: book.isbn,
+      name: book.name,
+      author: book.author,
+      publisher: book.publisher,
+    },
+    additional_information: {
+      description: book.additional_information.description,
+      condition: book.additional_information.condition,
+      images: book.additional_information.images,
+    },
+    pricing: {
+      original_price: book.pricing.original_price,
+      selling_price: book.pricing.selling_price,
+    },
+    created_on: {
+      date: book.created_on.date,
+      time: book.created_on.time,
+    },
+    slugs: {
+      name: book.slugs.name,
+    },
     uploader: {
       user_id: user._id,
       username: user.username,
@@ -72,7 +101,7 @@ const getBookletWithUploader = (booklet, user) => {
       first_name: user.first_name,
       last_name: user.last_name,
     },
-    location: booklet.location,
+    location: book.location,
   };
 };
 

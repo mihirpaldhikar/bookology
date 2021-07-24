@@ -6,99 +6,112 @@ const Books = require('./book.model');
 const getUser = (user) => {
   return {
     user_id: user._id,
-    username: user.username,
-    auth_provider: user.auth_provider,
-    bio: user.bio,
-    verified: user.verified,
-    suspended: user.suspended,
-    email_verified: user.email_verified,
-    email: encryptionManager.decrypt(user.email),
-    profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
-    first_name: user.first_name,
-    last_name: user.last_name,
-    joined_date: user.joined_date,
-    joined_time: user.joined_time,
-    username_slug: user.username_slug,
-    first_name_slug: user.first_name_slug,
-    last_name_slug: user.last_name_slug,
+    user_information: {
+      username: user.user_information.username,
+      verified: user.user_information.verified,
+      bio: user.user_information.bio,
+      profile_picture: encryptionManager.decrypt(user.user_information.profile_picture),
+      email: encryptionManager.decrypt(user.user_information.email),
+      first_name: user.user_information.first_name,
+      last_name: user.user_information.last_name,
+    },
+    providers: {
+      auth: user.providers.auth,
+    },
+    additional_information: {
+      suspended: user.additional_information.suspended,
+      email_verified: user.additional_information.email_verified,
+    },
+    joined_on: {
+      date: user.joined_on.date,
+      time: user.joined_on.time,
+    },
+    slugs: {
+      username: user.slugs.username,
+      first_name: user.slugs.first_name,
+      last_name: user.slugs.last_name,
+    },
   };
 };
 
-const getUserProfile = (user) => {
+const getUserWithBooks = (user, books) => {
   return {
-    username: user.username,
-    bio: user.bio,
-    verified: user.verified,
-    suspended: user.suspended,
-    email: encryptionManager.decrypt(user.email),
-    profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
-    first_name: user.first_name,
-    last_name: user.last_name,
-    joined_date: user.joined_date,
-    joined_time: user.joined_time,
-    username_slug: user.username_slug,
-    first_name_slug: user.first_name_slug,
-    last_name_slug: user.last_name_slug,
-  };
-};
-
-
-const getUserProfileWithBooks = (user, books) => {
-  return {
-    username: user.username,
-    bio: user.bio,
-    verified: user.verified,
-    suspended: user.suspended,
-    email: encryptionManager.decrypt(user.email),
-    profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
-    first_name: user.first_name,
-    last_name: user.last_name,
-    joined_date: user.joined_date,
-    joined_time: user.joined_time,
-    username_slug: user.username_slug,
-    first_name_slug: user.first_name_slug,
-    last_name_slug: user.last_name_slug,
+    user_id: user._id,
+    user_information: {
+      username: user.user_information.username,
+      verified: user.user_information.verified,
+      bio: user.user_information.bio,
+      profile_picture: encryptionManager.decrypt(user.user_information.profile_picture),
+      email: encryptionManager.decrypt(user.user_information.email),
+      first_name: user.user_information.first_name,
+      last_name: user.user_information.last_name,
+    },
+    providers: {
+      auth: user.providers.auth,
+    },
+    additional_information: {
+      suspended: user.additional_information.suspended,
+      email_verified: user.additional_information.email_verified,
+    },
+    joined_on: {
+      date: user.joined_on.date,
+      time: user.joined_on.time,
+    },
+    slugs: {
+      username: user.slugs.username,
+      first_name: user.slugs.first_name,
+      last_name: user.slugs.last_name,
+    },
     books: books.map((book) => {
       return Books.getBooklet(book);
     }),
   };
 };
 
+
 const setUser = (user) => {
   return {
     _id: user._id,
-    username: user.username,
-    auth_provider: user.auth_provider,
-    bio: user.bio,
-    verified: false,
-    suspended: false,
-    email_verified: user.email_verified,
-    email: encryptionManager.encrypt(user.email),
-    password: encryptionManager.encrypt(user.password),
-    profile_picture_url: encryptionManager.encrypt(user.profile_picture_url),
-    first_name: user.first_name,
-    last_name: user.last_name,
-    joined_date: moment().format('dddd DD MMMM YYYY'),
-    joined_time: moment().format('hh:mm:ss'),
-    username_slug: slugify(user.username, {
-      lower: true,
-      replacement: '-',
-    }),
-    first_name_slug: slugify(user.first_name, {
-      lower: true,
-      replacement: '-',
-    }),
-    last_name_slug: slugify(user.last_name, {
-      lower: true,
-      replacement: '-',
-    }),
+    user_information: {
+      username: user.username,
+      verified: false,
+      bio: user.bio,
+      profile_picture: encryptionManager.encrypt(user.profile_picture_url),
+      email: encryptionManager.encrypt(user.email),
+      first_name: user.first_name,
+      last_name: user.last_name,
+    },
+    providers: {
+      auth: user.auth_provider,
+    },
+    additional_information: {
+      suspended: false,
+      email_verified: user.email_verified,
+    },
+    joined_on: {
+      date: moment().format('dddd DD MMMM YYYY'),
+      time: moment().format('hh:mm:ss'),
+    },
+    slugs: {
+      username: slugify(user.username, {
+        lower: true,
+        replacement: '-',
+      }),
+      first_name: slugify(user.first_name, {
+        lower: true,
+        replacement: '-',
+      }),
+      last_name: slugify(user.last_name, {
+        lower: true,
+        replacement: '-',
+      }),
+    },
   };
 };
 
 
 module.exports = {
   getUser,
-  getUserProfile,
-  getUserProfileWithBooks,
+  getUserWithBooks,
   setUser,
 };

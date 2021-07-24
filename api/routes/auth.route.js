@@ -114,7 +114,7 @@ router.post('/delete', verifyUser, async (request, response, next) => {
       if (error) {
         response.sendStatus(403);
       } else {
-        if (await UsersCollection.findOne({_id: Crypto.decrypt(authData.user_id)}) === null) {
+        if (await UsersCollection.findOne({_id: authData.user_id}) === null) {
           response.status(404).json({
             result: {
               message: 'An error occurred while deleting user. User not found.',
@@ -123,10 +123,10 @@ router.post('/delete', verifyUser, async (request, response, next) => {
           });
           return false;
         }
-        await UsersCollection.findOneAndDelete({_id: Crypto.decrypt(authData.user_id)});
-        await BooksCollection.deleteMany({uploader_id: Crypto.decrypt(authData.user_id)});
-        await firebaseAdmin.auth().deleteUser(Crypto.decrypt(authData.user_id));
-        await firebaseAdmin.firestore().collection('Secrets').doc(Crypto.decrypt(authData.user_id)).delete();
+        await UsersCollection.findOneAndDelete({_id: authData.user_id});
+        await BooksCollection.deleteMany({uploader_id: authData.user_id});
+        await firebaseAdmin.auth().deleteUser(authData.user_id);
+        await firebaseAdmin.firestore().collection('Secrets').doc(authData.user_id).delete();
         response.status(200).json({
           result: {
             message: 'User successfully deleted.',
@@ -169,8 +169,8 @@ router.get('/verification/:token', async (request, response, next) => {
       const user = await UsersCollection.findOne({_id: data.user_id});
 
       await firebaseAdmin.auth().updateUser(data.user_id, {
-        displayName: `${user.first_name} ${user.last_name}`,
-        photoURL: Crypto.decrypt(user.profile_picture_url),
+        displayName: `${user.user_information.first_name} ${user.user_information.last_name}`,
+        photoURL: Crypto.decrypt(user.user_information.profile_picture),
         emailVerified: true,
       });
       jwt.sign({
@@ -180,7 +180,7 @@ router.get('/verification/:token', async (request, response, next) => {
         email_verified: true,
         created_on: moment().format('dddd DD MM YYYY hh mm ss'),
       }, process.env.JWT_SECRET_TOKEN, async (error, token) => {
-        await firebaseAdmin.firestore().collection(`Secrets`).doc(Crypto.decrypt(data.user_id)).set({
+        await firebaseAdmin.firestore().collection(`Secrets`).doc(data.user_id).set({
           user_id: data.user_id,
           authorizeToken: token,
         });

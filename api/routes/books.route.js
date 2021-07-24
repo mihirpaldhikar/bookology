@@ -63,14 +63,14 @@ router.post('/publish', verifyUser, async (request, response, next) => {
         const bookletData = Book.setBooklet({
           uploader_id: authData.user_id,
           isbn: request.body.isbn,
-          book_name: request.body.book_name,
-          book_author: request.body.book_author,
-          book_publisher: request.body.book_publisher,
+          name: request.body.name,
+          author: request.body.author,
+          publisher: request.body.publisher,
           description: request.body.description,
           original_price: request.body.original_price,
           selling_price: request.body.selling_price,
-          book_condition: request.body.book_condition,
-          book_images_urls: request.body.book_images_urls,
+          condition: request.body.condition,
+          images: request.body.images,
           location: request.body.location,
         });
         await BooksCollection.insertOne(bookletData, (error, result) => {

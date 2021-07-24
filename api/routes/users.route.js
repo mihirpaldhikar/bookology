@@ -8,7 +8,7 @@ const {verifyUser} = require('../middlewares/verify.middleware');
 router.get('/:username', verifyUser, async (request, response, next) => {
   try {
     if (request.query.with_books === 'true') {
-      const user = await UsersCollection.findOne({username: request.params.username});
+      const user = await UsersCollection.findOne({'user_information.username': request.params.username});
 
       if (user == null) {
         response.status(404).json({
@@ -21,14 +21,14 @@ router.get('/:username', verifyUser, async (request, response, next) => {
       }
 
       await BooksCollection.find({uploader_id: user._id}).toArray(function(error, result) {
-        response.status(200).json(User.getUserProfileWithBooks(user, result));
+        response.status(200).json(User.getUserWithBooks(user, result));
       });
       return false;
     }
 
     const user = await UsersCollection.findOne({username: request.params.username});
 
-    response.status(200).json(User.getUserProfile(user));
+    response.status(200).json(User.getUser(user));
   } catch (error) {
     response.status(500).json({
       result: {
