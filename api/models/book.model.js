@@ -33,6 +33,7 @@ const getBooklet = (booklet) => {
   return {
     book_id: booklet._id,
     isbn: booklet.isbn,
+    uploader_id: booklet.uploader_id,
     book_name: booklet.book_name,
     book_author: booklet.book_author,
     book_publisher: booklet.book_publisher,
@@ -64,6 +65,7 @@ const getBookletWithUploader = (booklet, user) => {
     upload_time: booklet.upload_time,
     book_name_slug: booklet.book_name_slug,
     uploader: {
+      user_id: user._id,
       username: user.username,
       verified: user.verified,
       profile_picture_url: encryptionManager.decrypt(user.profile_picture_url),
