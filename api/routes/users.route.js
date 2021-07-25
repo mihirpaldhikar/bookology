@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 const {UsersCollection, BooksCollection} = require('../managers/collection.manager');
 const {verifyUser} = require('../middlewares/verify.middleware');
 const jwt = require('jsonwebtoken');
+const {firebaseAdmin} = require('../configs/firebase.config');
 
 router.get('/:userID', verifyUser, async (request, response, next) => {
   try {
@@ -112,6 +113,13 @@ router.put('/:userID', verifyUser, async (request, response, next) => {
           suspended: user.additional_information.suspended,
           verified: user.user_information.verified,
         });
+
+        await firebaseAdmin.auth().updateUser(authData.user_id, {
+          displayName: `${request.body.first_name} ${request.body.last_name}`,
+          photoURL: request.body.profile_picture_url,
+          emailVerified: user.user_information.verified,
+        });
+
         await UsersCollection.replaceOne({_id: user._id},
           userData,
           function(error, result) {
