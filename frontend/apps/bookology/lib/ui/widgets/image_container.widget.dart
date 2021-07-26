@@ -89,6 +89,7 @@ class _ImageHolderState extends State<ImageHolder> {
                   ),
                   width: 150,
                   height: 150,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -98,7 +99,7 @@ class _ImageHolderState extends State<ImageHolder> {
             child: Positioned(
               top: 10,
               right: 10,
-              child: InkWell(
+              child: GestureDetector(
                 onTap: widget.onCancelled,
                 child: Container(
                   width: 20,
@@ -111,6 +112,25 @@ class _ImageHolderState extends State<ImageHolder> {
                     Icons.close,
                     size: 15,
                   ),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: widget.showCloseButton,
+            child: Positioned(
+              bottom: 10,
+              right: 5,
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Icon(
+                  Icons.fullscreen_outlined,
+                  size: 15,
                 ),
               ),
             ),

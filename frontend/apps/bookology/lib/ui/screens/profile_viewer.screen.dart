@@ -1,28 +1,25 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
-import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/marquee.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileViewer extends StatefulWidget {
+  const ProfileViewer({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileViewerState createState() => _ProfileViewerState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileViewerState extends State<ProfileViewer> {
   UserModel user = UserModel(
     additionalInformation: AdditionalInformation(
       suspended: false,
@@ -82,38 +79,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Marquee(
-            direction: Axis.horizontal,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 10,
-                ),
-                AutoSizeText(
-                  cacheService.getCurrentUserNameCache(),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Visibility(
-                  visible: cacheService.getCurrentIsVerifiedCache(),
-                  child: Icon(
-                    Icons.verified,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
-                ),
-              ],
+        title: Row(
+          children: [
+            SizedBox(
+              width: 10,
             ),
-          ),
+            Text(
+              userName,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Visibility(
+              visible: user.userInformation!.verified,
+              child: Icon(
+                Icons.verified,
+                color: Colors.blue,
+                size: 20,
+              ),
+            ),
+          ],
         ),
         actions: [
           Tooltip(
@@ -277,35 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 outlineColor: Colors.grey,
                                                 backgroundColor:
                                                     Colors.grey[50],
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditProfileScreen(
-                                                        userID: authService
-                                                            .currentUser()!
-                                                            .uid,
-                                                        profilePicture:
-                                                            authService
-                                                                .currentUser()!
-                                                                .photoURL
-                                                                .toString(),
-                                                        userName: cacheService
-                                                            .getCurrentUserNameCache(),
-                                                        bio: user
-                                                            .userInformation
-                                                            .bio,
-                                                        firstName: user
-                                                            .userInformation
-                                                            .firstName,
-                                                        lastName: user
-                                                            .userInformation
-                                                            .lastName,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
+                                                onPressed: () {},
                                               ),
                                             ),
                                           ],
@@ -376,7 +336,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _fetchUserData() async {
     final data =
         await apiService.getUserProfile(userID: authService.currentUser()!.uid);
-
     setState(() {
       _isLoading = false;
       user = UserModel.fromJson(data);

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CircularImage extends StatelessWidget {
@@ -12,10 +13,13 @@ class CircularImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: this.radius,
-      backgroundColor: Colors.grey[200],
-      backgroundImage: NetworkImage(this.image),
+    return ClipOval(
+      child: CachedNetworkImage(
+        imageUrl: this.image,
+        fit: BoxFit.fill,
+        height: this.radius,
+        width: this.radius,
+      ),
     );
   }
 }

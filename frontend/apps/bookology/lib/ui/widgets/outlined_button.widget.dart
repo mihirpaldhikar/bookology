@@ -6,14 +6,16 @@ class OutLinedButton extends StatelessWidget {
   final Color outlineColor;
   final Widget child;
   final Function onPressed;
+  final Color? backgroundColor;
 
-  const OutLinedButton({
-    Key? key,
-    this.outlineWidth = 2.0,
-    required this.child,
-    required this.outlineColor,
-    required this.onPressed,
-  }) : super(key: key);
+  const OutLinedButton(
+      {Key? key,
+      this.outlineWidth = 2.0,
+      required this.child,
+      required this.outlineColor,
+      required this.onPressed,
+      this.backgroundColor = Colors.transparent})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class OutLinedButton extends StatelessWidget {
             left: 8,
           ),
           decoration: BoxDecoration(
+            color: backgroundColor,
             border: Border.all(
               color: this.outlineColor,
               width: 1,

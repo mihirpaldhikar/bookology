@@ -1,20 +1,33 @@
 import 'package:bookology/managers/screen.manager.dart';
-import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
+import 'package:bookology/services/notification.service.dart';
 import 'package:bookology/ui/screens/auth.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
-import 'package:bookology/ui/screens/home.screen.dart';
 import 'package:bookology/ui/screens/login.screen.dart';
 import 'package:bookology/ui/screens/profile.screen.dart';
 import 'package:bookology/ui/screens/signup.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+const AndroidNotificationChannel androidNotificationChannel =
+    AndroidNotificationChannel(
+  'high_importance_channel',
+  'Book Enquiry Notification',
+  'This notification is shown when a user request to enquire about the book from the uploader.',
+  importance: Importance.max,
+);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class AppManager extends StatefulWidget {
   const AppManager({Key? key}) : super(key: key);
@@ -25,6 +38,53 @@ class AppManager extends StatefulWidget {
 
 class _AppManagerState extends State<AppManager> {
   @override
+  void initState() {
+    super.initState();
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      flutterLocalNotificationsPlugin.show(
+          message.hashCode,
+          'notification.title',
+          'notification.body',
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              androidNotificationChannel.id,
+              androidNotificationChannel.name,
+              androidNotificationChannel.description,
+              //icon: android.smallIcon,
+            ),
+          ));
+      //}
+    });
+
+    //FirebaseMessaging.onMessageOpenedApp;
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    await Firebase.initializeApp();
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidNotificationChannel);
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -33,6 +93,9 @@ class _AppManagerState extends State<AppManager> {
         ),
         Provider(
           create: (_) => FirestoreService(FirebaseFirestore.instance),
+        ),
+        Provider(
+          create: (_) => NotificationService(FirebaseMessaging.instance),
         ),
         StreamProvider(
           create: (context) =>
@@ -53,6 +116,11 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -80,6 +148,16 @@ class _AppState extends State<App> {
           bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: Colors.transparent,
           ),
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            textTheme:
+                GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+            actionsIconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+          ),
         ),
         routes: {
           '/home': (context) => ScreenManager(),
@@ -94,4 +172,19 @@ class _AppState extends State<App> {
       ),
     );
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  flutterLocalNotificationsPlugin.show(
+    message.hashCode,
+    'Book Enquiry Request',
+    '@imihirpaldhikar is requesting to enquire about a book',
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidNotificationChannel.id,
+        androidNotificationChannel.name,
+        androidNotificationChannel.description,
+      ),
+    ),
+  );
 }

@@ -6,7 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AccountDialog extends StatefulWidget {
-  const AccountDialog({Key? key}) : super(key: key);
+  final String username;
+  final String displayName;
+  final String profileImageURL;
+  final bool isVerified;
+
+  const AccountDialog({
+    Key? key,
+    required this.username,
+    required this.displayName,
+    required this.profileImageURL,
+    required this.isVerified,
+  }) : super(key: key);
 
   @override
   _AccountDialogState createState() => _AccountDialogState();
@@ -20,138 +31,134 @@ class _AccountDialogState extends State<AccountDialog>
   @override
   void initState() {
     super.initState();
-
-    controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
-    scaleAnimation =
-        CurvedAnimation(parent: controller, curve: Curves.easeInCubic);
-
-    controller.addListener(() {
-      setState(() {});
-    });
-
-    controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return ScaleTransition(
-      scale: scaleAnimation,
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        content: Container(
-          width: 700,
-          child: SingleChildScrollView(
-            child: Column(
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Bookology',
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            CircularImage(
+              image: widget.profileImageURL,
+              radius: 90,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              widget.displayName,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Bookology',
+                  widget.username,
                   style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  width: widget.isVerified ? 5 : 0,
                 ),
-                CircularImage(
-                  image: auth.currentUser()!.photoURL.toString(),
-                  radius: 40,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      auth.currentUser()!.displayName.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Icon(
-                      Icons.verified,
-                      color: Colors.blue,
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  auth.currentUser()!.email.toString(),
-                  style: TextStyle(
-                    fontSize: 15,
+                Visibility(
+                  visible: widget.isVerified,
+                  child: Icon(
+                    Icons.verified,
+                    color: Colors.blue,
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                OutLinedButton(
-                  onPressed: () {
-                    auth.signOut();
-                    Navigator.pushReplacementNamed(context, '/auth');
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                        ),
-                      ),
-                    ],
-                  ),
-                  outlineColor: Colors.redAccent,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                OutLinedButton(
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Close'),
-                    ],
-                  ),
-                  outlineColor: Colors.grey,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Support',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
-                    ),
-                    Text(
-                      'Contact Us',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
                 )
               ],
             ),
-          ),
+            SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              width: 300,
+              child: OutLinedButton(
+                onPressed: () {
+                  auth.signOut();
+                  Navigator.pushReplacementNamed(context, '/auth');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ],
+                ),
+                outlineColor: Colors.redAccent,
+                backgroundColor: Colors.red[50],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: 300,
+              child: OutLinedButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Close'),
+                  ],
+                ),
+                outlineColor: Colors.grey,
+                backgroundColor: Colors.grey[50],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Support',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                  ),
+                ),
+                Text(
+                  'Contact Us',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

@@ -92,6 +92,8 @@ class AuthService {
   Future<dynamic> signOut() async {
     try {
       await _firebaseAuth.signOut();
+      SharedPreferences userPrefs = await SharedPreferences.getInstance();
+      await userPrefs.clear();
       return true;
     } on FirebaseAuthException catch (error) {
       return error;
