@@ -393,7 +393,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                         isUploading = false;
                                       });
                                       Navigator.pushReplacementNamed(
-                                          context, '/home');
+                                          context, '/profile');
                                     }
                                   },
                                 ),

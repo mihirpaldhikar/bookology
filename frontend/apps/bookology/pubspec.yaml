@@ -55,3 +55,4 @@ flutter:
     - assets/svg/google_logo.svg
     - assets/svg/verify_email.svg
     - assets/svg/books.svg
+    - assets/svg/empty_list.svg

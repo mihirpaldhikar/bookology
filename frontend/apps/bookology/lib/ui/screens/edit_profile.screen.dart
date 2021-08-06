@@ -69,14 +69,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           IconButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                await uploadFile(imageURL).then((value) async {
+                if (widget.profilePicture.toString() != imageURL.toString()) {
+                  await uploadFile(imageURL).then((value) async {
+                    final result = await apiService.updateUserProfile(
+                      userID: widget.userID,
+                      userName: userNameController.text,
+                      firstName: firstNameController.text,
+                      lastName: lastNameController.text,
+                      bio: bioController.text,
+                      profilePicture: value,
+                    );
+
+                    if (result == true) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context, true);
+                      } else {
+                        SystemNavigator.pop();
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('An error occurred.'),
+                        ),
+                      );
+                    }
+                  });
+                } else {
                   final result = await apiService.updateUserProfile(
                     userID: widget.userID,
                     userName: userNameController.text,
                     firstName: firstNameController.text,
                     lastName: lastNameController.text,
                     bio: bioController.text,
-                    profilePicture: value,
+                    profilePicture: widget.profilePicture,
                   );
 
                   if (result == true) {
@@ -92,7 +117,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     );
                   }
-                });
+                }
               }
             },
             icon: Icon(

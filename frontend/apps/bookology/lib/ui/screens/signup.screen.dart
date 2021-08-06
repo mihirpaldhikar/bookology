@@ -55,7 +55,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           outlineColor: Colors.grey,
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/auth');
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/auth',
+                              (_) => false,
+                            );
                           },
                         ),
                       ),

@@ -86,7 +86,7 @@ class _CreateScreenState extends State<CreateScreen> {
           color: Colors.black,
         ),
         title: Text(
-          'Create new Booklet',
+          'Upload New Book',
           style: GoogleFonts.poppins(color: Colors.black),
         ),
       ),
@@ -94,8 +94,8 @@ class _CreateScreenState extends State<CreateScreen> {
         child: Container(
           child: _isLoading
               ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
@@ -536,8 +536,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   borderSide: new BorderSide(),
                 ),
                 prefixIcon: Icon(Icons.menu_book)
-              //fillColor: Colors.green
-            ),
+                //fillColor: Colors.green
+                ),
             controller: bookNameController,
             validator: (val) {
               if (val?.length == 0) {
@@ -564,8 +564,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   borderSide: new BorderSide(),
                 ),
                 prefixIcon: Icon(Icons.account_circle)
-              //fillColor: Colors.green
-            ),
+                //fillColor: Colors.green
+                ),
             controller: bookAuthorController,
             validator: (val) {
               if (val?.length == 0) {
@@ -592,8 +592,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   borderSide: new BorderSide(),
                 ),
                 prefixIcon: Icon(Icons.public)
-              //fillColor: Colors.green
-            ),
+                //fillColor: Colors.green
+                ),
             controller: bookPublisherController,
             validator: (val) {
               if (val?.length == 0) {
@@ -1409,7 +1409,7 @@ class _CreateScreenState extends State<CreateScreen> {
       {required PickedFile? pickedImage, required String imageURI}) async {
     File? cropped = await ImageCropper.cropImage(
       sourcePath: pickedImage!.path,
-      aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),
+      aspectRatio: CropAspectRatio(ratioX: 9, ratioY: 16),
       androidUiSettings: AndroidUiSettings(
         toolbarColor: Colors.white,
         toolbarTitle: 'Crop Image',

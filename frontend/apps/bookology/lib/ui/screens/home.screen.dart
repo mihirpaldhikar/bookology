@@ -400,6 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(
             builder: (BuildContext context) => BookViewer(
               bookID: bookModel.bookId.toString(),
+              uploaderID: bookModel.uploaderId.toString(),
               bookAuthor: bookModel.bookInformation.author.toString(),
               bookDescription:
                   bookModel.additionalInformation.description.toString(),

@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ScreenManager extends StatefulWidget {
-  const ScreenManager({Key? key}) : super(key: key);
+  final int currentIndex;
+
+  const ScreenManager({Key? key, required this.currentIndex}) : super(key: key);
 
   @override
   _ScreenManagerState createState() => _ScreenManagerState();
@@ -22,6 +24,12 @@ class _ScreenManagerState extends State<ScreenManager> {
     AuthScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    screenIndex = widget.currentIndex;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

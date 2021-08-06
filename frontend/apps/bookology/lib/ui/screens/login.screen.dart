@@ -55,7 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           outlineColor: Colors.grey,
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/auth');
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/auth',
+                              (_) => false,
+                            );
                           },
                         ),
                       ),

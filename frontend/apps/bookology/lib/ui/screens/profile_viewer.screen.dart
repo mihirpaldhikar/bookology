@@ -299,6 +299,9 @@ class _ProfileViewerState extends State<ProfileViewer> {
                                             BookViewer(
                                           bookID:
                                               '${user.books![index - 1].bookId.toString()}@${index.toString()}',
+                                          uploaderID: user
+                                              .books[index - 1].uploaderId
+                                              .toString(),
                                           bookAuthor: user.books![index - 1]
                                               .bookInformation!.author
                                               .toString(),

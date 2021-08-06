@@ -5,7 +5,6 @@ import 'package:bookology/services/notification.service.dart';
 import 'package:bookology/ui/screens/auth.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/login.screen.dart';
-import 'package:bookology/ui/screens/profile.screen.dart';
 import 'package:bookology/ui/screens/signup.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -160,15 +159,23 @@ class _AppState extends State<App> {
           ),
         ),
         routes: {
-          '/home': (context) => ScreenManager(),
-          '/profile': (context) => ProfileScreen(),
+          '/home': (context) => ScreenManager(
+                currentIndex: 0,
+              ),
+          '/profile': (context) => ScreenManager(
+                currentIndex: 3,
+              ),
           '/create': (context) => CreateScreen(),
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignUpScreen(),
           '/auth': (context) => AuthScreen(),
           '/verify': (context) => VerifyEmailScreen(),
         },
-        home: auth.isUserSignedIn() ? ScreenManager() : AuthScreen(),
+        home: auth.isUserSignedIn()
+            ? ScreenManager(
+                currentIndex: 0,
+              )
+            : AuthScreen(),
       ),
     );
   }

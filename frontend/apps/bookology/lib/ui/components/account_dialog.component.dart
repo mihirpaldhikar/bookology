@@ -100,7 +100,11 @@ class _AccountDialogState extends State<AccountDialog>
               child: OutLinedButton(
                 onPressed: () {
                   auth.signOut();
-                  Navigator.pushReplacementNamed(context, '/auth');
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/auth',
+                    (_) => false,
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

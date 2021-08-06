@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
 import 'package:bookology/ui/screens/profile_viewer.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -7,9 +8,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class BookViewer extends StatefulWidget {
   final String bookID;
+  final String uploaderID;
   final String bookName;
   final String bookAuthor;
   final String bookPublished;
@@ -21,6 +24,7 @@ class BookViewer extends StatefulWidget {
   const BookViewer({
     Key? key,
     required this.bookID,
+    required this.uploaderID,
     required this.bookName,
     required this.bookAuthor,
     required this.bookPublished,
@@ -64,6 +68,7 @@ class _BookViewerState extends State<BookViewer> {
   Widget build(BuildContext context) {
     int saving =
         int.parse(widget.originalPrice) - int.parse(widget.sellingPrice);
+    final authService = Provider.of<AuthService>(context);
     return Hero(
       tag: widget.bookID,
       child: Material(
@@ -74,11 +79,53 @@ class _BookViewerState extends State<BookViewer> {
               color: Colors.black,
             ),
             actions: [
-              Tooltip(
-                message: 'More Options',
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.more_vert_outlined),
+              Visibility(
+                visible: widget.uploaderID == authService.currentUser()!.uid
+                    ? true
+                    : false,
+                child: Tooltip(
+                  message: 'Edit Book',
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.edit_outlined),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.uploaderID == authService.currentUser()!.uid
+                    ? true
+                    : false,
+                child: Tooltip(
+                  message: 'Delete Book',
+                  child: IconButton(
+                    onPressed: () async {
+                      showLoaderDialog(context);
+                      final result = await apiService.deleteBook(
+                        bookID: widget.bookID.contains('@')
+                            ? widget.bookID.split('@')[0]
+                            : widget.bookID,
+                      );
+                      if (result == true) {
+                        Navigator.pushReplacementNamed(context, '/profile');
+                      }
+                    },
+                    icon: Icon(
+                      Icons.delete_forever_outlined,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.uploaderID != authService.currentUser()!.uid
+                    ? true
+                    : false,
+                child: Tooltip(
+                  message: 'More Options',
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.more_vert_outlined),
+                  ),
                 ),
               ),
             ],
@@ -214,35 +261,59 @@ class _BookViewerState extends State<BookViewer> {
                           SizedBox(
                             height: 30,
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: OutLinedButton(
-                                child: Center(
-                                  child: Text(
-                                    'Enquire',
+                          Visibility(
+                            visible: widget.uploaderID !=
+                                    authService.currentUser()!.uid
+                                ? true
+                                : false,
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: OutLinedButton(
+                                  child: Center(
+                                    child: Text(
+                                      'Enquire',
+                                    ),
                                   ),
-                                ),
-                                outlineColor: Colors.orange,
-                                backgroundColor: Colors.orange[100],
-                                onPressed: () {}),
+                                  outlineColor: Colors.orange,
+                                  backgroundColor: Colors.orange[100],
+                                  onPressed: () {}),
+                            ),
                           ),
-                          SizedBox(
-                            height: 30,
+                          Visibility(
+                            visible: widget.uploaderID !=
+                                    authService.currentUser()!.uid
+                                ? true
+                                : false,
+                            child: SizedBox(
+                              height: 30,
+                            ),
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: OutLinedButton(
-                                child: Center(
-                                  child: Text(
-                                    'Add to Wish List',
+                          Visibility(
+                            visible: widget.uploaderID !=
+                                    authService.currentUser()!.uid
+                                ? true
+                                : false,
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: OutLinedButton(
+                                  child: Center(
+                                    child: Text(
+                                      'Add to Wish List',
+                                    ),
                                   ),
-                                ),
-                                outlineColor: Colors.teal,
-                                backgroundColor: Colors.tealAccent[100],
-                                onPressed: () {}),
+                                  outlineColor: Colors.teal,
+                                  backgroundColor: Colors.tealAccent[100],
+                                  onPressed: () {}),
+                            ),
                           ),
-                          SizedBox(
-                            height: 40,
+                          Visibility(
+                            visible: widget.uploaderID !=
+                                    authService.currentUser()!.uid
+                                ? true
+                                : false,
+                            child: SizedBox(
+                              height: 40,
+                            ),
                           ),
                           Row(
                             children: [
@@ -254,7 +325,7 @@ class _BookViewerState extends State<BookViewer> {
                                 width: 10,
                               ),
                               Text(
-                                'Location : $location',
+                                'Book Location : $location',
                                 style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                   fontWeight: FontWeight.bold,
@@ -286,7 +357,7 @@ class _BookViewerState extends State<BookViewer> {
                               right: 20,
                             ),
                             child: AutoSizeText(
-                              widget.bookAuthor,
+                              widget.bookDescription,
                               maxLines: 40,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
@@ -648,5 +719,31 @@ class _BookViewerState extends State<BookViewer> {
           '${bookData['uploader']['first_name']} ${bookData['uploader']['last_name']}';
       isVerified = bookData['uploader']['verified'];
     });
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Colors.redAccent,
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Deleting...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

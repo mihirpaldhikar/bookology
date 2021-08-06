@@ -111,6 +111,29 @@ class ApiService {
     }
   }
 
+  Future<dynamic> deleteBook({required String bookID}) async {
+    try {
+      final requestURL = Uri.parse('$apiURL/books/delete/$bookID');
+      final response = await client.delete(
+        requestURL,
+        headers: <String, String>{
+          'Content-type': 'application/json',
+          'user-identifier-key': await _firestoreService.getAccessToken(),
+        },
+      );
+
+      final receivedData = jsonDecode(response.body);
+      if (receivedData['result']['status_code'] == 200) {
+        return true;
+      } else {
+        return receivedData;
+      }
+    } catch (error) {
+      print(error);
+      return error;
+    }
+  }
+
   Future<dynamic> postBookData({
     required String isbn,
     required String bookName,

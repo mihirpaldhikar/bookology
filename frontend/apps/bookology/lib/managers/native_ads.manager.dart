@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // COMPLETE: Import google_mobile_ads.dart
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -66,7 +65,11 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     return Container(
       height: 72.0,
       child: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Colors.grey,
+          ),
+        ),
       ),
     );
   }
