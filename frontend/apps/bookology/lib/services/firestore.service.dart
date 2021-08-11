@@ -19,15 +19,15 @@ class FirestoreService {
     try {
       final cacheStorage = GetStorage();
       final data = await _firestore
-          .collection('Secrets')
+          .collection('users')
           .doc(_firebaseAuth.currentUser?.uid)
           .get();
 
-      final userKey = data.data()?['authorizeToken'];
+      final userKey = data.data()?['metadata']['authorizeToken'];
       if (cacheStorage.read('userIdentifierKey') == null) {
         cacheStorage.write('userIdentifierKey', userKey);
       }
-
+      print('the user token is $userKey');
       return cacheStorage.read('userIdentifierKey');
     } catch (error) {
       print(error);
@@ -40,11 +40,13 @@ class FirestoreService {
       SharedPreferences userPrefs = await SharedPreferences.getInstance();
 
       final data = await _firestore
-          .collection('Secrets')
+          .collection('users')
           .doc(_firebaseAuth.currentUser?.uid)
           .set(
         {
-          'fcmToken': await _notificationService.getMessagingToken(),
+          'metadata': {
+            'fcmToken': await _notificationService.getMessagingToken()
+          },
         },
         SetOptions(
           merge: true,
