@@ -27,7 +27,6 @@ class FirestoreService {
       if (cacheStorage.read('userIdentifierKey') == null) {
         cacheStorage.write('userIdentifierKey', userKey);
       }
-      print('the user token is $userKey');
       return cacheStorage.read('userIdentifierKey');
     } catch (error) {
       print(error);
