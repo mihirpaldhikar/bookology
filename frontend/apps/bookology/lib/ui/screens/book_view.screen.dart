@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/chats.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
+import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/profile_viewer.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class BookViewer extends StatefulWidget {
   final String bookID;
+  final String isbn;
   final String uploaderID;
   final String bookName;
   final String bookAuthor;
@@ -24,6 +27,7 @@ class BookViewer extends StatefulWidget {
   const BookViewer({
     Key? key,
     required this.bookID,
+    required this.isbn,
     required this.uploaderID,
     required this.bookName,
     required this.bookAuthor,
@@ -42,7 +46,10 @@ class _BookViewerState extends State<BookViewer> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   final ApiService apiService = ApiService();
   String username = 'loading...';
-  String displayName = 'loading...';
+  String userID = '';
+  String userFirstName = 'loading...';
+  String userLastName = '';
+  String userProfileURL = '';
   String uploadedOn = 'loading...';
   String location = 'loading...';
   String bookCondition = 'loading...';
@@ -269,14 +276,33 @@ class _BookViewerState extends State<BookViewer> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width,
                               child: OutLinedButton(
-                                  child: Center(
-                                    child: Text(
-                                      'Enquire',
-                                    ),
+                                child: Center(
+                                  child: Text(
+                                    'Enquire',
                                   ),
-                                  outlineColor: Colors.orange,
-                                  backgroundColor: Colors.orange[100],
-                                  onPressed: () {}),
+                                ),
+                                outlineColor: Colors.orange,
+                                backgroundColor: Colors.orange[100],
+                                onPressed: () async {
+                                  final room =
+                                      await ChatsService().createChatRoom(
+                                    ownerUserID: authService.currentUser()?.uid,
+                                    userID: userID,
+                                    bookName: widget.bookName,
+                                    bookCoverImage: widget.images![0],
+                                  );
+                                  Navigator.of(context).pop();
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        room: room,
+                                        roomTitle:
+                                            '$userFirstName $userLastName',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           Visibility(
@@ -404,7 +430,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  '27201234567',
+                                  widget.isbn,
                                   style: GoogleFonts.ibmPlexMono(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -583,7 +609,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  displayName,
+                                  userFirstName + ' ' + userLastName,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -709,14 +735,15 @@ class _BookViewerState extends State<BookViewer> {
             ? widget.bookID.split('@')[0]
             : widget.bookID);
     setState(() {
+      userID = bookData['uploader']['user_id'];
       username = bookData['uploader']['username'];
       bookCondition = bookData['additional_information']['condition'];
       location =
           bookData['location'] == null ? 'Unknown' : bookData['location'];
       uploadedOn =
           '${bookData['created_on']['date']} \nat ${bookData['created_on']['time']}';
-      displayName =
-          '${bookData['uploader']['first_name']} ${bookData['uploader']['last_name']}';
+      userFirstName = bookData['uploader']['first_name'];
+      userLastName = bookData['uploader']['last_name'];
       isVerified = bookData['uploader']['verified'];
     });
   }

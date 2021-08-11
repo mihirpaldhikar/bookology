@@ -10,7 +10,6 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final apiService = ApiService();
   final User? user = FirebaseAuth.instance.currentUser;
-
   AuthService(this._firebaseAuth);
 
   Stream<User?> get onAuthStateChanges => _firebaseAuth.authStateChanges();

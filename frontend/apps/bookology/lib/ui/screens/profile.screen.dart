@@ -531,6 +531,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           BookViewer(
                                         bookID:
                                             '${user.books![index - 1].bookId.toString()}@${index.toString()}',
+                                        isbn: user.books![index - 1]
+                                            .bookInformation!.isbn,
                                         uploaderID: user
                                             .books[index - 1].uploaderId
                                             .toString(),

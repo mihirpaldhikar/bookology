@@ -7,7 +7,6 @@ import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/components/account_dialog.component.dart';
 import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
-import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,296 +93,287 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return auth.isEmailVerified() != true
-        ? VerifyEmailScreen()
-        : Scaffold(
-            backgroundColor: Colors.white,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(120),
-              child: SafeArea(
-                child: SearchBar(onDrawerClicked: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          padding: EdgeInsets.all(10),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(120),
+        child: SafeArea(
+          child: SearchBar(onDrawerClicked: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
+                    ),
+                    height: 500,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 3,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(50),
                           ),
-                          height: 500,
-                          width: MediaQuery.of(context).size.width,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 50,
-                                height: 3,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AccountDialog(
-                                      username: cacheService
-                                          .getCurrentUserNameCache(),
-                                      displayName: auth
-                                          .currentUser()!
-                                          .displayName
-                                          .toString(),
-                                      isVerified: cacheService
-                                          .getCurrentIsVerifiedCache(),
-                                      profileImageURL: auth
-                                          .currentUser()!
-                                          .photoURL
-                                          .toString(),
-                                    ),
-                                  ],
-                                ),
+                              AccountDialog(
+                                username:
+                                    cacheService.getCurrentUserNameCache(),
+                                displayName:
+                                    auth.currentUser()!.displayName.toString(),
+                                isVerified:
+                                    cacheService.getCurrentIsVerifiedCache(),
+                                profileImageURL:
+                                    auth.currentUser()!.photoURL.toString(),
                               ),
                             ],
                           ),
-                        );
-                      });
-                }),
-              ),
-            ),
-            body: _isLoading
-                ? ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: 5,
-                    padding: EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      top: 10,
+                        ),
+                      ],
                     ),
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return Container(
-                          margin: EdgeInsets.only(
-                            top: 10,
-                            bottom: 10,
-                          ),
-                          child: Chip(
-                            padding: EdgeInsets.all(10),
-                            backgroundColor: Colors.white,
-                            side: BorderSide(
+                  );
+                });
+          }),
+        ),
+      ),
+      body: _isLoading
+          ? ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: 5,
+              padding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 10,
+              ),
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    child: Chip(
+                      padding: EdgeInsets.all(10),
+                      backgroundColor: Colors.white,
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      label: Shimmer.fromColors(
+                        enabled: true,
+                        baseColor: Color(0xFFE0E0E0),
+                        highlightColor: Color(0xFFF5F5F5),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.place_outlined,
                               color: Colors.grey,
-                              width: 1,
                             ),
-                            label: Shimmer.fromColors(
-                              enabled: true,
-                              baseColor: Color(0xFFE0E0E0),
-                              highlightColor: Color(0xFFF5F5F5),
-                              child: Row(
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 150,
+                              height: 15,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: 250,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8),
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Shimmer.fromColors(
+                        enabled: true,
+                        baseColor: Color(0xFFE0E0E0),
+                        highlightColor: Color(0xFFF5F5F5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 150,
+                              height: MediaQuery.of(context).size.height,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.place_outlined,
-                                    color: Colors.grey,
-                                  ),
                                   SizedBox(
-                                    width: 10,
+                                    height: 10,
                                   ),
                                   Container(
                                     width: 150,
                                     height: 15,
                                     color: Colors.white,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                          height: 250,
-                          width: double.infinity,
-                          padding: EdgeInsets.all(8),
-                          margin: EdgeInsets.only(
-                            bottom: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Shimmer.fromColors(
-                              enabled: true,
-                              baseColor: Color(0xFFE0E0E0),
-                              highlightColor: Color(0xFFF5F5F5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   Container(
-                                    width: 150,
-                                    height: MediaQuery.of(context).size.height,
+                                    width: 120,
+                                    height: 15,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Container(
+                                    width: 140,
+                                    height: 10,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 40,
+                                        height: 10,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        width: 30,
+                                        height: 10,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        width: 30,
+                                        height: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Container(
+                                    width: 100,
+                                    height: 10,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    width: 170,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          width: 150,
-                                          height: 15,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          width: 120,
-                                          height: 15,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-                                        Container(
-                                          width: 140,
-                                          height: 10,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 40,
-                                              height: 10,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Container(
-                                              width: 30,
-                                              height: 10,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Container(
-                                              width: 30,
-                                              height: 10,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-                                        Container(
-                                          width: 100,
-                                          height: 10,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Container(
-                                          width: 170,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        )
-                                      ],
-                                    ),
                                   )
                                 ],
-                              )),
-                        );
-                      }
-                    },
-                  )
-                : Container(
-                    color: Colors.white,
-                    child: SmartRefresher(
-                      controller: _refreshController,
-                      scrollDirection: Axis.vertical,
-                      physics: BouncingScrollPhysics(),
-                      enablePullDown: true,
-                      header: ClassicHeader(),
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: listObj.length + 1,
-                        padding: EdgeInsets.only(
+                              ),
+                            )
+                          ],
+                        )),
+                  );
+                }
+              },
+            )
+          : Container(
+              color: Colors.white,
+              child: SmartRefresher(
+                controller: _refreshController,
+                scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
+                enablePullDown: true,
+                header: ClassicHeader(),
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: listObj.length + 1,
+                  padding: EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Container(
+                        margin: EdgeInsets.only(
+                          top: 10,
+                          bottom: 10,
                           left: 10,
                           right: 10,
-                          top: 10,
                         ),
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return Container(
-                              margin: EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                                left: 10,
-                                right: 10,
+                        child: Chip(
+                          padding: EdgeInsets.all(10),
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                            color: Theme.of(context).accentColor,
+                            width: 1,
+                          ),
+                          label: Row(
+                            children: [
+                              Icon(Icons.place_outlined),
+                              SizedBox(
+                                width: 10,
                               ),
-                              child: Chip(
-                                padding: EdgeInsets.all(10),
-                                backgroundColor: Colors.white,
-                                side: BorderSide(
-                                  color: Theme.of(context).accentColor,
-                                  width: 1,
-                                ),
-                                label: Row(
-                                  children: [
-                                    Icon(Icons.place_outlined),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(currentLocation),
-                                  ],
-                                ),
-                              ),
-                            );
-                          } else {
-                            if (listObj[index - 1] is BannerAd) {
-                              return NativeInlineAd();
-                            } else {
-                              return bookList(
-                                bookModel: listObj[index - 1] as BookModel,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-          );
+                              Text(currentLocation),
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      if (listObj[index - 1] is BannerAd) {
+                        return NativeInlineAd();
+                      } else {
+                        return bookList(
+                          bookModel: listObj[index - 1] as BookModel,
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+            ),
+    );
   }
 
   Widget bookList({required BookModel bookModel}) {
@@ -400,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(
             builder: (BuildContext context) => BookViewer(
               bookID: bookModel.bookId.toString(),
+              isbn: bookModel.bookInformation.isbn.toString(),
               uploaderID: bookModel.uploaderId.toString(),
               bookAuthor: bookModel.bookInformation.author.toString(),
               bookDescription:

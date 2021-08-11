@@ -102,6 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         keyboardType: TextInputType.emailAddress,
+                        textCapitalization: TextCapitalization.none,
+                        textInputAction: TextInputAction.next,
                       ),
                       SizedBox(
                         height: 40,
@@ -130,7 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           }
                         },
-                        keyboardType: TextInputType.visiblePassword,
+                        keyboardType: TextInputType.emailAddress,
+                        obscureText: true,
+                        textCapitalization: TextCapitalization.none,
+                        textInputAction: TextInputAction.done,
                       ),
                       SizedBox(
                         height: 50,

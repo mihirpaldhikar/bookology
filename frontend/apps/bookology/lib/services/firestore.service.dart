@@ -2,6 +2,8 @@ import 'package:bookology/services/notification.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,9 +42,14 @@ class FirestoreService {
       final data = await _firestore
           .collection('Secrets')
           .doc(_firebaseAuth.currentUser?.uid)
-          .set({
-        'fcmToken': await _notificationService.getMessagingToken(),
-      }, SetOptions(merge: true));
+          .set(
+        {
+          'fcmToken': await _notificationService.getMessagingToken(),
+        },
+        SetOptions(
+          merge: true,
+        ),
+      );
 
       final fcmToken = _notificationService.getMessagingToken();
       if (userPrefs.getString('userAccessKey') == null) {
@@ -53,6 +60,48 @@ class FirestoreService {
     } catch (error) {
       print(error);
       return error;
+    }
+  }
+
+  Future<dynamic> createFirestoreUser({
+    required String uuid,
+    required String firstName,
+    required String lastName,
+    required String profileImageURL,
+  }) async {
+    try {
+      final data = await _firestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser?.uid)
+          .set(
+        {
+          'firstName': firstName,
+          'imageUrl': profileImageURL,
+          'lastName': lastName,
+          'lastSeen': null,
+          'role': types.Role.user,
+          'metadata': {
+            'fcmToken': await _notificationService.getMessagingToken(),
+          },
+        },
+        SetOptions(
+          merge: true,
+        ),
+      );
+      return data;
+    } catch (error) {
+      print(error);
+      return error;
+    }
+  }
+
+  Future<types.User> getFirestoreUser({required String userID}) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userID).get();
+      return processUserDocument(doc);
+    } catch (error) {
+      print(error);
+      return types.User(id: '');
     }
   }
 }
