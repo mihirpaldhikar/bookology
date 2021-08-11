@@ -83,11 +83,12 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
           await firebaseAdmin.auth().updateUser(userData._id, {
             emailVerified: true,
           });
-          if ((await firebaseAdmin.firestore().collection(`Secrets`).doc(userData._id).get()).data() === undefined) {
-            await firebaseAdmin.firestore().collection(`Secrets`).doc(userData._id).set({
-              user_id: userData._id,
-              authorizeToken: token,
-            });
+          if ((await firebaseAdmin.firestore().collection(`users`).doc(userData._id).get()).data() === undefined) {
+            await firebaseAdmin.firestore().collection(`users`).doc(userData._id).set({
+              metadata: {
+                authorizeToken: token,
+              },
+            }, {merge: true});
           }
           response.status(201).json({
             result: {
@@ -126,7 +127,7 @@ router.delete('/delete', verifyUser, async (request, response, next) => {
         await UsersCollection.findOneAndDelete({_id: authData.user_id});
         await BooksCollection.deleteMany({uploader_id: authData.user_id});
         await firebaseAdmin.auth().deleteUser(authData.user_id);
-        await firebaseAdmin.firestore().collection('Secrets').doc(authData.user_id).delete();
+        await firebaseAdmin.firestore().collection('users').doc(authData.user_id).delete();
         response.status(200).json({
           result: {
             message: 'User successfully deleted.',
@@ -180,10 +181,11 @@ router.get('/verification/:token', async (request, response, next) => {
         email_verified: true,
         created_on: moment().format('dddd DD MM YYYY hh mm ss'),
       }, process.env.JWT_SECRET_TOKEN, async (error, token) => {
-        await firebaseAdmin.firestore().collection(`Secrets`).doc(data.user_id).set({
-          user_id: data.user_id,
-          authorizeToken: token,
-        });
+        await firebaseAdmin.firestore().collection(`users`).doc(data.user_id).set({
+          metadata: {
+            authorizeToken: token,
+          },
+        }, {merge: true});
         response.status(201).json({
           result: {
             message: 'User successfully created.',
