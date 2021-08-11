@@ -85,7 +85,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
           });
           if ((await firebaseAdmin.firestore().collection(`users`).doc(userData._id).get()).data() === undefined) {
             await firebaseAdmin.firestore().collection(`users`).doc(userData._id).set({
-              metadata: {
+              secrets: {
                 authorizeToken: token,
               },
             });
@@ -182,7 +182,7 @@ router.get('/verification/:token', async (request, response, next) => {
         created_on: moment().format('dddd DD MM YYYY hh mm ss'),
       }, process.env.JWT_SECRET_TOKEN, async (error, token) => {
         await firebaseAdmin.firestore().collection(`users`).doc(data.user_id).set({
-          metadata: {
+          secrets: {
             authorizeToken: token,
           },
         });
