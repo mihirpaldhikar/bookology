@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final apiService = ApiService();
   final User? user = FirebaseAuth.instance.currentUser;
+
   AuthService(this._firebaseAuth);
 
   Stream<User?> get onAuthStateChanges => _firebaseAuth.authStateChanges();
@@ -91,8 +92,7 @@ class AuthService {
   Future<dynamic> signOut() async {
     try {
       await _firebaseAuth.signOut();
-      SharedPreferences userPrefs = await SharedPreferences.getInstance();
-      await userPrefs.clear();
+      await CacheService().clearCacheStorage();
       return true;
     } on FirebaseAuthException catch (error) {
       return error;

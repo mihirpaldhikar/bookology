@@ -15,4 +15,8 @@ class CacheService {
   bool getCurrentIsVerifiedCache() {
     return cacheStorage.read('isVerified');
   }
+
+  Future<void> clearCacheStorage() async {
+    await cacheStorage.erase();
+  }
 }
