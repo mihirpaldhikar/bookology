@@ -35,7 +35,6 @@ class AuthService {
           firstName: firstName,
           lastName: lastName,
           authProvider: 'email-password');
-      print('result: Api res : $result');
       return result;
     } on FirebaseAuthException catch (error) {
       print(error.message);
