@@ -88,7 +88,7 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
               metadata: {
                 authorizeToken: token,
               },
-            }, {merge: true});
+            });
           }
           response.status(201).json({
             result: {
@@ -185,7 +185,7 @@ router.get('/verification/:token', async (request, response, next) => {
           metadata: {
             authorizeToken: token,
           },
-        }, {merge: true});
+        });
         response.status(201).json({
           result: {
             message: 'User successfully created.',
