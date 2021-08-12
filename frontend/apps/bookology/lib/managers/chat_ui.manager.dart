@@ -21,18 +21,22 @@ class ChatUiManager extends ChatTheme {
             ),
             deliveredIcon: Icon(
               Icons.done_outlined,
+              size: 15,
             ),
             seenIcon: Icon(
               Icons.done_all_outlined,
+              size: 17,
+              color: Colors.green,
             ),
-            inputBackgroundColor: Color(0xFFEEEEEE),
+            inputBackgroundColor: Colors.white,
             documentIcon: Icon(
               Icons.description_outlined,
             ),
-            inputBorderRadius: BorderRadius.circular(10),
+            inputBorderRadius: BorderRadius.circular(100),
             dateDividerTextStyle: GoogleFonts.poppins(),
             attachmentButtonIcon: Icon(
-              Icons.attach_file_outlined,
+              Icons.add,
+              color: Colors.white,
             ),
             inputTextColor: Colors.black,
             inputTextStyle: GoogleFonts.poppins(),

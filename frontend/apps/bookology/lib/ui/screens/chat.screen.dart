@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:bookology/managers/chat_ui.manager.dart';
+import 'package:bookology/managers/discussions.manager.dart';
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -30,6 +34,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
+  final firestoreService = new FirestoreService(FirebaseFirestore.instance);
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
@@ -126,9 +131,15 @@ class _ChatPageState extends State<ChatPage> {
       final name = result.files.single.name;
       final filePath = result.files.single.path;
       final file = File(filePath ?? '');
-
+      final collectionID =
+          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
       try {
-        final reference = FirebaseStorage.instance.ref(name);
+        final reference = FirebaseStorage.instance
+            .ref('rooms')
+            .child(widget.room.id)
+            .child('documents')
+            .child(collectionID)
+            .child(name);
         await reference.putFile(file);
         final uri = await reference.getDownloadURL();
 
@@ -139,7 +150,7 @@ class _ChatPageState extends State<ChatPage> {
           uri: uri,
         );
 
-        FirebaseChatCore.instance.sendMessage(message, widget.room.id);
+        firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException catch (e) {
         _setAttachmentUploading(false);
@@ -162,9 +173,16 @@ class _ChatPageState extends State<ChatPage> {
       final bytes = await result.readAsBytes();
       final image = await decodeImageFromList(bytes);
       final name = DateTime.now().microsecond.toString();
+      final collectionID =
+          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
 
       try {
-        final reference = FirebaseStorage.instance.ref(name);
+        final reference = FirebaseStorage.instance
+            .ref('rooms')
+            .child(widget.room.id)
+            .child('images')
+            .child(collectionID)
+            .child(name);
         await reference.putFile(file);
         final uri = await reference.getDownloadURL();
 
@@ -176,10 +194,7 @@ class _ChatPageState extends State<ChatPage> {
           width: image.width.toDouble(),
         );
 
-        FirebaseChatCore.instance.sendMessage(
-          message,
-          widget.room.id,
-        );
+        firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException catch (e) {
         _setAttachmentUploading(false);
@@ -219,10 +234,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    FirebaseChatCore.instance.sendMessage(
-      message,
-      widget.room.id,
-    );
+    firestoreService.sendMessage(message, widget.room.id,
+        '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}');
   }
 
   void _setAttachmentUploading(bool uploading) {
@@ -246,7 +259,7 @@ class _ChatPageState extends State<ChatPage> {
             initialData: const [],
             stream: FirebaseChatCore.instance.messages(snapshot.data!),
             builder: (context, snapshot) {
-              return Chat(
+              return Discussions(
                 showUserAvatars: true,
                 showUserNames: false,
                 usePreviewData: true,
@@ -255,6 +268,35 @@ class _ChatPageState extends State<ChatPage> {
                 messages: snapshot.data ?? [],
                 onAttachmentPressed: _handleAtachmentPressed,
                 onMessageTap: _handleMessageTap,
+                onMessageLongPress: (value) async {
+                  if (FirebaseAuth.instance.currentUser!.uid ==
+                      value.author.id) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text('Unsend Message?'),
+                              content:
+                                  Text('You will be able to unsend the message '
+                                      'you have sent.'),
+                              actions: [
+                                OutLinedButton(
+                                    child: Text('Unsend'),
+                                    outlineColor: Theme.of(context).accentColor,
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await firestoreService.unsendMessage(
+                                        messageID: value.id,
+                                        mediaURL: value.toJson()['uri'] == null
+                                            ? ''
+                                            : value.toJson()['uri'],
+                                        roomID: value.roomId as String,
+                                        messageType: value.type.toString(),
+                                      );
+                                    }),
+                              ],
+                            ));
+                  }
+                },
                 onPreviewDataFetched: _handlePreviewDataFetched,
                 onSendPressed: _handleSendPressed,
                 user: types.User(

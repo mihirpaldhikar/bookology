@@ -1,4 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
+import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +23,7 @@ class _RoomsPageState extends State<RoomsPage> {
   bool _initialized = false;
   User? _user;
   String groupOwner = '';
+  final firestoreService = new FirestoreService(FirebaseFirestore.instance);
 
   @override
   void initState() {
@@ -149,6 +153,7 @@ class _RoomsPageState extends State<RoomsPage> {
             margin: EdgeInsets.only(
               top: 40,
             ),
+            width: MediaQuery.of(context).size.width,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
               itemCount: snapshot.data!.length,
@@ -187,52 +192,72 @@ class _RoomsPageState extends State<RoomsPage> {
                       );
                     },
                     onLongPress: () async {
-                      await FirebaseFirestore.instance
-                          .collection('rooms')
-                          .doc(room.id)
-                          .delete();
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text('Delete Discussion?'),
+                                content: Text(
+                                    'This will delete the discussion for both'
+                                    ' the users. This action is '
+                                    'irreversible & you will need to request '
+                                    'the uploader to start discussion '
+                                    'again.'
+                                    '.'),
+                                actions: [
+                                  OutLinedButton(
+                                    child: Text('Delete'),
+                                    outlineColor: Theme.of(context).accentColor,
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      await firestoreService
+                                          .deleteDiscussionRoom(
+                                              discussionRoomID: room.id);
+                                    },
+                                  ),
+                                  OutLinedButton(
+                                    child: Text('Cancel'),
+                                    outlineColor: Theme.of(context).accentColor,
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ));
                     },
                     child: Container(
+                      width: 200,
                       padding: EdgeInsets.only(
                         left: 20,
                         bottom: 20,
                         top: 20,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              _buildAvatar(room),
-                              Column(
+                          _buildAvatar(room),
+                          Expanded(
+                            child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        room.name ?? '',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'You, $groupOwner',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      )
-                                    ],
+                                  AutoSizeText(
+                                    room.name ?? 'No Book Name',
+                                    maxLines: 2,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ],
-                              ),
-                            ],
+                                  Text(
+                                    'You, $groupOwner',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                ]),
                           ),
                         ],
                       ),

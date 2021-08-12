@@ -2,11 +2,8 @@ import 'dart:convert';
 
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
-import 'package:bookology/services/notification.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,22 +25,6 @@ class ApiService {
     required String? authProvider,
   }) async {
     try {
-      await FirebaseFirestore.instance.collection('users').doc(uuid).set(
-        {
-          'firstName': firstName,
-          'imageUrl': profilePhotoUrl,
-          'lastName': lastName,
-          'lastSeen': null,
-          'role': types.Role.user.toShortString(),
-          'metadata': {
-            'fcmToken': await NotificationService(FirebaseMessaging.instance)
-                .getMessagingToken(),
-          },
-        },
-        SetOptions(
-          merge: true,
-        ),
-      );
       final requestURL =
           Uri.parse('$apiURL/auth/signup?auth_provider=$authProvider');
 
