@@ -117,7 +117,13 @@ router.put('/:userID', verifyUser, async (request, response, next) => {
         await firebaseAdmin.auth().updateUser(authData.user_id, {
           displayName: `${request.body.first_name} ${request.body.last_name}`,
           photoURL: request.body.profile_picture_url,
-          emailVerified: user.additional_information.email_verified,
+          emailVerified: true,
+        });
+
+        await firebaseAdmin.firestore().collection('users').doc(authData.user_id).update({
+          firstName: request.body.first_name,
+          lastName: request.body.last_name,
+          imageUrl: request.body.profile_picture_url,
         });
 
         await UsersCollection.replaceOne({_id: user._id},
