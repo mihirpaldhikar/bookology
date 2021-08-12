@@ -156,8 +156,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     .signUpWithEmailAndPassword(
                                         email: emailController.text,
                                         password: passwordController.text,
-                                        firstName: ' ',
-                                        lastName: ' ',
+                                        firstName: '',
+                                        lastName: '',
                                         profilePictureURL:
                                             'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/SystemFiles%2Fdefault_profile_pictire.png?alt=media&token=1c37b178-a644-453b-ad8a-8023c2792567')
                                     .then(

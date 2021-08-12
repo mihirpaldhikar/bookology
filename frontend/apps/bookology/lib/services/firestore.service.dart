@@ -2,10 +2,10 @@ import 'package:bookology/services/notification.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore;
@@ -23,7 +23,7 @@ class FirestoreService {
           .doc(_firebaseAuth.currentUser?.uid)
           .get();
 
-      final userKey = data.data()?['metadata']['authorizeToken'];
+      final userKey = data.data()?['secrets']['authorizeToken'];
       if (cacheStorage.read('userIdentifierKey') == null) {
         cacheStorage.write('userIdentifierKey', userKey);
       }
@@ -31,36 +31,6 @@ class FirestoreService {
     } catch (error) {
       print(error);
       return error.toString();
-    }
-  }
-
-  Future<dynamic> uploadFCMToken() async {
-    try {
-      SharedPreferences userPrefs = await SharedPreferences.getInstance();
-
-      final data = await _firestore
-          .collection('users')
-          .doc(_firebaseAuth.currentUser?.uid)
-          .set(
-        {
-          'metadata': {
-            'fcmToken': await _notificationService.getMessagingToken()
-          },
-        },
-        SetOptions(
-          merge: true,
-        ),
-      );
-
-      final fcmToken = _notificationService.getMessagingToken();
-      if (userPrefs.getString('userAccessKey') == null) {
-        userPrefs.setString('userAccessKey', fcmToken.toString());
-      }
-
-      return true;
-    } catch (error) {
-      print(error);
-      return error;
     }
   }
 
@@ -103,6 +73,111 @@ class FirestoreService {
     } catch (error) {
       print(error);
       return types.User(id: '');
+    }
+  }
+
+  Future<bool> unsendMessage(
+      {required String messageType,
+      required String messageID,
+      required String mediaURL,
+      required String roomID}) async {
+    try {
+      if (messageType == 'MessageType.file') {
+        await _firestore
+            .collection('rooms')
+            .doc(roomID)
+            .collection('messages')
+            .doc(messageID)
+            .delete();
+        await FirebaseStorage.instance.refFromURL(mediaURL).delete();
+        return false;
+      }
+      if (messageType == 'MessageType.image') {
+        await _firestore
+            .collection('rooms')
+            .doc(roomID)
+            .collection('messages')
+            .doc(messageID)
+            .delete();
+        await FirebaseStorage.instance.refFromURL(mediaURL).delete();
+        return false;
+      }
+      if (messageType == 'MessageType.text') {
+        await _firestore
+            .collection('rooms')
+            .doc(roomID)
+            .collection('messages')
+            .doc(messageID)
+            .delete();
+
+        return false;
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  void sendMessage(
+      dynamic partialMessage, String roomId, String collectionID) async {
+    if (_firebaseAuth.currentUser == null) return;
+
+    types.Message? message;
+
+    if (partialMessage is types.PartialFile) {
+      message = types.FileMessage.fromPartial(
+        author: types.User(id: _firebaseAuth.currentUser!.uid),
+        id: '',
+        partialFile: partialMessage,
+        roomId: roomId,
+        metadata: {
+          'collectionID': collectionID,
+        },
+        status: types.Status.seen,
+      );
+    } else if (partialMessage is types.PartialImage) {
+      message = types.ImageMessage.fromPartial(
+        author: types.User(id: _firebaseAuth.currentUser!.uid),
+        id: '',
+        partialImage: partialMessage,
+        roomId: roomId,
+        status: types.Status.seen,
+        metadata: {
+          'collectionID': collectionID,
+        },
+      );
+    } else if (partialMessage is types.PartialText) {
+      message = types.TextMessage.fromPartial(
+        author: types.User(id: _firebaseAuth.currentUser!.uid),
+        id: '',
+        partialText: partialMessage,
+        roomId: roomId,
+        status: types.Status.seen,
+      );
+    }
+
+    if (message != null) {
+      final messageMap = message.toJson();
+      messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+      messageMap['authorId'] = _firebaseAuth.currentUser!.uid;
+      messageMap['createdAt'] = FieldValue.serverTimestamp();
+      messageMap['updatedAt'] = FieldValue.serverTimestamp();
+
+      await FirebaseFirestore.instance
+          .collection('rooms/$roomId/messages')
+          .add(messageMap);
+    }
+  }
+
+  Future<void> deleteDiscussionRoom({required String discussionRoomID}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(discussionRoomID)
+          .delete();
+    } catch (error) {
+      print(error);
     }
   }
 }

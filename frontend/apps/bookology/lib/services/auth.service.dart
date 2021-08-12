@@ -2,7 +2,11 @@ import 'dart:async';
 
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/services/notification.service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -28,13 +32,15 @@ class AuthService {
         password: password,
       );
       final result = await apiService.createUser(
-          uuid: _firebaseAuth.currentUser?.uid,
-          email: _firebaseAuth.currentUser?.email,
-          password: '',
-          profilePhotoUrl: profilePictureURL,
-          firstName: firstName,
-          lastName: lastName,
-          authProvider: 'email-password');
+        uuid: _firebaseAuth.currentUser?.uid,
+        email: _firebaseAuth.currentUser?.email,
+        password: '',
+        profilePhotoUrl: profilePictureURL,
+        firstName: firstName,
+        lastName: lastName,
+        authProvider: 'email-password',
+      );
+
       return result;
     } on FirebaseAuthException catch (error) {
       print(error.message);
@@ -55,16 +61,37 @@ class AuthService {
 
       await _firebaseAuth.signInWithCredential(credential);
       final result = await apiService.createUser(
-          uuid: _firebaseAuth.currentUser?.uid,
-          email: _firebaseAuth.currentUser?.email,
-          password: '',
-          profilePhotoUrl: _firebaseAuth.currentUser?.photoURL,
-          firstName:
+        uuid: _firebaseAuth.currentUser?.uid,
+        email: _firebaseAuth.currentUser?.email,
+        password: '',
+        profilePhotoUrl: _firebaseAuth.currentUser?.photoURL,
+        firstName:
+            _firebaseAuth.currentUser?.displayName.toString().split(' ')[0],
+        lastName:
+            _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
+        authProvider: 'google',
+      );
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebaseAuth.currentUser?.uid)
+          .set(
+        {
+          'firstName':
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[0],
-          lastName:
+          'imageUrl': _firebaseAuth.currentUser?.photoURL.toString(),
+          'lastName':
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
-          authProvider: 'google');
-
+          'lastSeen': null,
+          'role': types.Role.user.toShortString(),
+          'secrets': {
+            'fcmToken': await NotificationService(FirebaseMessaging.instance)
+                .getMessagingToken(),
+          },
+        },
+        SetOptions(
+          merge: true,
+        ),
+      );
       return result;
     } on FirebaseAuthException catch (error) {
       print(error);
@@ -102,6 +129,27 @@ class AuthService {
     try {
       _firebaseAuth.currentUser?.reload();
       if (_firebaseAuth.currentUser?.emailVerified == true) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_firebaseAuth.currentUser?.uid)
+            .set(
+          {
+            'firstName':
+                _firebaseAuth.currentUser?.displayName.toString().split(' ')[0],
+            'imageUrl': _firebaseAuth.currentUser?.photoURL.toString(),
+            'lastName':
+                _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
+            'lastSeen': null,
+            'role': types.Role.user.toShortString(),
+            'secrets': {
+              'fcmToken':
+                  'NotificationService(FirebaseMessaging.instance.getMessagingToken()',
+            },
+          },
+          SetOptions(
+            merge: true,
+          ),
+        ).then((value) {});
         return true;
       }
 
