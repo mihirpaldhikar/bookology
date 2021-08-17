@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/ui/components/account_dialog.component.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +11,17 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatefulWidget {
-  final VoidCallback onDrawerClicked;
-
-  const SearchBar({Key? key, required this.onDrawerClicked}) : super(key: key);
+  const SearchBar({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final cacheService = CacheService();
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
@@ -51,7 +55,57 @@ class _SearchBarState extends State<SearchBar> {
           children: [
             IconButton(
               icon: Icon(Icons.menu_outlined),
-              onPressed: widget.onDrawerClicked,
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                          ),
+                        ),
+                        height: 500,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 3,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AccountDialog(
+                                    username:
+                                        cacheService.getCurrentUserNameCache(),
+                                    displayName: auth
+                                        .currentUser()!
+                                        .displayName
+                                        .toString(),
+                                    isVerified: cacheService
+                                        .getCurrentIsVerifiedCache(),
+                                    profileImageURL:
+                                        auth.currentUser()!.photoURL.toString(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              },
             ),
             SizedBox(
               width: 5,
@@ -150,11 +204,14 @@ class _SearchBarState extends State<SearchBar> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.black,
+                        color: Theme.of(context).accentColor,
                         width: 1,
                       ),
                     ),
-                    child: Icon(Icons.add),
+                    child: Icon(
+                      Icons.add,
+                      color: Theme.of(context).accentColor,
+                    ),
                   ),
                 ),
               ),

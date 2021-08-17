@@ -36,6 +36,7 @@ class FirestoreService {
 
   Future<dynamic> createFirestoreUser({
     required String uuid,
+    required String userName,
     required String firstName,
     required String lastName,
     required String profileImageURL,
@@ -52,6 +53,8 @@ class FirestoreService {
           'lastSeen': null,
           'role': types.Role.user,
           'metadata': {
+            'userName': userName,
+            'isVerified': false,
             'fcmToken': await _notificationService.getMessagingToken(),
           },
         },
@@ -73,6 +76,22 @@ class FirestoreService {
     } catch (error) {
       print(error);
       return types.User(id: '');
+    }
+  }
+
+  Future<void> clearDiscussionsChat({required String roomID}) async {
+    try {
+      final messages = await _firestore
+          .collection('rooms')
+          .doc(roomID)
+          .collection('messages');
+
+      var snapshots = await messages.get();
+      for (var doc in snapshots.docs) {
+        await doc.reference.delete();
+      }
+    } catch (error) {
+      print(error);
     }
   }
 

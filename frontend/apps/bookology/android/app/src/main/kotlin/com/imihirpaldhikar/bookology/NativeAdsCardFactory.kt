@@ -12,17 +12,17 @@ import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 class NativeAdsCardFactory(val context: Context) : GoogleMobileAdsPlugin.NativeAdFactory {
 
     override fun createNativeAd(
-            nativeAd: NativeAd,
-            customOptions: MutableMap<String, Any>?
+        nativeAd: NativeAd,
+        customOptions: MutableMap<String, Any>?
     ): NativeAdView {
         val nativeAdView = LayoutInflater.from(context)
-                .inflate(R.layout.native_ads_card, null) as NativeAdView
+            .inflate(R.layout.native_ads_card, null) as NativeAdView
 
         with(nativeAdView) {
             val attributionViewSmall =
-                    findViewById<TextView>(R.id.tv_list_tile_native_ad_attribution_small)
+                findViewById<TextView>(R.id.tv_list_tile_native_ad_attribution_small)
             val attributionViewLarge =
-                    findViewById<TextView>(R.id.tv_list_tile_native_ad_attribution_large)
+                findViewById<TextView>(R.id.tv_list_tile_native_ad_attribution_large)
 
             val iconView = findViewById<ImageView>(R.id.iv_list_tile_native_ad_icon)
             val icon = nativeAd.icon

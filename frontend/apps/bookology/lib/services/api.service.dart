@@ -122,6 +122,7 @@ class ApiService {
       );
 
       final receivedData = jsonDecode(response.body);
+      print('data is $receivedData');
       if (receivedData['result']['status_code'] == 200) {
         return true;
       } else {

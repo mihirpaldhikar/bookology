@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/discussions.manager.dart';
+import 'package:bookology/managers/screen.manager.dart';
 import 'package:bookology/services/firestore.service.dart';
+import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -23,10 +25,16 @@ class ChatPage extends StatefulWidget {
     Key? key,
     required this.room,
     required this.roomTitle,
+    required this.userName,
+    required this.isVerified,
+    required this.userProfileImage,
   }) : super(key: key);
 
   final types.Room room;
   final String roomTitle;
+  final String userName;
+  final bool isVerified;
+  final String userProfileImage;
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -248,8 +256,107 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.roomTitle),
+        title: Row(
+          children: [
+            CircularImage(
+              image: widget.userProfileImage,
+              radius: 35,
+            ),
+            SizedBox(
+              width: 18,
+            ),
+            Text(
+              widget.userName,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Visibility(
+              visible: widget.isVerified,
+              child: Icon(
+                Icons.verified,
+                color: Colors.blue,
+                size: 20,
+              ),
+            ),
+          ],
+        ),
         iconTheme: IconThemeData(color: Colors.black),
+        actions: [
+          Tooltip(
+            message: 'Connection is Secured',
+            child: IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.lock_outlined,
+                                color: Colors.green,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Secured Connection',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          content: Container(
+                            height: 180,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'This discussion is end-to-end secured. '
+                                  'No one even Bookology can read the ongoing '
+                                  'discussions.',
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                OutLinedButton(
+                                  child: Center(child: Text('OK')),
+                                  outlineColor: Colors.green,
+                                  backgroundColor: Colors.green[100],
+                                  onPressed: () async {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ));
+              },
+              icon: Icon(
+                Icons.lock_outlined,
+                color: Colors.green,
+              ),
+            ),
+          ),
+          PopupMenuButton(
+            onSelected: menuAction,
+            itemBuilder: (BuildContext itemBuilder) => {
+              'Delete Discussions',
+            }
+                .map(
+                  (value) => PopupMenuItem(
+                    child: Text(value),
+                    value: value,
+                  ),
+                )
+                .toList(),
+          )
+        ],
       ),
       body: StreamBuilder<types.Room>(
         initialData: widget.room,
@@ -272,29 +379,68 @@ class _ChatPageState extends State<ChatPage> {
                   if (FirebaseAuth.instance.currentUser!.uid ==
                       value.author.id) {
                     showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text('Unsend Message?'),
-                              content:
-                                  Text('You will be able to unsend the message '
-                                      'you have sent.'),
-                              actions: [
-                                OutLinedButton(
-                                    child: Text('Unsend'),
-                                    outlineColor: Theme.of(context).accentColor,
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      await firestoreService.unsendMessage(
-                                        messageID: value.id,
-                                        mediaURL: value.toJson()['uri'] == null
-                                            ? ''
-                                            : value.toJson()['uri'],
-                                        roomID: value.roomId as String,
-                                        messageType: value.type.toString(),
-                                      );
-                                    }),
-                              ],
-                            ));
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Row(
+                          children: [
+                            Icon(
+                              Icons.auto_delete_outlined,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Unsend Message?',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: Container(
+                          height: 200,
+                          child: Column(
+                            children: [
+                              Text(
+                                'You will be able to unsend the message '
+                                'you have sent.',
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              OutLinedButton(
+                                child: Center(child: Text('Unsend')),
+                                outlineColor: Colors.red,
+                                backgroundColor: Colors.red[100],
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await firestoreService.unsendMessage(
+                                    messageID: value.id,
+                                    mediaURL: value.toJson()['uri'] == null
+                                        ? ''
+                                        : value.toJson()['uri'],
+                                    roomID: value.roomId as String,
+                                    messageType: value.type.toString(),
+                                  );
+                                },
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              OutLinedButton(
+                                child: Center(child: Text('Cancel')),
+                                outlineColor: Theme.of(context).accentColor,
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   }
                 },
                 onPreviewDataFetched: _handlePreviewDataFetched,
@@ -312,5 +458,79 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget chatMsg(Message message) {
     return Text(message.message.toString());
+  }
+
+  void menuAction(String value) {
+    switch (value) {
+      case 'Delete Discussions':
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.delete_forever_outlined,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Delete Discussion?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: Container(
+                    height: 260,
+                    child: Column(
+                      children: [
+                        Text(
+                          'This will delete the discussion for both'
+                          ' the users. This action is '
+                          'irreversible & you will need to request '
+                          'the uploader to start discussion '
+                          'again.'
+                          '.',
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        OutLinedButton(
+                          child: Center(child: Text('Delete')),
+                          outlineColor: Colors.red,
+                          backgroundColor: Colors.red[100],
+                          onPressed: () async {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ScreenManager(currentIndex: 1)),
+                              (route) => false,
+                            );
+                            await firestoreService.deleteDiscussionRoom(
+                                discussionRoomID: widget.room.id);
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        OutLinedButton(
+                          child: Center(child: Text('Cancel')),
+                          outlineColor: Theme.of(context).accentColor,
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ));
+
+        break;
+    }
   }
 }
