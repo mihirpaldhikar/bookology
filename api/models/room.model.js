@@ -1,6 +1,7 @@
 const createRoom = (roomData) => {
   return {
     _id: roomData.room_id,
+    book_id: roomData.book_id,
     title: roomData.time,
     room_icon: roomData.room_icon,
     room_owner: roomData.room_owner,
@@ -15,6 +16,7 @@ const createRoom = (roomData) => {
 const getRoom = (roomData) => {
   return {
     room_id: roomData._id,
+    book_id: roomData.book_id,
     title: roomData.time,
     room_icon: roomData.room_icon,
     room_owner: roomData.room_owner,

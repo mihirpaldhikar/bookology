@@ -20,6 +20,7 @@ router.post('/create', verifyUser, async (request, response, next) => {
       } else {
         const roomData = Room.createRoom({
           room_id: request.body.room_id,
+          book_id: request.body.book_id,
           title: request.body.title,
           room_icon: request.body.room_icon,
           room_owner: authData.user_id,
@@ -27,7 +28,8 @@ router.post('/create', verifyUser, async (request, response, next) => {
           date: request.body.date,
           time: request.body.time,
         });
-        await RoomsCollection.insertOne(roomData, (error, result) => {
+        const bookID = request.body.book_id;
+        await RoomsCollection.insertOne(roomData, async (error, result) => {
           if (error) {
             response.status(500).json({
               result: {
@@ -38,6 +40,9 @@ router.post('/create', verifyUser, async (request, response, next) => {
 
             return false;
           }
+          await firebaseAdmin.firestore().collection('users').doc(request.body.users[1]).collection('requests').doc(bookID).update({
+            accepted: true,
+          });
           response.status(201).json({
             result: {
               message: 'Room successfully created.',
