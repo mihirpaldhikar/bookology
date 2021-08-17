@@ -6,7 +6,7 @@ class ChatUiManager extends ChatTheme {
   ChatUiManager()
       : super(
             primaryColor: Color(0xffEEEEEE),
-            secondaryColor: Color(0xFF546E7A),
+            secondaryColor: Color(0xFF673AB7),
             backgroundColor: Colors.white,
             messageBorderRadius: 35,
             receivedMessageBodyTextStyle: GoogleFonts.poppins(

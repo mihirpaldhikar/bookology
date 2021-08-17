@@ -49,11 +49,12 @@ class _BookViewerState extends State<BookViewer> {
   String userID = '';
   String userFirstName = 'loading...';
   String userLastName = '';
-  String userProfileURL = '';
   String uploadedOn = 'loading...';
   String location = 'loading...';
+  String userProfilePicture = '';
   String bookCondition = 'loading...';
   bool isVerified = false;
+  bool isLoadingCompleted = false;
   int currentPage = 0;
 
   @override
@@ -106,15 +107,72 @@ class _BookViewerState extends State<BookViewer> {
                   message: 'Delete Book',
                   child: IconButton(
                     onPressed: () async {
-                      showLoaderDialog(context);
-                      final result = await apiService.deleteBook(
-                        bookID: widget.bookID.contains('@')
-                            ? widget.bookID.split('@')[0]
-                            : widget.bookID,
-                      );
-                      if (result == true) {
-                        Navigator.pushReplacementNamed(context, '/profile');
-                      }
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete_forever_outlined,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Delete Book?',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                content: Container(
+                                  height: 200,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'This book will be deleted. This action '
+                                        'is not irreversible.',
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      OutLinedButton(
+                                        child: Center(child: Text('Delete')),
+                                        outlineColor: Colors.red,
+                                        backgroundColor: Colors.red[100],
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                          showLoaderDialog(context);
+                                          final result =
+                                              await apiService.deleteBook(
+                                            bookID: widget.bookID.contains('@')
+                                                ? widget.bookID.split('@')[0]
+                                                : widget.bookID,
+                                          );
+                                          if (result == true) {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/profile');
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      OutLinedButton(
+                                        child: Center(child: Text('Cancel')),
+                                        outlineColor:
+                                            Theme.of(context).accentColor,
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
                     },
                     icon: Icon(
                       Icons.delete_forever_outlined,
@@ -281,26 +339,36 @@ class _BookViewerState extends State<BookViewer> {
                                     'Enquire',
                                   ),
                                 ),
-                                outlineColor: Colors.orange,
-                                backgroundColor: Colors.orange[100],
+                                outlineColor: isLoadingCompleted
+                                    ? Colors.orange
+                                    : Colors.grey,
+                                backgroundColor: isLoadingCompleted
+                                    ? Colors.orange[100]
+                                    : Colors.grey[100],
                                 onPressed: () async {
-                                  final room =
-                                      await ChatsService().createChatRoom(
-                                    ownerUserID: authService.currentUser()?.uid,
-                                    userID: userID,
-                                    bookName: widget.bookName,
-                                    bookCoverImage: widget.images![0],
-                                  );
-                                  Navigator.of(context).pop();
-                                  await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        room: room,
-                                        roomTitle:
-                                            '$userFirstName $userLastName',
+                                  if (isLoadingCompleted) {
+                                    final room =
+                                        await ChatsService().createChatRoom(
+                                      ownerUserID:
+                                          authService.currentUser()?.uid,
+                                      userID: userID,
+                                      bookName: widget.bookName,
+                                      bookCoverImage: widget.images![0],
+                                    );
+                                    Navigator.of(context).pop();
+                                    await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          room: room,
+                                          roomTitle:
+                                              '$userFirstName $userLastName',
+                                          userName: username,
+                                          isVerified: isVerified,
+                                          userProfileImage: userProfilePicture,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 },
                               ),
                             ),
@@ -735,6 +803,7 @@ class _BookViewerState extends State<BookViewer> {
             ? widget.bookID.split('@')[0]
             : widget.bookID);
     setState(() {
+      isLoadingCompleted = true;
       userID = bookData['uploader']['user_id'];
       username = bookData['uploader']['username'];
       bookCondition = bookData['additional_information']['condition'];
@@ -745,6 +814,7 @@ class _BookViewerState extends State<BookViewer> {
       userFirstName = bookData['uploader']['first_name'];
       userLastName = bookData['uploader']['last_name'];
       isVerified = bookData['uploader']['verified'];
+      userProfilePicture = bookData['uploader']['profile_picture_url'];
     });
   }
 

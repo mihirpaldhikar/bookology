@@ -83,6 +83,11 @@ class AuthService {
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
           'lastSeen': null,
           'role': types.Role.user.toShortString(),
+          'metadata': {
+            'userName':
+                _firebaseAuth.currentUser?.email.toString().split('@')[0],
+            'isVerified': false,
+          },
           'secrets': {
             'fcmToken': await NotificationService(FirebaseMessaging.instance)
                 .getMessagingToken(),
@@ -141,9 +146,13 @@ class AuthService {
                 _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
             'lastSeen': null,
             'role': types.Role.user.toShortString(),
+            'metadata': {
+              'userName':
+                  _firebaseAuth.currentUser?.email.toString().split('@')[0],
+              'isVerified': false,
+            },
             'secrets': {
-              'fcmToken':
-                  'NotificationService(FirebaseMessaging.instance.getMessagingToken()',
+              'fcmToken': FirebaseMessaging.instance.getToken(),
             },
           },
           SetOptions(

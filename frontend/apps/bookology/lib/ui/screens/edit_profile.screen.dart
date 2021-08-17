@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bookology/managers/screen.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -18,6 +19,7 @@ class EditProfileScreen extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String bio;
+  final bool isInitialUpdate;
 
   const EditProfileScreen({
     Key? key,
@@ -27,6 +29,7 @@ class EditProfileScreen extends StatefulWidget {
     required this.firstName,
     required this.lastName,
     required this.bio,
+    required this.isInitialUpdate,
   }) : super(key: key);
 
   @override
@@ -61,10 +64,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: widget.isInitialUpdate,
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: Text('Edit Profile'),
+        title: widget.isInitialUpdate
+            ? Text('Complete Profile')
+            : Text('Edit '
+                'Profile'),
         actions: [
           IconButton(
             onPressed: () async {
@@ -81,10 +88,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     );
 
                     if (result == true) {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context, true);
+                      if (widget.isInitialUpdate) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ScreenManager(
+                              currentIndex: 0,
+                              isUserProfileUpdated: true,
+                            ),
+                          ),
+                          (_) => false,
+                        );
                       } else {
-                        SystemNavigator.pop();
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context, true);
+                        } else {
+                          SystemNavigator.pop();
+                        }
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,10 +125,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   );
 
                   if (result == true) {
-                    if (Navigator.canPop(context)) {
-                      Navigator.pop(context, true);
+                    showLoaderDialog(context);
+                    if (widget.isInitialUpdate) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ScreenManager(currentIndex: 0),
+                        ),
+                        (_) => false,
+                      );
                     } else {
-                      SystemNavigator.pop();
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context, true);
+                      } else {
+                        SystemNavigator.pop();
+                      }
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -434,5 +465,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print(e);
       return e;
     }
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).accentColor,
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Updating...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

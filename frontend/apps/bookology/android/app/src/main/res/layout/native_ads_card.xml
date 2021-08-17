@@ -7,27 +7,27 @@
 
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/card_border">
+            android:layout_height="match_parent">
 
         <TextView
                 android:id="@+id/tv_list_tile_native_ad_attribution_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#F19938"
-                android:text="Sponsered"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"/>
+                android:background="@android:color/transparent"
+                android:text=""
+                android:textColor="@android:color/transparent"
+                android:textSize="0sp"
+                android:visibility="invisible"/>
 
         <ImageView
                 android:id="@+id/iv_list_tile_native_ad_icon"
                 android:layout_width="150dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="12dp"
                 android:scaleType="fitXY"
-                tools:background="@drawable/rounded_image"/>
+                tools:background="@drawable/rounded_image"
+                android:contentDescription="@string/ad_image"/>
 
         <TextView
                 android:id="@+id/tv_list_tile_native_ad_attribution_large"
@@ -37,7 +37,7 @@
                 android:layout_marginStart="16dp"
                 android:background="#F19938"
                 android:gravity="center"
-                android:text="Ad"
+                android:text="@string/ad"
                 android:textColor="#FFFFFF"
                 android:visibility="invisible"/>
 
@@ -53,21 +53,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:lines="1"
-                    android:maxLines="1"
+                    android:fontFamily="@font/poppins"
+                    android:lines="2"
+                    android:maxLines="2"
                     android:textColor="#000000"
-                    android:textSize="16sp"
-                    tools:text="Headline"/>
+                    android:textSize="20sp"
+                    tools:text="Headline"
+                    android:textStyle="bold"/>
 
             <TextView
                     android:id="@+id/tv_list_tile_native_ad_body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:lines="1"
-                    android:maxLines="1"
+                    android:fontFamily="@font/poppins"
+                    android:lines="4"
+                    android:maxLines="4"
                     android:textColor="#828282"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     tools:text="body"/>
 
         </LinearLayout>

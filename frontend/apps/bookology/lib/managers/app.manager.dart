@@ -4,6 +4,7 @@ import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/notification.service.dart';
 import 'package:bookology/ui/screens/auth.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
+import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:bookology/ui/screens/login.screen.dart';
 import 'package:bookology/ui/screens/signup.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
@@ -131,33 +132,39 @@ class _AppState extends State<App> {
       child: MaterialApp(
         title: 'Bookology',
         theme: ThemeData(
-          primarySwatch: MaterialColor(0xff651FFF, {
-            50: Color(0xFFEDE7F6),
-            100: Color(0xFFD1C4E9),
-            200: Color(0xFFB39DDB),
-            300: Color(0xFF9575CD),
-            400: Color(0xFF7E57C2),
-            500: Color(0xFF673AB7),
-            600: Color(0xFF5E35B1),
-            700: Color(0xFF512DA8),
-            800: Color(0xFF4527A0),
-            900: Color(0xFF311B92),
-          }),
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-          bottomSheetTheme: BottomSheetThemeData(
-            backgroundColor: Colors.transparent,
-          ),
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            elevation: 0,
+            primarySwatch: MaterialColor(0xff651FFF, {
+              50: Color(0xFFEDE7F6),
+              100: Color(0xFFD1C4E9),
+              200: Color(0xFFB39DDB),
+              300: Color(0xFF9575CD),
+              400: Color(0xFF7E57C2),
+              500: Color(0xFF673AB7),
+              600: Color(0xFF5E35B1),
+              700: Color(0xFF512DA8),
+              800: Color(0xFF4527A0),
+              900: Color(0xFF311B92),
+            }),
             textTheme:
                 GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-            actionsIconTheme: IconThemeData(
-              color: Colors.black,
+            bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.transparent,
             ),
-          ),
-        ),
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              textTheme:
+                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+              actionsIconTheme: IconThemeData(
+                color: Colors.black,
+              ),
+            ),
+            dialogTheme: DialogTheme(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              )),
+            )),
         routes: {
           '/home': (context) => ScreenManager(
                 currentIndex: 0,
@@ -172,9 +179,21 @@ class _AppState extends State<App> {
           '/verify': (context) => VerifyEmailScreen(),
         },
         home: auth.isUserSignedIn()
-            ? ScreenManager(
-                currentIndex: 0,
-              )
+            ? auth.currentUser()!.displayName!.length == 1
+                ? EditProfileScreen(
+                    userID: auth.currentUser()!.uid,
+                    profilePicture: auth.currentUser()!.photoURL.toString(),
+                    userName:
+                        auth.currentUser()!.email.toString().split('@')[0],
+                    firstName: '',
+                    lastName: '',
+                    bio: '',
+                    isInitialUpdate: true,
+                  )
+                : ScreenManager(
+                    currentIndex: 0,
+                    isUserProfileUpdated: false,
+                  )
             : AuthScreen(),
       ),
     );
