@@ -43,6 +43,7 @@ async function main() {
   server.use('/auth', require('./routes/auth.route'));
   server.use('/books', require('./routes/books.route'));
   server.use('/notifications', require('./routes/notifications.route'));
+  server.use('/rooms', require('./routes/room.route'));
   server.listen(process.env.SERVER_PORT, () => {
     console.log(
       `Server running in ${process.env.NODE_ENV} on Port ${process.env.SERVER_PORT}`

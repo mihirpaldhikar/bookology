@@ -98,6 +98,8 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
 
         return false;
       }
+
+
       const notificationData = NotificationModel.setNotification({
         sender_id: senderUserID,
         receiver_id: receiverUserID,
@@ -117,10 +119,7 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
           return false;
         }
 
-        const userFcmToken = (await firebaseAdmin.firestore()
-          .collection('Secrets')
-          .doc(receiverUserID.toString())
-          .get()).data();
+        const userFcmToken = (await firebaseAdmin.firestore().collection('users').doc(receiverUserID.toString()).get()).data()['secrets']['fcmToken'];
 
         const notification = {
           data: {
@@ -133,7 +132,24 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
         };
 
         firebaseAdmin.messaging().sendToDevice(userFcmToken.toString(), notification).then((result) => {
-          console.log(result);
+          if (result['results']['messageID'] !== null || result['results']['messageID'] !== undefined || result['results']['messageID'] !== '') {
+            response.status(200).json({
+              result: {
+                message: 'Notification Sent Successfully.',
+                status_code: 200,
+              },
+            });
+            return false;
+          } else {
+            response.status(500).json({
+              result: {
+                message: 'Error in sending notification.',
+                status_code: 500,
+              },
+            });
+
+            return false;
+          }
         });
       });
     }
@@ -147,5 +163,6 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
     });
   }
 });
+
 
 module.exports = router;

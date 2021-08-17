@@ -220,7 +220,10 @@ router.delete('/delete/:bookID', verifyUser, async (request, response, next) => 
           return false;
         }
         await BooksCollection.findOneAndDelete({_id: request.params.bookID});
-        await firebaseAdmin.storage().bucket(process.env.CLOUD_STORAGE_BUCKET_NAME).deleteFiles({prefix: `BooksImages/${authData.user_id}/${book.additional_information.images_collection_id}/`});
+        await firebaseAdmin.storage().bucket(process.env.CLOUD_STORAGE_BUCKET_NAME).deleteFiles({
+          prefix: `Users/${authData.user_id}/BooksImages/${book.additional_information.images_collection_id}/`,
+          force: true,
+        });
         response.status(200).json({
           result: {
             message: 'Book successfully deleted.',
