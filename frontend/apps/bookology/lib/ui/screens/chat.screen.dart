@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:bookology/managers/chat_ui.manager.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/discussions.manager.dart';
-import 'package:bookology/managers/screen.manager.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -291,51 +290,7 @@ class _ChatPageState extends State<ChatPage> {
             message: 'Connection is Secured',
             child: IconButton(
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Row(
-                            children: [
-                              Icon(
-                                Icons.lock_outlined,
-                                color: Colors.green,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Secured Connection',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          content: Container(
-                            height: 180,
-                            child: Column(
-                              children: [
-                                Text(
-                                  'This discussion is end-to-end secured. '
-                                  'No one even Bookology can read the ongoing '
-                                  'discussions.',
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                OutLinedButton(
-                                  child: Center(child: Text('OK')),
-                                  outlineColor: Colors.green,
-                                  backgroundColor: Colors.green[100],
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ));
+                DialogsManager(context).showSecuredConnectionDialog();
               },
               icon: Icon(
                 Icons.lock_outlined,
@@ -378,69 +333,7 @@ class _ChatPageState extends State<ChatPage> {
                 onMessageLongPress: (value) async {
                   if (FirebaseAuth.instance.currentUser!.uid ==
                       value.author.id) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Row(
-                          children: [
-                            Icon(
-                              Icons.auto_delete_outlined,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Unsend Message?',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        content: Container(
-                          height: 200,
-                          child: Column(
-                            children: [
-                              Text(
-                                'You will be able to unsend the message '
-                                'you have sent.',
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              OutLinedButton(
-                                child: Center(child: Text('Unsend')),
-                                outlineColor: Colors.red,
-                                backgroundColor: Colors.red[100],
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                  await firestoreService.unsendMessage(
-                                    messageID: value.id,
-                                    mediaURL: value.toJson()['uri'] == null
-                                        ? ''
-                                        : value.toJson()['uri'],
-                                    roomID: value.roomId as String,
-                                    messageType: value.type.toString(),
-                                  );
-                                },
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              OutLinedButton(
-                                child: Center(child: Text('Cancel')),
-                                outlineColor: Theme.of(context).accentColor,
-                                onPressed: () async {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    DialogsManager(context).showUnsendMessageDialog(value);
                   }
                 },
                 onPreviewDataFetched: _handlePreviewDataFetched,
@@ -456,80 +349,10 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget chatMsg(Message message) {
-    return Text(message.message.toString());
-  }
-
   void menuAction(String value) {
     switch (value) {
       case 'Delete Discussions':
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Row(
-                    children: [
-                      Icon(
-                        Icons.delete_forever_outlined,
-                        color: Colors.red,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Delete Discussion?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                  content: Container(
-                    height: 260,
-                    child: Column(
-                      children: [
-                        Text(
-                          'This will delete the discussion for both'
-                          ' the users. This action is '
-                          'irreversible & you will need to request '
-                          'the uploader to start discussion '
-                          'again.'
-                          '.',
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        OutLinedButton(
-                          child: Center(child: Text('Delete')),
-                          outlineColor: Colors.red,
-                          backgroundColor: Colors.red[100],
-                          onPressed: () async {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ScreenManager(currentIndex: 1)),
-                              (route) => false,
-                            );
-                            await firestoreService.deleteDiscussionRoom(
-                                discussionRoomID: widget.room.id);
-                          },
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        OutLinedButton(
-                          child: Center(child: Text('Cancel')),
-                          outlineColor: Theme.of(context).accentColor,
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ));
-
+        DialogsManager(context).showDeleteDiscussionDialog(widget.room);
         break;
     }
   }

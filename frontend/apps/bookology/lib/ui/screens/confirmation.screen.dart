@@ -105,8 +105,6 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                         borderColor: Colors.deepPurple,
                         borderWidth: 5.0,
                         direction: Axis.vertical,
-                        // The direction the liquid moves (Axis
-                        // .vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
                         center: Text(
                           "Uploading...",
                         ),
@@ -428,10 +426,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
     try {
       await firebase_storage.FirebaseStorage.instance
-          .ref('BookImages/${user.user?.uid}/$imagesCollectionsID/$name.png')
+          .ref('Users/${user.user?.uid}/BookImages/$imagesCollectionsID/$name'
+              '.png')
           .putFile(file);
       String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('BookImages/${user.user?.uid}/$imagesCollectionsID/$name.png')
+          .ref(
+              'Users/${user.user?.uid}/BookImages/$imagesCollectionsID/$name.png')
           .getDownloadURL();
       return downloadURL;
     } on firebase_core.FirebaseException catch (e) {

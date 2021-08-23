@@ -1,4 +1,4 @@
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -22,29 +22,12 @@ class LocationService {
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Permission Required'),
-          content: Text(
-              'Inorder to show the books listed nearby you, we require the location permission. '
-              'We required only approximate location which includes current district, state & '
-              'country. You can disable the location permission if you want but you will not get '
-              'relevant book recommendations.'),
-          actions: [
-            OutLinedButton(
-              child: Text('Allow'),
-              onPressed: () async {
-                permission = await Geolocator.requestPermission();
-                Navigator.pop(context);
-              },
-              outlineColor: Theme.of(context).accentColor,
-            )
-          ],
-        ),
+      DialogsManager(context).showLocationPermissionDialog(
+        () async {
+          permission = await Geolocator.requestPermission();
+          Navigator.pop(context);
+        },
       );
-
       if (permission == LocationPermission.denied) {
         // Permissions are denied, next time you could try
         // requesting permissions again (this is also where

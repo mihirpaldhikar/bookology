@@ -343,7 +343,6 @@ class _ProfileViewerState extends State<ProfileViewer> {
         await apiService.getUserProfile(userID: authService.currentUser()!.uid);
     setState(() {
       _isLoading = false;
-      user = UserModel.fromJson(data);
     });
     if (cacheService.getCurrentUserNameCache() ==
         user.userInformation.username) {

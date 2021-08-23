@@ -1,13 +1,18 @@
 import 'dart:convert';
 
+import 'package:bookology/models/book.model.dart';
+import 'package:bookology/models/notification.model.dart';
+import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
+  final cacheStorage = GetStorage();
   final apiURL = dotenv.env['API_URL'];
   final apiToken = dotenv.env['API_TOKEN'];
   final _fireUser = FirebaseAuth.instance.currentUser;
@@ -56,41 +61,51 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getUserProfile({required String userID}) async {
+  Future<UserModel?> getUserProfile({required String userID}) async {
     try {
       final requestURL = Uri.parse('$apiURL/users/$userID?with_books=true');
-      final response = await client.get(
+      final request = await client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
         },
       );
-      final receivedData = jsonDecode(response.body);
+      final response = jsonDecode(request.body);
+      final cacheData = jsonDecode(request.body);
 
       cacheService.setCurrentUser(
-          userName: receivedData['user_information']['username'],
-          isVerified: receivedData['user_information']['verified']);
-
-      return receivedData;
+          userName: cacheData['user_information']['username'],
+          isVerified: cacheData['user_information']['verified']);
+      final userData = UserModel.fromJson(response);
+      return userData;
     } catch (error) {
       print(error);
-      return error;
+      return null;
     }
   }
 
-  Future<dynamic> getBooks() async {
+  Future<List<BookModel>?> getBooks() async {
     try {
       final requestURL = Uri.parse('$apiURL/books/');
-      final response = await client.get(
+      final request = await client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
         },
       );
-      return jsonDecode(response.body);
+      final Iterable response = jsonDecode(request.body);
+
+      final books = List<BookModel>.from(
+        response
+            .map(
+              (book) => BookModel.fromJson(book),
+            )
+            .toList(),
+      );
+      return books;
     } catch (error) {
       print(error);
-      return error;
+      return null;
     }
   }
 
@@ -183,6 +198,66 @@ class ApiService {
       if (statusCode == 201) {
         return true;
       }
+    } catch (error) {
+      print(error);
+      return error;
+    }
+  }
+
+  Future<List<NotificationModel>?> getUserNotifications() async {
+    try {
+      final requestURL = Uri.parse('$apiURL/notifications');
+      final request = await http.get(
+        requestURL,
+        headers: {
+          'user-identifier-key': await _firestoreService.getAccessToken(),
+          'Content-type': 'application/json',
+        },
+      );
+      final Iterable response = jsonDecode(request.body);
+      if (request.statusCode == 200) {
+        final notifications = List<NotificationModel>.from(
+          response
+              .map(
+                (notification) => NotificationModel.fromJson(notification),
+              )
+              .toList(),
+        );
+
+        return notifications;
+      }
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<dynamic> sendEnquiryNotification(
+      {required String userID,
+      required String receiverID,
+      required String userName}) async {
+    try {
+      final requestURL = Uri.parse(
+          '${apiURL}/notifications/send?type=book_enquiry_notification');
+      final request = await http.post(
+        requestURL,
+        headers: {
+          'access-key': apiToken.toString(),
+          'user-identifier-key': await _firestoreService.getAccessToken(),
+          'receiver-user-id': receiverID,
+          'sender-user-id': userID,
+          'sender-username': userName,
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(
+          {},
+        ),
+      );
+      final response = jsonDecode(request.body);
+      if (response['result']['status_code'] == 200) {
+        return true;
+      }
+      return false;
     } catch (error) {
       print(error);
       return error;

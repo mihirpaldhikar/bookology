@@ -1,3 +1,4 @@
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -19,7 +20,7 @@ class OutLinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double borderRadius = 15;
+    final double borderRadius = ValuesConstant.SECONDARY_BORDER_RADIUS;
     return Container(
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),

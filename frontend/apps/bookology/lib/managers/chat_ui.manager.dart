@@ -28,6 +28,10 @@ class ChatUiManager extends ChatTheme {
               size: 17,
               color: Colors.green,
             ),
+            sendingIcon: Icon(
+              Icons.send_outlined,
+              size: 28,
+            ),
             inputBackgroundColor: Colors.white,
             documentIcon: Icon(
               Icons.description_outlined,

@@ -1,12 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/services/chats.service.dart';
+import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
-import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/profile_viewer.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,6 +46,9 @@ class BookViewer extends StatefulWidget {
 class _BookViewerState extends State<BookViewer> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   final ApiService apiService = ApiService();
+  final FirestoreService firestoreService =
+      FirestoreService(FirebaseFirestore.instance);
+  final CacheService cacheService = new CacheService();
   String username = 'loading...';
   String userID = '';
   String userFirstName = 'loading...';
@@ -82,7 +86,6 @@ class _BookViewerState extends State<BookViewer> {
       child: Material(
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Book'),
             iconTheme: IconThemeData(
               color: Colors.black,
             ),
@@ -347,27 +350,48 @@ class _BookViewerState extends State<BookViewer> {
                                     : Colors.grey[100],
                                 onPressed: () async {
                                   if (isLoadingCompleted) {
-                                    final room =
-                                        await ChatsService().createChatRoom(
-                                      ownerUserID:
-                                          authService.currentUser()?.uid,
+                                    final result =
+                                        await firestoreService.getRequest(
+                                      bookID: widget.bookID,
                                       userID: userID,
-                                      bookName: widget.bookName,
-                                      bookCoverImage: widget.images![0],
                                     );
-                                    Navigator.of(context).pop();
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          room: room,
-                                          roomTitle:
-                                              '$userFirstName $userLastName',
-                                          userName: username,
-                                          isVerified: isVerified,
-                                          userProfileImage: userProfilePicture,
-                                        ),
-                                      ),
-                                    );
+
+                                    if (result == 'empty') {
+                                      await apiService.sendEnquiryNotification(
+                                        userID: authService.currentUser()!.uid,
+                                        receiverID: userID,
+                                        userName: cacheService
+                                            .getCurrentUserNameCache(),
+                                      );
+
+                                      await firestoreService.createRequest(
+                                        bookID: widget.bookID,
+                                        userID: authService.currentUser()!.uid,
+                                      );
+                                    }
+
+                                    if (result == true) {}
+                                    // final room =
+                                    //     await ChatsService().createChatRoom(
+                                    //   ownerUserID:
+                                    //       authService.currentUser()?.uid,
+                                    //   userID: userID,
+                                    //   bookName: widget.bookName,
+                                    //   bookCoverImage: widget.images![0],
+                                    // );
+                                    // Navigator.of(context).pop();
+                                    // await Navigator.of(context).push(
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => ChatPage(
+                                    //       room: room,
+                                    //       roomTitle:
+                                    //           '$userFirstName $userLastName',
+                                    //       userName: username,
+                                    //       isVerified: isVerified,
+                                    //       userProfileImage: userProfilePicture,
+                                    //     ),
+                                    //   ),
+                                    // );
                                   }
                                 },
                               ),

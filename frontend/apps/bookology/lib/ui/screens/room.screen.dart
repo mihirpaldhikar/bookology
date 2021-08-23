@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -221,71 +221,8 @@ class _RoomsPageState extends State<RoomsPage> {
                             );
                           },
                           onLongPress: () async {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.delete_forever_outlined,
-                                            color: Colors.red,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Delete Discussion?',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      content: Container(
-                                        height: 260,
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              'This will delete the discussion for both'
-                                              ' the users. This action is '
-                                              'irreversible & you will need to request '
-                                              'the uploader to start discussion '
-                                              'again.'
-                                              '.',
-                                            ),
-                                            SizedBox(
-                                              height: 30,
-                                            ),
-                                            OutLinedButton(
-                                              child:
-                                                  Center(child: Text('Delete')),
-                                              outlineColor: Colors.red,
-                                              backgroundColor: Colors.red[100],
-                                              onPressed: () async {
-                                                Navigator.of(context).pop();
-                                                await firestoreService
-                                                    .deleteDiscussionRoom(
-                                                        discussionRoomID:
-                                                            room.id);
-                                              },
-                                            ),
-                                            SizedBox(
-                                              height: 15,
-                                            ),
-                                            OutLinedButton(
-                                              child:
-                                                  Center(child: Text('Cancel')),
-                                              outlineColor:
-                                                  Theme.of(context).accentColor,
-                                              onPressed: () async {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ));
+                            DialogsManager(context)
+                                .showDeleteDiscussionDialog(room);
                           },
                           child: Container(
                             width: 200,

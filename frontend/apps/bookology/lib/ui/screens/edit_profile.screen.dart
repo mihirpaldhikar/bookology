@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:bookology/managers/screen.manager.dart';
+import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
@@ -43,7 +44,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final bioController = TextEditingController();
-
+  final CacheService cacheService = new CacheService();
   String imageURL = '';
 
   bool isImageUpdated = false;
@@ -64,18 +65,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: widget.isInitialUpdate,
+        automaticallyImplyLeading: !widget.isInitialUpdate,
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-        title: widget.isInitialUpdate
-            ? Text('Complete Profile')
-            : Text('Edit '
-                'Profile'),
+        title: !widget.isInitialUpdate
+            ? Text('Edit '
+                'Profile')
+            : Text('Complete Profile'),
         actions: [
           IconButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
+                showLoaderDialog(context);
                 if (widget.profilePicture.toString() != imageURL.toString()) {
                   await uploadFile(imageURL).then((value) async {
                     final result = await apiService.updateUserProfile(
@@ -86,25 +88,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       bio: bioController.text,
                       profilePicture: value,
                     );
-
                     if (result == true) {
                       if (widget.isInitialUpdate) {
+                        cacheService.setIntroScreenView(seen: true);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ScreenManager(
-                              currentIndex: 0,
-                              isUserProfileUpdated: true,
-                            ),
+                            builder: (context) => ViewManager(currentIndex: 0),
                           ),
                           (_) => false,
                         );
                       } else {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context, true);
-                        } else {
-                          SystemNavigator.pop();
-                        }
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewManager(currentIndex: 3),
+                          ),
+                          (_) => false,
+                        );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,23 +124,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     bio: bioController.text,
                     profilePicture: widget.profilePicture,
                   );
-
                   if (result == true) {
-                    showLoaderDialog(context);
                     if (widget.isInitialUpdate) {
+                      cacheService.setIntroScreenView(seen: true);
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ScreenManager(currentIndex: 0),
+                          builder: (context) => ViewManager(currentIndex: 0),
                         ),
                         (_) => false,
                       );
                     } else {
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context, true);
-                      } else {
-                        SystemNavigator.pop();
-                      }
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewManager(currentIndex: 3),
+                        ),
+                        (_) => false,
+                      );
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -1,5 +1,6 @@
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
   final AuthHandler authHandler = new AuthHandler();
+  final CacheService cacheService = new CacheService();
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           outlineColor: Colors.black,
                           onPressed: () async {
+                            cacheService.setIntroScreenView(seen: false);
                             setState(() {
                               _isLoading = true;
                             });
@@ -109,6 +112,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           outlineColor: Colors.black,
                           onPressed: () {
+                            cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
@@ -118,6 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         InkWell(
                           borderRadius: BorderRadius.circular(5),
                           onTap: () {
+                            cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/signup');
                           },
                           child: RichText(

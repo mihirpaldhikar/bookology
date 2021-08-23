@@ -1,3 +1,4 @@
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -52,14 +53,14 @@ class _AccountDialogState extends State<AccountDialog>
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             CircularImage(
               image: widget.profileImageURL,
               radius: 90,
             ),
             SizedBox(
-              height: 30,
+              height: 25,
             ),
             Text(
               widget.displayName,
@@ -117,8 +118,8 @@ class _AccountDialogState extends State<AccountDialog>
                     ),
                   ],
                 ),
-                outlineColor: Colors.redAccent,
-                backgroundColor: Colors.red[50],
+                outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
+                backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
               ),
             ),
             SizedBox(
@@ -136,8 +137,8 @@ class _AccountDialogState extends State<AccountDialog>
                     Text('Close'),
                   ],
                 ),
-                outlineColor: Colors.grey,
-                backgroundColor: Colors.grey[50],
+                outlineColor: Theme.of(context).accentColor,
+                backgroundColor: ColorsConstant.SECONDARY_COLOR,
               ),
             ),
             SizedBox(
