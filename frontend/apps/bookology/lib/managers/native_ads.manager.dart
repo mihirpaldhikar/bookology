@@ -2,9 +2,7 @@ import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';t';
-
-// COMPLETE: Import google_mobile_ads.dart
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NativeInlineAd extends StatefulWidget {
