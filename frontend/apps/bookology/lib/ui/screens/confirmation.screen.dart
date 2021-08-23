@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/location.service.dart';
@@ -102,7 +103,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                         valueColor: AlwaysStoppedAnimation(
                             Theme.of(context).accentColor),
                         backgroundColor: Colors.white,
-                        borderColor: Colors.deepPurple,
+                        borderColor: ColorsConstant.DARK_COLOR,
                         borderWidth: 5.0,
                         direction: Axis.vertical,
                         center: Text(

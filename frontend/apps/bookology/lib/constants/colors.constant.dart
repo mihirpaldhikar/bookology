@@ -28,4 +28,6 @@ class ColorsConstant {
   static const Color BACKGROUND_COLOR = Color(0xFFFFFFFF);
 
   static const Color APP_BAR_COLOR = Color(0xFFFFFFFF);
+
+  static const Color DARK_COLOR = Color(0xFF07357E);
 }

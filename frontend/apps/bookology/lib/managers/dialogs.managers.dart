@@ -327,4 +327,60 @@ class DialogsManager {
       ),
     );
   }
+
+  void showDeleteBookDialog(VoidCallback onDelete) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.delete_forever_outlined,
+                    color: Colors.red,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Delete Book?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              content: Container(
+                height: 200,
+                child: Column(
+                  children: [
+                    Text(
+                      'This book will be deleted. This action '
+                      'is not irreversible.',
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    OutLinedButton(
+                      child: Center(child: Text('Delete')),
+                      outlineColor: Colors.red,
+                      backgroundColor: Colors.red[100],
+                      onPressed: onDelete,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    OutLinedButton(
+                      child: Center(child: Text('Cancel')),
+                      outlineColor: Theme.of(context).accentColor,
+                      backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
 }

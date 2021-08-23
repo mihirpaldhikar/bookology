@@ -49,7 +49,7 @@ class _SearchBarState extends State<SearchBar> {
         ),
         padding: EdgeInsets.only(
           left: 5,
-          right: 5,
+          right: 0,
           top: 2,
           bottom: 2,
         ),
@@ -75,38 +75,13 @@ class _SearchBarState extends State<SearchBar> {
                         ),
                         height: 500,
                         width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AccountDialog(
-                                    username:
-                                        cacheService.getCurrentUserNameCache(),
-                                    displayName: auth
-                                        .currentUser()!
-                                        .displayName
-                                        .toString(),
-                                    isVerified: cacheService
-                                        .getCurrentIsVerifiedCache(),
-                                    profileImageURL:
-                                        auth.currentUser()!.photoURL.toString(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: AccountDialog(
+                          username: cacheService.getCurrentUserNameCache(),
+                          displayName:
+                              auth.currentUser()!.displayName.toString(),
+                          isVerified: cacheService.getCurrentIsVerifiedCache(),
+                          profileImageURL:
+                              auth.currentUser()!.photoURL.toString(),
                         ),
                       );
                     });
@@ -204,9 +179,9 @@ class _SearchBarState extends State<SearchBar> {
                     );
                   },
                   icon: Container(
-                    width: 40,
-                    height: 40,
-                    padding: EdgeInsets.all(4),
+                    width: 30,
+                    height: 30,
+                    padding: EdgeInsets.all(0),
                     decoration: BoxDecoration(
                       color: ColorsConstant.SECONDARY_COLOR,
                       borderRadius: BorderRadius.circular(

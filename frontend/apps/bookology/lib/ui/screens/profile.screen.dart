@@ -112,9 +112,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                     icon: Container(
-                      width: 40,
-                      height: 40,
-                      padding: EdgeInsets.all(4),
+                      width: 30,
+                      height: 30,
+                      padding: EdgeInsets.all(0),
                       decoration: BoxDecoration(
                         color: ColorsConstant.SECONDARY_COLOR,
                         borderRadius: BorderRadius.circular(
@@ -172,38 +172,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          CircularImage(
-                                            image: userData.data!
-                                                .userInformation.profilePicture
-                                                .toString(),
-                                            radius: 90,
-                                          ),
-                                          SizedBox(
-                                            width: 100,
-                                          ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                userData.data!.books.length
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30),
-                                              ),
-                                              Text('Books'),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      CircularImage(
+                                        image: userData.data!.userInformation
+                                            .profilePicture
+                                            .toString(),
+                                        radius: 100,
+                                      ),
+                                      SizedBox(
+                                        width: 100,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
                                       ),
                                       SizedBox(
                                         height: 20,
@@ -216,26 +200,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 15,
+                                                fontSize: 25,
                                               ),
+                                              textAlign: TextAlign.center,
                                             ),
                                             SizedBox(
-                                              height: 5,
+                                              height: 10,
                                             ),
-                                            Text(userData
-                                                .data!.userInformation.bio
-                                                .toString())
+                                            Text(
+                                              userData.data!.userInformation.bio
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            )
                                           ],
                                         ),
                                       ),
                                       SizedBox(
                                         height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text(
+                                                userData.data!.books.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                    fontSize: 30),
+                                              ),
+                                              Text(
+                                                'Books',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                userData.data!.books.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30,
+                                                    color: Colors
+                                                        .deepOrangeAccent),
+                                              ),
+                                              Text(
+                                                'Points',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 30,
                                       ),
                                       Visibility(
                                         visible: isCurrentUser,
@@ -243,12 +284,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           margin: EdgeInsets.only(bottom: 20),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceEvenly,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
                                               SizedBox(
-                                                width: 200,
+                                                width: 150,
                                                 child: OutLinedButton(
                                                   child: Center(
                                                       child:
@@ -293,6 +334,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       ),
                                                     );
                                                   },
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 150,
+                                                child: OutLinedButton(
+                                                  child: Center(
+                                                    child: Text(
+                                                        'Account Settings'),
+                                                  ),
+                                                  outlineColor:
+                                                      Colors.grey.shade600,
+                                                  backgroundColor:
+                                                      Colors.grey.shade100,
+                                                  onPressed: () {},
                                                 ),
                                               ),
                                             ],

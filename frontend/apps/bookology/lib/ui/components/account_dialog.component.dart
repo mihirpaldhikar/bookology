@@ -1,6 +1,7 @@
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
+import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,9 @@ class _AccountDialogState extends State<AccountDialog>
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
+            Align(
+              alignment: Alignment.topCenter,
+              child: dragIndicator(),
             ),
             Text(
               'Bookology',

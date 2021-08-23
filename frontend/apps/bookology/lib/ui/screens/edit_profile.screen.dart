@@ -4,6 +4,7 @@ import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
+import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -359,20 +360,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.only(
-                    top: 5,
-                  ),
-                  width: 50,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                dragIndicator(),
                 Center(
                   child: Text(
                     'Pic Image From',

@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -87,39 +88,20 @@ class _ViewManagerState extends State<ViewManager> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  icon: Stack(
-                    children: [
-                      new Icon(
-                        Icons.notifications_outlined,
+                  icon: Badge(
+                    badgeColor: Colors.red,
+                    badgeContent: Text(
+                      '9',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal,
                       ),
-                      new Positioned(
-                        right: 0,
-                        top: -0.43,
-                        child: Container(
-                          padding: EdgeInsets.all(1),
-                          decoration: new BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 13,
-                            minHeight: 13,
-                          ),
-                          child: new Text(
-                            '10',
-                            style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
+                    child: Icon(
+                      Icons.notifications_outlined,
+                    ),
                   ),
-                  label: ''
-                      'Notifications',
+                  label: 'Notifications',
                   activeIcon: Icon(
                     Icons.notifications,
                     size: 30,

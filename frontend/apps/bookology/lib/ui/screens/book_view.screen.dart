@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -110,72 +112,25 @@ class _BookViewerState extends State<BookViewer> {
                   message: 'Delete Book',
                   child: IconButton(
                     onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.delete_forever_outlined,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      'Delete Book?',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                content: Container(
-                                  height: 200,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'This book will be deleted. This action '
-                                        'is not irreversible.',
-                                      ),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      OutLinedButton(
-                                        child: Center(child: Text('Delete')),
-                                        outlineColor: Colors.red,
-                                        backgroundColor: Colors.red[100],
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                          showLoaderDialog(context);
-                                          final result =
-                                              await apiService.deleteBook(
-                                            bookID: widget.bookID.contains('@')
-                                                ? widget.bookID.split('@')[0]
-                                                : widget.bookID,
-                                          );
-                                          if (result == true) {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/profile');
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      OutLinedButton(
-                                        child: Center(child: Text('Cancel')),
-                                        outlineColor:
-                                            Theme.of(context).accentColor,
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ));
+                      DialogsManager(context).showDeleteBookDialog(() async {
+                        Navigator.of(context).pop();
+                        showLoaderDialog(context);
+                        final result = await apiService.deleteBook(
+                          bookID: widget.bookID.contains('@')
+                              ? widget.bookID.split('@')[0]
+                              : widget.bookID,
+                        );
+                        if (result == true) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewManager(currentIndex: 3),
+                            ),
+                            (_) => false,
+                          );
+                        }
+                      });
                     },
                     icon: Icon(
                       Icons.delete_forever_outlined,
@@ -191,7 +146,7 @@ class _BookViewerState extends State<BookViewer> {
                 child: Tooltip(
                   message: 'More Options',
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {},
                     icon: Icon(Icons.more_vert_outlined),
                   ),
                 ),

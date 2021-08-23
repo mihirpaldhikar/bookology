@@ -90,55 +90,69 @@ class _AppState extends State<App> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Bookology',
-        theme: ThemeData(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            primarySwatch: ColorsConstant.PRIMARY_SWATCH,
-            accentColor: ColorsConstant.ACCENT_COLOR,
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Bookology',
+      theme: ThemeData(
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          primarySwatch: ColorsConstant.PRIMARY_SWATCH,
+          accentColor: ColorsConstant.ACCENT_COLOR,
+          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+          scaffoldBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
+          appBarTheme: AppBarTheme(
+            backgroundColor: ColorsConstant.APP_BAR_COLOR,
+            elevation: 0,
             textTheme:
                 GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-            bottomSheetTheme: BottomSheetThemeData(
-              backgroundColor: Colors.transparent,
+            actionsIconTheme: IconThemeData(
+              color: Colors.black,
             ),
-            scaffoldBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
-            appBarTheme: AppBarTheme(
-              backgroundColor: ColorsConstant.APP_BAR_COLOR,
-              elevation: 0,
-              textTheme:
-                  GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-              actionsIconTheme: IconThemeData(
-                color: Colors.black,
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
+                topLeft: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
               ),
             ),
-            dialogTheme: DialogTheme(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                Radius.circular(ValuesConstant.BORDER_RADIUS),
-              )),
+          ),
+          dialogTheme: DialogTheme(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+              Radius.circular(ValuesConstant.BORDER_RADIUS),
             )),
-        routes: {
-          '/home': (context) => ScreenManager(),
-          '/profile': (context) => ViewManager(
-                currentIndex: 3,
-              ),
-          '/create': (context) => CreateScreen(),
-          '/login': (context) => LoginScreen(),
-          '/signup': (context) => SignUpScreen(),
-          '/auth': (context) => AuthScreen(),
-          '/verify': (context) => VerifyEmailScreen(),
-        },
-        home: auth.isUserSignedIn() ? ScreenManager() : AuthScreen(),
-      ),
+          )),
+      routes: {
+        '/home': (context) => ScreenManager(),
+        '/profile': (context) => ViewManager(
+              currentIndex: 3,
+            ),
+        '/create': (context) => CreateScreen(),
+        '/login': (context) => LoginScreen(),
+        '/signup': (context) => SignUpScreen(),
+        '/auth': (context) => AuthScreen(),
+        '/verify': (context) => VerifyEmailScreen(),
+      },
+      home: auth.isUserSignedIn() ? ScreenManager() : AuthScreen(),
     );
   }
 }

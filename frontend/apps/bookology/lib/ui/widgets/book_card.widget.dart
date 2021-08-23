@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -88,19 +89,25 @@ class _BookCardState extends State<BookCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Spacer(),
-                            Container(
-                              padding: EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                color: ColorsConstant.SECONDARY_COLOR,
-                                borderRadius: BorderRadius.circular(
-                                    ValuesConstant.SECONDARY_BORDER_RADIUS),
-                                border: Border.all(
-                                  color: Theme.of(context).accentColor,
-                                  width: 1,
+                            GestureDetector(
+                              onTap: () {
+                                BottomSheetManager(context)
+                                    .showBookSelectionBottomSheet();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  color: ColorsConstant.SECONDARY_COLOR,
+                                  borderRadius: BorderRadius.circular(
+                                      ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                  border: Border.all(
+                                    color: Theme.of(context).accentColor,
+                                    width: 1,
+                                  ),
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.more_vert_outlined,
+                                child: Icon(
+                                  Icons.more_vert_outlined,
+                                ),
                               ),
                             ),
                           ],
