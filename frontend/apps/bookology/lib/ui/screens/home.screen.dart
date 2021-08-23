@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/book.model.dart';
@@ -31,20 +33,19 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshController(initialRefresh: false);
   final apiService = new ApiService();
   final locationService = new LocationService();
-
-  List<BookModel> books = [];
+  late Future<List<Object>?> feed;
   late BannerAd _ad;
-  List<Object> listObj = [];
+  List<Object> homeFeed = [];
   String userName = '';
   String displayName = '';
   String profileImageURL = '';
   String currentLocation = '';
   bool isVerified = false;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    feed = getFeed();
   }
 
   @override
@@ -76,22 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _ad.load();
 
-    getCurrentLocation().then((_) {
-      _fetchUserData().then(
-        (value) {
-          setState(() {
-            listObj = List.from(value);
-          });
-          MobileAds.instance.initialize().then((value) {
-            setState(() {
-              for (int i = listObj.length - 2; i >= 1; i -= 10) {
-                listObj.insert(i, _ad);
-              }
-            });
-          });
-        },
-      );
-    });
+    getCurrentLocation().then((_) {});
   }
 
   @override
@@ -105,74 +91,99 @@ class _HomeScreenState extends State<HomeScreen> {
           return OfflineScreen();
         }
         return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(120),
-            child: SafeArea(
-              child: SearchBar(),
+            backgroundColor: Colors.white,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(120),
+              child: SafeArea(
+                child: SearchBar(),
+              ),
             ),
-          ),
-          body: _isLoading
-              ? homeShimmer()
-              : Container(
-                  color: Colors.white,
-                  child: SmartRefresher(
-                    controller: _refreshController,
-                    scrollDirection: Axis.vertical,
-                    physics: BouncingScrollPhysics(),
-                    enablePullDown: true,
-                    header: ClassicHeader(),
-                    onRefresh: _onRefresh,
-                    onLoading: _onLoading,
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: listObj.length + 1,
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Container(
-                            margin: EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                              left: 10,
-                              right: 10,
-                            ),
-                            child: Chip(
-                              padding: EdgeInsets.all(10),
-                              backgroundColor: Colors.white,
-                              side: BorderSide(
-                                color: Theme.of(context).accentColor,
-                                width: 1,
-                              ),
-                              label: Row(
-                                children: [
-                                  Icon(Icons.place_outlined),
-                                  SizedBox(
-                                    width: 10,
+            body: FutureBuilder<List<Object>?>(
+              initialData: [],
+              future: feed,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Object>?> homeFeed) {
+                if (homeFeed.connectionState == ConnectionState.done) {
+                  if (homeFeed.hasData) {
+                    return Container(
+                      color: Colors.white,
+                      child: SmartRefresher(
+                        controller: _refreshController,
+                        scrollDirection: Axis.vertical,
+                        physics: BouncingScrollPhysics(),
+                        enablePullDown: true,
+                        header: ClassicHeader(),
+                        onRefresh: _onRefresh,
+                        onLoading: _onLoading,
+                        child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: homeFeed.data!.length + 1,
+                          padding: EdgeInsets.only(
+                            left: 15,
+                            right: 15,
+                            top: 10,
+                          ),
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                                child: Chip(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(
+                                        ValuesConstant.BORDER_RADIUS,
+                                      ),
+                                      bottomRight: Radius.circular(
+                                        ValuesConstant.BORDER_RADIUS,
+                                      ),
+                                      topLeft: Radius.circular(
+                                        ValuesConstant.BORDER_RADIUS,
+                                      ),
+                                      bottomLeft: Radius.circular(
+                                        ValuesConstant.BORDER_RADIUS,
+                                      ),
+                                    ),
                                   ),
-                                  Text(currentLocation),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else {
-                          if (listObj[index - 1] is BannerAd) {
-                            return NativeInlineAd();
-                          } else {
-                            return bookList(
-                              bookModel: listObj[index - 1] as BookModel,
-                            );
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ),
-        );
+                                  padding: EdgeInsets.all(10),
+                                  backgroundColor:
+                                      ColorsConstant.SECONDARY_COLOR,
+                                  side: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                    width: 1,
+                                  ),
+                                  label: Row(
+                                    children: [
+                                      Icon(Icons.place_outlined),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(currentLocation),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              if (homeFeed.data![index - 1] is BannerAd) {
+                                return NativeInlineAd();
+                              } else {
+                                return bookList(
+                                  bookModel:
+                                      homeFeed.data![index - 1] as BookModel,
+                                );
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  }
+                }
+                return homeShimmer();
+              },
+            ));
       },
     );
   }
@@ -208,35 +219,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<dynamic> _fetchUserData() async {
-    final data = await apiService.getBooks();
+  Future<List<Object>?> getFeed() async {
+    final books = await apiService.getBooks();
     setState(() {
-      _isLoading = false;
-
-      for (int i = 0; i < data.length; i++) {
-        books.add(BookModel.fromJson(data[i]));
-      }
+      homeFeed = List.from(books!);
     });
-    return books;
+    MobileAds.instance.initialize().then((value) {
+      setState(() {
+        for (int i = homeFeed.length - 2; i >= 1; i -= 10) {
+          homeFeed.insert(i, _ad);
+        }
+      });
+    });
+
+    return homeFeed;
   }
 
   void _onRefresh() async {
     setState(() {
-      books.clear();
+      homeFeed.clear();
+      feed = getFeed();
+      _refreshController.refreshCompleted();
     });
-    _fetchUserData().then(
-      (value) => {
-        listObj = List.from(value),
-        MobileAds.instance.initialize().then((value) {
-          setState(() {
-            for (int i = listObj.length - 2; i >= 1; i -= 10) {
-              listObj.insert(i, _ad);
-            }
-          });
-        }),
-        _refreshController.refreshCompleted()
-      },
-    );
   }
 
   void _onLoading() async {

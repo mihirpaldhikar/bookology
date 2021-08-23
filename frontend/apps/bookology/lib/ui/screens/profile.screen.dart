@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/api.service.dart';
@@ -26,40 +28,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  UserModel user = UserModel(
-    additionalInformation: AdditionalInformation(
-      suspended: false,
-      emailVerified: false,
-    ),
-    books: [],
-    joinedOn: JoinedOn(
-      date: '',
-      time: '',
-    ),
-    providers: Providers(
-      auth: '',
-    ),
-    slugs: Slugs(
-      username: '',
-      firstName: '',
-      lastName: '',
-    ),
-    userId: '',
-    userInformation: UserInformation(
-      username: '',
-      lastName: '',
-      firstName: '',
-      bio: '',
-      email: '',
-      profilePicture: '',
-      verified: false,
-    ),
-  );
+  late Future<UserModel> userData;
   String userName = '';
   String profileImage = '';
   bool isCurrentUser = false;
   int booksListed = 0;
-  bool _isLoading = true;
   final apiService = new ApiService();
   final authService = new AuthService(FirebaseAuth.instance);
   final cacheService = new CacheService();
@@ -69,12 +42,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    userData = _fetchUserData();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _fetchUserData();
   }
 
   @override
@@ -140,13 +113,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     icon: Container(
                       width: 40,
+                      height: 40,
                       padding: EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Theme.of(context).accentColor,
-                            width: 1,
-                          )),
+                        color: ColorsConstant.SECONDARY_COLOR,
+                        borderRadius: BorderRadius.circular(
+                            ValuesConstant.SECONDARY_BORDER_RADIUS),
+                        border: Border.all(
+                          color: Theme.of(context).accentColor,
+                          width: 1,
+                        ),
+                      ),
                       child: Icon(
                         Icons.add,
                         color: Theme.of(context).accentColor,
@@ -169,212 +146,251 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: SafeArea(
             child: Container(
-              child: _isLoading
-                  ? profileShimmer()
-                  : Container(
-                      child: SmartRefresher(
-                        controller: _refreshController,
-                        scrollDirection: Axis.vertical,
-                        physics: BouncingScrollPhysics(),
-                        enablePullDown: true,
-                        header: ClassicHeader(),
-                        onRefresh: _onRefresh,
-                        onLoading: _onLoading,
-                        child: ListView.builder(
-                            padding:
-                                EdgeInsets.only(top: 20, left: 10, right: 10),
-                            scrollDirection: Axis.vertical,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: user.books!.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        CircularImage(
-                                          image: user
-                                              .userInformation!.profilePicture
-                                              .toString(),
-                                          radius: 90,
-                                        ),
-                                        SizedBox(
-                                          width: 100,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              user.books!.length.toString(),
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 30),
-                                            ),
-                                            Text('Books'),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 15,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+              child: FutureBuilder<UserModel>(
+                future: userData,
+                builder:
+                    (BuildContext context, AsyncSnapshot<UserModel> userData) {
+                  if (userData.connectionState == ConnectionState.done) {
+                    if (userData.hasData) {
+                      return Container(
+                        child: SmartRefresher(
+                          controller: _refreshController,
+                          scrollDirection: Axis.vertical,
+                          physics: BouncingScrollPhysics(),
+                          enablePullDown: true,
+                          header: ClassicHeader(),
+                          onRefresh: _onRefresh,
+                          onLoading: _onLoading,
+                          child: ListView.builder(
+                              padding:
+                                  EdgeInsets.only(top: 20, left: 10, right: 10),
+                              scrollDirection: Axis.vertical,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: userData.data!.books.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         children: [
-                                          Text(
-                                            '${user.userInformation!.firstName.toString()} ${user.userInformation!.lastName.toString()}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          CircularImage(
+                                            image: userData.data!
+                                                .userInformation.profilePicture
+                                                .toString(),
+                                            radius: 90,
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            width: 100,
                                           ),
-                                          Text(user.userInformation!.bio
-                                              .toString())
+                                          Column(
+                                            children: [
+                                              Text(
+                                                userData.data!.books.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30),
+                                              ),
+                                              Text('Books'),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
                                         ],
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Visibility(
-                                      visible: isCurrentUser,
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 20),
-                                        child: Row(
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                        ),
+                                        child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
-                                              width: 200,
-                                              child: OutLinedButton(
-                                                child: Center(
-                                                    child:
-                                                        Text('Edit Profile')),
-                                                outlineColor: Colors.grey,
-                                                backgroundColor:
-                                                    Colors.grey[50],
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditProfileScreen(
-                                                        userID: authService
-                                                            .currentUser()!
-                                                            .uid,
-                                                        profilePicture:
-                                                            authService
-                                                                .currentUser()!
-                                                                .photoURL
-                                                                .toString(),
-                                                        userName: cacheService
-                                                            .getCurrentUserNameCache(),
-                                                        bio: user
-                                                            .userInformation
-                                                            .bio,
-                                                        firstName: user
-                                                            .userInformation
-                                                            .firstName,
-                                                        lastName: user
-                                                            .userInformation
-                                                            .lastName,
-                                                        isInitialUpdate: false,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
+                                            Text(
+                                              '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
                                               ),
                                             ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(userData
+                                                .data!.userInformation.bio
+                                                .toString())
                                           ],
                                         ),
                                       ),
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return BookCard(
-                                    bookID:
-                                        '${user.books![index - 1].bookId.toString()}@${index.toString()}',
-                                    bookName: user
-                                        .books![index - 1].bookInformation!.name
-                                        .toString(),
-                                    coverImageURL: user.books![index - 1]
-                                        .additionalInformation!.images![0],
-                                    originalPrice: user.books![index - 1]
-                                        .pricing!.originalPrice
-                                        .toString(),
-                                    sellingPrice: user
-                                        .books![index - 1].pricing!.sellingPrice
-                                        .toString(),
-                                    bookAuthor: user.books![index - 1]
-                                        .bookInformation!.author
-                                        .toString(),
-                                    onClicked: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              BookViewer(
-                                            bookID:
-                                                '${user.books![index - 1].bookId.toString()}@${index.toString()}',
-                                            isbn: user.books![index - 1]
-                                                .bookInformation!.isbn,
-                                            uploaderID: user
-                                                .books[index - 1].uploaderId
-                                                .toString(),
-                                            bookAuthor: user.books![index - 1]
-                                                .bookInformation!.author
-                                                .toString(),
-                                            bookDescription: user
-                                                .books![index - 1]
-                                                .additionalInformation!
-                                                .description
-                                                .toString(),
-                                            bookName: user.books![index - 1]
-                                                .bookInformation!.name
-                                                .toString(),
-                                            bookPublished: user
-                                                .books![index - 1]
-                                                .bookInformation!
-                                                .publisher
-                                                .toString(),
-                                            images: user.books![index - 1]
-                                                .additionalInformation!.images,
-                                            originalPrice: user
-                                                .books![index - 1]
-                                                .pricing!
-                                                .originalPrice
-                                                .toString(),
-                                            sellingPrice: user.books![index - 1]
-                                                .pricing!.sellingPrice
-                                                .toString(),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Visibility(
+                                        visible: isCurrentUser,
+                                        child: Container(
+                                          margin: EdgeInsets.only(bottom: 20),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: 200,
+                                                child: OutLinedButton(
+                                                  child: Center(
+                                                      child:
+                                                          Text('Edit Profile')),
+                                                  outlineColor:
+                                                      Theme.of(context)
+                                                          .accentColor,
+                                                  backgroundColor:
+                                                      ColorsConstant
+                                                          .SECONDARY_COLOR,
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            EditProfileScreen(
+                                                          userID: authService
+                                                              .currentUser()!
+                                                              .uid,
+                                                          profilePicture:
+                                                              authService
+                                                                  .currentUser()!
+                                                                  .photoURL
+                                                                  .toString(),
+                                                          userName: cacheService
+                                                              .getCurrentUserNameCache(),
+                                                          bio: userData
+                                                              .data!
+                                                              .userInformation
+                                                              .bio,
+                                                          firstName: userData
+                                                              .data!
+                                                              .userInformation
+                                                              .firstName,
+                                                          lastName: userData
+                                                              .data!
+                                                              .userInformation
+                                                              .lastName,
+                                                          isInitialUpdate:
+                                                              false,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      );
-                                    });
-                              }
-                            }),
-                      ),
-                    ),
+                                      )
+                                    ],
+                                  );
+                                } else {
+                                  return BookCard(
+                                      bookID:
+                                          '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                      bookName: userData.data!.books[index - 1]
+                                          .bookInformation.name
+                                          .toString(),
+                                      coverImageURL: userData
+                                          .data!
+                                          .books[index - 1]
+                                          .additionalInformation
+                                          .images[0],
+                                      originalPrice: userData
+                                          .data!
+                                          .books[index - 1]
+                                          .pricing
+                                          .originalPrice
+                                          .toString(),
+                                      sellingPrice: userData.data!
+                                          .books[index - 1].pricing.sellingPrice
+                                          .toString(),
+                                      bookAuthor: userData
+                                          .data!
+                                          .books[index - 1]
+                                          .bookInformation
+                                          .author
+                                          .toString(),
+                                      onClicked: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                BookViewer(
+                                              bookID:
+                                                  '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                              isbn: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .bookInformation
+                                                  .isbn,
+                                              uploaderID: userData.data!
+                                                  .books[index - 1].uploaderId,
+                                              bookAuthor: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .bookInformation
+                                                  .author,
+                                              bookDescription: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .additionalInformation
+                                                  .description,
+                                              bookName: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .bookInformation
+                                                  .name,
+                                              bookPublished: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .bookInformation
+                                                  .publisher,
+                                              images: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .additionalInformation
+                                                  .images,
+                                              originalPrice: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .pricing
+                                                  .originalPrice,
+                                              sellingPrice: userData
+                                                  .data!
+                                                  .books[index - 1]
+                                                  .pricing
+                                                  .sellingPrice,
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                        ),
+                      );
+                    }
+                  }
+                  return profileShimmer();
+                },
+              ),
             ),
           ),
         );
@@ -382,16 +398,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _fetchUserData() async {
+  Future<UserModel> _fetchUserData() async {
     final data =
         await apiService.getUserProfile(userID: authService.currentUser()!.uid);
 
-    setState(() {
-      _isLoading = false;
-      user = UserModel.fromJson(data);
-    });
     if (cacheService.getCurrentUserNameCache() ==
-        user.userInformation.username) {
+        data!.userInformation.username) {
       setState(() {
         isCurrentUser = true;
       });
@@ -400,10 +412,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         isCurrentUser = false;
       });
     }
+    return data;
   }
 
   void _onRefresh() async {
-    await _fetchUserData();
+    setState(() {
+      userData = _fetchUserData();
+    });
     _refreshController.refreshCompleted();
   }
 

@@ -8,8 +8,32 @@ class CacheService {
     cacheStorage.write('isVerified', isVerified);
   }
 
+  void setNewNotificationNumber({required int count}) {
+    cacheStorage.write('newNotificationNumber', count);
+  }
+
+  void setOldNotificationNumber({required int count}) {
+    cacheStorage.write('oldNotificationNumber', count);
+  }
+
+  int getNewNotificationNumber() {
+    return cacheStorage.read('newNotificationNumber');
+  }
+
+  int getOldNotificationNumber() {
+    return cacheStorage.read('oldNotificationNumber');
+  }
+
   String getCurrentUserNameCache() {
     return cacheStorage.read('userName');
+  }
+
+  void setIntroScreenView({required bool seen}) {
+    cacheStorage.write('seenIntroScreen', seen);
+  }
+
+  bool isIntroScreenSeen() {
+    return cacheStorage.read('seenIntroScreen');
   }
 
   bool getCurrentIsVerifiedCache() {

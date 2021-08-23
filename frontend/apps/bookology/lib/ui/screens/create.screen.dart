@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/ui/screens/confirmation.screen.dart';
@@ -142,6 +144,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                   ),
                                 ),
                                 outlineColor: Theme.of(context).accentColor,
+                                backgroundColor: ColorsConstant.SECONDARY_COLOR,
                                 onPressed: () {
                                   continued();
                                   if (_currentStep == 4) {
@@ -391,33 +394,7 @@ class _CreateScreenState extends State<CreateScreen> {
             alignment: Alignment.centerLeft,
             child: InkWell(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    title: Text(
-                      'ISBN',
-                    ),
-                    content: Text(
-                      'The International Standard Book Number (ISBN) is a numeric commercial book identifier which is intended to be unique.'
-                      '\nAn ISBN is assigned to each separate '
-                      'edition and variation (except '
-                      'reprintings) of a publication.',
-                    ),
-                    actions: [
-                      OutLinedButton(
-                        child: Text('      OK      '),
-                        outlineColor: Theme.of(context).accentColor,
-                        onPressed: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .pop('dialog');
-                        },
-                      ),
-                    ],
-                  ),
-                );
+                DialogsManager(context).showWhatIsIsbnDialog();
               },
               child: Text(
                 'What is ISBN number?',
@@ -450,6 +427,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ],
                     ),
                     outlineColor: Theme.of(context).accentColor,
+                    backgroundColor: ColorsConstant.SECONDARY_COLOR,
                   ),
                 ),
                 SizedBox(

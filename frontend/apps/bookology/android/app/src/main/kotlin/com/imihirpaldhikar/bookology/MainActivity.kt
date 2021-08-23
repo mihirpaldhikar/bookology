@@ -8,11 +8,12 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         GoogleMobileAdsPlugin.registerNativeAdFactory(
-                flutterEngine, "bookCard", NativeAdsCardFactory(context))
+            flutterEngine, "bookCardAd", NativeAdsCardFactory(context)
+        )
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         super.cleanUpFlutterEngine(flutterEngine)
-        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "bookCard")
+        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "bookCardAd")
     }
 }

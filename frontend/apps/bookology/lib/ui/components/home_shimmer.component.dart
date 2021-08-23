@@ -1,3 +1,4 @@
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -6,8 +7,8 @@ Widget homeShimmer() {
     physics: BouncingScrollPhysics(),
     itemCount: 5,
     padding: EdgeInsets.only(
-      left: 10,
-      right: 10,
+      left: 15,
+      right: 15,
       top: 10,
     ),
     itemBuilder: (context, index) {
@@ -18,6 +19,22 @@ Widget homeShimmer() {
             bottom: 10,
           ),
           child: Chip(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
+                bottomRight: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
+                topLeft: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
+                bottomLeft: Radius.circular(
+                  ValuesConstant.BORDER_RADIUS,
+                ),
+              ),
+            ),
             padding: EdgeInsets.all(10),
             backgroundColor: Colors.white,
             side: BorderSide(

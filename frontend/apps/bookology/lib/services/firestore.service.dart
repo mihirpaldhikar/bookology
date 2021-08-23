@@ -8,6 +8,7 @@ import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get_storage/get_storage.dart';
 
 class FirestoreService {
+  final cacheStorage = GetStorage();
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final NotificationService _notificationService =
@@ -17,7 +18,6 @@ class FirestoreService {
 
   Future<String> getAccessToken() async {
     try {
-      final cacheStorage = GetStorage();
       final data = await _firestore
           .collection('users')
           .doc(_firebaseAuth.currentUser?.uid)
@@ -150,9 +150,6 @@ class FirestoreService {
         id: '',
         partialFile: partialMessage,
         roomId: roomId,
-        metadata: {
-          'collectionID': collectionID,
-        },
         status: types.Status.seen,
       );
     } else if (partialMessage is types.PartialImage) {
@@ -162,9 +159,6 @@ class FirestoreService {
         partialImage: partialMessage,
         roomId: roomId,
         status: types.Status.seen,
-        metadata: {
-          'collectionID': collectionID,
-        },
       );
     } else if (partialMessage is types.PartialText) {
       message = types.TextMessage.fromPartial(
@@ -195,6 +189,47 @@ class FirestoreService {
           .collection('rooms')
           .doc(discussionRoomID)
           .delete();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<dynamic> createRequest({
+    required String bookID,
+    required String userID,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .collection('requests')
+          .doc(bookID)
+          .set(
+        {
+          'accepted': false,
+        },
+      );
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<dynamic> getRequest({
+    required String bookID,
+    required String userID,
+  }) async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .collection('requests')
+          .doc(bookID)
+          .get();
+
+      if (data.data()?['accepted'] == null) {
+        return 'empty';
+      }
+      return data.data()?['accepted'];
     } catch (error) {
       print(error);
     }

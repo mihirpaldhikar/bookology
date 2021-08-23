@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/components/account_dialog.component.dart';
@@ -34,7 +36,8 @@ class _SearchBarState extends State<SearchBar> {
           right: 10,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius:
+              BorderRadius.circular(ValuesConstant.SECONDARY_BORDER_RADIUS),
           boxShadow: [
             BoxShadow(
               color: Colors.grey,
@@ -42,7 +45,7 @@ class _SearchBarState extends State<SearchBar> {
               blurRadius: 2.0,
             )
           ],
-          color: Colors.white,
+          color: ColorsConstant.APP_BAR_COLOR,
         ),
         padding: EdgeInsets.only(
           left: 5,
@@ -64,8 +67,10 @@ class _SearchBarState extends State<SearchBar> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
+                            topLeft:
+                                Radius.circular(ValuesConstant.BORDER_RADIUS),
+                            topRight:
+                                Radius.circular(ValuesConstant.BORDER_RADIUS),
                           ),
                         ),
                         height: 500,
@@ -200,9 +205,12 @@ class _SearchBarState extends State<SearchBar> {
                   },
                   icon: Container(
                     width: 40,
+                    height: 40,
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      color: ColorsConstant.SECONDARY_COLOR,
+                      borderRadius: BorderRadius.circular(
+                          ValuesConstant.SECONDARY_BORDER_RADIUS),
                       border: Border.all(
                         color: Theme.of(context).accentColor,
                         width: 1,
