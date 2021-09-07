@@ -1,6 +1,28 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/constants/colors.constant.dart';
-import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/screen.manager.dart';
+import 'package:bookology/managers/theme.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
@@ -16,7 +38,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 const AndroidNotificationChannel androidNotificationChannel =
@@ -91,14 +112,14 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    super.initState();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
-        statusBarColor: Colors.transparent,
+        statusBarColor: ColorsConstant.STATUS_BAR_COLOR,
         systemNavigationBarColor: Colors.transparent,
       ),
     );
+    super.initState();
   }
 
   @override
@@ -108,39 +129,9 @@ class _AppState extends State<App> {
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Bookology',
-      theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          primarySwatch: ColorsConstant.PRIMARY_SWATCH,
-          accentColor: ColorsConstant.ACCENT_COLOR,
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-          scaffoldBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
-          appBarTheme: AppBarTheme(
-            backgroundColor: ColorsConstant.APP_BAR_COLOR,
-            elevation: 0,
-            textTheme:
-                GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-            actionsIconTheme: IconThemeData(
-              color: Colors.black,
-            ),
-          ),
-          bottomSheetTheme: BottomSheetThemeData(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
-                ),
-                topLeft: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
-                ),
-              ),
-            ),
-          ),
-          dialogTheme: DialogTheme(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-              Radius.circular(ValuesConstant.BORDER_RADIUS),
-            )),
-          )),
+      theme: ThemeManager.lightTheme,
+      darkTheme: ThemeManager.lightTheme,
+      themeMode: ThemeMode.system,
       routes: {
         '/home': (context) => ScreenManager(),
         '/profile': (context) => ViewManager(

@@ -1,13 +1,35 @@
-import 'package:badges/badges.dart';
-import 'package:bookology/constants/colors.constant.dart';
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
-import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:bookology/ui/screens/profile.screen.dart';
 import 'package:bookology/ui/screens/room.screen.dart';
+import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,8 +51,8 @@ class _ViewManagerState extends State<ViewManager> {
   int screenIndex = 0;
   List<Widget> screenList = [
     HomeScreen(),
+    SearchScreen(),
     RoomsPage(),
-    NotificationScreen(),
     ProfileScreen(),
   ];
   final cacheService = new CacheService();
@@ -52,81 +74,76 @@ class _ViewManagerState extends State<ViewManager> {
     return auth.isEmailVerified() != true
         ? VerifyEmailScreen()
         : Scaffold(
-            backgroundColor: ColorsConstant.BACKGROUND_COLOR,
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: ColorsConstant.BACKGROUND_COLOR,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: screenIndex,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              onTap: (value) {
+            bottomNavigationBar: BottomNavyBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              showElevation: false,
+              selectedIndex: screenIndex,
+              onItemSelected: (value) {
                 setState(() {
                   screenIndex = value;
                 });
               },
               items: [
-                BottomNavigationBarItem(
+                BottomNavyBarItem(
                   icon: Icon(
                     Icons.home_outlined,
+                    color: Colors.black,
                   ),
-                  label: 'Home',
-                  activeIcon: Icon(
-                    Icons.home,
-                    size: 30,
+                  title: Text(
+                    StringConstants.NAVIGATION_HOME,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                   ),
+                  activeColor: Theme.of(context).accentColor,
+                  inactiveColor: Colors.grey,
+                  textAlign: TextAlign.center,
                 ),
-                BottomNavigationBarItem(
+                BottomNavyBarItem(
+                  icon: Icon(
+                    Icons.search_outlined,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    StringConstants.NAVIGATION_SEARCH,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  activeColor: Theme.of(context).accentColor,
+                  inactiveColor: Colors.grey,
+                  textAlign: TextAlign.center,
+                ),
+                BottomNavyBarItem(
                   icon: Icon(
                     Icons.question_answer_outlined,
+                    color: Colors.black,
                   ),
-                  label: ''
-                      'Discussions',
-                  activeIcon: Icon(
-                    Icons.question_answer,
-                    size: 30,
+                  title: Text(
+                    StringConstants.NAVIGATION_DISCUSSIONS,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                   ),
+                  activeColor: Theme.of(context).accentColor,
+                  inactiveColor: Colors.grey,
+                  textAlign: TextAlign.center,
                 ),
-                BottomNavigationBarItem(
-                  icon: Badge(
-                    badgeColor: Colors.red,
-                    badgeContent: Text(
-                      '9',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.notifications_outlined,
+                BottomNavyBarItem(
+                  icon: CircularImage(
+                    image: auth.currentUser()!.photoURL.toString(),
+                    radius: 30,
+                  ),
+                  title: Text(
+                    StringConstants.NAVIGATION_PROFILE,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
                   ),
-                  label: 'Notifications',
-                  activeIcon: Icon(
-                    Icons.notifications,
-                    size: 30,
-                  ),
+                  activeColor: Theme.of(context).accentColor,
+                  inactiveColor: Colors.grey,
+                  textAlign: TextAlign.center,
                 ),
-                BottomNavigationBarItem(
-                    icon: CircularImage(
-                      image: auth.currentUser()!.photoURL.toString(),
-                      radius: 30,
-                    ),
-                    label: ''
-                        'Profile',
-                    activeIcon: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).accentColor,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: CircularImage(
-                        image: auth.currentUser()!.photoURL.toString(),
-                        radius: 27,
-                      ),
-                    )),
               ],
             ),
             body: SafeArea(

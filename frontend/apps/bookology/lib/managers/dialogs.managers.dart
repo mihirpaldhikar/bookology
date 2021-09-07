@@ -1,4 +1,26 @@
-import 'package:bookology/constants/colors.constant.dart';
+
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,9 +72,11 @@ class DialogsManager {
                       height: 30,
                     ),
                     OutLinedButton(
-                      child: Center(child: Text('Delete')),
-                      outlineColor: Colors.red,
-                      backgroundColor: Colors.red[100],
+                      text: 'Delete',
+                      showIcon: false,
+                      showText: true,
+                      outlineColor: Colors.redAccent,
+                      backgroundColo: Colors.red[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await firestoreService.deleteDiscussionRoom(
@@ -63,11 +87,9 @@ class DialogsManager {
                       height: 20,
                     ),
                     OutLinedButton(
-                      child: Center(
-                        child: Text('Cancel'),
-                      ),
-                      outlineColor: Theme.of(context).accentColor,
-                      backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                      text: 'Cancel',
+                      showIcon: false,
+                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -112,9 +134,11 @@ class DialogsManager {
                 height: 30,
               ),
               OutLinedButton(
-                child: Center(child: Text('Unsend')),
-                outlineColor: Colors.red,
-                backgroundColor: Colors.red[100],
+                text: 'Unsend',
+                showIcon: false,
+                showText: true,
+                outlineColor: Colors.redAccent,
+                backgroundColo: Colors.red[100],
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await firestoreService.unsendMessage(
@@ -131,9 +155,9 @@ class DialogsManager {
                 height: 15,
               ),
               OutLinedButton(
-                child: Center(child: Text('Cancel')),
-                outlineColor: Theme.of(context).accentColor,
-                backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                text: 'Cancel',
+                showIcon: false,
+                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -180,9 +204,11 @@ class DialogsManager {
                       height: 30,
                     ),
                     OutLinedButton(
-                      child: Center(child: Text('OK')),
+                      text: 'OK',
+                      showIcon: false,
+                      showText: true,
                       outlineColor: Colors.green,
-                      backgroundColor: Colors.green[100],
+                      backgroundColo: Colors.green[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -230,9 +256,9 @@ class DialogsManager {
                 height: 30,
               ),
               OutLinedButton(
-                child: Center(child: Text('OK')),
-                outlineColor: Theme.of(context).accentColor,
-                backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                text: 'OK',
+                showIcon: false,
+                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -265,9 +291,9 @@ class DialogsManager {
                 height: 30,
               ),
               OutLinedButton(
-                child: Center(child: Text('OK')),
-                outlineColor: Theme.of(context).accentColor,
-                backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                text: 'OK',
+                showIcon: false,
+                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -317,9 +343,10 @@ class DialogsManager {
                 height: 30,
               ),
               OutLinedButton(
-                child: Text('Next'),
+                text: 'Next',
+                showIcon: false,
+                showText: true,
                 onPressed: onPressed,
-                outlineColor: Theme.of(context).accentColor,
               )
             ],
           ),
@@ -362,18 +389,20 @@ class DialogsManager {
                       height: 30,
                     ),
                     OutLinedButton(
-                      child: Center(child: Text('Delete')),
-                      outlineColor: Colors.red,
-                      backgroundColor: Colors.red[100],
+                      text: 'Delete',
+                      showIcon: false,
+                      showText: true,
+                      outlineColor: Colors.redAccent,
+                      backgroundColo: Colors.red[100],
                       onPressed: onDelete,
                     ),
                     SizedBox(
                       height: 15,
                     ),
                     OutLinedButton(
-                      child: Center(child: Text('Cancel')),
-                      outlineColor: Theme.of(context).accentColor,
-                      backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                      text: 'Cancel',
+                      showIcon: false,
+                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },

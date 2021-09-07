@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -22,16 +44,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final AuthHandler authHandler = new AuthHandler();
-    return _isLoading
-        ? Scaffold(
-            body: Container(
+    return Scaffold(
+      body: _isLoading
+          ? Container(
               child: Center(
                 child: CircularProgressIndicator(),
               ),
-            ),
-          )
-        : Scaffold(
-            body: SafeArea(
+            )
+          : SafeArea(
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -48,19 +68,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           top: 20,
                           left: 0,
                         ),
-                        child: OutLinedButton(
-                          child: Icon(
-                            Icons.close,
-                            textDirection: TextDirection.ltr,
+                        child: SizedBox(
+                          width: 50,
+                          child: OutLinedButton(
+                            text: 'Close',
+                            icon: Icons.close,
+                            showIcon: true,
+                            showText: false,
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/auth',
+                                (_) => false,
+                              );
+                            },
                           ),
-                          outlineColor: Colors.grey,
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/auth',
-                              (_) => false,
-                            );
-                          },
                         ),
                       ),
                       SizedBox(
@@ -70,8 +92,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           'Welcome Back!',
                           style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
+                            fontStyle: Theme.of(context)
+                                .textTheme
+                                .headline4!
+                                .fontStyle,
+                            fontWeight: Theme.of(context)
+                                .textTheme
+                                .headline4!
+                                .fontWeight,
+                            fontSize:
+                                Theme.of(context).textTheme.headline4!.fontSize,
+                            color: Theme.of(context).accentColor,
                           ),
                         ),
                       ),
@@ -178,19 +209,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             }
                           },
-                          outlineColor: Colors.black,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Login'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Icon(Icons.arrow_forward)
-                              ],
-                            ),
-                          ),
+                          text: 'Login',
+                          icon: Icons.arrow_forward,
+                          showIcon: true,
+                          inverted: true,
+                          showText: true,
                         ),
                       ),
                     ],
@@ -198,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-          );
+    );
   }
 
   String? emailValidator(String value) {

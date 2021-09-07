@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/ui/components/bottom_sheet_view.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -14,50 +36,29 @@ class BottomSheetManager {
       builder: (BuildContext context) => BottomSheetView(
         contents: [
           OutLinedButton(
-            child: Row(
-              children: [
-                Icon(
-                  Icons.share_outlined,
-                  color: Theme.of(context).accentColor,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  'Share this book',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-              ],
-            ),
-            outlineColor: Theme.of(context).accentColor,
-            backgroundColor: ColorsConstant.SECONDARY_COLOR,
+            text: 'Share this book',
+            icon: Icons.share_outlined,
+            iconColor: Colors.black,
+            textColor: Colors.black,
+            outlineColor: Colors.black,
+            showText: true,
+            showIcon: true,
+            alignContent: MainAxisAlignment.start,
             onPressed: () {},
           ),
           SizedBox(
             height: 20,
           ),
           OutLinedButton(
-            child: Row(
-              children: [
-                Icon(
-                  Icons.report_outlined,
-                  color: Colors.redAccent,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  'Report this book',
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ],
-            ),
+            text: 'Report this book',
+            showIcon: true,
+            showText: true,
+            alignContent: MainAxisAlignment.start,
+            icon: Icons.report_outlined,
+            iconColor: Colors.redAccent,
+            textColor: Colors.redAccent,
             outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-            backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
+            backgroundColo: ColorsConstant.DANGER_BACKGROUND_COLOR,
             onPressed: () {},
           ),
         ],

@@ -1,3 +1,27 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -34,8 +58,12 @@ class _AuthScreenState extends State<AuthScreen> {
             body: SafeArea(
               child: ListView(
                 scrollDirection: Axis.vertical,
-                padding:
-                    EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
+                padding: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 20,
+                  bottom: 10,
+                ),
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
@@ -53,21 +81,40 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     child: Column(
                       children: [
-                        OutLinedButton(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
+                        GestureDetector(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 10,
+                              right: 8,
+                              left: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).backgroundColor,
+                              border: Border.all(
+                                color: Theme.of(context).accentColor,
+                                width: 1,
                               ),
-                              SvgPicture.asset('assets/svg/google_logo.svg'),
-                              SizedBox(
-                                width: 50,
-                              ),
-                              Text('Continue With Google'),
-                            ],
+                              borderRadius: BorderRadius.circular(
+                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                SvgPicture.asset('assets/svg/google_logo.svg'),
+                                SizedBox(
+                                  width: 50,
+                                ),
+                                Text(
+                                  StringConstants.HINT_CONTINUE_WITH_GOOGLE,
+                                  style: Theme.of(context).textTheme.button,
+                                ),
+                              ],
+                            ),
                           ),
-                          outlineColor: Colors.black,
-                          onPressed: () async {
+                          onTap: () async {
                             cacheService.setIntroScreenView(seen: false);
                             setState(() {
                               _isLoading = true;
@@ -98,26 +145,19 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 30,
                         ),
                         OutLinedButton(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(Icons.mail_outline_rounded),
-                              SizedBox(
-                                width: 100,
-                              ),
-                              Text('Login'),
-                            ],
-                          ),
-                          outlineColor: Colors.black,
+                          text: StringConstants.LOGIN,
+                          icon: Icons.mail_outline_rounded,
+                          showIcon: true,
+                          showText: true,
+                          alignContent: MainAxisAlignment.start,
+                          spaceBetween: 115,
                           onPressed: () {
                             cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 100,
                         ),
                         InkWell(
                           borderRadius: BorderRadius.circular(5),
@@ -127,13 +167,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                           child: RichText(
                             text: TextSpan(
-                              text: "Don't have an account?",
+                              text: StringConstants.HINT_CREATE_NEW_ACCOUNT,
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
                               ),
                               children: [
                                 TextSpan(
-                                  text: ' Sign Up',
+                                  text: ' ${StringConstants.SIGN_UP}',
                                   style: GoogleFonts.poppins(
                                     color: Theme.of(context).accentColor,
                                   ),
@@ -157,21 +197,20 @@ Widget _logo(BuildContext context) {
     child: Column(
       children: [
         Text(
-          'Bookology',
+          StringConstants.APP_NAME,
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 40,
-              color: Theme.of(context).accentColor),
+            fontWeight: Theme.of(context).textTheme.headline3!.fontWeight,
+            fontSize: Theme.of(context).textTheme.headline3!.fontSize,
+            fontStyle: Theme.of(context).textTheme.headline3!.fontStyle,
+            color: Theme.of(context).accentColor,
+          ),
         ),
         SizedBox(
           height: 10,
         ),
         Text(
-          'Find books nearby',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 15,
-          ),
+          StringConstants.APP_SLOGAN,
+          style: Theme.of(context).textTheme.subtitle1,
         ),
       ],
     ),

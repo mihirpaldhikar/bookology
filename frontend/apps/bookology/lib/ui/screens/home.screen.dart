@@ -1,6 +1,29 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'dart:async';
 
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
@@ -88,134 +111,175 @@ class _HomeScreenState extends State<HomeScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
         if (snapshot.data == ConnectivityStatus.Offline) {
-          return OfflineScreen();
+          return offlineScreen();
         }
         return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(120),
-              child: SafeArea(
-                child: SearchBar(),
-              ),
-            ),
             body: FutureBuilder<List<Object>?>(
-              initialData: [],
-              future: feed,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Object>?> homeFeed) {
-                if (homeFeed.connectionState == ConnectionState.done) {
-                  if (homeFeed.hasData) {
-                    return Container(
-                      color: Colors.white,
-                      child: SmartRefresher(
-                        controller: _refreshController,
-                        scrollDirection: Axis.vertical,
-                        physics: BouncingScrollPhysics(),
-                        enablePullDown: true,
-                        header: ClassicHeader(),
-                        onRefresh: _onRefresh,
-                        onLoading: _onLoading,
-                        child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          itemCount: homeFeed.data!.length + 1,
-                          padding: EdgeInsets.only(
-                            left: 15,
-                            right: 15,
-                            top: 10,
-                          ),
-                          itemBuilder: (context, index) {
+          initialData: [],
+          future: feed,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
+            if (homeFeed.connectionState == ConnectionState.done) {
+              if (homeFeed.hasData) {
+                return SmartRefresher(
+                  controller: _refreshController,
+                  scrollDirection: Axis.vertical,
+                  physics: BouncingScrollPhysics(),
+                  enablePullDown: true,
+                  header: ClassicHeader(),
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  child: CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 3,
+                        pinned: true,
+                        floating: false,
+                        titleSpacing: 0.0,
+                        backgroundColor: Color.fromARGB(245, 242, 246, 254),
+                        automaticallyImplyLeading: false,
+                        expandedHeight: 250.0,
+                        flexibleSpace: SearchBar(
+                          currentLocation: currentLocation,
+                        ),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
                             if (index == 0) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  top: 10,
-                                  bottom: 10,
-                                ),
-                                child: Chip(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(
-                                        ValuesConstant.BORDER_RADIUS,
-                                      ),
-                                      bottomRight: Radius.circular(
-                                        ValuesConstant.BORDER_RADIUS,
-                                      ),
-                                      topLeft: Radius.circular(
-                                        ValuesConstant.BORDER_RADIUS,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        ValuesConstant.BORDER_RADIUS,
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 15,
+                                      top: 20,
+                                    ),
+                                    child: Text(
+                                      'Book Categories',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 25,
                                       ),
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(10),
-                                  backgroundColor:
-                                      ColorsConstant.SECONDARY_COLOR,
-                                  side: BorderSide(
-                                    color: Theme.of(context).accentColor,
-                                    width: 1,
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 60,
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        physics: BouncingScrollPhysics(),
+                                        padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                        ),
+                                        itemCount: StringConstants
+                                            .BOOKS_CATEGORIES.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                              padding: EdgeInsets.only(
+                                                left: 10,
+                                                right: 10,
+                                                top: 5,
+                                                bottom: 5,
+                                              ),
+                                              margin: EdgeInsets.only(
+                                                left: 10,
+                                                top: 25,
+                                              ),
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                  color: ColorsConstant
+                                                      .SECONDARY_COLOR,
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius: BorderRadius
+                                                      .circular(ValuesConstant
+                                                          .SECONDARY_BORDER_RADIUS)),
+                                              child: Text(
+                                                StringConstants
+                                                    .BOOKS_CATEGORIES[index],
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ));
+                                        }),
                                   ),
-                                  label: Row(
-                                    children: [
-                                      Icon(Icons.place_outlined),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(currentLocation),
-                                    ],
-                                  ),
+                                ],
+                              );
+                            }
+                            if (homeFeed.data![index - 1] is BannerAd) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  top: 20,
                                 ),
+                                child: NativeInlineAd(),
                               );
                             } else {
-                              if (homeFeed.data![index - 1] is BannerAd) {
-                                return NativeInlineAd();
-                              } else {
-                                return bookList(
-                                  bookModel:
-                                      homeFeed.data![index - 1] as BookModel,
-                                );
-                              }
+                              return bookList(
+                                bookModel:
+                                    homeFeed.data![index - 1] as BookModel,
+                              );
                             }
                           },
+                          childCount: homeFeed.data!.length + 1,
                         ),
                       ),
-                    );
-                  }
-                }
-                return homeShimmer();
-              },
-            ));
+                    ],
+                  ),
+                );
+              }
+            }
+            return homeShimmer();
+          },
+        ));
       },
     );
   }
 
   Widget bookList({required BookModel bookModel}) {
-    return BookCard(
-      bookID: bookModel.bookId.toString(),
-      bookName: bookModel.bookInformation.name.toString(),
-      originalPrice: bookModel.pricing.originalPrice.toString(),
-      sellingPrice: bookModel.pricing.sellingPrice.toString(),
-      coverImageURL: bookModel.additionalInformation.images[0],
-      bookAuthor: bookModel.bookInformation.author.toString(),
-      onClicked: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => BookViewer(
-              bookID: bookModel.bookId.toString(),
-              isbn: bookModel.bookInformation.isbn.toString(),
-              uploaderID: bookModel.uploaderId.toString(),
-              bookAuthor: bookModel.bookInformation.author.toString(),
-              bookDescription:
-                  bookModel.additionalInformation.description.toString(),
-              bookName: bookModel.bookInformation.name.toString(),
-              bookPublished: bookModel.bookInformation.publisher.toString(),
-              images: bookModel.additionalInformation.images,
-              originalPrice: bookModel.pricing.originalPrice.toString(),
-              sellingPrice: bookModel.pricing.sellingPrice.toString(),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 5,
+      ),
+      child: BookCard(
+        bookID: bookModel.bookId.toString(),
+        bookName: bookModel.bookInformation.name.toString(),
+        originalPrice: bookModel.pricing.originalPrice.toString(),
+        sellingPrice: bookModel.pricing.sellingPrice.toString(),
+        coverImageURL: bookModel.additionalInformation.images[0],
+        bookAuthor: bookModel.bookInformation.author.toString(),
+        onClicked: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => BookViewer(
+                bookID: bookModel.bookId.toString(),
+                isbn: bookModel.bookInformation.isbn.toString(),
+                uploaderID: bookModel.uploaderId.toString(),
+                bookAuthor: bookModel.bookInformation.author.toString(),
+                bookDescription:
+                    bookModel.additionalInformation.description.toString(),
+                bookName: bookModel.bookInformation.name.toString(),
+                bookPublished: bookModel.bookInformation.publisher.toString(),
+                images: bookModel.additionalInformation.images,
+                originalPrice: bookModel.pricing.originalPrice.toString(),
+                sellingPrice: bookModel.pricing.sellingPrice.toString(),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

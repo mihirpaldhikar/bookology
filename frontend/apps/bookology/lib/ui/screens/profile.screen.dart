@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
@@ -7,6 +29,7 @@ import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
+import 'package:bookology/ui/components/account_dialog.component.dart';
 import 'package:bookology/ui/components/profile_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
@@ -18,10 +41,13 @@ import 'package:bookology/ui/widgets/marquee.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -52,13 +78,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthService>(context);
     return StreamBuilder<ConnectivityStatus>(
       initialData: ConnectivityStatus.Cellular,
       stream: ConnectivityService().connectionStatusController.stream,
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
         if (snapshot.data == ConnectivityStatus.Offline) {
-          return OfflineScreen();
+          return offlineScreen();
         }
         return Scaffold(
           appBar: AppBar(
@@ -78,9 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
                     ),
                     SizedBox(
                       width: 5,
@@ -117,31 +142,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.all(0),
                       decoration: BoxDecoration(
                         color: ColorsConstant.SECONDARY_COLOR,
-                        borderRadius: BorderRadius.circular(
-                            ValuesConstant.SECONDARY_BORDER_RADIUS),
+                        borderRadius: BorderRadius.circular(100),
                         border: Border.all(
-                          color: Theme.of(context).accentColor,
+                          color: Colors.black,
                           width: 1,
                         ),
                       ),
                       child: Icon(
                         Icons.add,
-                        color: Theme.of(context).accentColor,
+                        color: Colors.black,
                       ),
                     ),
                   ),
                 ),
               ),
-              Tooltip(
-                message: 'Settings',
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.settings_outlined,
-                    color: Colors.black,
-                  ),
-                ),
-              )
+              IconButton(
+                icon: Icon(Icons.menu_outlined),
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft:
+                                  Radius.circular(ValuesConstant.BORDER_RADIUS),
+                              topRight:
+                                  Radius.circular(ValuesConstant.BORDER_RADIUS),
+                            ),
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          child: AccountDialog(
+                            username: cacheService.getCurrentUserNameCache(),
+                            displayName:
+                                auth.currentUser()!.displayName.toString(),
+                            isVerified:
+                                cacheService.getCurrentIsVerifiedCache(),
+                            profileImageURL:
+                                auth.currentUser()!.photoURL.toString(),
+                          ),
+                        );
+                      });
+                },
+              ),
             ],
           ),
           body: SafeArea(
@@ -190,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         width: 10,
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 30,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -204,10 +249,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           children: [
                                             Text(
                                               '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 25,
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
                                               textAlign: TextAlign.center,
                                             ),
                                             SizedBox(
@@ -216,9 +260,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Text(
                                               userData.data!.userInformation.bio
                                                   .toString(),
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1,
                                               textAlign: TextAlign.center,
                                             )
                                           ],
@@ -246,10 +290,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                               Text(
                                                 'Books',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2,
                                               ),
                                             ],
                                           ),
@@ -266,10 +309,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                               Text(
                                                 'Points',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2,
                                               ),
                                             ],
                                           ),
@@ -291,15 +333,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               SizedBox(
                                                 width: 150,
                                                 child: OutLinedButton(
-                                                  child: Center(
-                                                      child:
-                                                          Text('Edit Profile')),
-                                                  outlineColor:
-                                                      Theme.of(context)
-                                                          .accentColor,
-                                                  backgroundColor:
-                                                      ColorsConstant
-                                                          .SECONDARY_COLOR,
+                                                  text: 'Edit Profile',
+                                                  showIcon: false,
+                                                  showText: true,
                                                   onPressed: () {
                                                     Navigator.push(
                                                       context,
@@ -339,14 +375,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               SizedBox(
                                                 width: 150,
                                                 child: OutLinedButton(
-                                                  child: Center(
-                                                    child: Text(
-                                                        'Account Settings'),
-                                                  ),
-                                                  outlineColor:
-                                                      Colors.grey.shade600,
-                                                  backgroundColor:
+                                                  text: 'Account Settings',
+                                                  showText: true,
+                                                  showIcon: false,
+                                                  outlineColor: Colors.black,
+                                                  backgroundColo:
                                                       Colors.grey.shade100,
+                                                  textColor: Colors.black,
                                                   onPressed: () {},
                                                 ),
                                               ),
@@ -358,6 +393,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 } else {
                                   return BookCard(
+                                      showMenu: false,
+                                      buttonText: 'Edit',
                                       bookID:
                                           '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
                                       bookName: userData.data!.books[index - 1]

@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'dart:io';
 
 import 'package:bookology/managers/view.manager.dart';
@@ -71,9 +93,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           color: Colors.black,
         ),
         title: !widget.isInitialUpdate
-            ? Text('Edit '
-                'Profile')
-            : Text('Complete Profile'),
+            ? Text(
+                'Edit '
+                'Profile',
+                style: Theme.of(context).appBarTheme.titleTextStyle,
+              )
+            : Text(
+                'Complete Profile',
+                style: Theme.of(context).appBarTheme.titleTextStyle,
+              ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -364,10 +392,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: Text(
                     'Pic Image From',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
                 SizedBox(
@@ -375,36 +400,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 OutLinedButton(
                   onPressed: onCameraPressed,
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.photo_camera_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Camera'),
-                    ],
-                  ),
+                  text: 'Camera',
+                  icon: Icons.photo_camera_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
                   onPressed: onGalleryPressed,
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.collections_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Gallery'),
-                    ],
-                  ),
+                  text: 'Gallery',
+                  icon: Icons.collections_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                 ),
               ],
             ),

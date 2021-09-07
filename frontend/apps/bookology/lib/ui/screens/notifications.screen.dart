@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
@@ -7,7 +29,9 @@ import 'package:bookology/services/cache.service.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
@@ -30,11 +54,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
       appBar: AppBar(
         title: Text(
           'Notifications',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
       body: FutureBuilder<List<NotificationModel>?>(
         future: notifications,
@@ -73,14 +95,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         padding: EdgeInsets.only(
                           left: 10,
                           right: 10,
-                          top: 5,
-                          bottom: 5,
+                          top: 15,
+                          bottom: 15,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
+                              width: 50,
+                              height: 50,
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: ColorsConstant.SECONDARY_COLOR,
@@ -105,10 +129,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                   SizedBox(
                                     height: 5,
@@ -118,6 +140,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ],
                               ),
