@@ -20,14 +20,43 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-include ':app'
+import 'package:flutter/material.dart';
 
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-def properties = new Properties()
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({
+    Key? key,
+  }) : super(key: key);
 
-assert localPropertiesFile.exists()
-localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
+  @override
+  _SearchScreenState createState() => _SearchScreenState();
+}
 
-def flutterSdkPath = properties.getProperty("flutter.sdk")
-assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+class _SearchScreenState extends State<SearchScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Search',
+            style: Theme.of(context).appBarTheme.titleTextStyle,
+          ),
+          automaticallyImplyLeading: true,
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          alignment: Alignment.center,
+          child: Text(
+            'Work in Progress!',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ));
+  }
+}

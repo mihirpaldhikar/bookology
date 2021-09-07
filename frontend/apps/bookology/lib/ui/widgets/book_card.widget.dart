@@ -1,6 +1,29 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +35,8 @@ class BookCard extends StatefulWidget {
   final String originalPrice;
   final String sellingPrice;
   final String coverImageURL;
+  final String? buttonText;
+  final bool? showMenu;
   final VoidCallback onClicked;
 
   const BookCard({
@@ -23,6 +48,8 @@ class BookCard extends StatefulWidget {
     required this.coverImageURL,
     required this.bookAuthor,
     required this.onClicked,
+    this.buttonText = 'View',
+    this.showMenu = true,
   }) : super(key: key);
 
   @override
@@ -37,7 +64,7 @@ class _BookCardState extends State<BookCard> {
     return Hero(
       tag: widget.bookID,
       child: Material(
-        color: Colors.white,
+        color: Colors.transparent,
         child: GestureDetector(
           onTap: widget.onClicked,
           child: Container(
@@ -48,12 +75,13 @@ class _BookCardState extends State<BookCard> {
                 bottom: 10,
               ),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 1,
-                  ),
-                  color: Colors.white),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,20 +115,32 @@ class _BookCardState extends State<BookCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Spacer(),
-                            Container(
-                              padding: EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                color: ColorsConstant.SECONDARY_COLOR,
-                                borderRadius: BorderRadius.circular(
-                                    ValuesConstant.SECONDARY_BORDER_RADIUS),
-                                border: Border.all(
-                                  color: Theme.of(context).accentColor,
-                                  width: 1,
+                            Visibility(
+                              visible: widget.showMenu!,
+                              child: Spacer(),
+                            ),
+                            Visibility(
+                              visible: widget.showMenu!,
+                              child: GestureDetector(
+                                onTap: () {
+                                  BottomSheetManager(context)
+                                      .showBookSelectionBottomSheet();
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: ColorsConstant.SECONDARY_COLOR,
+                                    borderRadius: BorderRadius.circular(
+                                        ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.more_vert_outlined,
+                                  ),
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.more_vert_outlined,
                               ),
                             ),
                           ],
@@ -110,10 +150,7 @@ class _BookCardState extends State<BookCard> {
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                         SizedBox(
                           height: 5,
@@ -138,10 +175,7 @@ class _BookCardState extends State<BookCard> {
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
+                              style: Theme.of(context).textTheme.subtitle1,
                             ),
                             SizedBox(
                               width: 5,
@@ -192,13 +226,11 @@ class _BookCardState extends State<BookCard> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: OutLinedButton(
-                            child: Center(
-                              child: Text(
-                                'View',
-                              ),
-                            ),
-                            outlineColor: Theme.of(context).accentColor,
-                            backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                            text: widget.buttonText!,
+                            showIcon: false,
+                            showText: true,
+                            outlineColor: Colors.black,
+                            textColor: Colors.black,
                             onPressed: widget.onClicked,
                           ),
                         )

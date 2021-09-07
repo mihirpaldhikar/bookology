@@ -1,5 +1,28 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'dart:io';
 
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/discussions.manager.dart';
@@ -82,18 +105,11 @@ class _ChatPageState extends State<ChatPage> {
                   height: 20,
                 ),
                 OutLinedButton(
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.image_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Photo'),
-                    ],
-                  ),
+                  text: StringConstants.CAMERA,
+                  icon: Icons.photo_camera_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                   onPressed: () {
                     Navigator.pop(context);
                     _handleImageSelection();
@@ -103,18 +119,11 @@ class _ChatPageState extends State<ChatPage> {
                   height: 20,
                 ),
                 OutLinedButton(
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.description_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('File'),
-                    ],
-                  ),
+                  text: StringConstants.FILE,
+                  icon: Icons.description_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                   onPressed: () {
                     Navigator.pop(context);
                     _handleFileSelection();
@@ -287,7 +296,7 @@ class _ChatPageState extends State<ChatPage> {
         iconTheme: IconThemeData(color: Colors.black),
         actions: [
           Tooltip(
-            message: 'Connection is Secured',
+            message: StringConstants.HINT_CONNECTION_SECURED,
             child: IconButton(
               onPressed: () {
                 DialogsManager(context).showSecuredConnectionDialog();
@@ -300,17 +309,16 @@ class _ChatPageState extends State<ChatPage> {
           ),
           PopupMenuButton(
             onSelected: menuAction,
-            itemBuilder: (BuildContext itemBuilder) => {
-              'Delete Discussions',
-            }
-                .map(
-                  (value) => PopupMenuItem(
-                    child: Text(value),
-                    value: value,
-                  ),
-                )
-                .toList(),
-          )
+            itemBuilder: (BuildContext itemBuilder) =>
+                StringConstants.MENU_DELETE_DISCUSSION
+                    .map(
+                      (value) => PopupMenuItem(
+                        child: Text(value),
+                        value: value,
+                      ),
+                    )
+                    .toList(),
+          ),
         ],
       ),
       body: StreamBuilder<types.Room>(

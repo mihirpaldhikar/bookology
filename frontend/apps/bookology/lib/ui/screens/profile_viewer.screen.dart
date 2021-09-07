@@ -1,3 +1,25 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
@@ -6,7 +28,6 @@ import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
@@ -255,20 +276,7 @@ class _ProfileViewerState extends State<ProfileViewer> {
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 200,
-                                              child: OutLinedButton(
-                                                child: Center(
-                                                    child:
-                                                        Text('Edit Profile')),
-                                                outlineColor: Colors.grey,
-                                                backgroundColor:
-                                                    Colors.grey[50],
-                                                onPressed: () {},
-                                              ),
-                                            ),
-                                          ],
+                                          children: [],
                                         ),
                                       ),
                                     )

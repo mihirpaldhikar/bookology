@@ -1,6 +1,30 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
+import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,33 +65,31 @@ class _AccountDialogState extends State<AccountDialog>
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
+            Align(
+              alignment: Alignment.topCenter,
+              child: dragIndicator(),
             ),
             Text(
-              'Bookology',
+              StringConstants.APP_NAME,
               style: TextStyle(
+                fontWeight: Theme.of(context).textTheme.headline4!.fontWeight,
                 color: Theme.of(context).accentColor,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+                fontSize: Theme.of(context).textTheme.headline5!.fontSize,
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
             CircularImage(
               image: widget.profileImageURL,
               radius: 90,
             ),
             SizedBox(
-              height: 25,
+              height: 20,
             ),
             Text(
               widget.displayName,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+              style: Theme.of(context).textTheme.headline5,
             ),
             SizedBox(
               height: 10,
@@ -107,19 +129,12 @@ class _AccountDialogState extends State<AccountDialog>
                     (_) => false,
                   );
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Logout',
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                      ),
-                    ),
-                  ],
-                ),
+                text: StringConstants.LOGOUT,
+                showIcon: false,
+                showText: true,
                 outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-                backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
+                backgroundColo: ColorsConstant.DANGER_BACKGROUND_COLOR,
+                textColor: Colors.redAccent,
               ),
             ),
             SizedBox(
@@ -131,14 +146,9 @@ class _AccountDialogState extends State<AccountDialog>
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop('dialog');
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Close'),
-                  ],
-                ),
-                outlineColor: Theme.of(context).accentColor,
-                backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                text: StringConstants.CLOSE,
+                showText: true,
+                showIcon: false,
               ),
             ),
             SizedBox(
@@ -148,14 +158,14 @@ class _AccountDialogState extends State<AccountDialog>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  'Support',
+                  StringConstants.SUPPORT,
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 13,
                   ),
                 ),
                 Text(
-                  'Contact Us',
+                  StringConstants.CONTACT_US,
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 13,

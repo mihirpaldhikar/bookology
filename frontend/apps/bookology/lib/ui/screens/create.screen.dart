@@ -1,7 +1,29 @@
+
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'dart:io';
 
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/isbn.service.dart';
@@ -83,13 +105,9 @@ class _CreateScreenState extends State<CreateScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.black,
-        ),
         title: Text(
           'Upload New Book',
-          style: GoogleFonts.poppins(color: Colors.black),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
       body: SafeArea(
@@ -134,106 +152,104 @@ class _CreateScreenState extends State<CreateScreen> {
                               SizedBox(
                                 width: 30,
                               ),
-                              OutLinedButton(
-                                child: SizedBox(
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Next',
-                                    ),
-                                  ),
-                                ),
-                                outlineColor: Theme.of(context).accentColor,
-                                backgroundColor: ColorsConstant.SECONDARY_COLOR,
-                                onPressed: () {
-                                  continued();
-                                  if (_currentStep == 4) {
-                                    if (_isImage1Selected &&
-                                        _isImage2Selected &&
-                                        _isImage3Selected &&
-                                        _isImage4Selected) {
-                                      setState(() {
-                                        _isImagesSelected = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _isImagesSelected = false;
-                                      });
-                                    }
-                                    if (bookSellingPriceController
-                                            .text.isNotEmpty &&
-                                        bookSellingPriceController
-                                            .text.isNotEmpty) {
-                                      if (int.parse(bookOriginalPriceController
-                                              .text) <
-                                          int.parse(bookSellingPriceController
-                                              .text)) {
+                              SizedBox(
+                                width: 100,
+                                child: OutLinedButton(
+                                  text: 'Next',
+                                  outlineColor: Theme.of(context).accentColor,
+                                  showText: true,
+                                  showIcon: false,
+                                  onPressed: () {
+                                    continued();
+                                    if (_currentStep == 4) {
+                                      if (_isImage1Selected &&
+                                          _isImage2Selected &&
+                                          _isImage3Selected &&
+                                          _isImage4Selected) {
+                                        setState(() {
+                                          _isImagesSelected = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _isImagesSelected = false;
+                                        });
+                                      }
+                                      if (bookSellingPriceController
+                                              .text.isNotEmpty &&
+                                          bookSellingPriceController
+                                              .text.isNotEmpty) {
+                                        if (int.parse(
+                                                bookOriginalPriceController
+                                                    .text) <
+                                            int.parse(bookSellingPriceController
+                                                .text)) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'Selling price cannot be '
+                                                  'more than Original Price.'),
+                                            ),
+                                          );
+                                          return false;
+                                        }
+                                      }
+                                      if (_formKey.currentState!.validate() &&
+                                          _isBookConditionSelected &&
+                                          _isImagesSelected) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                ConfirmationScreen(
+                                              isbn: this
+                                                  .isbnController
+                                                  .text
+                                                  .toString(),
+                                              bookName: this
+                                                  .bookNameController
+                                                  .text
+                                                  .toString(),
+                                              bookAuthor: this
+                                                  .bookAuthorController
+                                                  .text
+                                                  .toString(),
+                                              bookPublisher: this
+                                                  .bookPublisherController
+                                                  .text
+                                                  .toString(),
+                                              bookCondition: _bookCondition,
+                                              bookOriginalPrice: this
+                                                  .bookOriginalPriceController
+                                                  .text
+                                                  .toString(),
+                                              bookSellingPrice: this
+                                                  .bookSellingPriceController
+                                                  .text
+                                                  .toString(),
+                                              bookDescription: this
+                                                  .bookDescriptionController
+                                                  .text
+                                                  .toString(),
+                                              bookImage1: _imageUrl1,
+                                              bookImage2: _imageUrl2,
+                                              bookImage3: _imageUrl3,
+                                              bookImage4: _imageUrl4,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
-                                            content: Text(
-                                                'Selling price cannot be '
-                                                'more than Original Price.'),
+                                            content: Text('All fields are '
+                                                'compulsory.'),
                                           ),
                                         );
-                                        return false;
                                       }
                                     }
-                                    if (_formKey.currentState!.validate() &&
-                                        _isBookConditionSelected &&
-                                        _isImagesSelected) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ConfirmationScreen(
-                                            isbn: this
-                                                .isbnController
-                                                .text
-                                                .toString(),
-                                            bookName: this
-                                                .bookNameController
-                                                .text
-                                                .toString(),
-                                            bookAuthor: this
-                                                .bookAuthorController
-                                                .text
-                                                .toString(),
-                                            bookPublisher: this
-                                                .bookPublisherController
-                                                .text
-                                                .toString(),
-                                            bookCondition: _bookCondition,
-                                            bookOriginalPrice: this
-                                                .bookOriginalPriceController
-                                                .text
-                                                .toString(),
-                                            bookSellingPrice: this
-                                                .bookSellingPriceController
-                                                .text
-                                                .toString(),
-                                            bookDescription: this
-                                                .bookDescriptionController
-                                                .text
-                                                .toString(),
-                                            bookImage1: _imageUrl1,
-                                            bookImage2: _imageUrl2,
-                                            bookImage3: _imageUrl3,
-                                            bookImage4: _imageUrl4,
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text('All fields are '
-                                              'compulsory.'),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                },
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -416,18 +432,10 @@ class _CreateScreenState extends State<CreateScreen> {
                     onPressed: () {
                       _scan();
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.qr_code_scanner),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Scan')
-                      ],
-                    ),
-                    outlineColor: Theme.of(context).accentColor,
-                    backgroundColor: ColorsConstant.SECONDARY_COLOR,
+                    showIcon: true,
+                    showText: true,
+                    text: 'Scan',
+                    icon: Icons.qr_code_scanner,
                   ),
                 ),
                 SizedBox(
@@ -441,16 +449,24 @@ class _CreateScreenState extends State<CreateScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        style: GoogleFonts.ibmPlexMono(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                         decoration: new InputDecoration(
+                            labelStyle: GoogleFonts.ibmPlexMono(
+                              fontWeight: FontWeight.normal,
+                            ),
+                            hintStyle: GoogleFonts.ibmPlexMono(
+                              fontWeight: FontWeight.normal,
+                            ),
                             labelText: "ISBN",
                             fillColor: Colors.white,
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(15),
                               borderSide: new BorderSide(),
                             ),
-                            prefixIcon: Icon(Icons.fingerprint)
-                            //fillColor: Colors.green
-                            ),
+                            prefixIcon: Icon(Icons.fingerprint)),
                         controller: isbnController,
                         validator: (val) {
                           if (val?.length == 0) {
@@ -488,10 +504,10 @@ class _CreateScreenState extends State<CreateScreen> {
                     Visibility(
                       visible: _showSearchButton,
                       child: OutLinedButton(
-                        child: Icon(
-                          Icons.search,
-                        ),
-                        outlineColor: Theme.of(context).accentColor,
+                        showIcon: true,
+                        showText: false,
+                        text: 'Search',
+                        icon: Icons.search,
                         onPressed: () {
                           fetchBookData(isbnController.text);
                         },
@@ -1324,10 +1340,7 @@ class _CreateScreenState extends State<CreateScreen> {
                 Center(
                   child: Text(
                     'Pic Image From',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
                 SizedBox(
@@ -1335,36 +1348,22 @@ class _CreateScreenState extends State<CreateScreen> {
                 ),
                 OutLinedButton(
                   onPressed: onCameraPressed,
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.photo_camera_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Camera'),
-                    ],
-                  ),
+                  text: 'Camera',
+                  icon: Icons.photo_camera_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
                   onPressed: onGalleryPressed,
-                  outlineColor: Theme.of(context).accentColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.collections_outlined),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Gallery'),
-                    ],
-                  ),
+                  text: 'Gallery',
+                  icon: Icons.collections_outlined,
+                  showText: true,
+                  showIcon: true,
+                  align: Alignment.center,
                 ),
               ],
             ),

@@ -1,4 +1,29 @@
+/*
+ * Copyright 2021 Mihir Paldhikar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -95,7 +120,7 @@ class _BookViewerState extends State<BookViewer> {
                     ? true
                     : false,
                 child: Tooltip(
-                  message: 'Edit Book',
+                  message: StringConstants.HINT_EDIT_BOOK,
                   child: IconButton(
                     onPressed: () {},
                     icon: Icon(Icons.edit_outlined),
@@ -107,75 +132,28 @@ class _BookViewerState extends State<BookViewer> {
                     ? true
                     : false,
                 child: Tooltip(
-                  message: 'Delete Book',
+                  message: StringConstants.HINT_DELETE_BOOK,
                   child: IconButton(
                     onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.delete_forever_outlined,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      'Delete Book?',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                content: Container(
-                                  height: 200,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'This book will be deleted. This action '
-                                        'is not irreversible.',
-                                      ),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      OutLinedButton(
-                                        child: Center(child: Text('Delete')),
-                                        outlineColor: Colors.red,
-                                        backgroundColor: Colors.red[100],
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                          showLoaderDialog(context);
-                                          final result =
-                                              await apiService.deleteBook(
-                                            bookID: widget.bookID.contains('@')
-                                                ? widget.bookID.split('@')[0]
-                                                : widget.bookID,
-                                          );
-                                          if (result == true) {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/profile');
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      OutLinedButton(
-                                        child: Center(child: Text('Cancel')),
-                                        outlineColor:
-                                            Theme.of(context).accentColor,
-                                        onPressed: () async {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ));
+                      DialogsManager(context).showDeleteBookDialog(() async {
+                        Navigator.of(context).pop();
+                        showLoaderDialog(context);
+                        final result = await apiService.deleteBook(
+                          bookID: widget.bookID.contains('@')
+                              ? widget.bookID.split('@')[0]
+                              : widget.bookID,
+                        );
+                        if (result == true) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewManager(currentIndex: 3),
+                            ),
+                            (_) => false,
+                          );
+                        }
+                      });
                     },
                     icon: Icon(
                       Icons.delete_forever_outlined,
@@ -189,9 +167,9 @@ class _BookViewerState extends State<BookViewer> {
                     ? true
                     : false,
                 child: Tooltip(
-                  message: 'More Options',
+                  message: StringConstants.HINT_MORE_OPTIONS,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {},
                     icon: Icon(Icons.more_vert_outlined),
                   ),
                 ),
@@ -248,16 +226,13 @@ class _BookViewerState extends State<BookViewer> {
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30,
-                            ),
+                            style: Theme.of(context).textTheme.headline4,
                           ),
                           SizedBox(
                             height: 10,
                           ),
                           AutoSizeText(
-                            'By ${widget.bookAuthor}',
+                            '${StringConstants.BY} ${widget.bookAuthor}',
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -273,7 +248,7 @@ class _BookViewerState extends State<BookViewer> {
                           Row(
                             children: [
                               AutoSizeText(
-                                'Price:',
+                                '${StringConstants.PRICE}:',
                                 maxLines: 4,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
@@ -316,7 +291,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 10,
                           ),
                           AutoSizeText(
-                            'You Save ${saving.toString()}',
+                            '${StringConstants.YOU_SAVE} ${saving.toString()}',
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -337,15 +312,14 @@ class _BookViewerState extends State<BookViewer> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width,
                               child: OutLinedButton(
-                                child: Center(
-                                  child: Text(
-                                    'Enquire',
-                                  ),
-                                ),
+                                showIcon: false,
+                                showText: true,
+                                text: StringConstants.ENQUIRE,
+                                textColor: Colors.black,
                                 outlineColor: isLoadingCompleted
                                     ? Colors.orange
                                     : Colors.grey,
-                                backgroundColor: isLoadingCompleted
+                                backgroundColo: isLoadingCompleted
                                     ? Colors.orange[100]
                                     : Colors.grey[100],
                                 onPressed: () async {
@@ -414,13 +388,12 @@ class _BookViewerState extends State<BookViewer> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width,
                               child: OutLinedButton(
-                                  child: Center(
-                                    child: Text(
-                                      'Add to Wish List',
-                                    ),
-                                  ),
+                                  showIcon: false,
+                                  showText: true,
+                                  text: StringConstants.ADD_TO_WISHLIST,
+                                  textColor: Colors.black,
                                   outlineColor: Colors.teal,
-                                  backgroundColor: Colors.tealAccent[100],
+                                  backgroundColo: Colors.tealAccent[100],
                                   onPressed: () {}),
                             ),
                           ),
@@ -443,7 +416,7 @@ class _BookViewerState extends State<BookViewer> {
                                 width: 10,
                               ),
                               Text(
-                                'Book Location : $location',
+                                '${StringConstants.BOOK_LOCATION} : $location',
                                 style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                   fontWeight: FontWeight.bold,
@@ -456,7 +429,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 40,
                           ),
                           AutoSizeText(
-                            'Description',
+                            StringConstants.DESCRIPTION,
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -491,7 +464,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 40,
                           ),
                           AutoSizeText(
-                            'Book Details',
+                            StringConstants.BOOK_DETAILS,
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -511,7 +484,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'ISBN :',
+                                  '${StringConstants.ISBN} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -542,7 +515,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Author :',
+                                  '${StringConstants.AUTHOR} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -573,7 +546,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Publisher :',
+                                  '${StringConstants.PUBLISHER} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -604,7 +577,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Book Condition :',
+                                  '${StringConstants.BOOK_CONDITION} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -629,7 +602,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 30,
                           ),
                           AutoSizeText(
-                            'Uploader Details',
+                            StringConstants.UPLOADER_DETAILS,
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -649,7 +622,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Username :',
+                                  '${StringConstants.USERNAME} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -690,7 +663,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Name :',
+                                  '${StringConstants.NAME} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -701,7 +674,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  userFirstName + ' ' + userLastName,
+                                  '$userFirstName $userLastName',
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -721,7 +694,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Uploaded On :',
+                                  '${StringConstants.UPLOADED_ON} :',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15,
@@ -748,26 +721,29 @@ class _BookViewerState extends State<BookViewer> {
                           SizedBox(
                             height: 20,
                           ),
-                          Center(
-                            child: SizedBox(
-                              width: 200,
-                              child: OutLinedButton(
-                                outlineColor: Theme.of(context).accentColor,
-                                backgroundColor: Colors.deepPurple[50],
-                                child: Center(
-                                  child: Text(
-                                    'View Profile',
-                                  ),
+                          Visibility(
+                            visible: widget.uploaderID !=
+                                    authService.currentUser()!.uid
+                                ? true
+                                : false,
+                            child: Center(
+                              child: SizedBox(
+                                width: 200,
+                                child: OutLinedButton(
+                                  text: StringConstants.VIEW_PROFILE,
+                                  showText: true,
+                                  showIcon: false,
+                                  textColor: Colors.black,
+                                  outlineColor: Colors.black,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfileViewer(),
+                                      ),
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  print('the username is $username');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ProfileViewer(),
-                                    ),
-                                  );
-                                },
                               ),
                             ),
                           )
@@ -855,7 +831,8 @@ class _BookViewerState extends State<BookViewer> {
             width: 20,
           ),
           Container(
-              margin: EdgeInsets.only(left: 7), child: Text("Deleting...")),
+              margin: EdgeInsets.only(left: 7),
+              child: Text(StringConstants.DIALOG_DELETING)),
         ],
       ),
     );
