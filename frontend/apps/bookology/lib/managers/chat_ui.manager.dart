@@ -84,6 +84,8 @@ class ChatUiManager extends ChatTheme {
             sentMessageCaptionTextStyle: GoogleFonts.poppins(
               color: Color(0xFF757575),
             ),
+            messageInsetsHorizontal: 0.0,
+            messageInsetsVertical: 0.0,
             sentMessageLinkDescriptionTextStyle: GoogleFonts.poppins(),
             sentMessageLinkTitleTextStyle: GoogleFonts.poppins(),
             errorColor: Colors.red,

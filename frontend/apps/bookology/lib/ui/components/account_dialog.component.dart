@@ -133,7 +133,7 @@ class _AccountDialogState extends State<AccountDialog>
                 showIcon: false,
                 showText: true,
                 outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-                backgroundColo: ColorsConstant.DANGER_BACKGROUND_COLOR,
+                backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
                 textColor: Colors.redAccent,
               ),
             ),

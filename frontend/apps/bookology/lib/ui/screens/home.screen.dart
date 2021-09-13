@@ -31,6 +31,7 @@ import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/location.service.dart';
+import 'package:bookology/services/update.service.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
 import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
@@ -80,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    UpdateService(context).checkForAppUpdate();
     _ad = BannerAd(
       size: AdSize(
         width: MediaQuery.of(context).size.width.toInt(),

@@ -44,8 +44,15 @@ class _IntroScreenState extends State<IntroScreen> {
   final AuthService authService = new AuthService(FirebaseAuth.instance);
   final CacheService cacheService = new CacheService();
   final pageDecoration = const PageDecoration(
-    titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-    bodyTextStyle: TextStyle(fontSize: 19.0),
+    titleTextStyle: TextStyle(
+      fontSize: 28.0,
+      fontWeight: FontWeight.w700,
+      color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
+    ),
+    bodyTextStyle: TextStyle(
+      fontSize: 19.0,
+      color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
+    ),
     descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
     pageColor: Colors.white,
     imagePadding: EdgeInsets.zero,
@@ -60,7 +67,7 @@ class _IntroScreenState extends State<IntroScreen> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
           ),
         ),
         bodyWidget: Container(
@@ -74,7 +81,7 @@ class _IntroScreenState extends State<IntroScreen> {
         decoration: pageDecoration,
         image: const Center(
           child: Image(
-            image: AssetImage('assets/icons/bookology.icon.png'),
+            image: AssetImage('assets/icons/splash.icon.png'),
             width: 250,
             height: 250,
           ),
@@ -158,13 +165,18 @@ class _IntroScreenState extends State<IntroScreen> {
             decoration: BoxDecoration(
               color: ColorsConstant.SECONDARY_COLOR,
               border: Border.all(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
                 width: 1,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.SECONDARY_BORDER_RADIUS),
             ),
-            child: Text('Complete Profile'),
+            child: Text(
+              'Complete Profile',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
           next: Container(
             width: 200,
@@ -178,13 +190,18 @@ class _IntroScreenState extends State<IntroScreen> {
             decoration: BoxDecoration(
               color: ColorsConstant.SECONDARY_COLOR,
               border: Border.all(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
                 width: 1,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.SECONDARY_BORDER_RADIUS),
             ),
-            child: Text('Next'),
+            child: Text(
+              'Next',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
           pages: introPages,
           dotsDecorator: DotsDecorator(

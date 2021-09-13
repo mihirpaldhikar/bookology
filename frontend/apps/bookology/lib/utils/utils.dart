@@ -23,6 +23,7 @@
 import 'dart:ui';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:url_launcher/url_launcher.dart';
 
 const COLORS = [
   Color(0xffff6767),
@@ -44,3 +45,6 @@ Color getUserAvatarNameColor(types.User user) {
 
 String getUserName(types.User user) =>
     '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
+
+void launchURL({required String url}) async =>
+    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';

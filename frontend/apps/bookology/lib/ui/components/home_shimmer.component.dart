@@ -36,54 +36,144 @@ Widget homeShimmer() {
     itemBuilder: (context, index) {
       if (index == 0) {
         return Container(
-          margin: EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-          ),
-          child: Chip(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
-                ),
-                bottomRight: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
-                ),
-                topLeft: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
-                ),
-                bottomLeft: Radius.circular(
-                  ValuesConstant.BORDER_RADIUS,
+          height: 250.0,
+          width: double.infinity,
+          color: Colors.transparent,
+          child: Stack(
+            children: [
+              Shimmer.fromColors(
+                enabled: true,
+                baseColor: Color(0xFFE0E0E0),
+                highlightColor: Color(0xFFF5F5F5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: 10,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.place_outlined,
+                                  color: Colors.grey.shade900,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  width: 150,
+                                  height: 15,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 15,
+                            top: 6,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              size: 25,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 5,
+                            top: 6,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Icon(
+                              Icons.notifications_outlined,
+                              size: 25,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 20,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 15,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: 200,
+                            height: 15,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            padding: EdgeInsets.all(10),
-            backgroundColor: Colors.white,
-            side: BorderSide(
-              color: Colors.grey,
-              width: 1,
-            ),
-            label: Shimmer.fromColors(
-              enabled: true,
-              baseColor: Color(0xFFE0E0E0),
-              highlightColor: Color(0xFFF5F5F5),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.place_outlined,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: 150,
-                    height: 15,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ),
+            ],
           ),
         );
       } else {

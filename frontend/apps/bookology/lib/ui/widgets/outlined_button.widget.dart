@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -38,16 +37,16 @@ class OutLinedButton extends StatelessWidget {
   final bool showIcon;
   final bool? inverted;
   final Function onPressed;
-  final Color? backgroundColo;
+  final Color? backgroundColor;
   final MainAxisAlignment? alignContent;
   final double? spaceBetween;
 
   const OutLinedButton({
     Key? key,
-    this.outlineWidth = 2.0,
+    this.outlineWidth = 1.0,
     this.outlineColor = ColorsConstant.ACCENT_COLOR,
     required this.onPressed,
-    this.backgroundColo = ColorsConstant.SECONDARY_COLOR,
+    this.backgroundColor = ColorsConstant.SECONDARY_COLOR,
     required this.text,
     this.icon,
     required this.showText,
@@ -76,10 +75,10 @@ class OutLinedButton extends StatelessWidget {
             top: 10,
             bottom: 10,
             right: 8,
-            left: 8,
+            left: this.showIcon ? 20 : 8,
           ),
           decoration: BoxDecoration(
-            color: this.backgroundColo,
+            color: this.backgroundColor,
             border: Border.all(
               color: this.outlineColor!,
               width: 1,
@@ -93,16 +92,21 @@ class OutLinedButton extends StatelessWidget {
                   children: [
                     Visibility(
                       visible: this.showText,
-                      child: Text(
-                        this.text,
-                        style: TextStyle(
-                          fontWeight:
-                              Theme.of(context).textTheme.button!.fontWeight,
-                          fontSize:
-                              Theme.of(context).textTheme.button!.fontSize,
-                          fontStyle:
-                              Theme.of(context).textTheme.button!.fontStyle,
-                          color: this.textColor,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 100,
+                        ),
+                        child: Text(
+                          this.text,
+                          style: TextStyle(
+                            fontWeight:
+                                Theme.of(context).textTheme.button!.fontWeight,
+                            fontSize:
+                                Theme.of(context).textTheme.button!.fontSize,
+                            fontStyle:
+                                Theme.of(context).textTheme.button!.fontStyle,
+                            color: this.textColor,
+                          ),
                         ),
                       ),
                     ),
@@ -140,16 +144,21 @@ class OutLinedButton extends StatelessWidget {
                     ),
                     Visibility(
                       visible: this.showText,
-                      child: Text(
-                        this.text,
-                        style: TextStyle(
-                          fontWeight:
-                              Theme.of(context).textTheme.button!.fontWeight,
-                          fontSize:
-                              Theme.of(context).textTheme.button!.fontSize,
-                          fontStyle:
-                              Theme.of(context).textTheme.button!.fontStyle,
-                          color: this.textColor,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: this.showIcon ? 3 : 0,
+                        ),
+                        child: Text(
+                          this.text,
+                          style: TextStyle(
+                            fontWeight:
+                                Theme.of(context).textTheme.button!.fontWeight,
+                            fontSize:
+                                Theme.of(context).textTheme.button!.fontSize,
+                            fontStyle:
+                                Theme.of(context).textTheme.button!.fontStyle,
+                            color: this.textColor,
+                          ),
                         ),
                       ),
                     )

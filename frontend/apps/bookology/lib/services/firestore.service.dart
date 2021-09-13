@@ -20,6 +20,7 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/models/app.model.dart';
 import 'package:bookology/services/notification.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -259,5 +260,11 @@ class FirestoreService {
     } catch (error) {
       print(error);
     }
+  }
+
+  Future<AppModel> getServerSideAppDetails() async {
+    final appDetails =
+        await _firestore.collection('configs').doc('app_details').get();
+    return AppModel.fromJson(appDetails.data()!);
   }
 }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -37,23 +36,78 @@ Widget profileShimmer() {
             baseColor: Color(0xFFE0E0E0),
             highlightColor: Color(0xFFF5F5F5),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 15,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 15,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: 200,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 100,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
+                    Column(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 15,
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(100)),
-                    ),
-                    SizedBox(
-                      width: 100,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 60,
+                          height: 10,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                     Column(
                       children: [
@@ -67,50 +121,12 @@ Widget profileShimmer() {
                         ),
                         Container(
                           width: 60,
-                          height: 15,
+                          height: 10,
                           color: Colors.white,
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
                   ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 15,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 15,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: 200,
-                        height: 15,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        width: 100,
-                        height: 15,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
                 ),
                 SizedBox(
                   height: 20,

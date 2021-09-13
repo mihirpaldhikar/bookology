@@ -24,6 +24,18 @@ class StringConstants {
   // App Constants
   static const String APP_NAME = 'Bookology';
   static const String APP_SLOGAN = 'Find the books nearby.';
+  static const String APP_UPDATE_AVAILABLE = 'An App update is available.';
+  static String APP_COPYRIGHT =
+      'Copyright \u00a9 ${DateTime.now().year} Mihir Paldhikar';
+  static const String APP_NOTICE =
+      'No Part of the APP should be COPIED, MODIFIED, REDISTRIBUTED without the '
+      'written agreement/license from the author MIHIR PALDHIKAR. \nBy doing any '
+      'of the things written above is STRICTLY PROHIBITED and a Legal Offence. '
+      '\nLegal Action Will be taken without any Prior Notice.';
+
+  // Urls
+  static const String APP_PRIVACY_POLICY_URL =
+      'https://bookology.tech/privacy-policy';
 
   // Words Constants
   static const String DELETE = 'Delete';
@@ -58,6 +70,11 @@ class StringConstants {
   static const String CAMERA = 'Camera';
   static const String FILE = 'File';
   static const String UPLOADED_ON = 'Uploaded On';
+  static const String UPDATE = 'Update';
+  static const String POWERED_BY_FLUTTER = 'Powered By Flutter';
+  static const String PRIVACY_POLICY = 'Privacy Policy';
+  static const String CHECK_FOR_UPDATED = 'Check for Updates';
+  static const String SEND_FEEDBACK = 'Send Feedback';
 
   // Title Constants
   static const String TITLE_CONFIRMATION = 'Confirmation';

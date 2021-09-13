@@ -30,6 +30,7 @@ class ThemeManager {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     fontFamily: 'YoutubeSans',
+    primaryColor: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
     backgroundColor: ColorsConstant.BACKGROUND_COLOR,
     cardTheme: CardTheme(
       color: ColorsConstant.CARD_COLOR,
@@ -43,8 +44,6 @@ class ThemeManager {
       ),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    primarySwatch: ColorsConstant.PRIMARY_SWATCH,
-    accentColor: ColorsConstant.ACCENT_COLOR,
     textTheme: TextTheme(
       headline1: TextStyle(
         color: Colors.black,
@@ -96,16 +95,14 @@ class ThemeManager {
         fontFamily: 'YoutubeSans',
       ),
       button: TextStyle(
-        color: ColorsConstant.BUTTON_TEXT_COLOR,
+        color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
         fontWeight: FontWeight.w600,
         fontFamily: 'YoutubeSans',
+        fontSize: 15,
       ),
     ),
     iconTheme: IconThemeData(
       color: Colors.black,
-    ),
-    accentIconTheme: IconThemeData(
-      color: ColorsConstant.ACCENT_COLOR,
     ),
     chipTheme: ChipThemeData(
       backgroundColor: ColorsConstant.SECONDARY_COLOR,
@@ -128,20 +125,40 @@ class ThemeManager {
       deleteIconColor: Colors.redAccent,
       secondaryLabelStyle: TextStyle(),
     ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: TextStyle(fontFamily: 'YoutubeSans'),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(
+            ValuesConstant.BORDER_RADIUS,
+          ),
+          topLeft: Radius.circular(
+            ValuesConstant.BORDER_RADIUS,
+          ),
+          bottomLeft: Radius.circular(
+            ValuesConstant.BORDER_RADIUS,
+          ),
+          bottomRight: Radius.circular(
+            ValuesConstant.BORDER_RADIUS,
+          ),
+        ),
+      ),
+    ),
     scaffoldBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
     appBarTheme: AppBarTheme(
       backgroundColor: ColorsConstant.APP_BAR_COLOR,
       elevation: 0,
       toolbarTextStyle: TextStyle(
+        color: Colors.black,
         fontFamily: 'YoutubeSans',
         fontSize: 30,
       ),
-      textTheme: GoogleFonts.poppinsTextTheme(),
       iconTheme: IconThemeData(
         color: Colors.black,
       ),
       titleTextStyle: TextStyle(
-        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        fontWeight: FontWeight.normal,
         fontSize: 25,
         fontFamily: 'YoutubeSans',
       ),
@@ -168,6 +185,11 @@ class ThemeManager {
           Radius.circular(ValuesConstant.BORDER_RADIUS),
         ),
       ),
+    ),
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: ColorsConstant.PRIMARY_SWATCH,
+    ).copyWith(
+      secondary: ColorsConstant.ACCENT_COLOR,
     ),
   );
 }

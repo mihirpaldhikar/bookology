@@ -23,16 +23,31 @@
 
 package com.imihirpaldhikar.bookology
 
+import android.os.Environment
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 class MainActivity: FlutterActivity() {
+    private val channel = "externalStorage";
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         GoogleMobileAdsPlugin.registerNativeAdFactory(
             flutterEngine, "bookCardAd", NativeAdsCardFactory(context)
         )
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channel).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "getExternalStorageDirectory" ->
+                    result.success(Environment.getExternalStorageDirectory().toString())
+                "getExternalStoragePublicDirectory" -> {
+                    val type = call.argument<String>("type")
+                    result.success(Environment.getExternalStoragePublicDirectory(type).toString())
+                }
+                else -> result.notImplemented()
+            }
+        }
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
