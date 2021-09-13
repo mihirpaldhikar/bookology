@@ -23,6 +23,7 @@ const setBooklet = (book) => {
     pricing: {
       original_price: book.original_price,
       selling_price: book.selling_price,
+      currency: book.currency,
     },
     created_on: {
       date: moment().format('dddd DD MMMM YYYY'),
@@ -57,6 +58,7 @@ const updateBook = (book) => {
     pricing: {
       original_price: book.original_price,
       selling_price: book.selling_price,
+      currency: book.currency,
     },
     created_on: {
       date: book.date,
@@ -92,6 +94,7 @@ const getBooklet = (book) => {
     pricing: {
       original_price: book.pricing.original_price,
       selling_price: book.pricing.selling_price,
+      currency: book.pricing.currency,
     },
     created_on: {
       date: book.created_on.date,
