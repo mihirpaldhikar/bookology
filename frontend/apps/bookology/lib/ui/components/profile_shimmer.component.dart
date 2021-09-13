@@ -20,6 +20,7 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -242,7 +243,8 @@ Widget profileShimmer() {
                             height: 40,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(
+                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
                             ),
                           )
                         ],

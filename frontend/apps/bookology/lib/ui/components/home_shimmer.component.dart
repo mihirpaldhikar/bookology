@@ -164,7 +164,7 @@ Widget homeShimmer() {
                           ),
                           Container(
                             width: 200,
-                            height: 15,
+                            height: 20,
                             color: Colors.white,
                           ),
                         ],
@@ -284,7 +284,8 @@ Widget homeShimmer() {
                           height: 40,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(
+                                ValuesConstant.SECONDARY_BORDER_RADIUS),
                           ),
                         )
                       ],
