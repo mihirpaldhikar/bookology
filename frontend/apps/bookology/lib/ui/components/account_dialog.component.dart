@@ -73,7 +73,7 @@ class _AccountDialogState extends State<AccountDialog>
               StringConstants.APP_NAME,
               style: TextStyle(
                 fontWeight: Theme.of(context).textTheme.headline4!.fontWeight,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontSize: Theme.of(context).textTheme.headline5!.fontSize,
               ),
             ),

@@ -29,6 +29,7 @@ import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/update.service.dart';
@@ -37,6 +38,7 @@ import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -51,12 +53,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late StreamSubscription subscription;
-
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final apiService = new ApiService();
   final locationService = new LocationService();
+  final AuthService authService = new AuthService(FirebaseAuth.instance);
   late Future<List<Object>?> feed;
   late BannerAd _ad;
   List<Object> homeFeed = [];
@@ -227,8 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             } else {
                               return bookList(
-                                bookModel:
-                                    homeFeed.data![index - 1] as BookModel,
+                                book: homeFeed.data![index - 1] as BookModel,
                               );
                             }
                           },
@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget bookList({required BookModel bookModel}) {
+  Widget bookList({required BookModel book}) {
     return Padding(
       padding: EdgeInsets.only(
         left: 10,
@@ -255,28 +255,17 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: BookCard(
-        bookID: bookModel.bookId.toString(),
-        bookName: bookModel.bookInformation.name.toString(),
-        originalPrice: bookModel.pricing.originalPrice.toString(),
-        sellingPrice: bookModel.pricing.sellingPrice.toString(),
-        coverImageURL: bookModel.additionalInformation.images[0],
-        bookAuthor: bookModel.bookInformation.author.toString(),
+        buttonText:
+            authService.currentUser()!.uid == book.uploaderId ? 'Edit' : 'View',
+        id: book.bookId,
+        book: book,
         onClicked: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => BookViewer(
-                bookID: bookModel.bookId.toString(),
-                isbn: bookModel.bookInformation.isbn.toString(),
-                uploaderID: bookModel.uploaderId.toString(),
-                bookAuthor: bookModel.bookInformation.author.toString(),
-                bookDescription:
-                    bookModel.additionalInformation.description.toString(),
-                bookName: bookModel.bookInformation.name.toString(),
-                bookPublished: bookModel.bookInformation.publisher.toString(),
-                images: bookModel.additionalInformation.images,
-                originalPrice: bookModel.pricing.originalPrice.toString(),
-                sellingPrice: bookModel.pricing.sellingPrice.toString(),
+                id: book.bookId,
+                book: book,
               ),
             ),
           );

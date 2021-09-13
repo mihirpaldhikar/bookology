@@ -112,7 +112,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               ),
                               child: Icon(
                                 Icons.notifications_outlined,
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                             SizedBox(

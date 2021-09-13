@@ -22,15 +22,15 @@
 
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/permission.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
-import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -150,7 +150,8 @@ class _IntroScreenState extends State<IntroScreen> {
           onDone: () => _onIntroEnd(context),
           onChange: (pageIndex) {
             if (pageIndex == 3) {
-              getCurrentLocation().then((value) {});
+              PermissionManager()
+                  .requestPermission(Permission.locationWhenInUse);
             }
           },
           done: Container(
@@ -206,7 +207,7 @@ class _IntroScreenState extends State<IntroScreen> {
           pages: introPages,
           dotsDecorator: DotsDecorator(
             color: Colors.grey.shade400,
-            activeColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
           ),
         ),
       ),
@@ -228,12 +229,5 @@ class _IntroScreenState extends State<IntroScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> getCurrentLocation() async {
-    final currentLocation =
-        await LocationService().determinePosition(context: context);
-    List<Placemark> placeMarks = await placemarkFromCoordinates(
-        currentLocation.latitude, currentLocation.longitude);
   }
 }

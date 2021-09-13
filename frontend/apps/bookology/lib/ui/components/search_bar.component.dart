@@ -23,7 +23,6 @@
 import 'dart:math';
 
 import 'package:badges/badges.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/services/auth.service.dart';
@@ -54,6 +53,7 @@ class _SearchBarState extends State<SearchBar> {
   final locationService = new LocationService();
   var top = 0.0;
   bool isCollapsed = false;
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
@@ -125,7 +125,7 @@ class _SearchBarState extends State<SearchBar> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                              color: ColorsConstant.SECONDARY_COLOR,
+                              color: Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Icon(
@@ -159,7 +159,7 @@ class _SearchBarState extends State<SearchBar> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                              color: ColorsConstant.SECONDARY_COLOR,
+                              color: Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Badge(
@@ -195,7 +195,7 @@ class _SearchBarState extends State<SearchBar> {
               ),
               height: 250.0,
               decoration: BoxDecoration(
-                color: ColorsConstant.SECONDARY_COLOR,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(ValuesConstant.BORDER_RADIUS),
                   bottomRight: Radius.circular(ValuesConstant.BORDER_RADIUS),
@@ -232,7 +232,8 @@ class _SearchBarState extends State<SearchBar> {
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
-                                    ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                  ValuesConstant.SECONDARY_BORDER_RADIUS,
+                                ),
                                 border: Border.all(
                                   color: Colors.black,
                                   width: 1,

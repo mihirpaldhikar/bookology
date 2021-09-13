@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -87,8 +86,8 @@ class NotificationService {
     }
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
-    await FirebaseMessaging.onMessage.listen(_handleNotification);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
+    FirebaseMessaging.onMessage.listen(_handleNotification);
   }
 }
 

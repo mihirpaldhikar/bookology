@@ -28,7 +28,6 @@ import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +36,6 @@ class ApiService {
   final cacheStorage = GetStorage();
   final apiURL = dotenv.env['API_URL'];
   final apiToken = dotenv.env['API_TOKEN'];
-  final _fireUser = FirebaseAuth.instance.currentUser;
   final _firestoreService = new FirestoreService(FirebaseFirestore.instance);
   final cacheService = CacheService();
   final client = http.Client();
@@ -147,7 +145,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> deleteBook({required String bookID}) async {
+  Future<bool> deleteBook({required String bookID}) async {
     try {
       final requestURL = Uri.parse('$apiURL/books/delete/$bookID');
       final response = await client.delete(
@@ -161,16 +159,15 @@ class ApiService {
       final receivedData = jsonDecode(response.body);
       if (receivedData['result']['status_code'] == 200) {
         return true;
-      } else {
-        return receivedData;
       }
+      return false;
     } catch (error) {
       print(error);
-      return error;
+      return false;
     }
   }
 
-  Future<dynamic> postBookData({
+  Future<bool> postBookData({
     required String isbn,
     required String bookName,
     required String bookAuthor,
@@ -187,7 +184,7 @@ class ApiService {
     required String imageDownloadURL4,
   }) async {
     try {
-      final requestURL = Uri.parse('${apiURL}/books/publish');
+      final requestURL = Uri.parse('$apiURL/books/publish');
       final response = await http.post(
         requestURL,
         headers: {
@@ -219,9 +216,10 @@ class ApiService {
       if (statusCode == 201) {
         return true;
       }
+      return false;
     } catch (error) {
       print(error);
-      return error;
+      return false;
     }
   }
 
@@ -253,13 +251,13 @@ class ApiService {
     }
   }
 
-  Future<dynamic> sendEnquiryNotification(
+  Future<bool> sendEnquiryNotification(
       {required String userID,
       required String receiverID,
       required String userName}) async {
     try {
       final requestURL = Uri.parse(
-          '${apiURL}/notifications/send?type=book_enquiry_notification');
+          '$apiURL/notifications/send?type=book_enquiry_notification');
       final request = await http.post(
         requestURL,
         headers: {
@@ -281,11 +279,11 @@ class ApiService {
       return false;
     } catch (error) {
       print(error);
-      return error;
+      return false;
     }
   }
 
-  Future<dynamic> updateUserProfile({
+  Future<bool> updateUserProfile({
     required String userID,
     required String userName,
     required String firstName,
@@ -316,9 +314,10 @@ class ApiService {
       if (receivedData['result']['status_code'] == 200) {
         return true;
       }
+      return false;
     } catch (error) {
       print(error);
-      return error;
+      return false;
     }
   }
 }

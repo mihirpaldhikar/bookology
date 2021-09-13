@@ -72,6 +72,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_isAdLoaded) {
       return Container(
         child: Expanded(

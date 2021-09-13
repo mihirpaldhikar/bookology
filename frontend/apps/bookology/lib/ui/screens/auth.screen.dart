@@ -178,7 +178,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                 TextSpan(
                                   text: ' ${StringConstants.SIGN_UP}',
                                   style: GoogleFonts.poppins(
-                                    color: Theme.of(context).accentColor,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
                                 ),
                               ],

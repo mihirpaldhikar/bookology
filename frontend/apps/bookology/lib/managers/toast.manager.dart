@@ -21,40 +21,53 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_l10n.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-/// A class that represents send button widget
-class SendChatButton extends StatelessWidget {
-  /// Creates send button widget
-  const SendChatButton({
-    Key? key,
-    required this.onPressed,
-  }) : super(key: key);
+class ToastManager {
+  final BuildContext context;
 
-  /// Callback for send button tap event
-  final void Function() onPressed;
+  ToastManager(this.context);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      width: 77,
-      padding: const EdgeInsets.all(2),
-      child: Padding(
-        padding: EdgeInsets.zero,
-        child: Tooltip(
-          message: InheritedL10n.of(context).l10n.sendButtonAccessibilityLabel,
-          child: TextButton(
-            child: Text(
-              'Send',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
+  void showToast({
+    required String message,
+    bool showIcon = false,
+    int durationSeconds = 3,
+    IconData? icon,
+    Color? iconColor,
+    Color? textColor,
+    Color? backGroundColor,
+  }) {
+    FToast fToast;
+    fToast = FToast();
+    fToast.init(context);
+    fToast.showToast(
+      toastDuration: Duration(seconds: durationSeconds),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: backGroundColor ?? Colors.grey.shade100,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(
+              visible: showIcon,
+              child: Icon(
+                icon,
+                color: iconColor,
               ),
             ),
-            onPressed: onPressed,
-          ),
+            SizedBox(
+              width: 12.0,
+            ),
+            Text(
+              message,
+              style: TextStyle(
+                color: textColor ?? Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
         ),
       ),
     );

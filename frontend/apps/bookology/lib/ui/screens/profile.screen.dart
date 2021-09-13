@@ -40,7 +40,6 @@ import 'package:bookology/ui/widgets/marquee.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -77,7 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
     return StreamBuilder<ConnectivityStatus>(
       initialData: ConnectivityStatus.Cellular,
       stream: ConnectivityService().connectionStatusController.stream,
@@ -259,7 +257,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Theme.of(context)
-                                                        .accentColor,
+                                                        .colorScheme
+                                                        .secondary,
                                                     fontSize: 30),
                                               ),
                                               Text(
@@ -372,83 +371,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 } else {
                                   return BookCard(
-                                      showMenu: false,
+                                      showMenu: true,
                                       buttonText: 'Edit',
-                                      bookID:
-                                          '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                                      bookName: userData.data!.books[index - 1]
-                                          .bookInformation.name
-                                          .toString(),
-                                      coverImageURL: userData
-                                          .data!
-                                          .books[index - 1]
-                                          .additionalInformation
-                                          .images[0],
-                                      originalPrice: userData
-                                          .data!
-                                          .books[index - 1]
-                                          .pricing
-                                          .originalPrice
-                                          .toString(),
-                                      sellingPrice: userData.data!
-                                          .books[index - 1].pricing.sellingPrice
-                                          .toString(),
-                                      bookAuthor: userData
-                                          .data!
-                                          .books[index - 1]
-                                          .bookInformation
-                                          .author
-                                          .toString(),
+                                      id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                      book: userData.data!.books[index - 1],
                                       onClicked: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 BookViewer(
-                                              bookID:
-                                                  '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                                              isbn: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .bookInformation
-                                                  .isbn,
-                                              uploaderID: userData.data!
-                                                  .books[index - 1].uploaderId,
-                                              bookAuthor: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .bookInformation
-                                                  .author,
-                                              bookDescription: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .additionalInformation
-                                                  .description,
-                                              bookName: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .bookInformation
-                                                  .name,
-                                              bookPublished: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .bookInformation
-                                                  .publisher,
-                                              images: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .additionalInformation
-                                                  .images,
-                                              originalPrice: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .pricing
-                                                  .originalPrice,
-                                              sellingPrice: userData
-                                                  .data!
-                                                  .books[index - 1]
-                                                  .pricing
-                                                  .sellingPrice,
+                                              id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                              book: userData
+                                                  .data!.books[index - 1],
                                             ),
                                           ),
                                         );

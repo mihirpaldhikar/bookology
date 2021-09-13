@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -46,7 +45,6 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  int _index = 0;
   List<bool> activeTab = [
     false,
     false,
@@ -156,7 +154,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                 width: 100,
                                 child: OutLinedButton(
                                   text: 'Next',
-                                  outlineColor: Theme.of(context).accentColor,
+                                  outlineColor:
+                                      Theme.of(context).colorScheme.secondary,
                                   showText: true,
                                   showIcon: false,
                                   onPressed: () {
@@ -415,7 +414,9 @@ class _CreateScreenState extends State<CreateScreen> {
               child: Text(
                 'What is ISBN number?',
                 textAlign: TextAlign.end,
-                style: TextStyle(color: Theme.of(context).accentColor),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
           ),
@@ -957,8 +958,9 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: Text(
                         value,
                         style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).accentColor),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
                     );
                   }).toList(),
@@ -1374,7 +1376,8 @@ class _CreateScreenState extends State<CreateScreen> {
   Future<dynamic> _picImage(
       {required ImageSource source, required String imageURI}) async {
     final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo = await _picker.getImage(source: source);
+    final PickedFile? photo =
+        (await _picker.pickImage(source: source)) as PickedFile?;
 
     final croppedImage =
         await _cropImage(pickedImage: photo, imageURI: imageURI);

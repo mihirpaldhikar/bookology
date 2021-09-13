@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -122,8 +121,6 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
 
   @override
   Widget build(BuildContext context) {
-    final _query = MediaQuery.of(context);
-
     return GestureDetector(
       onTap: () => _inputFocusNode.requestFocus(),
       child: Shortcuts(

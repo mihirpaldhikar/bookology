@@ -146,7 +146,7 @@ class _ChatPageState extends State<ChatPage> {
       _setAttachmentUploading(true);
       final name = result.files.single.name;
       final filePath = result.files.single.path;
-      final file = File(filePath ?? '');
+      final file = File(filePath);
       final collectionID =
           '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
       try {
@@ -160,7 +160,7 @@ class _ChatPageState extends State<ChatPage> {
         final uri = await reference.getDownloadURL();
 
         final message = types.PartialFile(
-          mimeType: lookupMimeType(filePath ?? ''),
+          mimeType: lookupMimeType(filePath),
           name: name,
           size: result.files.single.size,
           uri: uri,
@@ -176,7 +176,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleImageSelection() async {
-    final result = await ImagePicker().getImage(
+    final result = await ImagePicker().pickImage(
       imageQuality: 70,
       maxWidth: 1440,
       source: ImageSource.gallery,

@@ -21,10 +21,8 @@
  */
 
 import 'package:bookology/models/app.model.dart';
-import 'package:bookology/services/notification.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get_storage/get_storage.dart';
@@ -33,8 +31,6 @@ class FirestoreService {
   final cacheStorage = GetStorage();
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final NotificationService _notificationService =
-      NotificationService(FirebaseMessaging.instance);
 
   FirestoreService(this._firestore);
 
@@ -45,49 +41,14 @@ class FirestoreService {
           .doc(_firebaseAuth.currentUser?.uid)
           .get();
 
-      final userKey = data.data()?['secrets']['authorizeToken'];
+      final userKey = await data.data()?['secrets']['authorizeToken'];
       if (cacheStorage.read('userIdentifierKey') == null) {
         cacheStorage.write('userIdentifierKey', userKey);
       }
       return cacheStorage.read('userIdentifierKey');
     } catch (error) {
       print(error);
-      return error.toString();
-    }
-  }
-
-  Future<dynamic> createFirestoreUser({
-    required String uuid,
-    required String userName,
-    required String firstName,
-    required String lastName,
-    required String profileImageURL,
-  }) async {
-    try {
-      final data = await _firestore
-          .collection('users')
-          .doc(_firebaseAuth.currentUser?.uid)
-          .set(
-        {
-          'firstName': firstName,
-          'imageUrl': profileImageURL,
-          'lastName': lastName,
-          'lastSeen': null,
-          'role': types.Role.user,
-          'metadata': {
-            'userName': userName,
-            'isVerified': false,
-            'fcmToken': await _notificationService.getMessagingToken(),
-          },
-        },
-        SetOptions(
-          merge: true,
-        ),
-      );
-      return data;
-    } catch (error) {
-      print(error);
-      return error;
+      return '';
     }
   }
 
@@ -108,10 +69,8 @@ class FirestoreService {
 
   Future<void> clearDiscussionsChat({required String roomID}) async {
     try {
-      final messages = await _firestore
-          .collection('rooms')
-          .doc(roomID)
-          .collection('messages');
+      final messages =
+          _firestore.collection('rooms').doc(roomID).collection('messages');
 
       var snapshots = await messages.get();
       for (var doc in snapshots.docs) {
@@ -221,7 +180,7 @@ class FirestoreService {
     }
   }
 
-  Future<dynamic> createRequest({
+  Future<void> createRequest({
     required String bookID,
     required String userID,
   }) async {
@@ -254,7 +213,7 @@ class FirestoreService {
           .get();
 
       if (data.data()?['accepted'] == null) {
-        return 'empty';
+        return 'null';
       }
       return data.data()?['accepted'];
     } catch (error) {
