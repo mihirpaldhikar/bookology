@@ -137,7 +137,11 @@ class _BookViewerState extends State<BookViewer> {
                     onPressed: () async {
                       DialogsManager(context).showDeleteBookDialog(() async {
                         Navigator.of(context).pop();
-                        showLoaderDialog(context);
+                        DialogsManager(context).showProgressDialog(
+                          content: 'Deleting',
+                          contentColor: Colors.redAccent,
+                          progressColor: Colors.redAccent,
+                        );
                         final result = await apiService.deleteBook(
                           bookID: widget.bookID.contains('@')
                               ? widget.bookID.split('@')[0]
@@ -319,7 +323,7 @@ class _BookViewerState extends State<BookViewer> {
                                 outlineColor: isLoadingCompleted
                                     ? Colors.orange
                                     : Colors.grey,
-                                backgroundColo: isLoadingCompleted
+                                backgroundColor: isLoadingCompleted
                                     ? Colors.orange[100]
                                     : Colors.grey[100],
                                 onPressed: () async {
@@ -393,7 +397,7 @@ class _BookViewerState extends State<BookViewer> {
                                   text: StringConstants.ADD_TO_WISHLIST,
                                   textColor: Colors.black,
                                   outlineColor: Colors.teal,
-                                  backgroundColo: Colors.tealAccent[100],
+                                  backgroundColor: Colors.tealAccent[100],
                                   onPressed: () {}),
                             ),
                           ),
@@ -648,6 +652,7 @@ class _BookViewerState extends State<BookViewer> {
                                   child: Icon(
                                     Icons.verified,
                                     color: Colors.blue,
+                                    size: 15,
                                   ),
                                 ),
                               ],
@@ -816,32 +821,5 @@ class _BookViewerState extends State<BookViewer> {
       isVerified = bookData['uploader']['verified'];
       userProfilePicture = bookData['uploader']['profile_picture_url'];
     });
-  }
-
-  showLoaderDialog(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-      content: new Row(
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.redAccent,
-            ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Container(
-              margin: EdgeInsets.only(left: 7),
-              child: Text(StringConstants.DIALOG_DELETING)),
-        ],
-      ),
-    );
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 }

@@ -67,12 +67,12 @@ class _AuthScreenState extends State<AuthScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      top: 100,
+                      top: 60,
                     ),
                     child: _logo(context),
                   ),
                   SizedBox(
-                    height: 220,
+                    height: 170,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             decoration: BoxDecoration(
                               color: Theme.of(context).backgroundColor,
                               border: Border.all(
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).primaryColor,
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(
@@ -149,6 +149,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           icon: Icons.mail_outline_rounded,
                           showIcon: true,
                           showText: true,
+                          iconColor: Theme.of(context).primaryColor,
+                          textColor: Theme.of(context).primaryColor,
+                          outlineColor: Theme.of(context).primaryColor,
                           alignContent: MainAxisAlignment.start,
                           spaceBetween: 115,
                           onPressed: () {
@@ -196,17 +199,13 @@ Widget _logo(BuildContext context) {
   return Container(
     child: Column(
       children: [
-        Text(
-          StringConstants.APP_NAME,
-          style: TextStyle(
-            fontWeight: Theme.of(context).textTheme.headline3!.fontWeight,
-            fontSize: Theme.of(context).textTheme.headline3!.fontSize,
-            fontStyle: Theme.of(context).textTheme.headline3!.fontStyle,
-            color: Theme.of(context).accentColor,
-          ),
+        Image(
+          image: AssetImage('assets/icons/splash.icon.png'),
+          width: 200,
+          height: 200,
         ),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         Text(
           StringConstants.APP_SLOGAN,

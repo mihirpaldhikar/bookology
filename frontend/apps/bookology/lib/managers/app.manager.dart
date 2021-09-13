@@ -24,6 +24,7 @@ import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/screen.manager.dart';
 import 'package:bookology/managers/theme.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
+import 'package:bookology/services/app.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/notification.service.dart';
@@ -85,6 +86,9 @@ class _AppManagerState extends State<AppManager> {
         ),
         Provider(
           create: (_) => NotificationService(FirebaseMessaging.instance),
+        ),
+        Provider(
+          create: (_) => AppService(),
         ),
         StreamProvider(
           create: (context) =>

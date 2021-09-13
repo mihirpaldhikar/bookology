@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -76,7 +75,7 @@ class DialogsManager {
                       showIcon: false,
                       showText: true,
                       outlineColor: Colors.redAccent,
-                      backgroundColo: Colors.red[100],
+                      backgroundColor: Colors.red[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await firestoreService.deleteDiscussionRoom(
@@ -138,7 +137,7 @@ class DialogsManager {
                 showIcon: false,
                 showText: true,
                 outlineColor: Colors.redAccent,
-                backgroundColo: Colors.red[100],
+                backgroundColor: Colors.red[100],
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await firestoreService.unsendMessage(
@@ -208,7 +207,7 @@ class DialogsManager {
                       showIcon: false,
                       showText: true,
                       outlineColor: Colors.green,
-                      backgroundColo: Colors.green[100],
+                      backgroundColor: Colors.green[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -393,7 +392,7 @@ class DialogsManager {
                       showIcon: false,
                       showText: true,
                       outlineColor: Colors.redAccent,
-                      backgroundColo: Colors.red[100],
+                      backgroundColor: Colors.red[100],
                       onPressed: onDelete,
                     ),
                     SizedBox(
@@ -411,5 +410,90 @@ class DialogsManager {
                 ),
               ),
             ));
+  }
+
+  void showInstallAppDialog(VoidCallback onRequest) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.delete_forever_outlined,
+                    color: Colors.red,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Permission Required',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              content: Container(
+                height: 200,
+                child: Column(
+                  children: [
+                    Text(
+                      'This book will be deleted. This action '
+                      'is not irreversible.',
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    OutLinedButton(
+                      text: 'Delete',
+                      showIcon: false,
+                      showText: true,
+                      outlineColor: Colors.redAccent,
+                      backgroundColor: Colors.red[100],
+                      onPressed: onRequest,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    OutLinedButton(
+                      text: 'Cancel',
+                      showIcon: false,
+                      showText: true,
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  void showProgressDialog({required String content, required Color contentColor, required Color progressColor}) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+             progressColor,
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Text(content)),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

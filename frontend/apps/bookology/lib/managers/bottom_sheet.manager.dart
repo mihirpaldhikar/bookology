@@ -22,7 +22,9 @@
 
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/ui/components/bottom_sheet_view.component.dart';
+import 'package:bookology/ui/screens/about.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetManager {
@@ -58,11 +60,121 @@ class BottomSheetManager {
             iconColor: Colors.redAccent,
             textColor: Colors.redAccent,
             outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-            backgroundColo: ColorsConstant.DANGER_BACKGROUND_COLOR,
+            backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
             onPressed: () {},
           ),
         ],
         height: 200,
+      ),
+    );
+  }
+
+  void showMoreMenuBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => BottomSheetView(
+        contents: [
+          OutLinedButton(
+              text: 'About',
+              icon: Icons.info_outlined,
+              iconColor: Colors.black,
+              textColor: Colors.black,
+              outlineColor: Colors.black,
+              showText: true,
+              showIcon: true,
+              alignContent: MainAxisAlignment.start,
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  this.context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => LicenseScreen(),
+                  ),
+                );
+              }),
+          // SizedBox(
+          //   height: 20,
+          // ),
+          // OutLinedButton(
+          //   text: 'Report this book',
+          //   showIcon: true,
+          //   showText: true,
+          //   alignContent: MainAxisAlignment.start,
+          //   icon: Icons.report_outlined,
+          //   iconColor: Colors.redAccent,
+          //   textColor: Colors.redAccent,
+          //   outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
+          //   backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
+          //   onPressed: () {},
+          // ),
+        ],
+        height: 200,
+      ),
+    );
+  }
+
+  void showUpdateAvailableBottomSheet(
+      {required String changeLog,
+      required VoidCallback onUpdateClicked,
+      required VoidCallback onCancelClicked}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => BottomSheetView(
+        title: 'Update Available',
+        contents: [
+          Text(
+            'A new version of the app is available please update to enjoy latest features! ',
+            style: TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'What\'s New?',
+            textAlign: TextAlign.left,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Container(
+            height: 150,
+            width: double.infinity,
+            child: ListView(
+              children: [
+                Text(changeLog),
+              ],
+            ),
+          ),
+          OutLinedButton(
+            text: 'Update',
+            align: Alignment.center,
+            icon: Icons.share_outlined,
+            iconColor: Colors.black,
+            textColor: Colors.black,
+            outlineColor: Colors.black,
+            showText: true,
+            showIcon: false,
+            alignContent: MainAxisAlignment.center,
+            onPressed: onUpdateClicked,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          OutLinedButton(
+            text: 'Remind me later',
+            showIcon: false,
+            showText: true,
+            align: Alignment.center,
+            alignContent: MainAxisAlignment.center,
+            icon: Icons.report_outlined,
+            iconColor: Colors.redAccent,
+            textColor: Colors.black,
+            outlineColor: Colors.black,
+            backgroundColor: Colors.grey.shade50,
+            onPressed: onCancelClicked,
+          ),
+        ],
+        height: 500,
       ),
     );
   }

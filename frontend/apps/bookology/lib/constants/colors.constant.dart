@@ -60,4 +60,6 @@ class ColorsConstant {
   static const Color APP_BAR_COLOR = Color(0xFFF2F6FE);
 
   static const Color STATUS_BAR_COLOR = Color(0xFFF2F6FE);
+
+  static const Color LIGHT_THEME_CONTENT_COLOR = Colors.black;
 }

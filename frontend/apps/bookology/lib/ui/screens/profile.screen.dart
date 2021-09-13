@@ -22,14 +22,13 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
-import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
-import 'package:bookology/ui/components/account_dialog.component.dart';
 import 'package:bookology/ui/components/profile_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
@@ -159,32 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: Icon(Icons.menu_outlined),
                 onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft:
-                                  Radius.circular(ValuesConstant.BORDER_RADIUS),
-                              topRight:
-                                  Radius.circular(ValuesConstant.BORDER_RADIUS),
-                            ),
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          child: AccountDialog(
-                            username: cacheService.getCurrentUserNameCache(),
-                            displayName:
-                                auth.currentUser()!.displayName.toString(),
-                            isVerified:
-                                cacheService.getCurrentIsVerifiedCache(),
-                            profileImageURL:
-                                auth.currentUser()!.photoURL.toString(),
-                          ),
-                        );
-                      });
+                  BottomSheetManager(context).showMoreMenuBottomSheet();
                 },
               ),
             ],
@@ -335,6 +309,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 child: OutLinedButton(
                                                   text: 'Edit Profile',
                                                   showIcon: false,
+                                                  outlineColor:
+                                                      Theme.of(context)
+                                                          .primaryColor,
+                                                  textColor: Theme.of(context)
+                                                      .primaryColor,
                                                   showText: true,
                                                   onPressed: () {
                                                     Navigator.push(
@@ -379,7 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   showText: true,
                                                   showIcon: false,
                                                   outlineColor: Colors.black,
-                                                  backgroundColo:
+                                                  backgroundColor:
                                                       Colors.grey.shade100,
                                                   textColor: Colors.black,
                                                   onPressed: () {},
