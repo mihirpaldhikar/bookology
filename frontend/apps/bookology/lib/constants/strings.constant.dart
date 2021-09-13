@@ -25,8 +25,7 @@ class StringConstants {
   static const String APP_NAME = 'Bookology';
   static const String APP_SLOGAN = 'Find the books nearby.';
   static const String APP_UPDATE_AVAILABLE = 'An App update is available.';
-  static String APP_COPYRIGHT =
-      'Copyright \u00a9 ${DateTime.now().year} Mihir Paldhikar';
+  static const String APP_COPYRIGHT = 'Copyright \u00a9 2021 Mihir Paldhikar';
   static const String APP_NOTICE =
       'No Part of the APP should be COPIED, MODIFIED, REDISTRIBUTED without the '
       'written agreement/license from the author MIHIR PALDHIKAR. \nBy doing any '
@@ -137,6 +136,12 @@ class StringConstants {
     'Kids',
     'Mysteries',
   ];
+
+  // Map Constants
+  static const Map<String, String> CURRENCIES = {
+    'INR': '₹',
+    'USD': '\$',
+  };
 
   // Overflow Menu Constants
   static const Set<String> MENU_DELETE_DISCUSSION = {

@@ -98,9 +98,6 @@ class _RoomsPageState extends State<RoomsPage> {
       }
     }
 
-    final hasImage = room.imageUrl != null;
-    final name = room.name ?? '';
-
     return Container(
       width: 80,
       height: 100,
@@ -285,14 +282,16 @@ class _RoomsPageState extends State<RoomsPage> {
                                                 'You',
                                                 style: TextStyle(
                                                   color: Theme.of(context)
-                                                      .accentColor,
+                                                      .colorScheme
+                                                      .secondary,
                                                 ),
                                               ),
                                               backgroundColor: Colors.white,
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(
                                                   color: Theme.of(context)
-                                                      .accentColor,
+                                                      .colorScheme
+                                                      .secondary,
                                                   width: 1,
                                                 ),
                                                 borderRadius:

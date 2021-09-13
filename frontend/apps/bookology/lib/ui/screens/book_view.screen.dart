@@ -22,14 +22,16 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
+import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
-import 'package:bookology/ui/screens/profile_viewer.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,29 +41,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class BookViewer extends StatefulWidget {
-  final String bookID;
-  final String isbn;
-  final String uploaderID;
-  final String bookName;
-  final String bookAuthor;
-  final String bookPublished;
-  final String bookDescription;
-  final String originalPrice;
-  final String sellingPrice;
-  final List<String>? images;
+  final BookModel book;
+  final String id;
 
   const BookViewer({
     Key? key,
-    required this.bookID,
-    required this.isbn,
-    required this.uploaderID,
-    required this.bookName,
-    required this.bookAuthor,
-    required this.bookPublished,
-    required this.bookDescription,
-    required this.originalPrice,
-    required this.sellingPrice,
-    required this.images,
+    required this.book,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -74,6 +60,7 @@ class _BookViewerState extends State<BookViewer> {
   final FirestoreService firestoreService =
       FirestoreService(FirebaseFirestore.instance);
   final CacheService cacheService = new CacheService();
+  final CurrencyManager currencyManager = new CurrencyManager();
   String username = 'loading...';
   String userID = '';
   String userFirstName = 'loading...';
@@ -85,6 +72,7 @@ class _BookViewerState extends State<BookViewer> {
   bool isVerified = false;
   bool isLoadingCompleted = false;
   int currentPage = 0;
+  String currencySymbol = '';
 
   @override
   void initState() {
@@ -93,21 +81,28 @@ class _BookViewerState extends State<BookViewer> {
     _pageController.addListener(() {
       int next = _pageController.page!.round();
 
-      if (currentPage != null) {
-        setState(() {
-          currentPage = next;
-        });
-      }
+      setState(() {
+        currentPage = next;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      currencySymbol = currencyManager.getCurrencySymbol(
+          currency: widget.book.pricing.currency);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    int saving =
-        int.parse(widget.originalPrice) - int.parse(widget.sellingPrice);
+    int saving = int.parse(widget.book.pricing.originalPrice) -
+        int.parse(widget.book.pricing.sellingPrice);
     final authService = Provider.of<AuthService>(context);
     return Hero(
-      tag: widget.bookID,
+      tag: widget.id,
       child: Material(
         child: Scaffold(
           appBar: AppBar(
@@ -116,9 +111,10 @@ class _BookViewerState extends State<BookViewer> {
             ),
             actions: [
               Visibility(
-                visible: widget.uploaderID == authService.currentUser()!.uid
-                    ? true
-                    : false,
+                visible:
+                    widget.book.uploaderId == authService.currentUser()!.uid
+                        ? true
+                        : false,
                 child: Tooltip(
                   message: StringConstants.HINT_EDIT_BOOK,
                   child: IconButton(
@@ -128,9 +124,10 @@ class _BookViewerState extends State<BookViewer> {
                 ),
               ),
               Visibility(
-                visible: widget.uploaderID == authService.currentUser()!.uid
-                    ? true
-                    : false,
+                visible:
+                    widget.book.uploaderId == authService.currentUser()!.uid
+                        ? true
+                        : false,
                 child: Tooltip(
                   message: StringConstants.HINT_DELETE_BOOK,
                   child: IconButton(
@@ -143,9 +140,9 @@ class _BookViewerState extends State<BookViewer> {
                           progressColor: Colors.redAccent,
                         );
                         final result = await apiService.deleteBook(
-                          bookID: widget.bookID.contains('@')
-                              ? widget.bookID.split('@')[0]
-                              : widget.bookID,
+                          bookID: widget.id.contains('@')
+                              ? widget.id.split('@')[0]
+                              : widget.id,
                         );
                         if (result == true) {
                           Navigator.pushAndRemoveUntil(
@@ -155,6 +152,15 @@ class _BookViewerState extends State<BookViewer> {
                                   ViewManager(currentIndex: 3),
                             ),
                             (_) => false,
+                          );
+                        }
+                        if (result == false) {
+                          ToastManager(this.context).showToast(
+                            message: 'An Error Occurred!',
+                            icon: Icons.error_outline_outlined,
+                            iconColor: Colors.white,
+                            textColor: Colors.white,
+                            backGroundColor: Colors.redAccent,
                           );
                         }
                       });
@@ -167,9 +173,10 @@ class _BookViewerState extends State<BookViewer> {
                 ),
               ),
               Visibility(
-                visible: widget.uploaderID != authService.currentUser()!.uid
-                    ? true
-                    : false,
+                visible:
+                    widget.book.uploaderId != authService.currentUser()!.uid
+                        ? true
+                        : false,
                 child: Tooltip(
                   message: StringConstants.HINT_MORE_OPTIONS,
                   child: IconButton(
@@ -196,21 +203,23 @@ class _BookViewerState extends State<BookViewer> {
                         height: 550,
                         child: PageView.builder(
                             controller: _pageController,
-                            itemCount: widget.images!.length,
+                            itemCount:
+                                widget.book.additionalInformation.images.length,
                             physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               bool activePage = index == currentPage;
                               return _imagePager(
                                   active: activePage,
-                                  image: widget.images![index]);
+                                  image: widget.book.additionalInformation
+                                      .images[index]);
                             }),
                       ),
                     ),
                     Center(
                       child: PageViewIndicator(
-                        length: widget.images!.length,
+                        length: widget.book.additionalInformation.images.length,
                         currentIndex: currentPage,
-                        currentColor: Theme.of(context).accentColor,
+                        currentColor: Theme.of(context).colorScheme.secondary,
                         currentSize: 10,
                         otherSize: 5,
                       ),
@@ -226,7 +235,7 @@ class _BookViewerState extends State<BookViewer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            widget.bookName,
+                            widget.book.bookInformation.name,
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -236,7 +245,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 10,
                           ),
                           AutoSizeText(
-                            '${StringConstants.BY} ${widget.bookAuthor}',
+                            '${StringConstants.BY} ${widget.book.bookInformation.author}',
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -265,7 +274,7 @@ class _BookViewerState extends State<BookViewer> {
                                 width: 15,
                               ),
                               AutoSizeText(
-                                this.widget.sellingPrice,
+                                '$currencySymbol ${this.widget.book.pricing.sellingPrice}',
                                 maxLines: 4,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
@@ -278,7 +287,7 @@ class _BookViewerState extends State<BookViewer> {
                                 width: 10,
                               ),
                               AutoSizeText(
-                                this.widget.originalPrice,
+                                this.widget.book.pricing.originalPrice,
                                 maxLines: 4,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
@@ -295,7 +304,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 10,
                           ),
                           AutoSizeText(
-                            '${StringConstants.YOU_SAVE} ${saving.toString()}',
+                            '${StringConstants.YOU_SAVE} $currencySymbol ${saving.toString()}',
                             maxLines: 4,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -309,7 +318,7 @@ class _BookViewerState extends State<BookViewer> {
                             height: 30,
                           ),
                           Visibility(
-                            visible: widget.uploaderID !=
+                            visible: widget.book.uploaderId !=
                                     authService.currentUser()!.uid
                                 ? true
                                 : false,
@@ -330,11 +339,11 @@ class _BookViewerState extends State<BookViewer> {
                                   if (isLoadingCompleted) {
                                     final result =
                                         await firestoreService.getRequest(
-                                      bookID: widget.bookID,
+                                      bookID: widget.id,
                                       userID: userID,
                                     );
 
-                                    if (result == 'empty') {
+                                    if (result == 'null') {
                                       await apiService.sendEnquiryNotification(
                                         userID: authService.currentUser()!.uid,
                                         receiverID: userID,
@@ -343,7 +352,7 @@ class _BookViewerState extends State<BookViewer> {
                                       );
 
                                       await firestoreService.createRequest(
-                                        bookID: widget.bookID,
+                                        bookID: widget.id,
                                         userID: authService.currentUser()!.uid,
                                       );
                                     }
@@ -376,7 +385,7 @@ class _BookViewerState extends State<BookViewer> {
                             ),
                           ),
                           Visibility(
-                            visible: widget.uploaderID !=
+                            visible: widget.book.uploaderId !=
                                     authService.currentUser()!.uid
                                 ? true
                                 : false,
@@ -385,7 +394,7 @@ class _BookViewerState extends State<BookViewer> {
                             ),
                           ),
                           Visibility(
-                            visible: widget.uploaderID !=
+                            visible: widget.book.uploaderId !=
                                     authService.currentUser()!.uid
                                 ? true
                                 : false,
@@ -402,7 +411,7 @@ class _BookViewerState extends State<BookViewer> {
                             ),
                           ),
                           Visibility(
-                            visible: widget.uploaderID !=
+                            visible: widget.book.uploaderId !=
                                     authService.currentUser()!.uid
                                 ? true
                                 : false,
@@ -414,7 +423,7 @@ class _BookViewerState extends State<BookViewer> {
                             children: [
                               Icon(
                                 Icons.place_outlined,
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                               SizedBox(
                                 width: 10,
@@ -422,7 +431,8 @@ class _BookViewerState extends State<BookViewer> {
                               Text(
                                 '${StringConstants.BOOK_LOCATION} : $location',
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
@@ -452,7 +462,7 @@ class _BookViewerState extends State<BookViewer> {
                               right: 20,
                             ),
                             child: AutoSizeText(
-                              widget.bookDescription,
+                              widget.book.additionalInformation.description,
                               maxLines: 40,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
@@ -499,7 +509,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  widget.isbn,
+                                  widget.book.bookInformation.isbn,
                                   style: GoogleFonts.ibmPlexMono(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -530,7 +540,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  widget.bookAuthor,
+                                  widget.book.bookInformation.author,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -561,7 +571,7 @@ class _BookViewerState extends State<BookViewer> {
                                   width: 15,
                                 ),
                                 Text(
-                                  widget.bookPublished,
+                                  widget.book.bookInformation.publisher,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -726,32 +736,6 @@ class _BookViewerState extends State<BookViewer> {
                           SizedBox(
                             height: 20,
                           ),
-                          Visibility(
-                            visible: widget.uploaderID !=
-                                    authService.currentUser()!.uid
-                                ? true
-                                : false,
-                            child: Center(
-                              child: SizedBox(
-                                width: 200,
-                                child: OutLinedButton(
-                                  text: StringConstants.VIEW_PROFILE,
-                                  showText: true,
-                                  showIcon: false,
-                                  textColor: Colors.black,
-                                  outlineColor: Colors.black,
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ProfileViewer(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
@@ -804,9 +788,7 @@ class _BookViewerState extends State<BookViewer> {
 
   _getBookInfo() async {
     final bookData = await apiService.getBookByID(
-        bookID: widget.bookID.contains('@')
-            ? widget.bookID.split('@')[0]
-            : widget.bookID);
+        bookID: widget.id.contains('@') ? widget.id.split('@')[0] : widget.id);
     setState(() {
       isLoadingCompleted = true;
       userID = bookData['uploader']['user_id'];

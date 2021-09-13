@@ -60,6 +60,7 @@ dependencies:
   permission_handler: ^8.1.6
   dio: ^4.0.0
   image_gallery_saver: ^1.6.9
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:

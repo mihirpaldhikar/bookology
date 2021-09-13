@@ -24,29 +24,23 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
+import 'package:bookology/managers/currency.manager.dart';
+import 'package:bookology/models/book.model.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BookCard extends StatefulWidget {
-  final String bookID;
-  final String bookName;
-  final String bookAuthor;
-  final String originalPrice;
-  final String sellingPrice;
-  final String coverImageURL;
+  final String id;
+  final BookModel book;
   final String? buttonText;
   final bool? showMenu;
   final VoidCallback onClicked;
 
   const BookCard({
     Key? key,
-    required this.bookID,
-    required this.bookName,
-    required this.originalPrice,
-    required this.sellingPrice,
-    required this.coverImageURL,
-    required this.bookAuthor,
+    required this.id,
+    required this.book,
     required this.onClicked,
     this.buttonText = 'View',
     this.showMenu = true,
@@ -59,10 +53,13 @@ class BookCard extends StatefulWidget {
 class _BookCardState extends State<BookCard> {
   @override
   Widget build(BuildContext context) {
-    int saving =
-        int.parse(widget.originalPrice) - int.parse(widget.sellingPrice);
+    int saving = int.parse(widget.book.pricing.originalPrice) -
+        int.parse(widget.book.pricing.sellingPrice);
+
+    String currencySymbol = CurrencyManager()
+        .getCurrencySymbol(currency: widget.book.pricing.currency);
     return Hero(
-      tag: widget.bookID,
+      tag: widget.id,
       child: Material(
         color: Colors.transparent,
         child: GestureDetector(
@@ -89,7 +86,8 @@ class _BookCardState extends State<BookCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
-                      imageUrl: this.widget.coverImageURL,
+                      imageUrl:
+                          this.widget.book.additionalInformation.images.first,
                       placeholder: (context, url) => Center(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
@@ -146,7 +144,7 @@ class _BookCardState extends State<BookCard> {
                           ],
                         ),
                         AutoSizeText(
-                          this.widget.bookName,
+                          this.widget.book.bookInformation.name,
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -156,7 +154,7 @@ class _BookCardState extends State<BookCard> {
                           height: 5,
                         ),
                         AutoSizeText(
-                          'By ${this.widget.bookAuthor}',
+                          'By ${this.widget.book.bookInformation.author}',
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -181,7 +179,7 @@ class _BookCardState extends State<BookCard> {
                               width: 5,
                             ),
                             AutoSizeText(
-                              this.widget.sellingPrice,
+                              '$currencySymbol ${this.widget.book.pricing.sellingPrice}',
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
@@ -194,7 +192,7 @@ class _BookCardState extends State<BookCard> {
                               width: 10,
                             ),
                             AutoSizeText(
-                              this.widget.originalPrice,
+                              this.widget.book.pricing.originalPrice,
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
@@ -210,7 +208,7 @@ class _BookCardState extends State<BookCard> {
                           height: 3,
                         ),
                         AutoSizeText(
-                          'You Save ${saving.toString()}',
+                          'You Save $currencySymbol ${saving.toString()}',
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,

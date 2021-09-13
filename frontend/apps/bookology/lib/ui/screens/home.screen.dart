@@ -51,8 +51,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late StreamSubscription subscription;
-
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final apiService = new ApiService();
@@ -227,8 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             } else {
                               return bookList(
-                                bookModel:
-                                    homeFeed.data![index - 1] as BookModel,
+                                book: homeFeed.data![index - 1] as BookModel,
                               );
                             }
                           },
@@ -247,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget bookList({required BookModel bookModel}) {
+  Widget bookList({required BookModel book}) {
     return Padding(
       padding: EdgeInsets.only(
         left: 10,
@@ -255,28 +252,15 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: BookCard(
-        bookID: bookModel.bookId.toString(),
-        bookName: bookModel.bookInformation.name.toString(),
-        originalPrice: bookModel.pricing.originalPrice.toString(),
-        sellingPrice: bookModel.pricing.sellingPrice.toString(),
-        coverImageURL: bookModel.additionalInformation.images[0],
-        bookAuthor: bookModel.bookInformation.author.toString(),
+        id: book.bookId,
+        book: book,
         onClicked: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => BookViewer(
-                bookID: bookModel.bookId.toString(),
-                isbn: bookModel.bookInformation.isbn.toString(),
-                uploaderID: bookModel.uploaderId.toString(),
-                bookAuthor: bookModel.bookInformation.author.toString(),
-                bookDescription:
-                    bookModel.additionalInformation.description.toString(),
-                bookName: bookModel.bookInformation.name.toString(),
-                bookPublished: bookModel.bookInformation.publisher.toString(),
-                images: bookModel.additionalInformation.images,
-                originalPrice: bookModel.pricing.originalPrice.toString(),
-                sellingPrice: bookModel.pricing.sellingPrice.toString(),
+                id: book.bookId,
+                book: book,
               ),
             ),
           );

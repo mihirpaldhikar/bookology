@@ -167,7 +167,7 @@ class ThemeManager {
       ),
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      modalBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
+      modalBackgroundColor: ColorsConstant.SECONDARY_COLOR,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
@@ -180,6 +180,7 @@ class ThemeManager {
       ),
     ),
     dialogTheme: DialogTheme(
+      backgroundColor: ColorsConstant.SECONDARY_COLOR,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(ValuesConstant.BORDER_RADIUS),

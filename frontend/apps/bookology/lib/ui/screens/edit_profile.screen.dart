@@ -426,7 +426,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<dynamic> _picImage(
       {required ImageSource source, required String imageURI}) async {
     final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo = await _picker.getImage(source: source);
+    final PickedFile? photo =
+        (await _picker.pickImage(source: source)) as PickedFile?;
 
     final croppedImage =
         await _cropImage(pickedImage: photo, imageURI: imageURI);
@@ -474,7 +475,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).accentColor,
+              Theme.of(context).colorScheme.secondary,
             ),
           ),
           SizedBox(

@@ -83,7 +83,7 @@ class AuthHandler {
           );
           break;
         default:
-          print('Case ${value} is not yet implemented');
+          print('Case $value is not yet implemented');
       }
     }
   }

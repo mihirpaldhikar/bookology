@@ -122,7 +122,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                       child: LiquidCircularProgressIndicator(
                         value: 0.35,
                         valueColor: AlwaysStoppedAnimation(
-                            Theme.of(context).accentColor),
+                          Theme.of(context).colorScheme.secondary,
+                        ),
                         backgroundColor: Colors.white,
                         borderColor: ColorsConstant.DARK_COLOR,
                         borderWidth: 5.0,

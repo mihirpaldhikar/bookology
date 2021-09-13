@@ -104,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 .fontWeight,
                             fontSize:
                                 Theme.of(context).textTheme.headline4!.fontSize,
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),

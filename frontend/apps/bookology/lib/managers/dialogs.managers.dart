@@ -226,7 +226,7 @@ class DialogsManager {
           children: [
             Icon(
               Icons.campaign_outlined,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               size: 30,
             ),
             SizedBox(
@@ -235,7 +235,7 @@ class DialogsManager {
             Text(
               'Sponsored Content',
               style: TextStyle(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -313,7 +313,7 @@ class DialogsManager {
           children: [
             Icon(
               Icons.place_outlined,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               size: 30,
             ),
             SizedBox(
@@ -322,7 +322,7 @@ class DialogsManager {
             Text(
               'Location Permission',
               style: TextStyle(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -470,21 +470,22 @@ class DialogsManager {
             ));
   }
 
-  void showProgressDialog({required String content, required Color contentColor, required Color progressColor}) {
+  void showProgressDialog(
+      {required String content,
+      required Color contentColor,
+      required Color progressColor}) {
     AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-             progressColor,
+              progressColor,
             ),
           ),
           SizedBox(
             width: 20,
           ),
-          Container(
-              margin: EdgeInsets.only(left: 7),
-              child: Text(content)),
+          Container(margin: EdgeInsets.only(left: 7), child: Text(content)),
         ],
       ),
     );
