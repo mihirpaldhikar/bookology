@@ -191,6 +191,7 @@ class ThemeManager {
       primarySwatch: ColorsConstant.PRIMARY_SWATCH,
     ).copyWith(
       secondary: ColorsConstant.ACCENT_COLOR,
+      background: ColorsConstant.SECONDARY_COLOR,
     ),
   );
 }

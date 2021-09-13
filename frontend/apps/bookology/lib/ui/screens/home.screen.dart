@@ -29,6 +29,7 @@ import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/update.service.dart';
@@ -37,6 +38,7 @@ import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -55,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshController(initialRefresh: false);
   final apiService = new ApiService();
   final locationService = new LocationService();
+  final AuthService authService = new AuthService(FirebaseAuth.instance);
   late Future<List<Object>?> feed;
   late BannerAd _ad;
   List<Object> homeFeed = [];
@@ -252,6 +255,8 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: BookCard(
+        buttonText:
+            authService.currentUser()!.uid == book.uploaderId ? 'Edit' : 'View',
         id: book.bookId,
         book: book,
         onClicked: () {

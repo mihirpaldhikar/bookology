@@ -21,18 +21,22 @@
  */
 
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/components/bottom_sheet_view.component.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetManager {
   final BuildContext context;
+  final AuthService authService = new AuthService(FirebaseAuth.instance);
 
   BottomSheetManager(this.context);
 
-  void showBookSelectionBottomSheet() {
+  void showBookSelectionBottomSheet(
+      {required String bookId, required String uploaderId}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) => BottomSheetView(
@@ -48,20 +52,30 @@ class BottomSheetManager {
             alignContent: MainAxisAlignment.start,
             onPressed: () {},
           ),
-          SizedBox(
-            height: 20,
+          Visibility(
+            visible: this.authService.currentUser()!.uid == uploaderId
+                ? false
+                : true,
+            child: SizedBox(
+              height: 20,
+            ),
           ),
-          OutLinedButton(
-            text: 'Report this book',
-            showIcon: true,
-            showText: true,
-            alignContent: MainAxisAlignment.start,
-            icon: Icons.report_outlined,
-            iconColor: Colors.redAccent,
-            textColor: Colors.redAccent,
-            outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-            backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
-            onPressed: () {},
+          Visibility(
+            visible: this.authService.currentUser()!.uid == uploaderId
+                ? false
+                : true,
+            child: OutLinedButton(
+              text: 'Report this book',
+              showIcon: true,
+              showText: true,
+              alignContent: MainAxisAlignment.start,
+              icon: Icons.report_outlined,
+              iconColor: Colors.redAccent,
+              textColor: Colors.redAccent,
+              outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
+              backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
+              onPressed: () {},
+            ),
           ),
         ],
         height: 200,

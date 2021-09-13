@@ -371,7 +371,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 } else {
                                   return BookCard(
-                                      showMenu: false,
+                                      showMenu: true,
                                       buttonText: 'Edit',
                                       id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
                                       book: userData.data!.books[index - 1],

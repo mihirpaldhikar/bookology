@@ -77,7 +77,7 @@ class _BookCardState extends State<BookCard> {
                   color: Colors.black,
                   width: 1,
                 ),
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: Theme.of(context).colorScheme.background,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -122,7 +122,10 @@ class _BookCardState extends State<BookCard> {
                               child: GestureDetector(
                                 onTap: () {
                                   BottomSheetManager(context)
-                                      .showBookSelectionBottomSheet();
+                                      .showBookSelectionBottomSheet(
+                                    bookId: widget.book.bookId,
+                                    uploaderId: widget.book.uploaderId,
+                                  );
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(3),
