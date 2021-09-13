@@ -31,6 +31,7 @@ import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
+import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -110,6 +111,17 @@ class _BookViewerState extends State<BookViewer> {
               color: Colors.black,
             ),
             actions: [
+              Tooltip(
+                message: StringConstants.HINT_SHARE_BOOK,
+                child: IconButton(
+                  onPressed: () {
+                    ShareService().shareBook(
+                      book: widget.book,
+                    );
+                  },
+                  icon: Icon(Icons.share_outlined),
+                ),
+              ),
               Visibility(
                 visible:
                     widget.book.uploaderId == authService.currentUser()!.uid
@@ -178,10 +190,13 @@ class _BookViewerState extends State<BookViewer> {
                         ? true
                         : false,
                 child: Tooltip(
-                  message: StringConstants.HINT_MORE_OPTIONS,
+                  message: StringConstants.HINT_REPORT_BOOK,
                   child: IconButton(
                     onPressed: () async {},
-                    icon: Icon(Icons.more_vert_outlined),
+                    icon: Icon(
+                      Icons.report_outlined,
+                      color: Colors.redAccent,
+                    ),
                   ),
                 ),
               ),

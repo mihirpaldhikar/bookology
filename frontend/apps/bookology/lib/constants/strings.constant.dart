@@ -94,6 +94,8 @@ class StringConstants {
   static const String HINT_DELETE_BOOK = 'Delete Book';
   static const String HINT_MORE_OPTIONS = 'More Options';
   static const String HINT_CONNECTION_SECURED = 'Connection is Secured';
+  static const String HINT_SHARE_BOOK = 'Share this book';
+  static const String HINT_REPORT_BOOK = 'Report this book';
 
   // Dialog Constants
   static const String DIALOG_DELETING = 'Deleting...';

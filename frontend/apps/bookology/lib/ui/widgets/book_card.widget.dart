@@ -123,8 +123,7 @@ class _BookCardState extends State<BookCard> {
                                 onTap: () {
                                   BottomSheetManager(context)
                                       .showBookSelectionBottomSheet(
-                                    bookId: widget.book.bookId,
-                                    uploaderId: widget.book.uploaderId,
+                                    book: widget.book,
                                   );
                                 },
                                 child: Container(

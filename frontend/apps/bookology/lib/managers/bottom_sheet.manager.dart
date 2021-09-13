@@ -21,7 +21,9 @@
  */
 
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/bottom_sheet_view.component.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -35,8 +37,7 @@ class BottomSheetManager {
 
   BottomSheetManager(this.context);
 
-  void showBookSelectionBottomSheet(
-      {required String bookId, required String uploaderId}) {
+  void showBookSelectionBottomSheet({required BookModel book}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) => BottomSheetView(
@@ -50,10 +51,15 @@ class BottomSheetManager {
             showText: true,
             showIcon: true,
             alignContent: MainAxisAlignment.start,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+              ShareService().shareBook(
+                book: book,
+              );
+            },
           ),
           Visibility(
-            visible: this.authService.currentUser()!.uid == uploaderId
+            visible: this.authService.currentUser()!.uid == book.uploaderId
                 ? false
                 : true,
             child: SizedBox(
@@ -61,7 +67,7 @@ class BottomSheetManager {
             ),
           ),
           Visibility(
-            visible: this.authService.currentUser()!.uid == uploaderId
+            visible: this.authService.currentUser()!.uid == book.uploaderId
                 ? false
                 : true,
             child: OutLinedButton(
