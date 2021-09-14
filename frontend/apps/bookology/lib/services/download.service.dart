@@ -25,7 +25,6 @@ import 'dart:io';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/permission.manager.dart';
 import 'package:dio/dio.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -74,12 +73,11 @@ class DownloadService {
       }
       if (await directory.exists()) {
         File saveFile = File(directory.path + "/$fileName");
-        await _dio.download(url, saveFile.path,
-            onReceiveProgress: onDownloadStarted);
-        if (Platform.isIOS) {
-          await ImageGallerySaver.saveFile(saveFile.path,
-              isReturnPathOfIOS: true);
-        }
+        await _dio.download(
+          url,
+          saveFile.path,
+          onReceiveProgress: onDownloadStarted,
+        );
         return true;
       }
     } catch (e) {

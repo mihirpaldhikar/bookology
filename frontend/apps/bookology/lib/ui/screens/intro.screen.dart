@@ -59,6 +59,11 @@ class _IntroScreenState extends State<IntroScreen> {
   );
 
   @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final List<PageViewModel> introPages = [
       PageViewModel(

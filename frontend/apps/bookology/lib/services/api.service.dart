@@ -22,23 +22,20 @@
 
 import 'dart:convert';
 
+import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/notification.model.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final cacheStorage = GetStorage();
-  final apiURL = dotenv.env['API_URL'];
-  final apiToken = dotenv.env['API_TOKEN'];
   final _firestoreService = new FirestoreService(FirebaseFirestore.instance);
-  final cacheService = CacheService();
-  final client = http.Client();
+  final _cacheService = CacheService();
+  final SecretsManager _secretsManager = new SecretsManager();
+  final _client = http.Client();
 
   Future<dynamic> createUser({
     required String? uuid,
@@ -50,13 +47,15 @@ class ApiService {
     required String? authProvider,
   }) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
+      final String? apiKey = await _secretsManager.getApiKey();
       final requestURL =
           Uri.parse('$apiURL/auth/signup?auth_provider=$authProvider');
 
-      final response = await client.post(
+      final response = await _client.post(
         requestURL,
         headers: {
-          "access-key": apiToken.toString(),
+          "access-key": apiKey.toString(),
         },
         body: {
           "id": uuid,
@@ -83,8 +82,9 @@ class ApiService {
 
   Future<UserModel?> getUserProfile({required String userID}) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/users/$userID?with_books=true');
-      final request = await client.get(
+      final request = await _client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -93,7 +93,7 @@ class ApiService {
       final response = jsonDecode(request.body);
       final cacheData = jsonDecode(request.body);
 
-      cacheService.setCurrentUser(
+      _cacheService.setCurrentUser(
           userName: cacheData['user_information']['username'],
           isVerified: cacheData['user_information']['verified']);
       final userData = UserModel.fromJson(response);
@@ -106,8 +106,9 @@ class ApiService {
 
   Future<List<BookModel>?> getBooks() async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/');
-      final request = await client.get(
+      final request = await _client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -131,8 +132,9 @@ class ApiService {
 
   Future<dynamic> getBookByID({required String bookID}) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/$bookID');
-      final response = await client.get(
+      final response = await _client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -147,8 +149,9 @@ class ApiService {
 
   Future<bool> deleteBook({required String bookID}) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/delete/$bookID');
-      final response = await client.delete(
+      final response = await _client.delete(
         requestURL,
         headers: <String, String>{
           'Content-type': 'application/json',
@@ -184,6 +187,7 @@ class ApiService {
     required String imageDownloadURL4,
   }) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/publish');
       final response = await http.post(
         requestURL,
@@ -225,6 +229,7 @@ class ApiService {
 
   Future<List<NotificationModel>?> getUserNotifications() async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/notifications');
       final request = await http.get(
         requestURL,
@@ -256,12 +261,14 @@ class ApiService {
       required String receiverID,
       required String userName}) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
+      final String? apiKey = await _secretsManager.getApiKey();
       final requestURL = Uri.parse(
           '$apiURL/notifications/send?type=book_enquiry_notification');
       final request = await http.post(
         requestURL,
         headers: {
-          'access-key': apiToken.toString(),
+          'access-key': apiKey.toString(),
           'user-identifier-key': await _firestoreService.getAccessToken(),
           'receiver-user-id': receiverID,
           'sender-user-id': userID,
@@ -286,14 +293,16 @@ class ApiService {
   Future<bool> updateUserProfile({
     required String userID,
     required String userName,
+    required bool? isVerified,
     required String firstName,
     required String lastName,
     required String bio,
     required String profilePicture,
   }) async {
     try {
+      final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/users/$userID');
-      final response = await client.put(
+      final response = await _client.put(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken(),
@@ -310,8 +319,9 @@ class ApiService {
         ),
       );
       final receivedData = jsonDecode(response.body);
-      cacheService.setCurrentUser(userName: userName);
       if (receivedData['result']['status_code'] == 200) {
+        _cacheService.setCurrentUser(
+            userName: userName, isVerified: isVerified);
         return true;
       }
       return false;

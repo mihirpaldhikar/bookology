@@ -22,6 +22,7 @@
 
 import 'dart:async';
 
+import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/notification.service.dart';
@@ -144,6 +145,7 @@ class AuthService {
   Future<dynamic> signOut() async {
     try {
       await _firebaseAuth.signOut();
+      await SecretsManager().removeAllSecrets();
       await CacheService().clearCacheStorage();
       return true;
     } on FirebaseAuthException catch (error) {

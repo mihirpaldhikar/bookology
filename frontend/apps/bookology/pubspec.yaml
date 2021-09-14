@@ -1,7 +1,7 @@
 name: bookology
 description: The Mobile App for the Bookology
 publish_to: 'none'
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -23,7 +23,6 @@ dependencies:
   google_fonts: ^2.1.0
   font_awesome_flutter: ^9.1.0
   google_sign_in: ^5.1.0
-  flutter_dotenv: ^5.0.2
   flutter_svg: ^0.22.0
   barcode_scan2: ^4.1.4
   cached_network_image: ^3.1.0
@@ -52,16 +51,15 @@ dependencies:
   introduction_screen: ^2.1.0
   after_layout: ^1.1.0
   badges: ^2.0.1
-  adaptive_theme: ^2.2.0
   bottom_navy_bar: ^6.0.0
   package_info: ^2.0.2
   material_snackbar: ^2.0.0-nullsafety.1
-  flutter_downloader: ^1.7.0
   permission_handler: ^8.1.6
   dio: ^4.0.0
-  image_gallery_saver: ^1.6.9
   fluttertoast: ^8.0.8
   share_plus: ^2.1.4
+  flutter_secure_storage: ^4.2.1
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
