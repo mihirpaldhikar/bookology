@@ -24,6 +24,7 @@ import 'dart:io';
 
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/ui/screens/confirmation.screen.dart';
@@ -201,39 +202,63 @@ class _CreateScreenState extends State<CreateScreen> {
                                           MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 ConfirmationScreen(
-                                              isbn: this
-                                                  .isbnController
-                                                  .text
-                                                  .toString(),
-                                              bookName: this
-                                                  .bookNameController
-                                                  .text
-                                                  .toString(),
-                                              bookAuthor: this
-                                                  .bookAuthorController
-                                                  .text
-                                                  .toString(),
-                                              bookPublisher: this
-                                                  .bookPublisherController
-                                                  .text
-                                                  .toString(),
-                                              bookCondition: _bookCondition,
-                                              bookOriginalPrice: this
-                                                  .bookOriginalPriceController
-                                                  .text
-                                                  .toString(),
-                                              bookSellingPrice: this
-                                                  .bookSellingPriceController
-                                                  .text
-                                                  .toString(),
-                                              bookDescription: this
-                                                  .bookDescriptionController
-                                                  .text
-                                                  .toString(),
-                                              bookImage1: _imageUrl1,
-                                              bookImage2: _imageUrl2,
-                                              bookImage3: _imageUrl3,
-                                              bookImage4: _imageUrl4,
+                                              book: BookModel(
+                                                bookId: '',
+                                                uploaderId: '',
+                                                bookInformation:
+                                                    BookInformation(
+                                                  isbn: this
+                                                      .isbnController
+                                                      .text
+                                                      .toString(),
+                                                  name: this
+                                                      .bookNameController
+                                                      .text
+                                                      .toString(),
+                                                  author: this
+                                                      .bookAuthorController
+                                                      .text
+                                                      .toString(),
+                                                  publisher: this
+                                                      .bookPublisherController
+                                                      .text
+                                                      .toString(),
+                                                ),
+                                                additionalInformation:
+                                                    AdditionalInformation(
+                                                  condition: _bookCondition,
+                                                  description: this
+                                                      .bookDescriptionController
+                                                      .text
+                                                      .toString(),
+                                                  imagesCollectionId: '',
+                                                  images: [
+                                                    _imageUrl1,
+                                                    _imageUrl2,
+                                                    _imageUrl3,
+                                                    _imageUrl4,
+                                                  ],
+                                                ),
+                                                pricing: Pricing(
+                                                  currency: '',
+                                                  originalPrice: this
+                                                      .bookOriginalPriceController
+                                                      .text
+                                                      .toString(),
+                                                  sellingPrice: this
+                                                      .bookSellingPriceController
+                                                      .text
+                                                      .toString(),
+                                                ),
+                                                createdOn: CreatedOn(
+                                                  date: '',
+                                                  time: '',
+                                                ),
+                                                slugs: Slugs(
+                                                  name: '',
+                                                ),
+                                                location: '',
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1376,8 +1401,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Future<dynamic> _picImage(
       {required ImageSource source, required String imageURI}) async {
     final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo =
-        (await _picker.pickImage(source: source)) as PickedFile?;
+    final PickedFile? photo = (await _picker.getImage(source: source));
 
     final croppedImage =
         await _cropImage(pickedImage: photo, imageURI: imageURI);

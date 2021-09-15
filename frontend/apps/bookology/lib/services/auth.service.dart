@@ -56,7 +56,6 @@ class AuthService {
       final result = await apiService.createUser(
         uuid: _firebaseAuth.currentUser?.uid,
         email: _firebaseAuth.currentUser?.email,
-        password: '',
         profilePhotoUrl: profilePictureURL,
         firstName: firstName,
         lastName: lastName,
@@ -85,7 +84,6 @@ class AuthService {
       final result = await apiService.createUser(
         uuid: _firebaseAuth.currentUser?.uid,
         email: _firebaseAuth.currentUser?.email,
-        password: '',
         profilePhotoUrl: _firebaseAuth.currentUser?.photoURL,
         firstName:
             _firebaseAuth.currentUser?.displayName.toString().split(' ')[0],

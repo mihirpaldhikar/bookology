@@ -40,7 +40,6 @@ class ApiService {
   Future<dynamic> createUser({
     required String? uuid,
     required String? email,
-    required String? password,
     required String? profilePhotoUrl,
     required String? firstName,
     required String? lastName,
@@ -61,7 +60,6 @@ class ApiService {
           "id": uuid,
           "username": email.toString().split('@')[0],
           "email": email,
-          "password": password,
           "profile_picture_url": profilePhotoUrl,
           "first_name": firstName,
           "last_name": lastName,
@@ -171,20 +169,7 @@ class ApiService {
   }
 
   Future<bool> postBookData({
-    required String isbn,
-    required String bookName,
-    required String bookAuthor,
-    required String bookPublisher,
-    required String bookDescription,
-    required String originalPrice,
-    required String sellingPrice,
-    required String bookCondition,
-    required String location,
-    required String imagesCollectionID,
-    required String imageDownloadURL1,
-    required String imageDownloadURL2,
-    required String imageDownloadURL3,
-    required String imageDownloadURL4,
+    required BookModel book,
   }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
@@ -197,22 +182,19 @@ class ApiService {
         },
         body: jsonEncode(
           {
-            "isbn": isbn,
-            "name": bookName,
-            "author": bookAuthor,
-            "publisher": bookPublisher,
-            "description": bookDescription,
-            "original_price": originalPrice,
-            "selling_price": sellingPrice,
-            "condition": bookCondition,
-            "images_collection_id": imagesCollectionID,
-            "images": [
-              imageDownloadURL1.toString(),
-              imageDownloadURL2.toString(),
-              imageDownloadURL3.toString(),
-              imageDownloadURL4.toString(),
-            ],
-            "location": location
+            "isbn": book.bookInformation.isbn,
+            "name": book.bookInformation.name,
+            "author": book.bookInformation.author,
+            "publisher": book.bookInformation.publisher,
+            "description": book.additionalInformation.description,
+            "original_price": book.pricing.originalPrice,
+            "selling_price": book.pricing.sellingPrice,
+            "currency": book.pricing.currency,
+            "condition": book.additionalInformation.condition,
+            "images_collection_id":
+                book.additionalInformation.imagesCollectionId,
+            "images": book.additionalInformation.images,
+            "location": book.location
           },
         ),
       );
