@@ -25,6 +25,8 @@ import 'dart:math';
 
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/managers/currency.manager.dart';
+import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/location.service.dart';
@@ -39,33 +41,11 @@ import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmationScreen extends StatefulWidget {
-  final String isbn;
-  final String bookName;
-  final String bookAuthor;
-  final String bookPublisher;
-  final String bookCondition;
-  final String bookOriginalPrice;
-  final String bookSellingPrice;
-  final String bookDescription;
-  final String bookImage1;
-  final String bookImage2;
-  final String bookImage3;
-  final String bookImage4;
+  final BookModel book;
 
   const ConfirmationScreen({
     Key? key,
-    required this.isbn,
-    required this.bookName,
-    required this.bookAuthor,
-    required this.bookPublisher,
-    required this.bookCondition,
-    required this.bookOriginalPrice,
-    required this.bookSellingPrice,
-    required this.bookDescription,
-    required this.bookImage1,
-    required this.bookImage2,
-    required this.bookImage3,
-    required this.bookImage4,
+    required this.book,
   }) : super(key: key);
 
   @override
@@ -164,7 +144,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: widget.isbn,
+                                    text: widget.book.bookInformation.isbn,
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -184,7 +164,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: widget.bookName,
+                                    text: widget.book.bookInformation.name,
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -204,7 +184,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: widget.bookAuthor,
+                                    text: widget.book.bookInformation.author,
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -224,7 +204,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: widget.bookPublisher,
+                                    text: widget.book.bookInformation.publisher,
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -246,7 +226,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: widget.bookDescription.trim() + '...',
+                                    text: widget
+                                        .book.additionalInformation.description
+                                        .trim(),
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -269,7 +251,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: widget.bookOriginalPrice,
+                                        text: widget.book.pricing.originalPrice,
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -289,7 +271,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: widget.bookSellingPrice,
+                                        text: widget.book.pricing.sellingPrice,
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -313,7 +295,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                   ImageHolder(
                                     onPressed: () {},
                                     onCancelled: () {},
-                                    imageURL: widget.bookImage1,
+                                    imageURL: widget
+                                        .book.additionalInformation.images[0],
                                     showCloseButton: false,
                                   ),
                                   SizedBox(
@@ -322,7 +305,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                   ImageHolder(
                                     onPressed: () {},
                                     onCancelled: () {},
-                                    imageURL: widget.bookImage2,
+                                    imageURL: widget
+                                        .book.additionalInformation.images[1],
                                     showCloseButton: false,
                                   ),
                                   SizedBox(
@@ -331,7 +315,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                   ImageHolder(
                                     onPressed: () {},
                                     onCancelled: () {},
-                                    imageURL: widget.bookImage3,
+                                    imageURL: widget
+                                        .book.additionalInformation.images[2],
                                     showCloseButton: false,
                                   ),
                                   SizedBox(
@@ -340,7 +325,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                   ImageHolder(
                                     onPressed: () {},
                                     onCancelled: () {},
-                                    imageURL: widget.bookImage4,
+                                    imageURL: widget
+                                        .book.additionalInformation.images[3],
                                     showCloseButton: false,
                                   ),
                                   SizedBox(
@@ -364,27 +350,41 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                     setState(() {
                                       isUploading = true;
                                     });
-                                    await uploadFile(widget.bookImage1, user)
+                                    await uploadFile(
+                                            widget.book.additionalInformation
+                                                .images[0],
+                                            user)
                                         .then((value) {
                                       setState(() {
                                         imageDownloadURL1 = value;
                                       });
                                     }).then((value) async {
-                                      await uploadFile(widget.bookImage2, user)
+                                      await uploadFile(
+                                              widget.book.additionalInformation
+                                                  .images[1],
+                                              user)
                                           .then((value) {
                                         setState(() {
                                           imageDownloadURL2 = value;
                                         });
                                       }).then((value) async {
                                         await uploadFile(
-                                                widget.bookImage3, user)
+                                                widget
+                                                    .book
+                                                    .additionalInformation
+                                                    .images[2],
+                                                user)
                                             .then((value) {
                                           setState(() {
                                             imageDownloadURL3 = value;
                                           });
                                         }).then((value) async {
                                           await uploadFile(
-                                                  widget.bookImage4, user)
+                                                  widget
+                                                      .book
+                                                      .additionalInformation
+                                                      .images[3],
+                                                  user)
                                               .then((value) {
                                             setState(() {
                                               imageDownloadURL4 = value;
@@ -396,20 +396,42 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
                                     final result =
                                         await apiService.postBookData(
-                                      isbn: widget.isbn,
-                                      bookName: widget.bookName,
-                                      bookAuthor: widget.bookAuthor,
-                                      bookPublisher: widget.bookPublisher,
-                                      bookDescription: widget.bookDescription,
-                                      bookCondition: widget.bookCondition,
-                                      originalPrice: widget.bookOriginalPrice,
-                                      sellingPrice: widget.bookSellingPrice,
-                                      location: this.currentLocation,
-                                      imagesCollectionID: imagesCollectionsID,
-                                      imageDownloadURL1: imageDownloadURL1,
-                                      imageDownloadURL2: imageDownloadURL2,
-                                      imageDownloadURL3: imageDownloadURL3,
-                                      imageDownloadURL4: imageDownloadURL4,
+                                      book: BookModel(
+                                        bookId: widget.book.bookId,
+                                        uploaderId: widget.book.uploaderId,
+                                        bookInformation:
+                                            widget.book.bookInformation,
+                                        additionalInformation:
+                                            AdditionalInformation(
+                                          images: [
+                                            imageDownloadURL1,
+                                            imageDownloadURL2,
+                                            imageDownloadURL3,
+                                            imageDownloadURL4,
+                                          ],
+                                          condition: widget.book
+                                              .additionalInformation.condition,
+                                          description: widget
+                                              .book
+                                              .additionalInformation
+                                              .description,
+                                          imagesCollectionId:
+                                              imagesCollectionsID,
+                                        ),
+                                        pricing: Pricing(
+                                          sellingPrice:
+                                              widget.book.pricing.sellingPrice,
+                                          originalPrice:
+                                              widget.book.pricing.originalPrice,
+                                          currency:
+                                              CurrencyManager().setCurrency(
+                                            location: this.currentLocation,
+                                          ),
+                                        ),
+                                        createdOn: widget.book.createdOn,
+                                        slugs: widget.book.slugs,
+                                        location: this.currentLocation,
+                                      ),
                                     );
                                     if (result == true) {
                                       setState(() {

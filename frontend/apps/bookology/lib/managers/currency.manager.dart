@@ -30,4 +30,14 @@ class CurrencyManager {
     }
     return '\$';
   }
+
+  String setCurrency({required String location}) {
+    if (location.contains('India')) {
+      return 'INR';
+    }
+    if (location.contains('United States Of America')) {
+      return 'USD';
+    }
+    return '';
+  }
 }

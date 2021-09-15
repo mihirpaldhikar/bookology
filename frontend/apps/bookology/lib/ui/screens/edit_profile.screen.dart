@@ -40,6 +40,7 @@ class EditProfileScreen extends StatefulWidget {
   final String userID;
   final String profilePicture;
   final String userName;
+  final bool? isVerified;
   final String firstName;
   final String lastName;
   final String bio;
@@ -50,6 +51,7 @@ class EditProfileScreen extends StatefulWidget {
     required this.userID,
     required this.profilePicture,
     required this.userName,
+    this.isVerified = false,
     required this.firstName,
     required this.lastName,
     required this.bio,
@@ -112,6 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     final result = await apiService.updateUserProfile(
                       userID: widget.userID,
                       userName: userNameController.text,
+                      isVerified: widget.isVerified,
                       firstName: firstNameController.text,
                       lastName: lastNameController.text,
                       bio: bioController.text,
@@ -148,6 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   final result = await apiService.updateUserProfile(
                     userID: widget.userID,
                     userName: userNameController.text,
+                    isVerified: widget.isVerified,
                     firstName: firstNameController.text,
                     lastName: lastNameController.text,
                     bio: bioController.text,
@@ -482,7 +486,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             width: 20,
           ),
           Container(
-              margin: EdgeInsets.only(left: 7), child: Text("Updating...")),
+            margin: EdgeInsets.only(left: 7),
+            child: Text("Updating..."),
+          ),
         ],
       ),
     );

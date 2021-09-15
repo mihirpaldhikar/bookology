@@ -179,217 +179,221 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onRefresh: _onRefresh,
                           onLoading: _onLoading,
                           child: ListView.builder(
-                              padding:
-                                  EdgeInsets.only(top: 20, left: 10, right: 10),
-                              scrollDirection: Axis.vertical,
-                              physics: BouncingScrollPhysics(),
-                              itemCount: userData.data!.books.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
+                            padding:
+                                EdgeInsets.only(top: 20, left: 10, right: 10),
+                            scrollDirection: Axis.vertical,
+                            physics: BouncingScrollPhysics(),
+                            itemCount: userData.data!.books.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    CircularImage(
+                                      image: userData
+                                          .data!.userInformation.profilePicture
+                                          .toString(),
+                                      radius: 100,
+                                    ),
+                                    SizedBox(
+                                      width: 100,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 15,
                                       ),
-                                      CircularImage(
-                                        image: userData.data!.userInformation
-                                            .profilePicture
-                                            .toString(),
-                                        radius: 100,
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 15,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              userData.data!.userInformation.bio
-                                                  .toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1,
-                                              textAlign: TextAlign.center,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Column(
-                                            children: [
-                                              Text(
-                                                userData.data!.books.length
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
-                                                    fontSize: 30),
-                                              ),
-                                              Text(
-                                                'Books',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2,
-                                              ),
-                                            ],
+                                          Text(
+                                            '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                            textAlign: TextAlign.center,
                                           ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                userData.data!.books.length
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30,
-                                                    color: Colors
-                                                        .deepOrangeAccent),
-                                              ),
-                                              Text(
-                                                'Points',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2,
-                                              ),
-                                            ],
+                                          SizedBox(
+                                            height: 10,
                                           ),
+                                          Text(
+                                            userData.data!.userInformation.bio
+                                                .toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1,
+                                            textAlign: TextAlign.center,
+                                          )
                                         ],
                                       ),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Visibility(
-                                        visible: isCurrentUser,
-                                        child: Container(
-                                          margin: EdgeInsets.only(bottom: 20),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 150,
-                                                child: OutLinedButton(
-                                                  text: 'Edit Profile',
-                                                  showIcon: false,
-                                                  outlineColor:
-                                                      Theme.of(context)
-                                                          .primaryColor,
-                                                  textColor: Theme.of(context)
-                                                      .primaryColor,
-                                                  showText: true,
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditProfileScreen(
-                                                          userID: authService
-                                                              .currentUser()!
-                                                              .uid,
-                                                          profilePicture:
-                                                              authService
-                                                                  .currentUser()!
-                                                                  .photoURL
-                                                                  .toString(),
-                                                          userName: cacheService
-                                                              .getCurrentUserNameCache(),
-                                                          bio: userData
-                                                              .data!
-                                                              .userInformation
-                                                              .bio,
-                                                          firstName: userData
-                                                              .data!
-                                                              .userInformation
-                                                              .firstName,
-                                                          lastName: userData
-                                                              .data!
-                                                              .userInformation
-                                                              .lastName,
-                                                          isInitialUpdate:
-                                                              false,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 150,
-                                                child: OutLinedButton(
-                                                  text: 'Account Settings',
-                                                  showText: true,
-                                                  showIcon: false,
-                                                  outlineColor: Colors.black,
-                                                  backgroundColor:
-                                                      Colors.grey.shade100,
-                                                  textColor: Colors.black,
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                } else {
-                                  return BookCard(
-                                      showMenu: true,
-                                      buttonText: 'Edit',
-                                      id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                                      book: userData.data!.books[index - 1],
-                                      onClicked: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                BookViewer(
-                                              id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                                              book: userData
-                                                  .data!.books[index - 1],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              userData.data!.books.length
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  fontSize: 30),
                                             ),
-                                          ),
-                                        );
-                                      });
-                                }
-                              }),
+                                            Text(
+                                              'Books',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2,
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              userData.data!.books.length
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 30,
+                                                  color:
+                                                      Colors.deepOrangeAccent),
+                                            ),
+                                            Text(
+                                              'Points',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Visibility(
+                                      visible: isCurrentUser,
+                                      child: Container(
+                                        margin: EdgeInsets.only(bottom: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: 150,
+                                              child: OutLinedButton(
+                                                text: 'Edit Profile',
+                                                showIcon: false,
+                                                outlineColor: Theme.of(context)
+                                                    .primaryColor,
+                                                textColor: Theme.of(context)
+                                                    .primaryColor,
+                                                showText: true,
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditProfileScreen(
+                                                        userID: authService
+                                                            .currentUser()!
+                                                            .uid,
+                                                        profilePicture:
+                                                            authService
+                                                                .currentUser()!
+                                                                .photoURL
+                                                                .toString(),
+                                                        userName: userData
+                                                            .data!
+                                                            .userInformation
+                                                            .username,
+                                                        isVerified: userData
+                                                            .data!
+                                                            .userInformation
+                                                            .verified,
+                                                        bio: userData
+                                                            .data!
+                                                            .userInformation
+                                                            .bio,
+                                                        firstName: userData
+                                                            .data!
+                                                            .userInformation
+                                                            .firstName,
+                                                        lastName: userData
+                                                            .data!
+                                                            .userInformation
+                                                            .lastName,
+                                                        isInitialUpdate: false,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 150,
+                                              child: OutLinedButton(
+                                                text: 'Account Settings',
+                                                showText: true,
+                                                showIcon: false,
+                                                outlineColor: Colors.black,
+                                                backgroundColor:
+                                                    Colors.grey.shade100,
+                                                textColor: Colors.black,
+                                                onPressed: () {},
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return BookCard(
+                                  showMenu: true,
+                                  buttonText: 'Edit',
+                                  id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                  book: userData.data!.books[index - 1],
+                                  onClicked: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            BookViewer(
+                                          id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+                                          book: userData.data!.books[index - 1],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          ),
                         ),
                       );
                     }
@@ -410,21 +414,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (cacheService.getCurrentUserNameCache() ==
         data!.userInformation.username) {
-      setState(() {
-        isCurrentUser = true;
-      });
+      setState(
+        () {
+          isCurrentUser = true;
+        },
+      );
     } else {
-      setState(() {
-        isCurrentUser = false;
-      });
+      setState(
+        () {
+          isCurrentUser = false;
+        },
+      );
     }
     return data;
   }
 
   void _onRefresh() async {
-    setState(() {
-      userData = _fetchUserData();
-    });
+    setState(
+      () {
+        userData = _fetchUserData();
+      },
+    );
     _refreshController.refreshCompleted();
   }
 

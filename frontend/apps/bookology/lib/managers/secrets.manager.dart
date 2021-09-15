@@ -20,28 +20,52 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/managers/app.manager.dart';
-import 'package:bookology/services/ads.service.dart';
-import 'package:bookology/services/startup.service.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: 'app.config.env');
-  final adsM = MobileAds.instance.initialize();
-  await StartUpService().startService();
-  await Firebase.initializeApp();
-  await GetStorage.init();
-  runApp(
-    Provider.value(
-      value: AdsService(adsM),
-      builder: (context, child) => AppManager(),
-    ),
-  );
+class SecretsManager {
+  final FlutterSecureStorage secret = new FlutterSecureStorage();
+  final apiURL = dotenv.env['API_URL'];
+  final isbnApiURL = dotenv.env['ISBN_API_URL'];
+  final apiKEY = dotenv.env['API_KEY'];
+
+  Future<void> setApiKey() async {
+    final String apiKey = apiKEY!;
+    await secret.write(
+      key: 'API_KEY',
+      value: apiKey,
+    );
+  }
+
+  Future<void> setApiUrl() async {
+    final String apiUrl = apiURL!;
+    await secret.write(
+      key: 'API_URL',
+      value: apiUrl,
+    );
+  }
+
+  Future<void> setISBNApiUrl() async {
+    final String apiISBNUrl = isbnApiURL!;
+    await secret.write(
+      key: 'ISBN_API_URL',
+      value: apiISBNUrl,
+    );
+  }
+
+  Future<String?> getApiKey() async {
+    return await secret.read(key: 'API_KEY');
+  }
+
+  Future<String?> getApiUrl() async {
+    return await secret.read(key: 'API_URL');
+  }
+
+  Future<String?> getISBNApiUrl() async {
+    return await secret.read(key: 'ISBN_API_URL');
+  }
+
+  Future<void> removeAllSecrets() async {
+    await secret.deleteAll();
+  }
 }

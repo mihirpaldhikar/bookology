@@ -34,6 +34,7 @@ import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SearchBar extends StatefulWidget {
@@ -84,21 +85,7 @@ class _SearchBarState extends State<SearchBar> {
                       child: Text(
                         StringConstants.APP_NAME,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: Theme.of(context)
-                              .appBarTheme
-                              .titleTextStyle!
-                              .fontSize,
-                          fontWeight: Theme.of(context)
-                              .appBarTheme
-                              .titleTextStyle!
-                              .fontWeight,
-                          fontFamily: Theme.of(context)
-                              .appBarTheme
-                              .titleTextStyle!
-                              .fontFamily,
-                          color: Colors.black,
-                        ),
+                        style: Theme.of(context).appBarTheme.titleTextStyle,
                       ),
                     ),
                     Spacer(),
@@ -357,19 +344,18 @@ class _SearchBarState extends State<SearchBar> {
                         child: RichText(
                           text: TextSpan(
                             text: 'Good ${greeting()},\n',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              fontFamily: 'YoutubeSans',
+                              fontSize: 17,
                             ),
                             children: [
                               TextSpan(
                                 text: '${auth.currentUser()!.displayName}!',
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                   color: Colors.black,
-                                  fontSize: 30,
-                                  fontFamily: 'YoutubeSans',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
                                 ),
                               ),
                             ],
