@@ -150,7 +150,11 @@ class _BookCardState extends State<BookCard> {
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline5,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                         SizedBox(
                           height: 5,

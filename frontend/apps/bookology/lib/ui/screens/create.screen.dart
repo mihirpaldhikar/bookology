@@ -155,8 +155,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                 width: 100,
                                 child: OutLinedButton(
                                   text: 'Next',
-                                  outlineColor:
-                                      Theme.of(context).colorScheme.secondary,
+                                  outlineColor: Theme.of(context).primaryColor,
+                                  textColor: Theme.of(context).primaryColor,
                                   showText: true,
                                   showIcon: false,
                                   onPressed: () {
@@ -461,6 +461,9 @@ class _CreateScreenState extends State<CreateScreen> {
                     showIcon: true,
                     showText: true,
                     text: 'Scan',
+                    outlineColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryColor,
+                    iconColor: Theme.of(context).primaryColor,
                     icon: Icons.qr_code_scanner,
                   ),
                 ),

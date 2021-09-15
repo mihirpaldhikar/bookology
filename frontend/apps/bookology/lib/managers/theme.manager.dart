@@ -29,7 +29,6 @@ import 'package:google_fonts/google_fonts.dart';
 class ThemeManager {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    fontFamily: 'YoutubeSans',
     primaryColor: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
     backgroundColor: ColorsConstant.BACKGROUND_COLOR,
     cardTheme: CardTheme(
@@ -44,63 +43,7 @@ class ThemeManager {
       ),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    textTheme: TextTheme(
-      headline1: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      headline2: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'YoutubeSans',
-      ),
-      headline3: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w700,
-        fontFamily: 'YoutubeSans',
-      ),
-      headline4: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'YoutubeSans',
-      ),
-      headline5: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-        fontFamily: 'YoutubeSans',
-      ),
-      headline6: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        fontFamily: 'YoutubeSans',
-      ),
-      subtitle1: TextStyle(
-        color: Colors.grey.shade800,
-        fontWeight: FontWeight.w300,
-        fontFamily: 'YoutubeSans',
-      ),
-      subtitle2: TextStyle(
-        color: Colors.grey.shade800,
-        fontWeight: FontWeight.normal,
-        fontFamily: 'YoutubeSans',
-      ),
-      bodyText1: TextStyle(
-        color: Colors.grey.shade600,
-        fontWeight: FontWeight.normal,
-        fontFamily: 'YoutubeSans',
-      ),
-      bodyText2: TextStyle(
-        color: Colors.grey.shade600,
-        fontWeight: FontWeight.normal,
-        fontFamily: 'YoutubeSans',
-      ),
-      button: TextStyle(
-        color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'YoutubeSans',
-        fontSize: 15,
-      ),
-    ),
+    textTheme: GoogleFonts.poppinsTextTheme(),
     iconTheme: IconThemeData(
       color: Colors.black,
     ),
@@ -126,7 +69,7 @@ class ThemeManager {
       secondaryLabelStyle: TextStyle(),
     ),
     snackBarTheme: SnackBarThemeData(
-      contentTextStyle: TextStyle(fontFamily: 'YoutubeSans'),
+      contentTextStyle: GoogleFonts.poppins(),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
@@ -148,19 +91,17 @@ class ThemeManager {
     appBarTheme: AppBarTheme(
       backgroundColor: ColorsConstant.APP_BAR_COLOR,
       elevation: 0,
-      toolbarTextStyle: TextStyle(
+      toolbarTextStyle: GoogleFonts.poppins(
         color: Colors.black,
-        fontFamily: 'YoutubeSans',
-        fontSize: 30,
+        fontWeight: FontWeight.bold,
       ),
       iconTheme: IconThemeData(
         color: Colors.black,
       ),
-      titleTextStyle: TextStyle(
+      titleTextStyle: GoogleFonts.poppins(
         color: Colors.black,
-        fontWeight: FontWeight.normal,
-        fontSize: 25,
-        fontFamily: 'YoutubeSans',
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
       ),
       actionsIconTheme: IconThemeData(
         color: Colors.black,

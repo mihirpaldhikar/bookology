@@ -84,13 +84,6 @@ flutter:
     - assets/icons/bookology.icon.png
     - assets/icons/splash.icon.png
 
-  fonts:
-    - family: YoutubeSans
-      fonts:
-        - asset: fonts/youtube-sans-light.ttf
-        - asset: fonts/youtube-sans-medium.ttf
-        - asset: fonts/youtube-sans-bold.ttf
-
 flutter_icons:
   android: true
   ios: true
