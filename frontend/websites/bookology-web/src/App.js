@@ -20,31 +20,29 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {BrowserRouter, Route} from "react-router-dom";
-import HomePage from "./pages/home.page";
-import AboutPage from "./pages/about.page";
-import TitleBar from "./components/appbar.component.dart";
-import {Container, createTheme, MuiThemeProvider} from "@material-ui/core";
+import {BrowserRouter} from "react-router-dom";
+import {createTheme, MuiThemeProvider} from "@material-ui/core";
+import PageManager from "./managers/page.manager";
 
-function App() {
-    const theme = createTheme({
-        palette: {
-            primary: {main: '#0C58D2',},
-            secondary: {main: '#F2F6FE',},
-        },
-    });
-    return (
-        <BrowserRouter>
-            <MuiThemeProvider theme={theme}>
-                <TitleBar appName='Bookology'/>
-                <Container>
-                    <Route path="/" component={HomePage} exact/>
-                    <Route path="/about" component={AboutPage}/>
-                </Container>
-            </MuiThemeProvider>
-        </BrowserRouter>
+function App(props)  {
+        const theme = createTheme({
+            palette: {
+                primary: {main: '#0C58D2',},
+                secondary: {main: '#F2F6FE',},
+            },
+        });
+        return (
+            <BrowserRouter>
+                <MuiThemeProvider theme={theme}>
+                  <PageManager/>
+                </MuiThemeProvider>
+            </BrowserRouter>
+        );
+    }
 
-    );
-}
+
+
+App.propTypes = {};
 
 export default App;
+

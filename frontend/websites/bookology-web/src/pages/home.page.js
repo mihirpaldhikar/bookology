@@ -20,21 +20,28 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
+import {Container} from "@material-ui/core";
+import PropTypes from 'prop-types';
 
-class HomePage extends Component {
-    render() {
-        return (
-            <div>
-                <center>
+function HomePage(props) {
+    useEffect(() => {
+        document.title = props.pageTitle;
+    });
+
+    return (
+        <Container>
+            <center>
 
                 <h5>Site is under construction.</h5>
-                </center>
-            </div>
-        );
-    }
+            </center>
+        </Container>
+    );
+
 }
 
-HomePage.propTypes = {};
+HomePage.propTypes = {
+    pageTitle: PropTypes.string.isRequired
+};
 
 export default HomePage;

@@ -20,19 +20,24 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {Container} from "@material-ui/core";
 
-class AboutPage extends Component {
-    render() {
-        return (
-            <div>
-                    <h1>About Page</h1>
-            </div>
-        );
-    }
+function AboutPage(props) {
+    useEffect(() => {
+        document.title = props.pageTitle;
+    });
+    return (
+        <Container>
+            <h1>About Page</h1>
+        </Container>
+    );
+
 }
 
-AboutPage.propTypes = {};
+AboutPage.propTypes = {
+    pageTitle: PropTypes.string.isRequired
+};
 
 export default AboutPage;
