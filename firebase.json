@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "./frontend/web/",
+    "public": "./frontend/websites/bookology-web/build/",
     "ignore": [
       "firebase.json",
       "**/.*",
