@@ -73,10 +73,10 @@ class _CreateScreenState extends State<CreateScreen> {
   String _imageUrl4 = '';
 
   ScanResult? scanResult;
-  var _aspectTolerance = 0.00;
-  var _selectedCamera = -1;
-  var _useAutoFocus = true;
-  var _autoEnableFlash = false;
+  final _aspectTolerance = 0.00;
+  final _selectedCamera = -1;
+  final _useAutoFocus = true;
+  final _autoEnableFlash = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -88,13 +88,13 @@ class _CreateScreenState extends State<CreateScreen> {
   final bookOriginalPriceController = TextEditingController();
   final bookSellingPriceController = TextEditingController();
 
-  final isbnService = new IsbnService();
+  final isbnService = IsbnService();
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e == BarcodeFormat.unknown);
 
   List<BarcodeFormat> selectedFormats = [..._possibleFormats];
 
-  final apiService = new ApiService();
+  final apiService = ApiService();
 
   int _currentStep = 0;
   StepperType stepperType = StepperType.horizontal;
@@ -116,7 +116,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
+                    children: const [
                       CircularProgressIndicator(),
                       SizedBox(
                         height: 30,
@@ -129,7 +129,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   key: _formKey,
                   child: Stepper(
                     type: StepperType.vertical,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     currentStep: _currentStep,
                     onStepTapped: (step) => tapped(step),
                     controlsBuilder: (
@@ -139,16 +139,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     }) {
                       return Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           Row(
                             children: [
                               TextButton(
-                                child: Text('Previous'),
+                                child: const Text('Previous'),
                                 onPressed: cancel,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 30,
                               ),
                               SizedBox(
@@ -185,7 +185,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 .text)) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text(
                                                   'Selling price cannot be '
                                                   'more than Original Price.'),
@@ -207,30 +207,25 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 uploaderId: '',
                                                 bookInformation:
                                                     BookInformation(
-                                                  isbn: this
-                                                      .isbnController
+                                                  isbn: isbnController.text
+                                                      .toString(),
+                                                  name: bookNameController.text
+                                                      .toString(),
+                                                  author: bookAuthorController
                                                       .text
                                                       .toString(),
-                                                  name: this
-                                                      .bookNameController
-                                                      .text
-                                                      .toString(),
-                                                  author: this
-                                                      .bookAuthorController
-                                                      .text
-                                                      .toString(),
-                                                  publisher: this
-                                                      .bookPublisherController
-                                                      .text
-                                                      .toString(),
+                                                  publisher:
+                                                      bookPublisherController
+                                                          .text
+                                                          .toString(),
                                                 ),
                                                 additionalInformation:
                                                     AdditionalInformation(
                                                   condition: _bookCondition,
-                                                  description: this
-                                                      .bookDescriptionController
-                                                      .text
-                                                      .toString(),
+                                                  description:
+                                                      bookDescriptionController
+                                                          .text
+                                                          .toString(),
                                                   imagesCollectionId: '',
                                                   images: [
                                                     _imageUrl1,
@@ -241,14 +236,14 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 ),
                                                 pricing: Pricing(
                                                   currency: '',
-                                                  originalPrice: this
-                                                      .bookOriginalPriceController
-                                                      .text
-                                                      .toString(),
-                                                  sellingPrice: this
-                                                      .bookSellingPriceController
-                                                      .text
-                                                      .toString(),
+                                                  originalPrice:
+                                                      bookOriginalPriceController
+                                                          .text
+                                                          .toString(),
+                                                  sellingPrice:
+                                                      bookSellingPriceController
+                                                          .text
+                                                          .toString(),
                                                 ),
                                                 createdOn: CreatedOn(
                                                   date: '',
@@ -265,7 +260,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
-                                          SnackBar(
+                                          const SnackBar(
                                             content: Text('All fields are '
                                                 'compulsory.'),
                                           ),
@@ -283,7 +278,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     steps: [
                       Step(
                         title: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.info_outlined),
                             SizedBox(
                               width: 10,
@@ -291,7 +286,8 @@ class _CreateScreenState extends State<CreateScreen> {
                             Text('Book Info'),
                           ],
                         ),
-                        subtitle: Text('           Fill the basic book info'),
+                        subtitle:
+                            const Text('           Fill the basic book info'),
                         content: bookInfo(),
                         isActive: _currentStep >= 0,
                         state: _currentStep >= 0
@@ -300,7 +296,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                       Step(
                         title: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.description_outlined),
                             SizedBox(
                               width: 10,
@@ -308,8 +304,9 @@ class _CreateScreenState extends State<CreateScreen> {
                             Text('Description'),
                           ],
                         ),
-                        subtitle: Text('           Write the description of '
-                            'book'),
+                        subtitle:
+                            const Text('           Write the description of '
+                                'book'),
                         content: bookDescription(),
                         isActive: _currentStep >= 0,
                         state: _currentStep >= 1
@@ -318,7 +315,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                       Step(
                         title: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.sell_outlined),
                             SizedBox(
                               width: 10,
@@ -326,8 +323,9 @@ class _CreateScreenState extends State<CreateScreen> {
                             Text('Pricing'),
                           ],
                         ),
-                        subtitle: Text('           Write the price you want '
-                            'to sell the book at'),
+                        subtitle:
+                            const Text('           Write the price you want '
+                                'to sell the book at'),
                         content: bookPricing(),
                         isActive: _currentStep >= 0,
                         state: _currentStep >= 2
@@ -336,7 +334,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                       Step(
                         title: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.rule_outlined),
                             SizedBox(
                               width: 10,
@@ -344,8 +342,9 @@ class _CreateScreenState extends State<CreateScreen> {
                             Text('Book Condition'),
                           ],
                         ),
-                        subtitle: Text('           Select the condition of '
-                            'the book'),
+                        subtitle:
+                            const Text('           Select the condition of '
+                                'the book'),
                         content: bookCondition(),
                         isActive: _currentStep >= 0,
                         state: _currentStep >= 3
@@ -354,7 +353,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                       Step(
                         title: Row(
-                          children: [
+                          children: const [
                             Icon(Icons.image_outlined),
                             SizedBox(
                               width: 10,
@@ -362,8 +361,9 @@ class _CreateScreenState extends State<CreateScreen> {
                             Text('Upload Images'),
                           ],
                         ),
-                        subtitle: Text('           Upload the images of the '
-                            'book'),
+                        subtitle:
+                            const Text('           Upload the images of the '
+                                'book'),
                         content: bookImagesContainer(context: context),
                         isActive: _currentStep >= 0,
                         state: _currentStep >= 4
@@ -405,263 +405,259 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   Widget bookInfo() {
-    return Container(
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(switchText),
+            Checkbox(
+              value: _hasISBN,
+              onChanged: (value) {
+                setState(() {
+                  if (_hasISBN == true) {
+                    _hasISBN = false;
+                    switchText = 'Book dosen\'t have ISBN number';
+                  } else {
+                    _hasISBN = true;
+                    switchText = 'Book has ISBN number';
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: InkWell(
+            onTap: () {
+              DialogsManager(context).showWhatIsIsbnDialog();
+            },
+            child: Text(
+              'What is ISBN number?',
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Visibility(
+          visible: _hasISBN,
+          child: Column(
             children: [
-              Text(switchText),
-              Checkbox(
-                value: _hasISBN,
-                onChanged: (value) {
-                  setState(() {
-                    if (_hasISBN == true) {
-                      _hasISBN = false;
-                      switchText = 'Book dosen\'t have ISBN number';
-                    } else {
-                      _hasISBN = true;
-                      switchText = 'Book has ISBN number';
-                    }
-                  });
-                },
+              SizedBox(
+                width: 150,
+                child: OutLinedButton(
+                  onPressed: () {
+                    _scan();
+                  },
+                  showIcon: true,
+                  showText: true,
+                  text: 'Scan',
+                  outlineColor: Theme.of(context).primaryColor,
+                  textColor: Theme.of(context).primaryColor,
+                  iconColor: Theme.of(context).primaryColor,
+                  icon: Icons.qr_code_scanner,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text('OR'),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      style: GoogleFonts.ibmPlexMono(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      decoration: InputDecoration(
+                          labelStyle: GoogleFonts.ibmPlexMono(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          hintStyle: GoogleFonts.ibmPlexMono(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          labelText: "ISBN",
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(),
+                          ),
+                          prefixIcon: const Icon(Icons.fingerprint)),
+                      controller: isbnController,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "ISBN cannot be empty.";
+                        } else {
+                          if (val.length < 10 || val.length > 13) {
+                            return "ISBN should be of 10 or"
+                                " 13 digits";
+                          } else {
+                            return null;
+                          }
+                        }
+                      },
+                      onChanged: (value) async {
+                        if (value.length == 10) {
+                          setState(() {
+                            _showSearchButton = true;
+                          });
+                        } else {
+                          setState(() {
+                            _showSearchButton = false;
+                          });
+
+                          if (value.length == 13) {
+                            fetchBookData(value);
+                          }
+                        }
+                      },
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Visibility(
+                    visible: _showSearchButton,
+                    child: OutLinedButton(
+                      showIcon: true,
+                      showText: false,
+                      text: 'Search',
+                      icon: Icons.search,
+                      onPressed: () {
+                        fetchBookData(isbnController.text);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: InkWell(
-              onTap: () {
-                DialogsManager(context).showWhatIsIsbnDialog();
-              },
-              child: Text(
-                'What is ISBN number?',
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Book Name",
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
               ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Visibility(
-            visible: _hasISBN,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 150,
-                  child: OutLinedButton(
-                    onPressed: () {
-                      _scan();
-                    },
-                    showIcon: true,
-                    showText: true,
-                    text: 'Scan',
-                    outlineColor: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryColor,
-                    iconColor: Theme.of(context).primaryColor,
-                    icon: Icons.qr_code_scanner,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('OR'),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        style: GoogleFonts.ibmPlexMono(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                        decoration: new InputDecoration(
-                            labelStyle: GoogleFonts.ibmPlexMono(
-                              fontWeight: FontWeight.normal,
-                            ),
-                            hintStyle: GoogleFonts.ibmPlexMono(
-                              fontWeight: FontWeight.normal,
-                            ),
-                            labelText: "ISBN",
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(15),
-                              borderSide: new BorderSide(),
-                            ),
-                            prefixIcon: Icon(Icons.fingerprint)),
-                        controller: isbnController,
-                        validator: (val) {
-                          if (val?.length == 0) {
-                            return "ISBN cannot be empty.";
-                          } else {
-                            if (val!.length < 10 || val.length > 13) {
-                              return "ISBN should be of 10 or"
-                                  " 13 digits";
-                            } else {
-                              return null;
-                            }
-                          }
-                        },
-                        onChanged: (value) async {
-                          if (value.length == 10) {
-                            setState(() {
-                              _showSearchButton = true;
-                            });
-                          } else {
-                            setState(() {
-                              _showSearchButton = false;
-                            });
-
-                            if (value.length == 13) {
-                              fetchBookData(value);
-                            }
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    Visibility(
-                      visible: _showSearchButton,
-                      child: OutLinedButton(
-                        showIcon: true,
-                        showText: false,
-                        text: 'Search',
-                        icon: Icons.search,
-                        onPressed: () {
-                          fetchBookData(isbnController.text);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Book Name",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.menu_book)
-                //fillColor: Colors.green
-                ),
-            controller: bookNameController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Book name cannot be empty.";
+              prefixIcon: const Icon(Icons.menu_book)
+              //fillColor: Colors.green
+              ),
+          controller: bookNameController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Book name cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Book name is not valid.";
               } else {
-                if (val!.length < 5) {
-                  return "Book name is not valid.";
-                } else {
-                  return null;
-                }
+                return null;
               }
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Author",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.account_circle)
-                //fillColor: Colors.green
-                ),
-            controller: bookAuthorController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Author cannot be empty.";
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Author",
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
+              ),
+              prefixIcon: const Icon(Icons.account_circle)
+              //fillColor: Colors.green
+              ),
+          controller: bookAuthorController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Author cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Author is not valid.";
               } else {
-                if (val!.length < 5) {
-                  return "Author is not valid.";
-                } else {
-                  return null;
-                }
+                return null;
               }
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Publisher",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.public)
-                //fillColor: Colors.green
-                ),
-            controller: bookPublisherController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Publisher cannot be empty.";
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Publisher",
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
+              ),
+              prefixIcon: const Icon(Icons.public)
+              //fillColor: Colors.green
+              ),
+          controller: bookPublisherController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Publisher cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Publisher is not valid.";
               } else {
-                if (val!.length < 5) {
-                  return "Publisher is not valid.";
-                } else {
-                  return null;
-                }
+                return null;
               }
-            },
-            keyboardType: TextInputType.text,
-          ),
-        ],
-      ),
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+      ],
     );
   }
 
   Widget bookDescription() {
-    return Container(
-      child: TextFormField(
-        decoration: new InputDecoration(
-          labelText: "Description",
-          fillColor: Colors.white,
-          border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(15),
-            borderSide: new BorderSide(),
-          ),
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Description",
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(),
         ),
-        maxLines: null,
-        controller: bookDescriptionController,
-        validator: (val) {
-          if (val?.length == 0) {
-            return "Description cannot be empty.";
-          } else {
-            if (val!.length < 5) {
-              return "Description is not valid.";
-            } else {
-              return null;
-            }
-          }
-        },
-        keyboardType: TextInputType.multiline,
       ),
+      maxLines: null,
+      controller: bookDescriptionController,
+      validator: (val) {
+        if (val!.isEmpty) {
+          return "Description cannot be empty.";
+        } else {
+          if (val.length < 5) {
+            return "Description is not valid.";
+          } else {
+            return null;
+          }
+        }
+      },
+      keyboardType: TextInputType.multiline,
     );
   }
 
@@ -694,7 +690,7 @@ class _CreateScreenState extends State<CreateScreen> {
     } catch (error) {
       if (error.toString().contains('FormatException')) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('No book found with the ISBN. Please fill details'
                 ' manually.'),
           ),
@@ -724,14 +720,14 @@ class _CreateScreenState extends State<CreateScreen> {
       setState(() {
         if (e.code == BarcodeScanner.cameraAccessDenied) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Camera Permission not granted. Allow '
                   'Permission in settings.'),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Unknown Error Occurred.'),
             ),
           );
@@ -745,7 +741,7 @@ class _CreateScreenState extends State<CreateScreen> {
       height: 200,
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
       ),
       child: Column(
@@ -754,22 +750,22 @@ class _CreateScreenState extends State<CreateScreen> {
         children: [
           Expanded(
             child: TextFormField(
-              decoration: new InputDecoration(
+              decoration: InputDecoration(
                   labelText: "Original Price",
                   fillColor: Colors.white,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15),
-                    borderSide: new BorderSide(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(),
                   ),
-                  prefixIcon: Icon(Icons.sell)
+                  prefixIcon: const Icon(Icons.sell)
                   //fillColor: Colors.green
                   ),
               controller: bookOriginalPriceController,
               validator: (val) {
-                if (val?.length == 0) {
+                if (val!.isEmpty) {
                   return "Original Price cannot be empty.";
                 } else {
-                  if (val!.length < 1) {
+                  if (val.isEmpty) {
                     return "Original Price is not valid.";
                   } else {
                     return null;
@@ -779,27 +775,27 @@ class _CreateScreenState extends State<CreateScreen> {
               keyboardType: TextInputType.number,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Expanded(
             child: TextFormField(
-              decoration: new InputDecoration(
+              decoration: InputDecoration(
                   labelText: "Selling Price",
                   fillColor: Colors.white,
-                  border: new OutlineInputBorder(
-                    borderRadius: new BorderRadius.circular(15),
-                    borderSide: new BorderSide(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(),
                   ),
-                  prefixIcon: Icon(Icons.sell)
+                  prefixIcon: const Icon(Icons.sell)
                   //fillColor: Colors.green
                   ),
               controller: bookSellingPriceController,
               validator: (val) {
-                if (val?.length == 0) {
+                if (val!.isEmpty) {
                   return "Selling Price cannot be empty.";
                 } else {
-                  if (val!.length < 1) {
+                  if (val.isEmpty) {
                     return "Selling Price is not valid.";
                   } else {
                     return null;
@@ -815,138 +811,136 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   Widget bookDataFields({required BuildContext context}) {
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Book Name",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.menu_book)
-                //fillColor: Colors.green
-                ),
-            controller: bookNameController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Book name cannot be empty.";
-              } else {
-                if (val!.length < 5) {
-                  return "Book name is not valid.";
-                } else {
-                  return null;
-                }
-              }
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Author",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.account_circle)
-                //fillColor: Colors.green
-                ),
-            controller: bookAuthorController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Author cannot be empty.";
-              } else {
-                if (val!.length < 5) {
-                  return "Author is not valid.";
-                } else {
-                  return null;
-                }
-              }
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Publisher",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(15),
-                  borderSide: new BorderSide(),
-                ),
-                prefixIcon: Icon(Icons.public)
-                //fillColor: Colors.green
-                ),
-            controller: bookPublisherController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Publisher cannot be empty.";
-              } else {
-                if (val!.length < 5) {
-                  return "Publisher is not valid.";
-                } else {
-                  return null;
-                }
-              }
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            decoration: new InputDecoration(
-              labelText: "Description",
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Book Name",
               fillColor: Colors.white,
-              border: new OutlineInputBorder(
-                borderRadius: new BorderRadius.circular(15),
-                borderSide: new BorderSide(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
               ),
-            ),
-            maxLines: null,
-            controller: bookDescriptionController,
-            validator: (val) {
-              if (val?.length == 0) {
-                return "Description cannot be empty.";
+              prefixIcon: const Icon(Icons.menu_book)
+              //fillColor: Colors.green
+              ),
+          controller: bookNameController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Book name cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Book name is not valid.";
               } else {
-                if (val!.length < 5) {
-                  return "Description is not valid.";
-                } else {
-                  return null;
-                }
+                return null;
               }
-            },
-            keyboardType: TextInputType.multiline,
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Author",
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
+              ),
+              prefixIcon: const Icon(Icons.account_circle)
+              //fillColor: Colors.green
+              ),
+          controller: bookAuthorController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Author cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Author is not valid.";
+              } else {
+                return null;
+              }
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+              labelText: "Publisher",
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(),
+              ),
+              prefixIcon: const Icon(Icons.public)
+              //fillColor: Colors.green
+              ),
+          controller: bookPublisherController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Publisher cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Publisher is not valid.";
+              } else {
+                return null;
+              }
+            }
+          },
+          keyboardType: TextInputType.text,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: "Description",
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(),
+            ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+          maxLines: null,
+          controller: bookDescriptionController,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return "Description cannot be empty.";
+            } else {
+              if (val.length < 5) {
+                return "Description is not valid.";
+              } else {
+                return null;
+              }
+            }
+          },
+          keyboardType: TextInputType.multiline,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
   Widget bookCondition() {
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 20,
       ),
       child: Column(
         children: [
           Container(
             height: 65,
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 10,
               top: 5,
               bottom: 5,
@@ -967,12 +961,12 @@ class _CreateScreenState extends State<CreateScreen> {
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 DropdownButton<String>(
                   //elevation: 5,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
 
                   items: <String>[
                     'Select',
@@ -992,7 +986,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                     );
                   }).toList(),
-                  hint: Text(
+                  hint: const Text(
                     "Select",
                     style: TextStyle(
                         color: Colors.black,
@@ -1022,13 +1016,13 @@ class _CreateScreenState extends State<CreateScreen> {
           ),
           Visibility(
             visible: !_isBookConditionSelected,
-            child: SizedBox(
+            child: const SizedBox(
               height: 10,
             ),
           ),
           Visibility(
             visible: !_isBookConditionSelected,
-            child: Align(
+            child: const Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: EdgeInsets.only(
@@ -1050,282 +1044,268 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   Widget bookImagesContainer({required BuildContext context}) {
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          height: 150,
+          width: MediaQuery.of(context).size.width,
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            children: [
+              Column(
+                children: [
+                  Visibility(
+                    visible: !_showBookImage1,
+                    child: ImagePlaceholder(
+                      onPressed: () async {
+                        _imagePickerBottomSheet(onCameraPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.camera, imageURI: _imageUrl1);
+                          setState(() {
+                            _imageUrl1 = pickedImage;
+                            _isImage1Selected = true;
+                            _showBookImage1 = true;
+                          });
+                          Navigator.pop(context);
+                        }, onGalleryPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.gallery,
+                              imageURI: _imageUrl1);
+                          setState(() {
+                            _imageUrl1 = pickedImage;
+                            _isImage1Selected = true;
+                            _showBookImage1 = true;
+                          });
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: _showBookImage1,
+                    child: ImageHolder(
+                      imageURL: _imageUrl1,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ImageViewer(imageURl: _imageUrl1),
+                          ),
+                        );
+                      },
+                      onCancelled: () {
+                        setState(() {
+                          _showBookImage1 = false;
+                          _imageUrl1 = '';
+                          _isImage1Selected = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                children: [
+                  Visibility(
+                    visible: !_showBookImage2,
+                    child: ImagePlaceholder(
+                      onPressed: () async {
+                        _imagePickerBottomSheet(onCameraPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.camera, imageURI: _imageUrl2);
+                          setState(() {
+                            _imageUrl2 = pickedImage;
+                            _isImage2Selected = true;
+                            _showBookImage2 = true;
+                          });
+                          Navigator.pop(context);
+                        }, onGalleryPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.gallery,
+                              imageURI: _imageUrl2);
+                          setState(() {
+                            _imageUrl2 = pickedImage;
+                            _isImage2Selected = true;
+                            _showBookImage2 = true;
+                          });
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: _showBookImage2,
+                    child: ImageHolder(
+                      imageURL: _imageUrl2,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ImageViewer(imageURl: _imageUrl2),
+                          ),
+                        );
+                      },
+                      onCancelled: () {
+                        setState(() {
+                          _showBookImage2 = false;
+                          _imageUrl2 = '';
+                          _isImage2Selected = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                children: [
+                  Visibility(
+                    visible: !_showBookImage3,
+                    child: ImagePlaceholder(
+                      onPressed: () async {
+                        _imagePickerBottomSheet(onCameraPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.camera, imageURI: _imageUrl3);
+                          setState(() {
+                            _imageUrl3 = pickedImage;
+                            _isImage3Selected = true;
+                            _showBookImage3 = true;
+                          });
+                          Navigator.pop(context);
+                        }, onGalleryPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.gallery,
+                              imageURI: _imageUrl3);
+                          setState(() {
+                            _imageUrl3 = pickedImage;
+                            _isImage3Selected = true;
+                            _showBookImage3 = true;
+                          });
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: _showBookImage3,
+                    child: ImageHolder(
+                      imageURL: _imageUrl3,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ImageViewer(imageURl: _imageUrl3),
+                          ),
+                        );
+                      },
+                      onCancelled: () {
+                        setState(() {
+                          _showBookImage3 = false;
+                          _imageUrl3 = '';
+                          _isImage3Selected = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Column(
+                children: [
+                  Visibility(
+                    visible: !_showBookImage4,
+                    child: ImagePlaceholder(
+                      onPressed: () async {
+                        _imagePickerBottomSheet(onCameraPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.camera, imageURI: _imageUrl4);
+                          setState(() {
+                            _imageUrl4 = pickedImage;
+                            _isImage4Selected = true;
+                            _showBookImage4 = true;
+                          });
+                          Navigator.pop(context);
+                        }, onGalleryPressed: () async {
+                          final pickedImage = await _picImage(
+                              source: ImageSource.gallery,
+                              imageURI: _imageUrl4);
+                          setState(() {
+                            _imageUrl4 = pickedImage;
+                            _isImage4Selected = true;
+                            _showBookImage4 = true;
+                          });
+                          Navigator.pop(context);
+                        });
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: _showBookImage4,
+                    child: ImageHolder(
+                      imageURL: _imageUrl4,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ImageViewer(imageURl: _imageUrl4),
+                          ),
+                        );
+                      },
+                      onCancelled: () {
+                        setState(() {
+                          _showBookImage4 = false;
+                          _imageUrl4 = '';
+                          _isImage4Selected = false;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: !_isImagesSelected,
+          child: const SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: 150,
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: [
-                Container(
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: !_showBookImage1,
-                        child: ImagePlaceholder(
-                          onPressed: () async {
-                            _imagePickerBottomSheet(onCameraPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.camera,
-                                  imageURI: _imageUrl1);
-                              setState(() {
-                                _imageUrl1 = pickedImage;
-                                _isImage1Selected = true;
-                                _showBookImage1 = true;
-                              });
-                              Navigator.pop(context);
-                            }, onGalleryPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.gallery,
-                                  imageURI: _imageUrl1);
-                              setState(() {
-                                _imageUrl1 = pickedImage;
-                                _isImage1Selected = true;
-                                _showBookImage1 = true;
-                              });
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: _showBookImage1,
-                        child: ImageHolder(
-                          imageURL: _imageUrl1,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ImageViewer(imageURl: _imageUrl1),
-                              ),
-                            );
-                          },
-                          onCancelled: () {
-                            setState(() {
-                              _showBookImage1 = false;
-                              _imageUrl1 = '';
-                              _isImage1Selected = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: !_showBookImage2,
-                        child: ImagePlaceholder(
-                          onPressed: () async {
-                            _imagePickerBottomSheet(onCameraPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.camera,
-                                  imageURI: _imageUrl2);
-                              setState(() {
-                                _imageUrl2 = pickedImage;
-                                _isImage2Selected = true;
-                                _showBookImage2 = true;
-                              });
-                              Navigator.pop(context);
-                            }, onGalleryPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.gallery,
-                                  imageURI: _imageUrl2);
-                              setState(() {
-                                _imageUrl2 = pickedImage;
-                                _isImage2Selected = true;
-                                _showBookImage2 = true;
-                              });
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: _showBookImage2,
-                        child: ImageHolder(
-                          imageURL: _imageUrl2,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ImageViewer(imageURl: _imageUrl2),
-                              ),
-                            );
-                          },
-                          onCancelled: () {
-                            setState(() {
-                              _showBookImage2 = false;
-                              _imageUrl2 = '';
-                              _isImage2Selected = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: !_showBookImage3,
-                        child: ImagePlaceholder(
-                          onPressed: () async {
-                            _imagePickerBottomSheet(onCameraPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.camera,
-                                  imageURI: _imageUrl3);
-                              setState(() {
-                                _imageUrl3 = pickedImage;
-                                _isImage3Selected = true;
-                                _showBookImage3 = true;
-                              });
-                              Navigator.pop(context);
-                            }, onGalleryPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.gallery,
-                                  imageURI: _imageUrl3);
-                              setState(() {
-                                _imageUrl3 = pickedImage;
-                                _isImage3Selected = true;
-                                _showBookImage3 = true;
-                              });
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: _showBookImage3,
-                        child: ImageHolder(
-                          imageURL: _imageUrl3,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ImageViewer(imageURl: _imageUrl3),
-                              ),
-                            );
-                          },
-                          onCancelled: () {
-                            setState(() {
-                              _showBookImage3 = false;
-                              _imageUrl3 = '';
-                              _isImage3Selected = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: !_showBookImage4,
-                        child: ImagePlaceholder(
-                          onPressed: () async {
-                            _imagePickerBottomSheet(onCameraPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.camera,
-                                  imageURI: _imageUrl4);
-                              setState(() {
-                                _imageUrl4 = pickedImage;
-                                _isImage4Selected = true;
-                                _showBookImage4 = true;
-                              });
-                              Navigator.pop(context);
-                            }, onGalleryPressed: () async {
-                              final pickedImage = await _picImage(
-                                  source: ImageSource.gallery,
-                                  imageURI: _imageUrl4);
-                              setState(() {
-                                _imageUrl4 = pickedImage;
-                                _isImage4Selected = true;
-                                _showBookImage4 = true;
-                              });
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                      ),
-                      Visibility(
-                        visible: _showBookImage4,
-                        child: ImageHolder(
-                          imageURL: _imageUrl4,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ImageViewer(imageURl: _imageUrl4),
-                              ),
-                            );
-                          },
-                          onCancelled: () {
-                            setState(() {
-                              _showBookImage4 = false;
-                              _imageUrl4 = '';
-                              _isImage4Selected = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        ),
+        Visibility(
+          visible: !_isImagesSelected,
+          child: const Padding(
+            padding: EdgeInsets.only(
+              left: 10,
             ),
-          ),
-          Visibility(
-            visible: !_isImagesSelected,
-            child: SizedBox(
-              height: 10,
-            ),
-          ),
-          Visibility(
-            visible: !_isImagesSelected,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 10,
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Please Upload all Images',
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: 12,
-                  ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                'Please Upload all Images',
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 12,
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -1336,13 +1316,13 @@ class _CreateScreenState extends State<CreateScreen> {
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 20,
               right: 20,
               top: 10,
               bottom: 10,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
@@ -1354,7 +1334,7 @@ class _CreateScreenState extends State<CreateScreen> {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 5,
                   ),
                   width: 50,
@@ -1364,7 +1344,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     borderRadius: BorderRadius.circular(50),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Center(
@@ -1373,7 +1353,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 OutLinedButton(
@@ -1384,7 +1364,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   showIcon: true,
                   align: Alignment.center,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
@@ -1416,8 +1396,8 @@ class _CreateScreenState extends State<CreateScreen> {
       {required PickedFile? pickedImage, required String imageURI}) async {
     File? cropped = await ImageCropper.cropImage(
       sourcePath: pickedImage!.path,
-      aspectRatio: CropAspectRatio(ratioX: 9, ratioY: 16),
-      androidUiSettings: AndroidUiSettings(
+      aspectRatio: const CropAspectRatio(ratioX: 9, ratioY: 16),
+      androidUiSettings: const AndroidUiSettings(
         toolbarColor: Colors.white,
         toolbarTitle: 'Crop Image',
       ),

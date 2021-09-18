@@ -26,21 +26,25 @@ import 'package:shimmer/shimmer.dart';
 
 Widget profileShimmer() {
   return ListView.builder(
-      padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+      padding: const EdgeInsets.only(
+        top: 20,
+        left: 10,
+        right: 10,
+      ),
       scrollDirection: Axis.vertical,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       itemCount: 6,
       itemBuilder: (context, index) {
         if (index == 0) {
           return Shimmer.fromColors(
             enabled: true,
-            baseColor: Color(0xFFE0E0E0),
-            highlightColor: Color(0xFFF5F5F5),
+            baseColor: const Color(0xFFE0E0E0),
+            highlightColor: const Color(0xFFF5F5F5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Container(
@@ -51,11 +55,11 @@ Widget profileShimmer() {
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 15,
                   ),
                   child: Column(
@@ -67,7 +71,7 @@ Widget profileShimmer() {
                         height: 15,
                         color: Colors.white,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Container(
@@ -75,7 +79,7 @@ Widget profileShimmer() {
                         height: 10,
                         color: Colors.white,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Container(
@@ -86,7 +90,7 @@ Widget profileShimmer() {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 Row(
@@ -100,7 +104,7 @@ Widget profileShimmer() {
                           height: 15,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
@@ -117,7 +121,7 @@ Widget profileShimmer() {
                           height: 15,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
@@ -129,7 +133,7 @@ Widget profileShimmer() {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
               ],
@@ -139,8 +143,8 @@ Widget profileShimmer() {
           return Container(
             height: 250,
             width: double.infinity,
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.only(
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.only(
               bottom: 20,
             ),
             decoration: BoxDecoration(
@@ -153,8 +157,8 @@ Widget profileShimmer() {
             ),
             child: Shimmer.fromColors(
                 enabled: true,
-                baseColor: Color(0xFFE0E0E0),
-                highlightColor: Color(0xFFF5F5F5),
+                baseColor: const Color(0xFFE0E0E0),
+                highlightColor: const Color(0xFFF5F5F5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +171,7 @@ Widget profileShimmer() {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Expanded(
@@ -175,7 +179,7 @@ Widget profileShimmer() {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
@@ -183,7 +187,7 @@ Widget profileShimmer() {
                             height: 15,
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Container(
@@ -191,7 +195,7 @@ Widget profileShimmer() {
                             height: 15,
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
                           Container(
@@ -199,7 +203,7 @@ Widget profileShimmer() {
                             height: 10,
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
                           Row(
@@ -209,7 +213,7 @@ Widget profileShimmer() {
                                 height: 10,
                                 color: Colors.white,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Container(
@@ -217,7 +221,7 @@ Widget profileShimmer() {
                                 height: 10,
                                 color: Colors.white,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Container(
@@ -227,7 +231,7 @@ Widget profileShimmer() {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
                           Container(
@@ -235,7 +239,7 @@ Widget profileShimmer() {
                             height: 10,
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
@@ -244,7 +248,7 @@ Widget profileShimmer() {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(
-                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                  ValuesConstant.secondaryBorderRadius),
                             ),
                           )
                         ],

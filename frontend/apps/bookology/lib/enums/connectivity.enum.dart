@@ -20,4 +20,4 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-enum ConnectivityStatus { WiFi, Cellular, Offline }
+enum ConnectivityStatus { wifi, cellular, offline }

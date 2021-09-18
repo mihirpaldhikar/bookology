@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -105,7 +104,7 @@ class _PageViewIndicatorState extends State<PageViewIndicator> {
             borderRadius: BorderRadius.circular(widget.borderRadius!),
             color: getColor(index),
           ),
-          margin: widget.margin ?? EdgeInsets.all(5),
+          margin: widget.margin ?? const EdgeInsets.all(5),
           width: getDotSize(index),
           height: getDotSize(index),
         ),

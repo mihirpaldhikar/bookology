@@ -32,9 +32,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final _firestoreService = new FirestoreService(FirebaseFirestore.instance);
+  final _firestoreService = FirestoreService(FirebaseFirestore.instance);
   final _cacheService = CacheService();
-  final SecretsManager _secretsManager = new SecretsManager();
+  final SecretsManager _secretsManager = SecretsManager();
   final _client = http.Client();
 
   Future<dynamic> createUser({
@@ -70,11 +70,10 @@ class ApiService {
       if (statusCode == 201) {
         return true;
       } else {
-        print(message);
         return message;
       }
     } catch (error) {
-      throw error;
+      rethrow;
     }
   }
 
@@ -97,8 +96,7 @@ class ApiService {
       final userData = UserModel.fromJson(response);
       return userData;
     } catch (error) {
-      print(error);
-      return null;
+      rethrow;
     }
   }
 
@@ -123,8 +121,7 @@ class ApiService {
       );
       return books;
     } catch (error) {
-      print(error);
-      return null;
+      rethrow;
     }
   }
 
@@ -140,8 +137,7 @@ class ApiService {
       );
       return jsonDecode(response.body);
     } catch (error) {
-      print(error);
-      return error;
+      rethrow;
     }
   }
 
@@ -163,8 +159,7 @@ class ApiService {
       }
       return false;
     } catch (error) {
-      print(error);
-      return false;
+      rethrow;
     }
   }
 
@@ -204,8 +199,7 @@ class ApiService {
       }
       return false;
     } catch (error) {
-      print(error);
-      return false;
+      rethrow;
     }
   }
 
@@ -233,8 +227,7 @@ class ApiService {
         return notifications;
       }
     } catch (error) {
-      print(error);
-      return null;
+      rethrow;
     }
   }
 
@@ -267,8 +260,7 @@ class ApiService {
       }
       return false;
     } catch (error) {
-      print(error);
-      return false;
+      rethrow;
     }
   }
 
@@ -308,8 +300,7 @@ class ApiService {
       }
       return false;
     } catch (error) {
-      print(error);
-      return false;
+      rethrow;
     }
   }
 }

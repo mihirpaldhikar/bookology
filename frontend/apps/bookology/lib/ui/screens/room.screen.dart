@@ -56,8 +56,8 @@ class _RoomsPageState extends State<RoomsPage> {
   String userName = '';
   String userImageProfile = '';
   bool isVerified = false;
-  final authService = new AuthService(FirebaseAuth.instance);
-  final firestoreService = new FirestoreService(FirebaseFirestore.instance);
+  final authService = AuthService(FirebaseAuth.instance);
+  final firestoreService = FirestoreService(FirebaseFirestore.instance);
 
   @override
   void initState() {
@@ -130,11 +130,11 @@ class _RoomsPageState extends State<RoomsPage> {
       return Container();
     }
     return StreamBuilder<ConnectivityStatus>(
-      initialData: ConnectivityStatus.Cellular,
+      initialData: ConnectivityStatus.cellular,
       stream: ConnectivityService().connectionStatusController.stream,
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
-        if (snapshot.data == ConnectivityStatus.Offline) {
+        if (snapshot.data == ConnectivityStatus.offline) {
           return offlineScreen();
         } else {
           return Scaffold(
@@ -152,7 +152,7 @@ class _RoomsPageState extends State<RoomsPage> {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 20,
                       right: 20,
                     ),
@@ -165,19 +165,19 @@ class _RoomsPageState extends State<RoomsPage> {
                           width: 100,
                           height: 200,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
-                        Text(
+                        const Text(
                           'No Discussions',
                           style: TextStyle(
                             fontSize: 20,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
-                        Text(
+                        const Text(
                           'To Start a discussion, request book uploader to allow '
                           'enquiry of the book.',
                           style: TextStyle(
@@ -192,16 +192,16 @@ class _RoomsPageState extends State<RoomsPage> {
                 }
 
                 return Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 40,
                   ),
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final room = snapshot.data![index];
-                      room.users.forEach((element) {
+                      for (var element in room.users) {
                         if (element.id.toString() !=
                             FirebaseAuth.instance.currentUser!.uid.toString()) {
                           groupOwner =
@@ -210,9 +210,9 @@ class _RoomsPageState extends State<RoomsPage> {
                           isVerified = element.metadata!['isVerified'];
                           userImageProfile = element.imageUrl!;
                         }
-                      });
+                      }
                       return Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           left: 10,
                           right: 10,
                           bottom: 30,
@@ -245,7 +245,7 @@ class _RoomsPageState extends State<RoomsPage> {
                           },
                           child: Container(
                             width: 200,
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               left: 20,
                               bottom: 20,
                               top: 20,
@@ -266,13 +266,13 @@ class _RoomsPageState extends State<RoomsPage> {
                                           softWrap: false,
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Row(
@@ -305,19 +305,19 @@ class _RoomsPageState extends State<RoomsPage> {
                                                 radius: 25,
                                               ),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 5,
                                             ),
                                             Chip(
                                               label: Text(
-                                                '$groupOwner',
-                                                style: TextStyle(
+                                                groupOwner,
+                                                style: const TextStyle(
                                                   color: Colors.black,
                                                 ),
                                               ),
                                               backgroundColor: Colors.white,
                                               shape: RoundedRectangleBorder(
-                                                side: BorderSide(
+                                                side: const BorderSide(
                                                   color: Colors.black,
                                                   width: 1,
                                                 ),

@@ -96,7 +96,7 @@ class _AppManagerState extends State<AppManager> {
           initialData: null,
         ),
       ],
-      child: App(),
+      child: const App(),
     );
   }
 }
@@ -117,9 +117,9 @@ class _AppState extends State<App> {
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
-        statusBarColor: ColorsConstant.STATUS_BAR_COLOR,
+        statusBarColor: ColorsConstant.statusBarColor,
         systemNavigationBarColor: Colors.transparent,
       ),
     );
@@ -137,17 +137,17 @@ class _AppState extends State<App> {
       darkTheme: ThemeManager.lightTheme,
       themeMode: ThemeMode.system,
       routes: {
-        '/home': (context) => ScreenManager(),
-        '/profile': (context) => ViewManager(
+        '/home': (context) => const ScreenManager(),
+        '/profile': (context) => const ViewManager(
               currentIndex: 3,
             ),
-        '/create': (context) => CreateScreen(),
-        '/login': (context) => LoginScreen(),
-        '/signup': (context) => SignUpScreen(),
-        '/auth': (context) => AuthScreen(),
-        '/verify': (context) => VerifyEmailScreen(),
+        '/create': (context) => const CreateScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignUpScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/verify': (context) => const VerifyEmailScreen(),
       },
-      home: auth.isUserSignedIn() ? ScreenManager() : AuthScreen(),
+      home: auth.isUserSignedIn() ? const ScreenManager() : const AuthScreen(),
     );
   }
 }

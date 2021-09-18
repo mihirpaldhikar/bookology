@@ -23,7 +23,7 @@
 import 'package:flutter/material.dart';
 
 class ColorsConstant {
-  static const MaterialColor PRIMARY_SWATCH = MaterialColor(
+  static const MaterialColor primarySwatch = MaterialColor(
     0xff2E79F3,
     {
       50: Color(0xFF4285F4),
@@ -39,27 +39,27 @@ class ColorsConstant {
     },
   );
 
-  static const Color ACCENT_COLOR = Color(0xff2E79F3);
+  static const Color accentColor = Color(0xff2E79F3);
 
-  static const Color SECONDARY_COLOR = Color(0xFFF2F6FE);
+  static const Color secondaryColor = Color(0xFFF2F6FE);
 
-  static const Color DANGER_BORDER_COLOR = Colors.redAccent;
+  static const Color dangerBorderColor = Colors.redAccent;
 
-  static const Color DANGER_BACKGROUND_COLOR = Color(0xffFFEBEE);
+  static const Color dangerBackgroundColor = Color(0xffFFEBEE);
 
-  static const Color BACKGROUND_COLOR = Color(0xFFFFFFFF);
+  static const Color backgroundColor = Color(0xFFFFFFFF);
 
-  static const Color DARK_COLOR = Color(0xFF07357E);
+  static const Color darkColor = Color(0xFF07357E);
 
-  static const Color CARD_COLOR = Color(0xFFffffff);
+  static const Color cardColor = Color(0xFFffffff);
 
-  static const Color APP_BAR_BUTTONS_BACKGROUND = Color(0xFF4285F4);
+  static const Color appBarButtonsBackground = Color(0xFF4285F4);
 
-  static const Color BUTTON_TEXT_COLOR = ACCENT_COLOR;
+  static const Color buttonTextColor = accentColor;
 
-  static const Color APP_BAR_COLOR = Color(0xFFF2F6FE);
+  static const Color appBarColor = Color(0xFFF2F6FE);
 
-  static const Color STATUS_BAR_COLOR = Color(0xFFF2F6FE);
+  static const Color statusBarColor = Color(0xFFF2F6FE);
 
-  static const Color LIGHT_THEME_CONTENT_COLOR = Colors.black;
+  static const Color lightThemeContentColor = Colors.black;
 }

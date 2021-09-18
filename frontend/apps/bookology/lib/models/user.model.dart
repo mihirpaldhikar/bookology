@@ -59,47 +59,47 @@ class UserModel {
       required JoinedOn joinedOn,
       required Slugs slugs,
       required List<BookModel> books}) {
-    this.userId = userId;
-    this.userInformation = userInformation;
-    this.providers = providers;
-    this.additionalInformation = additionalInformation;
-    this.joinedOn = joinedOn;
-    this.slugs = slugs;
-    this.books = books;
+    userId = userId;
+    userInformation = userInformation;
+    providers = providers;
+    additionalInformation = additionalInformation;
+    joinedOn = joinedOn;
+    slugs = slugs;
+    books = books;
   }
 
   UserModel.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
     userInformation = (json['user_information'] != null
-        ? new UserInformation.fromJson(json['user_information'])
+        ? UserInformation.fromJson(json['user_information'])
         : null)!;
     providers = (json['providers'] != null
-        ? new Providers.fromJson(json['providers'])
+        ? Providers.fromJson(json['providers'])
         : null)!;
     additionalInformation = (json['additional_information'] != null
-        ? new AdditionalInformation.fromJson(json['additional_information'])
+        ? AdditionalInformation.fromJson(json['additional_information'])
         : null)!;
     joinedOn = (json['joined_on'] != null
-        ? new JoinedOn.fromJson(json['joined_on'])
+        ? JoinedOn.fromJson(json['joined_on'])
         : null)!;
-    slugs = (json['slugs'] != null ? new Slugs.fromJson(json['slugs']) : null)!;
+    slugs = (json['slugs'] != null ? Slugs.fromJson(json['slugs']) : null)!;
     if (json['books'] != null) {
       books = [];
       json['books'].forEach((v) {
-        books.add(new BookModel.fromJson(v));
+        books.add(BookModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['user_information'] = this.userInformation.toJson();
-    data['providers'] = this.providers.toJson();
-    data['additional_information'] = this.additionalInformation.toJson();
-    data['joined_on'] = this.joinedOn.toJson();
-    data['slugs'] = this.slugs.toJson();
-    data['books'] = this.books.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['user_information'] = userInformation.toJson();
+    data['providers'] = providers.toJson();
+    data['additional_information'] = additionalInformation.toJson();
+    data['joined_on'] = joinedOn.toJson();
+    data['slugs'] = slugs.toJson();
+    data['books'] = books.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -121,13 +121,13 @@ class UserInformation {
       required String email,
       required String firstName,
       required String lastName}) {
-    this.username = username;
-    this.verified = verified;
-    this.bio = bio;
-    this.profilePicture = profilePicture;
-    this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    username = username;
+    verified = verified;
+    bio = bio;
+    profilePicture = profilePicture;
+    email = email;
+    firstName = firstName;
+    lastName = lastName;
   }
 
   UserInformation.fromJson(Map<String, dynamic> json) {
@@ -141,14 +141,14 @@ class UserInformation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    data['verified'] = this.verified;
-    data['bio'] = this.bio;
-    data['profile_picture'] = this.profilePicture;
-    data['email'] = this.email;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['username'] = username;
+    data['verified'] = verified;
+    data['bio'] = bio;
+    data['profile_picture'] = profilePicture;
+    data['email'] = email;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
     return data;
   }
 }
@@ -157,7 +157,7 @@ class Providers {
   String auth = '';
 
   Providers({required String auth}) {
-    this.auth = auth;
+    auth = auth;
   }
 
   Providers.fromJson(Map<String, dynamic> json) {
@@ -165,8 +165,8 @@ class Providers {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['auth'] = this.auth;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['auth'] = auth;
     return data;
   }
 }
@@ -177,8 +177,8 @@ class AdditionalInformation {
 
   AdditionalInformation(
       {required bool suspended, required bool emailVerified}) {
-    this.suspended = suspended;
-    this.emailVerified = emailVerified;
+    suspended = suspended;
+    emailVerified = emailVerified;
   }
 
   AdditionalInformation.fromJson(Map<String, dynamic> json) {
@@ -187,9 +187,9 @@ class AdditionalInformation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['suspended'] = this.suspended;
-    data['email_verified'] = this.emailVerified;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['suspended'] = suspended;
+    data['email_verified'] = emailVerified;
     return data;
   }
 }
@@ -199,8 +199,8 @@ class JoinedOn {
   String time = '';
 
   JoinedOn({required String date, required String time}) {
-    this.date = date;
-    this.time = time;
+    date = date;
+    time = time;
   }
 
   JoinedOn.fromJson(Map<String, dynamic> json) {
@@ -209,9 +209,9 @@ class JoinedOn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['time'] = this.time;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date;
+    data['time'] = time;
     return data;
   }
 }
@@ -225,9 +225,9 @@ class Slugs {
       {required String username,
       required String firstName,
       required String lastName}) {
-    this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    username = username;
+    firstName = firstName;
+    lastName = lastName;
   }
 
   Slugs.fromJson(Map<String, dynamic> json) {
@@ -237,10 +237,10 @@ class Slugs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['username'] = this.username;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['username'] = username;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
     return data;
   }
 }

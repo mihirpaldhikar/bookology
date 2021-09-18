@@ -51,7 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
           width: double.infinity,
           height: double.infinity,
           alignment: Alignment.center,
-          child: Text(
+          child: const Text(
             'Work in Progress!',
             style: TextStyle(
               fontSize: 20,

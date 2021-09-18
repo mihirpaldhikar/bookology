@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -42,7 +41,7 @@ class _ImageViewerState extends State<ImageViewer> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
         title: Text(
@@ -52,13 +51,11 @@ class _ImageViewerState extends State<ImageViewer> {
         backgroundColor: Colors.white,
       ),
       body: SafeArea(
-        child: Container(
-          child: PhotoView(
-            backgroundDecoration: BoxDecoration(color: Colors.white),
-            imageProvider: FileImage(
-              File.fromUri(
-                Uri.parse(widget.imageURl),
-              ),
+        child: PhotoView(
+          backgroundDecoration: const BoxDecoration(color: Colors.white),
+          imageProvider: FileImage(
+            File.fromUri(
+              Uri.parse(widget.imageURl),
             ),
           ),
         ),

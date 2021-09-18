@@ -36,7 +36,7 @@ class ImagePlaceholder extends StatefulWidget {
 class _ImagePlaceholderState extends State<ImagePlaceholder> {
   @override
   Widget build(BuildContext context) {
-    final double _borderRadius = 15;
+    const double _borderRadius = 15;
     return Container(
       width: 150,
       height: 150,
@@ -50,7 +50,7 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
       child: InkWell(
         borderRadius: BorderRadius.circular(_borderRadius),
         onTap: widget.onPressed,
-        child: Center(
+        child: const Center(
           child: Icon(
             Icons.add,
             color: Colors.grey,
@@ -82,7 +82,7 @@ class ImageHolder extends StatefulWidget {
 class _ImageHolderState extends State<ImageHolder> {
   @override
   Widget build(BuildContext context) {
-    final double _borderRadius = 15;
+    const double _borderRadius = 15;
     return Container(
       width: 150,
       height: 150,
@@ -130,7 +130,7 @@ class _ImageHolderState extends State<ImageHolder> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.close,
                     size: 15,
                   ),
@@ -150,7 +150,7 @@ class _ImageHolderState extends State<ImageHolder> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.fullscreen_outlined,
                   size: 15,
                 ),

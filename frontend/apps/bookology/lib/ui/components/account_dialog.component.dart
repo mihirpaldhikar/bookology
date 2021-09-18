@@ -61,120 +61,118 @@ class _AccountDialogState extends State<AccountDialog>
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: dragIndicator(),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: dragIndicator(),
+          ),
+          Text(
+            StringConstants.appName,
+            style: TextStyle(
+              fontWeight: Theme.of(context).textTheme.headline4!.fontWeight,
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: Theme.of(context).textTheme.headline5!.fontSize,
             ),
-            Text(
-              StringConstants.APP_NAME,
-              style: TextStyle(
-                fontWeight: Theme.of(context).textTheme.headline4!.fontWeight,
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: Theme.of(context).textTheme.headline5!.fontSize,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          CircularImage(
+            image: widget.profileImageURL,
+            radius: 90,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            widget.displayName,
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.username,
+                style: const TextStyle(
+                  fontSize: 17,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            CircularImage(
-              image: widget.profileImageURL,
-              radius: 90,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              widget.displayName,
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.username,
-                  style: TextStyle(
-                    fontSize: 17,
-                  ),
-                ),
-                SizedBox(
-                  width: widget.isVerified ? 5 : 0,
-                ),
-                Visibility(
-                  visible: widget.isVerified,
-                  child: Icon(
-                    Icons.verified,
-                    color: Colors.blue,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              width: 300,
-              child: OutLinedButton(
-                onPressed: () {
-                  auth.signOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/auth',
-                    (_) => false,
-                  );
-                },
-                text: StringConstants.LOGOUT,
-                showIcon: false,
-                showText: true,
-                outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-                backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
-                textColor: Colors.redAccent,
+              SizedBox(
+                width: widget.isVerified ? 5 : 0,
               ),
+              Visibility(
+                visible: widget.isVerified,
+                child: const Icon(
+                  Icons.verified,
+                  color: Colors.blue,
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          SizedBox(
+            width: 300,
+            child: OutLinedButton(
+              onPressed: () {
+                auth.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/auth',
+                  (_) => false,
+                );
+              },
+              text: StringConstants.logout,
+              showIcon: false,
+              showText: true,
+              outlineColor: ColorsConstant.dangerBorderColor,
+              backgroundColor: ColorsConstant.dangerBackgroundColor,
+              textColor: Colors.redAccent,
             ),
-            SizedBox(
-              height: 20,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 300,
+            child: OutLinedButton(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+              },
+              text: StringConstants.close,
+              showText: true,
+              showIcon: false,
             ),
-            SizedBox(
-              width: 300,
-              child: OutLinedButton(
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop('dialog');
-                },
-                text: StringConstants.CLOSE,
-                showText: true,
-                showIcon: false,
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              Text(
+                StringConstants.support,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  StringConstants.SUPPORT,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
+              Text(
+                StringConstants.contactUs,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
                 ),
-                Text(
-                  StringConstants.CONTACT_US,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

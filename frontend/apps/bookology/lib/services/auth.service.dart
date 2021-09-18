@@ -63,9 +63,8 @@ class AuthService {
       );
 
       return result;
-    } on FirebaseAuthException catch (error) {
-      print(error.message);
-      return error.message;
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -118,9 +117,8 @@ class AuthService {
         ),
       );
       return result;
-    } on FirebaseAuthException catch (error) {
-      print(error);
-      return error;
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -134,9 +132,8 @@ class AuthService {
         password: password,
       );
       return true;
-    } on FirebaseAuthException catch (error) {
-      print(error.message);
-      return error.message;
+    } on FirebaseAuthException {
+      rethrow;
     }
   }
 
@@ -185,8 +182,7 @@ class AuthService {
 
       return false;
     } catch (error) {
-      print(error);
-      return error;
+      rethrow;
     }
   }
 

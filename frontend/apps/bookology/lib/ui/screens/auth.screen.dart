@@ -40,25 +40,23 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
-  final AuthHandler authHandler = new AuthHandler();
-  final CacheService cacheService = new CacheService();
+  final AuthHandler authHandler = AuthHandler();
+  final CacheService cacheService = CacheService();
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     return _isLoading
-        ? Scaffold(
-            body: Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           )
         : Scaffold(
             body: SafeArea(
               child: ListView(
                 scrollDirection: Axis.vertical,
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: 10,
                   right: 10,
                   top: 20,
@@ -66,16 +64,16 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 60,
                     ),
                     child: _logo(context),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 170,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 20,
                       right: 20,
                     ),
@@ -83,7 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       children: [
                         GestureDetector(
                           child: Container(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               top: 10,
                               bottom: 10,
                               right: 8,
@@ -96,19 +94,19 @@ class _AuthScreenState extends State<AuthScreen> {
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(
-                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                  ValuesConstant.secondaryBorderRadius),
                             ),
                             child: Row(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 SvgPicture.asset('assets/svg/google_logo.svg'),
-                                SizedBox(
+                                const SizedBox(
                                   width: 50,
                                 ),
                                 Text(
-                                  StringConstants.HINT_CONTINUE_WITH_GOOGLE,
+                                  StringConstants.hintContinueWithGoogle,
                                   style: Theme.of(context).textTheme.button,
                                 ),
                               ],
@@ -141,11 +139,11 @@ class _AuthScreenState extends State<AuthScreen> {
                             );
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         OutLinedButton(
-                          text: StringConstants.LOGIN,
+                          text: StringConstants.login,
                           icon: Icons.mail_outline_rounded,
                           showIcon: true,
                           showText: true,
@@ -159,7 +157,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 100,
                         ),
                         InkWell(
@@ -170,13 +168,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                           child: RichText(
                             text: TextSpan(
-                              text: StringConstants.HINT_CREATE_NEW_ACCOUNT,
+                              text: StringConstants.hintCreateNewAccount,
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
                               ),
                               children: [
                                 TextSpan(
-                                  text: ' ${StringConstants.SIGN_UP}',
+                                  text: ' ${StringConstants.signUp}',
                                   style: GoogleFonts.poppins(
                                     color:
                                         Theme.of(context).colorScheme.secondary,
@@ -197,22 +195,20 @@ class _AuthScreenState extends State<AuthScreen> {
 }
 
 Widget _logo(BuildContext context) {
-  return Container(
-    child: Column(
-      children: [
-        Image(
-          image: AssetImage('assets/icons/splash.icon.png'),
-          width: 200,
-          height: 200,
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          StringConstants.APP_SLOGAN,
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-      ],
-    ),
+  return Column(
+    children: [
+      const Image(
+        image: AssetImage('assets/icons/splash.icon.png'),
+        width: 200,
+        height: 200,
+      ),
+      const SizedBox(
+        height: 20,
+      ),
+      Text(
+        StringConstants.appSlogan,
+        style: Theme.of(context).textTheme.subtitle1,
+      ),
+    ],
   );
 }

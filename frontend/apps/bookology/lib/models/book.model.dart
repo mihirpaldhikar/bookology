@@ -58,45 +58,44 @@ class BookModel {
       required CreatedOn createdOn,
       required Slugs slugs,
       required String location}) {
-    this.bookId = bookId;
-    this.uploaderId = uploaderId;
-    this.bookInformation = bookInformation;
-    this.additionalInformation = additionalInformation;
-    this.pricing = pricing;
-    this.createdOn = createdOn;
-    this.slugs = slugs;
-    this.location = location;
+    bookId = bookId;
+    uploaderId = uploaderId;
+    bookInformation = bookInformation;
+    additionalInformation = additionalInformation;
+    pricing = pricing;
+    createdOn = createdOn;
+    slugs = slugs;
+    location = location;
   }
 
   BookModel.fromJson(Map<String, dynamic> json) {
     bookId = json['book_id'];
     uploaderId = json['uploader_id'];
     bookInformation = (json['book_information'] != null
-        ? new BookInformation.fromJson(json['book_information'])
+        ? BookInformation.fromJson(json['book_information'])
         : null)!;
     additionalInformation = (json['additional_information'] != null
-        ? new AdditionalInformation.fromJson(json['additional_information'])
+        ? AdditionalInformation.fromJson(json['additional_information'])
         : null)!;
-    pricing = (json['pricing'] != null
-        ? new Pricing.fromJson(json['pricing'])
-        : null)!;
+    pricing =
+        (json['pricing'] != null ? Pricing.fromJson(json['pricing']) : null)!;
     createdOn = (json['created_on'] != null
-        ? new CreatedOn.fromJson(json['created_on'])
+        ? CreatedOn.fromJson(json['created_on'])
         : null)!;
-    slugs = (json['slugs'] != null ? new Slugs.fromJson(json['slugs']) : null)!;
+    slugs = (json['slugs'] != null ? Slugs.fromJson(json['slugs']) : null)!;
     location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['book_id'] = this.bookId;
-    data['uploader_id'] = this.uploaderId;
-    data['book_information'] = this.bookInformation.toJson();
-    data['additional_information'] = this.additionalInformation.toJson();
-    data['pricing'] = this.pricing.toJson();
-    data['created_on'] = this.createdOn.toJson();
-    data['slugs'] = this.slugs.toJson();
-    data['location'] = this.location;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['book_id'] = bookId;
+    data['uploader_id'] = uploaderId;
+    data['book_information'] = bookInformation.toJson();
+    data['additional_information'] = additionalInformation.toJson();
+    data['pricing'] = pricing.toJson();
+    data['created_on'] = createdOn.toJson();
+    data['slugs'] = slugs.toJson();
+    data['location'] = location;
     return data;
   }
 }
@@ -112,10 +111,10 @@ class BookInformation {
       required String name,
       required String author,
       required String publisher}) {
-    this.isbn = isbn;
-    this.name = name;
-    this.author = author;
-    this.publisher = publisher;
+    isbn = isbn;
+    name = name;
+    author = author;
+    publisher = publisher;
   }
 
   BookInformation.fromJson(Map<String, dynamic> json) {
@@ -126,11 +125,11 @@ class BookInformation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isbn'] = this.isbn;
-    data['name'] = this.name;
-    data['author'] = this.author;
-    data['publisher'] = this.publisher;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['isbn'] = isbn;
+    data['name'] = name;
+    data['author'] = author;
+    data['publisher'] = publisher;
     return data;
   }
 }
@@ -146,10 +145,10 @@ class AdditionalInformation {
       required String condition,
       required String imagesCollectionId,
       required List<String> images}) {
-    this.description = description;
-    this.condition = condition;
-    this.imagesCollectionId = imagesCollectionId;
-    this.images = images;
+    description = description;
+    condition = condition;
+    imagesCollectionId = imagesCollectionId;
+    images = images;
   }
 
   AdditionalInformation.fromJson(Map<String, dynamic> json) {
@@ -160,11 +159,11 @@ class AdditionalInformation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['description'] = this.description;
-    data['condition'] = this.condition;
-    data['images_collection_id'] = this.imagesCollectionId;
-    data['images'] = this.images;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['description'] = description;
+    data['condition'] = condition;
+    data['images_collection_id'] = imagesCollectionId;
+    data['images'] = images;
     return data;
   }
 }
@@ -178,9 +177,9 @@ class Pricing {
       {required String originalPrice,
       required String sellingPrice,
       required String currency}) {
-    this.originalPrice = originalPrice;
-    this.sellingPrice = sellingPrice;
-    this.currency = currency;
+    originalPrice = originalPrice;
+    sellingPrice = sellingPrice;
+    currency = currency;
   }
 
   Pricing.fromJson(Map<String, dynamic> json) {
@@ -190,10 +189,10 @@ class Pricing {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['original_price'] = this.originalPrice;
-    data['selling_price'] = this.sellingPrice;
-    data['currency'] = this.currency;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['original_price'] = originalPrice;
+    data['selling_price'] = sellingPrice;
+    data['currency'] = currency;
     return data;
   }
 }
@@ -203,8 +202,8 @@ class CreatedOn {
   String time = '';
 
   CreatedOn({required String date, required String time}) {
-    this.date = date;
-    this.time = time;
+    date = date;
+    time = time;
   }
 
   CreatedOn.fromJson(Map<String, dynamic> json) {
@@ -213,9 +212,9 @@ class CreatedOn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['time'] = this.time;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date;
+    data['time'] = time;
     return data;
   }
 }
@@ -224,7 +223,7 @@ class Slugs {
   String name = '';
 
   Slugs({required String name}) {
-    this.name = name;
+    name = name;
   }
 
   Slugs.fromJson(Map<String, dynamic> json) {
@@ -232,8 +231,8 @@ class Slugs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
     return data;
   }
 }

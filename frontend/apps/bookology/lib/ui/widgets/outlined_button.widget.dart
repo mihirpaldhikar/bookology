@@ -44,16 +44,16 @@ class OutLinedButton extends StatelessWidget {
   const OutLinedButton({
     Key? key,
     this.outlineWidth = 1.0,
-    this.outlineColor = ColorsConstant.ACCENT_COLOR,
+    this.outlineColor = ColorsConstant.accentColor,
     required this.onPressed,
-    this.backgroundColor = ColorsConstant.SECONDARY_COLOR,
+    this.backgroundColor = ColorsConstant.secondaryColor,
     required this.text,
     this.icon,
     required this.showText,
     required this.showIcon,
     this.align = Alignment.center,
-    this.iconColor = ColorsConstant.ACCENT_COLOR,
-    this.textColor = ColorsConstant.ACCENT_COLOR,
+    this.iconColor = ColorsConstant.accentColor,
+    this.textColor = ColorsConstant.accentColor,
     this.inverted = false,
     this.alignContent = MainAxisAlignment.center,
     this.spaceBetween = 20,
@@ -61,43 +61,43 @@ class OutLinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double borderRadius = ValuesConstant.SECONDARY_BORDER_RADIUS;
+    const double borderRadius = ValuesConstant.secondaryBorderRadius;
     return Container(
-      alignment: this.align,
+      alignment: align,
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
         onTap: () {
           onPressed();
         },
         child: Container(
-          alignment: this.align,
+          alignment: align,
           padding: EdgeInsets.only(
             top: 10,
             bottom: 10,
             right: 8,
-            left: this.showIcon ? 20 : 8,
+            left: showIcon ? 20 : 8,
           ),
           decoration: BoxDecoration(
-            color: this.backgroundColor,
+            color: backgroundColor,
             border: Border.all(
-              color: this.outlineColor!,
+              color: outlineColor!,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          child: this.inverted!
+          child: inverted!
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: this.alignContent!,
+                  mainAxisAlignment: alignContent!,
                   children: [
                     Visibility(
-                      visible: this.showText,
+                      visible: showText,
                       child: Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 100,
                         ),
                         child: Text(
-                          this.text,
+                          text,
                           style: TextStyle(
                             fontWeight:
                                 Theme.of(context).textTheme.button!.fontWeight,
@@ -105,51 +105,51 @@ class OutLinedButton extends StatelessWidget {
                                 Theme.of(context).textTheme.button!.fontSize,
                             fontStyle:
                                 Theme.of(context).textTheme.button!.fontStyle,
-                            color: this.textColor,
+                            color: textColor,
                           ),
                         ),
                       ),
                     ),
                     Visibility(
-                      visible: this.showIcon && this.showText,
+                      visible: showIcon && showText,
                       child: SizedBox(
-                        width: this.spaceBetween,
+                        width: spaceBetween,
                       ),
                     ),
                     Visibility(
-                      visible: this.showIcon,
+                      visible: showIcon,
                       child: Icon(
-                        this.icon,
-                        color: this.iconColor,
+                        icon,
+                        color: iconColor,
                       ),
                     ),
                   ],
                 )
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: this.alignContent!,
+                  mainAxisAlignment: alignContent!,
                   children: [
                     Visibility(
-                      visible: this.showIcon,
+                      visible: showIcon,
                       child: Icon(
-                        this.icon,
-                        color: this.iconColor,
+                        icon,
+                        color: iconColor,
                       ),
                     ),
                     Visibility(
-                      visible: this.showIcon && this.showText,
+                      visible: showIcon && showText,
                       child: SizedBox(
-                        width: this.spaceBetween,
+                        width: spaceBetween,
                       ),
                     ),
                     Visibility(
-                      visible: this.showText,
+                      visible: showText,
                       child: Padding(
                         padding: EdgeInsets.only(
-                          top: this.showIcon ? 3 : 0,
+                          top: showIcon ? 3 : 0,
                         ),
                         child: Text(
-                          this.text,
+                          text,
                           style: TextStyle(
                             fontWeight:
                                 Theme.of(context).textTheme.button!.fontWeight,
@@ -157,7 +157,7 @@ class OutLinedButton extends StatelessWidget {
                                 Theme.of(context).textTheme.button!.fontSize,
                             fontStyle:
                                 Theme.of(context).textTheme.button!.fontStyle,
-                            color: this.textColor,
+                            color: textColor,
                           ),
                         ),
                       ),

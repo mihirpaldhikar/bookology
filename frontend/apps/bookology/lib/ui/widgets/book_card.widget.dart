@@ -66,8 +66,8 @@ class _BookCardState extends State<BookCard> {
           onTap: widget.onClicked,
           child: Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.only(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.only(
                 top: 10,
                 bottom: 10,
               ),
@@ -86,9 +86,8 @@ class _BookCardState extends State<BookCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
-                      imageUrl:
-                          this.widget.book.additionalInformation.images.first,
-                      placeholder: (context, url) => Center(
+                      imageUrl: widget.book.additionalInformation.images.first,
+                      placeholder: (context, url) => const Center(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                             Colors.grey,
@@ -101,7 +100,7 @@ class _BookCardState extends State<BookCard> {
                       width: 150,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
@@ -115,7 +114,7 @@ class _BookCardState extends State<BookCard> {
                           children: [
                             Visibility(
                               visible: widget.showMenu!,
-                              child: Spacer(),
+                              child: const Spacer(),
                             ),
                             Visibility(
                               visible: widget.showMenu!,
@@ -127,17 +126,17 @@ class _BookCardState extends State<BookCard> {
                                   );
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(3),
+                                  padding: const EdgeInsets.all(3),
                                   decoration: BoxDecoration(
-                                    color: ColorsConstant.SECONDARY_COLOR,
+                                    color: ColorsConstant.secondaryColor,
                                     borderRadius: BorderRadius.circular(
-                                        ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                        ValuesConstant.secondaryBorderRadius),
                                     border: Border.all(
                                       color: Colors.black,
                                       width: 1,
                                     ),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.more_vert_outlined,
                                   ),
                                 ),
@@ -146,7 +145,7 @@ class _BookCardState extends State<BookCard> {
                           ],
                         ),
                         AutoSizeText(
-                          this.widget.book.bookInformation.name,
+                          widget.book.bookInformation.name,
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -156,11 +155,11 @@ class _BookCardState extends State<BookCard> {
                             fontSize: 20,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         AutoSizeText(
-                          'By ${this.widget.book.bookInformation.author}',
+                          'By ${widget.book.bookInformation.author}',
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -169,7 +168,7 @@ class _BookCardState extends State<BookCard> {
                               fontSize: 13,
                               color: Colors.grey[600]),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Row(
@@ -181,28 +180,28 @@ class _BookCardState extends State<BookCard> {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             AutoSizeText(
-                              '$currencySymbol ${this.widget.book.pricing.sellingPrice}',
+                              '$currencySymbol ${widget.book.pricing.sellingPrice}',
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             AutoSizeText(
-                              this.widget.book.pricing.originalPrice,
+                              widget.book.pricing.originalPrice,
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 15,
                                   decoration: TextDecoration.lineThrough,
@@ -210,7 +209,7 @@ class _BookCardState extends State<BookCard> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 3,
                         ),
                         AutoSizeText(
@@ -218,7 +217,7 @@ class _BookCardState extends State<BookCard> {
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             color: Colors.green,
                             fontSize: 15,

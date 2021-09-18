@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -26,7 +25,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class ChatsService {
-  final firestoreService = new FirestoreService(FirebaseFirestore.instance);
+  final firestoreService = FirestoreService(FirebaseFirestore.instance);
 
   Future<dynamic> createChatRoom({
     required String? bookName,

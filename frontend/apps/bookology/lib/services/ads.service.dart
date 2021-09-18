@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -40,7 +39,7 @@ class AdsService {
           // Releases an ad resource when it fails to load
           ad.dispose();
 
-          print('Ad load failed (code=${error.code} message=${error.message})');
+          throw 'Ad load failed (code=${error.code} message=${error.message})';
         },
       );
 }

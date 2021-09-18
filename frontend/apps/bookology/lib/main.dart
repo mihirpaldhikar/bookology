@@ -25,7 +25,6 @@ import 'package:bookology/services/ads.service.dart';
 import 'package:bookology/services/startup.service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -41,7 +40,7 @@ Future<void> main() async {
   runApp(
     Provider.value(
       value: AdsService(adsM),
-      builder: (context, child) => AppManager(),
+      builder: (context, child) => const AppManager(),
     ),
   );
 }

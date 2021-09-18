@@ -51,7 +51,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   final cacheService = CacheService();
-  final locationService = new LocationService();
+  final locationService = LocationService();
   var top = 0.0;
   bool isCollapsed = false;
 
@@ -59,7 +59,9 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+      onTap: () => FocusScope.of(context).requestFocus(
+        FocusNode(),
+      ),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           top = constraints.biggest.height;
@@ -69,7 +71,7 @@ class _SearchBarState extends State<SearchBar> {
             isCollapsed = false;
           }
           return FlexibleSpaceBar(
-            titlePadding: EdgeInsets.only(
+            titlePadding: const EdgeInsets.only(
               left: 20,
               right: 20,
               bottom: 10,
@@ -83,16 +85,16 @@ class _SearchBarState extends State<SearchBar> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        StringConstants.APP_NAME,
+                        StringConstants.appName,
                         textAlign: TextAlign.start,
                         style: Theme.of(context).appBarTheme.titleTextStyle,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Tooltip(
                       message: 'Upload New Book',
                       child: Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           right: 20,
                           top: 6,
                         ),
@@ -101,12 +103,12 @@ class _SearchBarState extends State<SearchBar> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CreateScreen(),
+                                builder: (context) => const CreateScreen(),
                               ),
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.black,
@@ -115,7 +117,7 @@ class _SearchBarState extends State<SearchBar> {
                               color: Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.add,
                               size: 25,
                             ),
@@ -130,17 +132,17 @@ class _SearchBarState extends State<SearchBar> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NotificationScreen(),
+                              builder: (context) => const NotificationScreen(),
                             ),
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             right: 5,
                             top: 6,
                           ),
                           child: Container(
-                            padding: EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.black,
@@ -154,7 +156,7 @@ class _SearchBarState extends State<SearchBar> {
                               toAnimate: false,
                               badgeColor: Colors.red,
                               elevation: 0,
-                              badgeContent: Text(
+                              badgeContent: const Text(
                                 '9+',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -162,7 +164,7 @@ class _SearchBarState extends State<SearchBar> {
                                   fontSize: 12,
                                 ),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.notifications_outlined,
                                 size: 25,
                               ),
@@ -174,7 +176,7 @@ class _SearchBarState extends State<SearchBar> {
                   ],
                 )),
             background: Container(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 20,
                 right: 20,
                 top: 10,
@@ -183,9 +185,9 @@ class _SearchBarState extends State<SearchBar> {
               height: 250.0,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(ValuesConstant.BORDER_RADIUS),
-                  bottomRight: Radius.circular(ValuesConstant.BORDER_RADIUS),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(ValuesConstant.borderRadius),
+                  bottomRight: Radius.circular(ValuesConstant.borderRadius),
                 ),
               ),
               child: Stack(
@@ -207,11 +209,11 @@ class _SearchBarState extends State<SearchBar> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               top: 10,
                             ),
                             child: Container(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 left: 10,
                                 right: 10,
                                 top: 5,
@@ -219,7 +221,7 @@ class _SearchBarState extends State<SearchBar> {
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
-                                  ValuesConstant.SECONDARY_BORDER_RADIUS,
+                                  ValuesConstant.secondaryBorderRadius,
                                 ),
                                 border: Border.all(
                                   color: Colors.black,
@@ -232,7 +234,7 @@ class _SearchBarState extends State<SearchBar> {
                                     Icons.place_outlined,
                                     color: Colors.grey.shade900,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Text(
@@ -245,11 +247,11 @@ class _SearchBarState extends State<SearchBar> {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Tooltip(
                             message: 'Upload New Book',
                             child: Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 right: 15,
                                 top: 6,
                               ),
@@ -258,12 +260,13 @@ class _SearchBarState extends State<SearchBar> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CreateScreen(),
+                                      builder: (context) =>
+                                          const CreateScreen(),
                                     ),
                                   );
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Colors.black,
@@ -271,7 +274,7 @@ class _SearchBarState extends State<SearchBar> {
                                     ),
                                     borderRadius: BorderRadius.circular(100),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.add,
                                     size: 25,
                                   ),
@@ -286,17 +289,18 @@ class _SearchBarState extends State<SearchBar> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NotificationScreen(),
+                                    builder: (context) =>
+                                        const NotificationScreen(),
                                   ),
                                 );
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                   right: 5,
                                   top: 6,
                                 ),
                                 child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Colors.black,
@@ -309,7 +313,7 @@ class _SearchBarState extends State<SearchBar> {
                                     toAnimate: false,
                                     badgeColor: Colors.red,
                                     elevation: 0,
-                                    badgeContent: Text(
+                                    badgeContent: const Text(
                                       '9+',
                                       style: TextStyle(
                                         color: Colors.white,
@@ -317,7 +321,7 @@ class _SearchBarState extends State<SearchBar> {
                                         fontSize: 12,
                                       ),
                                     ),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.notifications_outlined,
                                       size: 25,
                                     ),
@@ -328,7 +332,7 @@ class _SearchBarState extends State<SearchBar> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       CircularImage(
@@ -338,7 +342,7 @@ class _SearchBarState extends State<SearchBar> {
                         radius: 75,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 20,
                         ),
                         child: RichText(
@@ -387,7 +391,11 @@ class _SearchBarState extends State<SearchBar> {
 
 class BackendService {
   static Future<List<Map<String, String>>> getSuggestions(String query) async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(
+      const Duration(
+        seconds: 1,
+      ),
+    );
 
     return List.generate(3, (index) {
       return {
@@ -401,7 +409,7 @@ class BackendService {
 class CitiesService {
   static List<String> getSuggestions(String query) {
     List<String> matches = <String>[];
-    matches.addAll(StringConstants.CITIES);
+    matches.addAll(StringConstants.cities);
 
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;

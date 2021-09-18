@@ -39,8 +39,8 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   late Future<List<NotificationModel>?> notifications;
-  final ApiService apiService = new ApiService();
-  final CacheService cacheService = new CacheService();
+  final ApiService apiService = ApiService();
+  final CacheService cacheService = CacheService();
 
   @override
   void initState() {
@@ -60,18 +60,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: FutureBuilder<List<NotificationModel>?>(
         future: notifications,
-        initialData: [],
+        initialData: const [],
         builder: (BuildContext context,
             AsyncSnapshot<List<NotificationModel>?> notifications) {
           if (notifications.connectionState == ConnectionState.done) {
             if (notifications.hasData) {
               return ListView.builder(
                 scrollDirection: Axis.vertical,
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: notifications.data!.length,
                 itemBuilder: (BuildContext context, index) {
                   return Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       left: 15,
                       right: 15,
                       bottom: 10,
@@ -79,7 +79,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius:
-                          BorderRadius.circular(ValuesConstant.BORDER_RADIUS),
+                          BorderRadius.circular(ValuesConstant.borderRadius),
                       border: Border.all(
                         color: Colors.grey,
                         width: 1,
@@ -87,12 +87,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     child: InkWell(
                       borderRadius:
-                          BorderRadius.circular(ValuesConstant.BORDER_RADIUS),
+                          BorderRadius.circular(ValuesConstant.borderRadius),
                       onLongPress: () async {
                         //DialogsManager(context).showDeleteDiscussionDialog();
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           left: 10,
                           right: 10,
                           top: 15,
@@ -105,9 +105,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             Container(
                               width: 50,
                               height: 50,
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: ColorsConstant.SECONDARY_COLOR,
+                                color: ColorsConstant.secondaryColor,
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Icon(
@@ -115,7 +115,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Expanded(
@@ -132,7 +132,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   AutoSizeText(
@@ -154,9 +154,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 },
               );
             }
-            return Text('An error occurred');
+            return const Text('An error occurred');
           } else {
-            return Text('Loading');
+            return const Text('Loading');
           }
         },
       ),

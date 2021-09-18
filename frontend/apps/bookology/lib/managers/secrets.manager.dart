@@ -24,7 +24,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecretsManager {
-  final FlutterSecureStorage secret = new FlutterSecureStorage();
+  final FlutterSecureStorage secret = const FlutterSecureStorage();
   final apiURL = dotenv.env['API_URL'];
   final isbnApiURL = dotenv.env['ISBN_API_URL'];
   final apiKEY = dotenv.env['API_KEY'];

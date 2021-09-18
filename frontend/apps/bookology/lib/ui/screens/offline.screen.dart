@@ -36,10 +36,10 @@ Widget offlineScreen() {
             width: 200,
             height: 200,
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
-          Text(
+          const Text(
             'No Network!',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -47,10 +47,10 @@ Widget offlineScreen() {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
-          Text(
+          const Text(
             'The content will automatically be loaded once network '
             'connection is available.',
             style: TextStyle(

@@ -50,12 +50,12 @@ class ViewManager extends StatefulWidget {
 class _ViewManagerState extends State<ViewManager> {
   int screenIndex = 0;
   List<Widget> screenList = [
-    HomeScreen(),
-    SearchScreen(),
-    RoomsPage(),
-    ProfileScreen(),
+    const HomeScreen(),
+    const SearchScreen(),
+    const RoomsPage(),
+    const ProfileScreen(),
   ];
-  final cacheService = new CacheService();
+  final cacheService = CacheService();
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _ViewManagerState extends State<ViewManager> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
     return auth.isEmailVerified() != true
-        ? VerifyEmailScreen()
+        ? const VerifyEmailScreen()
         : Scaffold(
             bottomNavigationBar: BottomNavyBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -85,12 +85,12 @@ class _ViewManagerState extends State<ViewManager> {
               },
               items: [
                 BottomNavyBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.home_outlined,
                     color: Colors.black,
                   ),
-                  title: Text(
-                    StringConstants.NAVIGATION_HOME,
+                  title: const Text(
+                    StringConstants.navigationHome,
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -100,12 +100,12 @@ class _ViewManagerState extends State<ViewManager> {
                   textAlign: TextAlign.center,
                 ),
                 BottomNavyBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search_outlined,
                     color: Colors.black,
                   ),
-                  title: Text(
-                    StringConstants.NAVIGATION_SEARCH,
+                  title: const Text(
+                    StringConstants.navigationSearch,
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -115,12 +115,12 @@ class _ViewManagerState extends State<ViewManager> {
                   textAlign: TextAlign.center,
                 ),
                 BottomNavyBarItem(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.question_answer_outlined,
                     color: Colors.black,
                   ),
-                  title: Text(
-                    StringConstants.NAVIGATION_DISCUSSIONS,
+                  title: const Text(
+                    StringConstants.navigationDiscussions,
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -134,8 +134,8 @@ class _ViewManagerState extends State<ViewManager> {
                     image: auth.currentUser()!.photoURL.toString(),
                     radius: 30,
                   ),
-                  title: Text(
-                    StringConstants.NAVIGATION_PROFILE,
+                  title: const Text(
+                    StringConstants.navigationProfile,
                     style: TextStyle(
                       color: Colors.black,
                     ),

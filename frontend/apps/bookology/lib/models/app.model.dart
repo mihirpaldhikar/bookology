@@ -40,18 +40,18 @@ class AppModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['app_name'] = this.appName;
-    data['android_package_name'] = this.androidPackageName;
-    data['ios_bundle_id'] = this.iosBundleId;
-    data['app_version'] = this.appVersion;
-    data['app_build_number'] = this.appBuildNumber;
-    data['isPublishedOnGooglePlayStore'] = this.isPublishedOnGooglePlayStore;
-    data['isPublishedOnAppleAppStore'] = this.isPublishedOnAppleAppStore;
-    data['google_play_store_url'] = this.googlePlayStoreUrl;
-    data['apple_app_store_url'] = this.appleAppStoreUrl;
-    data['direct_update_url'] = this.directUpdateUrl;
-    data['changelogs'] = this.changelogs;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['app_name'] = appName;
+    data['android_package_name'] = androidPackageName;
+    data['ios_bundle_id'] = iosBundleId;
+    data['app_version'] = appVersion;
+    data['app_build_number'] = appBuildNumber;
+    data['isPublishedOnGooglePlayStore'] = isPublishedOnGooglePlayStore;
+    data['isPublishedOnAppleAppStore'] = isPublishedOnAppleAppStore;
+    data['google_play_store_url'] = googlePlayStoreUrl;
+    data['apple_app_store_url'] = appleAppStoreUrl;
+    data['direct_update_url'] = directUpdateUrl;
+    data['changelogs'] = changelogs;
     return data;
   }
 }

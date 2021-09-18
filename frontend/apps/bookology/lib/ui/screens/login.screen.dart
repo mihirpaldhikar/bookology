@@ -43,19 +43,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final _formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final AuthHandler authHandler = new AuthHandler();
+    final AuthHandler authHandler = AuthHandler();
     return Scaffold(
       body: _isLoading
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
+          ? const Center(
+              child: CircularProgressIndicator(),
             )
           : SafeArea(
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     right: 30,
                     left: 30,
                   ),
@@ -64,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 20,
                           left: 0,
                         ),
@@ -85,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 50,
                       ),
                       Center(
@@ -106,26 +104,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 150,
                       ),
                       TextFormField(
-                        decoration: new InputDecoration(
+                        decoration: InputDecoration(
                             labelText: "Email",
                             fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(15),
-                              borderSide: new BorderSide(),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(),
                             ),
-                            prefixIcon: Icon(Icons.mail_outline_rounded)
+                            prefixIcon: const Icon(Icons.mail_outline_rounded)
                             //fillColor: Colors.green
                             ),
                         controller: emailController,
                         validator: (val) {
-                          if (val?.length == 0) {
+                          if (val!.isEmpty) {
                             return "Email cannot be empty.";
                           } else {
-                            if (!isEmail(val!)) {
+                            if (!isEmail(val)) {
                               return "Email is not valid.";
                             } else {
                               return null;
@@ -136,28 +134,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.next,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 40,
                       ),
                       TextFormField(
-                        decoration: new InputDecoration(
+                        decoration: InputDecoration(
                             labelText: "Password",
                             fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(15),
-                              borderSide: new BorderSide(),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(),
                             ),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.lock_outlined,
                             )
                             //fillColor: Colors.green
                             ),
                         controller: passwordController,
                         validator: (val) {
-                          if (val?.length == 0) {
+                          if (val!.isEmpty) {
                             return "Password cannot be empty.";
                           } else {
-                            if (!validatePassword(val!)) {
+                            if (!validatePassword(val)) {
                               return "Enter a valid password.";
                             }
                             return null;
@@ -168,11 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         textCapitalization: TextCapitalization.none,
                         textInputAction: TextInputAction.done,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 50,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           right: 50,
                           left: 50,
                         ),
@@ -205,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                 );
                               } catch (e) {
-                                print(e);
+                                rethrow;
                               }
                             }
                           },
@@ -235,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
     return regExp.hasMatch(em);
   }
@@ -243,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool validatePassword(String value) {
     Pattern pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regex = new RegExp(pattern.toString());
+    RegExp regex = RegExp(pattern.toString());
 
     return regex.hasMatch(value);
   }

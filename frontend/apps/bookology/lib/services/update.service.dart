@@ -47,10 +47,10 @@ class UpdateService {
         localAppVersion != remoteAppVersion) {
       MaterialSnackBarMessenger.of(context).showSnackBar(
         snackbar: MaterialSnackbar(
-          duration: Duration(seconds: 5),
-          content: Text(StringConstants.APP_UPDATE_AVAILABLE),
+          duration: const Duration(seconds: 5),
+          content: const Text(StringConstants.appUpdateAvailable),
           actionBuilder: (context, close) => TextButton(
-            child: Text(StringConstants.UPDATE),
+            child: const Text(StringConstants.update),
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               BottomSheetManager(context).showUpdateAvailableBottomSheet(

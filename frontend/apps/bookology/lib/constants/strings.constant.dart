@@ -22,87 +22,87 @@
 
 class StringConstants {
   // App Constants
-  static const String APP_NAME = 'Bookology';
-  static const String APP_SLOGAN = 'Find the books nearby.';
-  static const String APP_UPDATE_AVAILABLE = 'An App update is available.';
-  static const String APP_COPYRIGHT = 'Copyright \u00a9 2021 Mihir Paldhikar';
-  static const String APP_NOTICE =
+  static const String appName = 'Bookology';
+  static const String appSlogan = 'Find the books nearby.';
+  static const String appUpdateAvailable = 'An App update is available.';
+  static const String appCopyright = 'Copyright \u00a9 2021 Mihir Paldhikar';
+  static const String appNotice =
       'No Part of the APP should be COPIED, MODIFIED, REDISTRIBUTED without the '
       'written agreement/license from the author MIHIR PALDHIKAR. \nBy doing any '
       'of the things written above is STRICTLY PROHIBITED and a Legal Offence. '
       '\nLegal Action Will be taken without any Prior Notice.';
 
   // Urls
-  static const String APP_PRIVACY_POLICY_URL =
+  static const String appPrivacyPolicy =
       'https://bookology.tech/privacy-policy';
 
   // Words Constants
-  static const String DELETE = 'Delete';
-  static const String CLOSE = 'Close';
-  static const String LOGOUT = 'Logout';
-  static const String SIGN_UP = 'Sign Up';
-  static const String LOGIN = 'Login';
-  static const String SUPPORT = 'Logout';
-  static const String SEARCH = 'Search';
-  static const String CONTACT_US = 'Contact Us';
-  static const String OK = 'OK';
-  static const String BY = 'By';
-  static const String PRICE = 'Price';
-  static const String YOU_SAVE = 'You Save';
-  static const String ENQUIRE = 'Enquire';
-  static const String ADD_TO_WISHLIST = 'Add to Wish list';
-  static const String BOOK_LOCATION = 'Book Location';
-  static const String DESCRIPTION = 'Description';
-  static const String BOOK_DETAILS = 'Book Details';
-  static const String VIEW_PROFILE = 'View Profile';
-  static const String ISBN = 'ISBN';
-  static const String BOOK_NAME = 'Book Name';
-  static const String SELLING_PRICE = 'Selling Price';
-  static const String ORIGINAL_PRICE = 'Original Price';
-  static const String AUTHOR = 'Author';
-  static const String UPLOAD = 'Upload';
-  static const String PUBLISHER = 'Publisher';
-  static const String BOOK_CONDITION = 'Book Condition';
-  static const String UPLOADER_DETAILS = 'Uploader Details';
-  static const String USERNAME = 'Username';
-  static const String NAME = 'Name';
-  static const String CAMERA = 'Camera';
-  static const String FILE = 'File';
-  static const String UPLOADED_ON = 'Uploaded On';
-  static const String UPDATE = 'Update';
-  static const String POWERED_BY_FLUTTER = 'Powered By Flutter';
-  static const String PRIVACY_POLICY = 'Privacy Policy';
-  static const String CHECK_FOR_UPDATED = 'Check for Updates';
-  static const String SEND_FEEDBACK = 'Send Feedback';
+  static const String delete = 'Delete';
+  static const String close = 'Close';
+  static const String logout = 'Logout';
+  static const String signUp = 'Sign Up';
+  static const String login = 'Login';
+  static const String support = 'Support';
+  static const String search = 'Search';
+  static const String contactUs = 'Contact Us';
+  static const String ok = 'OK';
+  static const String by = 'By';
+  static const String price = 'Price';
+  static const String youSave = 'You Save';
+  static const String enquire = 'Enquire';
+  static const String addToWishList = 'Add to Wish list';
+  static const String bookLocation = 'Book Location';
+  static const String description = 'Description';
+  static const String bookDetails = 'Book Details';
+  static const String viewProfile = 'View Profile';
+  static const String isbn = 'ISBN';
+  static const String bookName = 'Book Name';
+  static const String sellingPrice = 'Selling Price';
+  static const String originalPrice = 'Original Price';
+  static const String author = 'Author';
+  static const String upload = 'Upload';
+  static const String publisher = 'Publisher';
+  static const String bookCondition = 'Book Condition';
+  static const String uploadDetails = 'Uploader Details';
+  static const String username = 'Username';
+  static const String name = 'Name';
+  static const String camera = 'Camera';
+  static const String file = 'File';
+  static const String uploadedOn = 'Uploaded On';
+  static const String update = 'Update';
+  static const String poweredByFlutter = 'Powered By Flutter';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String checkForUpdates = 'Check for Updates';
+  static const String sendFeedback = 'Send Feedback';
 
   // Title Constants
-  static const String TITLE_CONFIRMATION = 'Confirmation';
+  static const String titleConfirmation = 'Confirmation';
 
   // Navigation Constants
-  static const String NAVIGATION_HOME = 'Home';
-  static const String NAVIGATION_NOTIFICATIONS = 'Notifications';
-  static const String NAVIGATION_PROFILE = 'Profile';
-  static const String NAVIGATION_DISCUSSIONS = 'Discussions';
-  static const String NAVIGATION_SEARCH = 'Search';
+  static const String navigationHome = 'Home';
+  static const String navigationNotifications = 'Notifications';
+  static const String navigationProfile = 'Profile';
+  static const String navigationDiscussions = 'Discussions';
+  static const String navigationSearch = 'Search';
 
   // Hints Constants
-  static const String HINT_CREATE_NEW_BOOK = 'Create new Book';
-  static const String HINT_CREATE_NEW_ACCOUNT =
+  static const String hintCreateNewBook = 'Create new Book';
+  static const String hintCreateNewAccount =
       'Create new Don\'t have an account?';
-  static const String HINT_CONTINUE_WITH_GOOGLE = 'Continue With Google';
-  static const String HINT_EDIT_BOOK = 'Edit Book';
-  static const String HINT_DELETE_BOOK = 'Delete Book';
-  static const String HINT_MORE_OPTIONS = 'More Options';
-  static const String HINT_CONNECTION_SECURED = 'Connection is Secured';
-  static const String HINT_SHARE_BOOK = 'Share this book';
-  static const String HINT_REPORT_BOOK = 'Report this book';
+  static const String hintContinueWithGoogle = 'Continue With Google';
+  static const String hintEditBook = 'Edit Book';
+  static const String hintDeleteBook = 'Delete Book';
+  static const String hintMoreOptions = 'More Options';
+  static const String hintConnectionSecured = 'Connection is Secured';
+  static const String hintShareBook = 'Share this book';
+  static const String hintReportBook = 'Report this book';
 
   // Dialog Constants
-  static const String DIALOG_DELETING = 'Deleting...';
-  static const String DIALOG_UPLOADING = 'Uploading...';
+  static const String dialogDeleting = 'Deleting...';
+  static const String dialogUploading = 'Uploading...';
 
   // List Constants
-  static const List<String> CITIES = [
+  static const List<String> cities = [
     'Beirut',
     'Damascus',
     'San Fransisco',
@@ -117,7 +117,7 @@ class StringConstants {
     'Philadelphia',
     'Sydney',
   ];
-  static const List<String> BOOKS_CATEGORIES = [
+  static const List<String> bookCategories = [
     'All',
     'Education & References',
     'Comics',
@@ -128,7 +128,7 @@ class StringConstants {
     'Kids',
     'Mysteries',
   ];
-  static const List<String> SELECT_BOOKS_CATEGORIES = [
+  static const List<String> selectBookCategories = [
     'Education & References',
     'Comics',
     'Science Fiction',
@@ -140,13 +140,13 @@ class StringConstants {
   ];
 
   // Map Constants
-  static const Map<String, String> CURRENCIES = {
+  static const Map<String, String> currencies = {
     'INR': '₹',
     'USD': '\$',
   };
 
   // Overflow Menu Constants
-  static const Set<String> MENU_DELETE_DISCUSSION = {
+  static const Set<String> menuDeleteDiscussion = {
     'Delete Discussions',
   };
 }

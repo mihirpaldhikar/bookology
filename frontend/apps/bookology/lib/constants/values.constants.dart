@@ -21,7 +21,7 @@
  */
 
 class ValuesConstant {
-  static const double BORDER_RADIUS = 15.0;
+  static const double borderRadius = 15.0;
 
-  static const double SECONDARY_BORDER_RADIUS = 100.0;
+  static const double secondaryBorderRadius = 100.0;
 }

@@ -30,7 +30,7 @@ class DialogsManager {
   final BuildContext context;
 
   final FirestoreService firestoreService =
-      new FirestoreService(FirebaseFirestore.instance);
+      FirestoreService(FirebaseFirestore.instance);
 
   DialogsManager(this.context);
 
@@ -39,7 +39,7 @@ class DialogsManager {
         context: context,
         builder: (context) => AlertDialog(
               title: Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.delete_forever_outlined,
                     color: Colors.red,
@@ -56,18 +56,18 @@ class DialogsManager {
                   ),
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 280,
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'This will delete the discussion for both'
                       ' the users. This action is '
                       'irreversible & you will need to request '
                       'the uploader to start discussion '
                       'again.',
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     OutLinedButton(
@@ -82,7 +82,7 @@ class DialogsManager {
                             discussionRoomID: room.id);
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     OutLinedButton(
@@ -104,7 +104,7 @@ class DialogsManager {
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
-          children: [
+          children: const [
             Icon(
               Icons.auto_delete_outlined,
               color: Colors.red,
@@ -121,15 +121,15 @@ class DialogsManager {
             ),
           ],
         ),
-        content: Container(
+        content: SizedBox(
           height: 200,
           child: Column(
             children: [
-              Text(
+              const Text(
                 'You will be able to unsend the message '
                 'you have sent.',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               OutLinedButton(
@@ -142,15 +142,13 @@ class DialogsManager {
                   Navigator.of(context).pop();
                   await firestoreService.unsendMessage(
                     messageID: message.id,
-                    mediaURL: message.toJson()['uri'] == null
-                        ? ''
-                        : message.toJson()['uri'],
+                    mediaURL: message.toJson()['uri'] ?? '',
                     roomID: message.roomId as String,
                     messageType: message.type.toString(),
                   );
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               OutLinedButton(
@@ -173,7 +171,7 @@ class DialogsManager {
         context: context,
         builder: (context) => AlertDialog(
               title: Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.lock_outlined,
                     color: Colors.green,
@@ -190,16 +188,16 @@ class DialogsManager {
                   ),
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 180,
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'This discussion is end-to-end secured. '
                       'No one even Bookology can read the ongoing '
                       'discussions.',
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     OutLinedButton(
@@ -229,7 +227,7 @@ class DialogsManager {
               color: Theme.of(context).colorScheme.secondary,
               size: 30,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
@@ -241,17 +239,17 @@ class DialogsManager {
             ),
           ],
         ),
-        content: Container(
+        content: SizedBox(
           height: 260,
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Sponsored or advertisement are the essential part '
                 'inorder to maintain the underlying infrastructure. '
                 'This ADs are sourced from Google ADs Network. We '
                 'don\'t collect the information to show you ADs.',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               OutLinedButton(
@@ -273,20 +271,20 @@ class DialogsManager {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text(
+        title: const Text(
           'About ISBN',
         ),
-        content: Container(
+        content: SizedBox(
           height: 300,
           child: Column(
             children: [
-              Text(
+              const Text(
                 'The International Standard Book Number (ISBN) is a numeric commercial book identifier which is intended to be unique.'
                 '\nAn ISBN is assigned to each separate '
                 'edition and variation (except '
                 'reprintings) of a publication.',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               OutLinedButton(
@@ -316,7 +314,7 @@ class DialogsManager {
               color: Theme.of(context).colorScheme.secondary,
               size: 30,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
@@ -328,17 +326,17 @@ class DialogsManager {
             ),
           ],
         ),
-        content: Container(
+        content: SizedBox(
           height: 300,
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Inorder to show the books listed nearby you, we require the location permission. '
                 'We required only approximate location which includes current district, state & '
                 'country. You can disable the location permission if you want but you will not get '
                 'relevant book recommendations.',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               OutLinedButton(
@@ -359,7 +357,7 @@ class DialogsManager {
         context: context,
         builder: (context) => AlertDialog(
               title: Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.delete_forever_outlined,
                     color: Colors.red,
@@ -376,15 +374,15 @@ class DialogsManager {
                   ),
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 200,
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'This book will be deleted. This action '
                       'is not irreversible.',
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     OutLinedButton(
@@ -395,7 +393,7 @@ class DialogsManager {
                       backgroundColor: Colors.red[100],
                       onPressed: onDelete,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     OutLinedButton(
@@ -417,7 +415,7 @@ class DialogsManager {
         context: context,
         builder: (context) => AlertDialog(
               title: Row(
-                children: [
+                children: const [
                   Icon(
                     Icons.delete_forever_outlined,
                     color: Colors.red,
@@ -434,15 +432,15 @@ class DialogsManager {
                   ),
                 ],
               ),
-              content: Container(
+              content: SizedBox(
                 height: 200,
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'This book will be deleted. This action '
                       'is not irreversible.',
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     OutLinedButton(
@@ -453,7 +451,7 @@ class DialogsManager {
                       backgroundColor: Colors.red[100],
                       onPressed: onRequest,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     OutLinedButton(
@@ -475,17 +473,22 @@ class DialogsManager {
       required Color contentColor,
       required Color progressColor}) {
     AlertDialog alert = AlertDialog(
-      content: new Row(
+      content: Row(
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
               progressColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
-          Container(margin: EdgeInsets.only(left: 7), child: Text(content)),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 7,
+            ),
+            child: Text(content),
+          ),
         ],
       ),
     );

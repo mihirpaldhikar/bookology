@@ -58,7 +58,7 @@ class ToastManager {
                 color: iconColor,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 12.0,
             ),
             Text(

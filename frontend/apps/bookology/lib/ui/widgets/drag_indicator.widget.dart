@@ -26,7 +26,7 @@ Widget dragIndicator() {
   return Container(
     width: 40,
     height: 5,
-    margin: EdgeInsets.only(
+    margin: const EdgeInsets.only(
       top: 10,
       bottom: 20,
     ),

@@ -53,11 +53,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  final apiService = new ApiService();
-  final locationService = new LocationService();
-  final AuthService authService = new AuthService(FirebaseAuth.instance);
+  final apiService = ApiService();
+  final locationService = LocationService();
+  final AuthService authService = AuthService(FirebaseAuth.instance);
   late Future<List<Object>?> feed;
   late BannerAd _ad;
   List<Object> homeFeed = [];
@@ -95,10 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
           // Releases an ad resource when it fails to load
           ad.dispose();
 
-          print('Ad load failed (code=${error.code} message=${error.message})');
+          throw 'Ad load failed (code=${error.code} message=${error.message})';
         },
       ),
-      request: AdRequest(),
+      request: const AdRequest(),
     );
 
     _ad.load();
@@ -109,16 +109,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectivityStatus>(
-      initialData: ConnectivityStatus.Cellular,
+      initialData: ConnectivityStatus.cellular,
       stream: ConnectivityService().connectionStatusController.stream,
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
-        if (snapshot.data == ConnectivityStatus.Offline) {
+        if (snapshot.data == ConnectivityStatus.offline) {
           return offlineScreen();
         }
         return Scaffold(
             body: FutureBuilder<List<Object>?>(
-          initialData: [],
+          initialData: const [],
           future: feed,
           builder:
               (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
@@ -127,13 +127,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 return SmartRefresher(
                   controller: _refreshController,
                   scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   enablePullDown: true,
-                  header: ClassicHeader(),
+                  header: const ClassicHeader(),
                   onRefresh: _onRefresh,
                   onLoading: _onLoading,
                   child: CustomScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
                     slivers: [
                       SliverAppBar(
@@ -141,7 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         pinned: true,
                         floating: false,
                         titleSpacing: 0.0,
-                        backgroundColor: Color.fromARGB(245, 242, 246, 254),
+                        backgroundColor:
+                            const Color.fromARGB(245, 242, 246, 254),
                         automaticallyImplyLeading: false,
                         expandedHeight: 250.0,
                         flexibleSpace: SearchBar(
@@ -156,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
+                                  const Padding(
                                     padding: EdgeInsets.only(
                                       left: 15,
                                       top: 20,
@@ -176,41 +177,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: ListView.builder(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
-                                        physics: BouncingScrollPhysics(),
-                                        padding: EdgeInsets.only(
+                                        physics: const BouncingScrollPhysics(),
+                                        padding: const EdgeInsets.only(
                                           left: 10,
                                           right: 10,
                                         ),
                                         itemCount: StringConstants
-                                            .BOOKS_CATEGORIES.length,
+                                            .bookCategories.length,
                                         itemBuilder: (context, index) {
                                           return Container(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                 left: 10,
                                                 right: 10,
                                                 top: 5,
                                                 bottom: 5,
                                               ),
-                                              margin: EdgeInsets.only(
+                                              margin: const EdgeInsets.only(
                                                 left: 10,
                                                 top: 25,
                                               ),
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                   color: ColorsConstant
-                                                      .SECONDARY_COLOR,
+                                                      .secondaryColor,
                                                   border: Border.all(
                                                     color: Colors.black,
                                                     width: 1,
                                                   ),
                                                   borderRadius: BorderRadius
                                                       .circular(ValuesConstant
-                                                          .SECONDARY_BORDER_RADIUS)),
+                                                          .secondaryBorderRadius)),
                                               child: Text(
                                                 StringConstants
-                                                    .BOOKS_CATEGORIES[index],
-                                                style: TextStyle(
-                                                    color: Colors.black),
+                                                    .bookCategories[index],
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                ),
                                               ));
                                         }),
                                   ),
@@ -218,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                             if (homeFeed.data![index - 1] is BannerAd) {
-                              return Padding(
+                              return const Padding(
                                 padding: EdgeInsets.only(
                                   left: 10,
                                   right: 10,
@@ -249,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget bookList({required BookModel book}) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 10,
         right: 10,
         top: 5,

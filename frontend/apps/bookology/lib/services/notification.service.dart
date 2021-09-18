@@ -36,8 +36,7 @@ class NotificationService {
       final messagingToken = _firebaseMessaging.getToken();
       return messagingToken;
     } catch (error) {
-      print(error);
-      return error;
+      rethrow;
     }
   }
 
@@ -45,8 +44,8 @@ class NotificationService {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings();
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = const IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -93,15 +92,15 @@ class NotificationService {
 
 void _handleNotification(RemoteMessage message) async {
   if (message.data['notification_type'] == 'book_enquiry_notification') {
-    print('BACKGROUND MSG ');
     // navigatorKey.currentState!.pushAndRemoveUntil(
     //     MaterialPageRoute(builder: (context) => ScreenManager(currentIndex: 3)),
     //     (route) => false);
     showDialog(
-        context: navigatorKey.currentState!.context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text('LOL'),
-            ));
+      context: navigatorKey.currentState!.context,
+      builder: (BuildContext context) => const AlertDialog(
+        title: Text('LOL'),
+      ),
+    );
   }
 }
 

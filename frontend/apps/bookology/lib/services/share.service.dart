@@ -28,9 +28,9 @@ class ShareService {
     required BookModel book,
   }) {
     Share.share(
-      'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.APP_NAME}. \nhttps://bookology.tech/book/${book.bookId}',
+      'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.appName}. \nhttps://bookology.tech/book/${book.bookId}',
       subject:
-          'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.APP_NAME}.',
+          'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.appName}.',
     );
   }
 }

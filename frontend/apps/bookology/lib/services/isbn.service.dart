@@ -26,7 +26,7 @@ import 'package:bookology/managers/secrets.manager.dart';
 import 'package:http/http.dart' as http;
 
 class IsbnService {
-  final SecretsManager _secretsManager = new SecretsManager();
+  final SecretsManager _secretsManager = SecretsManager();
   final client = http.Client();
 
   IsbnService();
@@ -39,8 +39,7 @@ class IsbnService {
       final data = jsonDecode(response.body);
       return data;
     } catch (error) {
-      print(error);
-      return error;
+      rethrow;
     }
   }
 
@@ -52,8 +51,7 @@ class IsbnService {
       final authorData = jsonDecode(authorResponse.body);
       return authorData['name'];
     } catch (error) {
-      print(error);
-      return error;
+      rethrow;
     }
   }
 }

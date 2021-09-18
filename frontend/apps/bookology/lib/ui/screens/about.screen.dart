@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LicenseScreen extends StatefulWidget {
+class AboutScreen extends StatefulWidget {
+  const AboutScreen({Key? key}) : super(key: key);
+
   @override
-  _LicenseScreenState createState() => _LicenseScreenState();
+  _AboutScreenState createState() => _AboutScreenState();
 }
 
-class _LicenseScreenState extends State<LicenseScreen> {
+class _AboutScreenState extends State<AboutScreen> {
   final List<Widget> _licenses = <Widget>[];
   final Map<String, List> _licenseContent = {};
   bool _loaded = false;
@@ -24,7 +26,7 @@ class _LicenseScreenState extends State<LicenseScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    final appService = new AppService();
+    final appService = AppService();
     final appInfo = await appService.getAppInfo();
     final remoteAppInfo = await appService.getRemoteAppInfo();
     setState(() {
@@ -72,21 +74,28 @@ class _LicenseScreenState extends State<LicenseScreen> {
           ));
         }
       }
-      tempSubWidget.add(Divider());
+      tempSubWidget.add(
+        const Divider(),
+      );
       _licenseContent[license.packages.join(', ')] = tempSubWidget;
     }
 
     _licenseContent.forEach((key, value) {
       int count = 0;
-      value.forEach((element) {
+      for (var element in value) {
         if (element.runtimeType == Divider) count += 1;
-      });
+      }
       // Replace ExpansionTile with any widget that suits you
       _licenses.add(ExpansionTile(
-        title: Text('$key', style: TextStyle(color: Colors.black)),
+        title: Text(
+          key,
+          style: const TextStyle(
+            color: Colors.black,
+          ),
+        ),
         subtitle: Text(
           '$count licenses',
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
         children: <Widget>[...value],
       ));
@@ -111,151 +120,151 @@ class _LicenseScreenState extends State<LicenseScreen> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 10,
             right: 10,
             top: 20,
           ),
           child: !_loaded
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
               : ListView.separated(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: _licenses.length + 1,
-                  separatorBuilder: (context, index) => Divider(),
+                  separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      return Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 20,
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Image(
+                            width: 200,
+                            height: 200,
+                            image: AssetImage(
+                              'assets/icons/splash.icon.png',
                             ),
-                            Image(
-                              width: 200,
-                              height: 200,
-                              image: AssetImage(
-                                'assets/icons/splash.icon.png',
-                              ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Version: $appVersion',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 17,
                             ),
-                            SizedBox(
-                              height: 20,
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Build Number: $appBuildNumber',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 17,
                             ),
-                            Text(
-                              'Version: $appVersion',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 17,
-                              ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: OutLinedButton(
+                              onPressed: () async {
+                                launchURL(
+                                  url: StringConstants.appPrivacyPolicy,
+                                );
+                              },
+                              text: StringConstants.privacyPolicy,
+                              showText: true,
+                              showIcon: true,
+                              icon: Icons.security_outlined,
+                              iconColor: Colors.green,
+                              textColor: Colors.green,
+                              outlineColor: Colors.green,
+                              backgroundColor: Colors.green.shade50,
                             ),
-                            SizedBox(
-                              height: 5,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: OutLinedButton(
+                              onPressed: () async {
+                                launchURL(
+                                  url: googlePlayStoreUrl,
+                                );
+                              },
+                              text: StringConstants.checkForUpdates,
+                              showText: true,
+                              showIcon: true,
+                              icon: FontAwesomeIcons.googlePlay,
+                              iconColor: Colors.black,
+                              textColor: Colors.black,
+                              outlineColor: Colors.black,
                             ),
-                            Text(
-                              'Build Number: $appBuildNumber',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 17,
-                              ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: OutLinedButton(
+                              onPressed: () async {
+                                launchURL(
+                                  url: googlePlayStoreUrl,
+                                );
+                              },
+                              text: StringConstants.sendFeedback,
+                              showText: true,
+                              showIcon: true,
+                              icon: Icons.feedback_outlined,
+                              iconColor: Colors.black,
+                              textColor: Colors.black,
+                              outlineColor: Colors.black,
                             ),
-                            SizedBox(
-                              height: 30,
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Text(
+                            StringConstants.appNotice,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
                             ),
-                            SizedBox(
-                              width: 250,
-                              child: OutLinedButton(
-                                onPressed: () async {
-                                  launchURL(
-                                    url: StringConstants.APP_PRIVACY_POLICY_URL,
-                                  );
-                                },
-                                text: StringConstants.PRIVACY_POLICY,
-                                showText: true,
-                                showIcon: true,
-                                icon: Icons.security_outlined,
-                                iconColor: Colors.green,
-                                textColor: Colors.green,
-                                outlineColor: Colors.green,
-                                backgroundColor: Colors.green.shade50,
-                              ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Text(
+                            StringConstants.appCopyright,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 20,
                             ),
-                            SizedBox(
-                              height: 20,
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            'Licenses',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
-                            SizedBox(
-                              width: 250,
-                              child: OutLinedButton(
-                                onPressed: () async {
-                                  launchURL(
-                                    url: googlePlayStoreUrl,
-                                  );
-                                },
-                                text: StringConstants.CHECK_FOR_UPDATED,
-                                showText: true,
-                                showIcon: true,
-                                icon: FontAwesomeIcons.googlePlay,
-                                iconColor: Colors.black,
-                                textColor: Colors.black,
-                                outlineColor: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: 250,
-                              child: OutLinedButton(
-                                onPressed: () async {
-                                  launchURL(
-                                    url: googlePlayStoreUrl,
-                                  );
-                                },
-                                text: StringConstants.SEND_FEEDBACK,
-                                showText: true,
-                                showIcon: true,
-                                icon: Icons.feedback_outlined,
-                                iconColor: Colors.black,
-                                textColor: Colors.black,
-                                outlineColor: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Text(
-                              StringConstants.APP_NOTICE,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Text(
-                              StringConstants.APP_COPYRIGHT,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              'Licenses',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     }
                     return _licenses.elementAt(index - 1);

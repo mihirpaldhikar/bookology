@@ -29,8 +29,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DownloadService {
-  final Dio _dio = new Dio();
-  final PermissionManager _permissionManager = new PermissionManager();
+  final Dio _dio = Dio();
+  final PermissionManager _permissionManager = PermissionManager();
 
   Future<bool> download({
     required String url,
@@ -45,7 +45,6 @@ class DownloadService {
             .requestPermission(Permission.manageExternalStorage)) {
           directory = (await getExternalStorageDirectory())!;
           String newPath = "";
-          print(directory);
           List<String> paths = directory.path.split("/");
           for (int x = 1; x < paths.length; x++) {
             String folder = paths[x];
@@ -55,7 +54,7 @@ class DownloadService {
               break;
             }
           }
-          newPath = newPath + "/${StringConstants.APP_NAME}/$folderName";
+          newPath = newPath + "/${StringConstants.appName}/$folderName";
           directory = Directory(newPath);
         } else {
           return false;
@@ -81,7 +80,7 @@ class DownloadService {
         return true;
       }
     } catch (e) {
-      print(e);
+      rethrow;
     }
     return false;
   }

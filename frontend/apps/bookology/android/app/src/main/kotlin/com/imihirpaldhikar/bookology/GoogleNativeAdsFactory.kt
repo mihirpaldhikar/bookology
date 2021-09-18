@@ -31,14 +31,14 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
-class NativeAdsCardFactory(val context: Context) : GoogleMobileAdsPlugin.NativeAdFactory {
+class GoogleNativeAdsFactory(private val context: Context) : GoogleMobileAdsPlugin.NativeAdFactory {
 
     override fun createNativeAd(
         nativeAd: NativeAd,
         customOptions: MutableMap<String, Any>?
     ): NativeAdView {
         val nativeAdView = LayoutInflater.from(context)
-            .inflate(R.layout.native_ads_card, null) as NativeAdView
+            .inflate(R.layout.google_native_ads_card, null) as NativeAdView
 
         with(nativeAdView) {
             val attributionViewSmall =

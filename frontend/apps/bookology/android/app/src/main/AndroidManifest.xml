@@ -23,20 +23,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.imihirpaldhikar.bookology">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
 
     <application
-        android:name=".Application"
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
-        android:fullBackupOnly="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Bookology">
         <activity
@@ -45,16 +43,12 @@
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
+            android:screenOrientation="fullSensor"
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
-
-            <intent-filter>
-                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -68,14 +62,13 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
-        <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6991839116816523~7269076503" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
-
 </manifest>

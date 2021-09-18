@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -51,15 +50,15 @@ class Dialogue extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Text(
-                  this.title,
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  this.description,
+                  description,
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 20,
@@ -68,10 +67,10 @@ class Dialogue extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            this.actions,
+            actions,
           ],
         ),
       ),

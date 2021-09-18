@@ -41,17 +41,17 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
-  final AuthService authService = new AuthService(FirebaseAuth.instance);
-  final CacheService cacheService = new CacheService();
+  final AuthService authService = AuthService(FirebaseAuth.instance);
+  final CacheService cacheService = CacheService();
   final pageDecoration = const PageDecoration(
     titleTextStyle: TextStyle(
       fontSize: 28.0,
       fontWeight: FontWeight.w700,
-      color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
+      color: ColorsConstant.lightThemeContentColor,
     ),
     bodyTextStyle: TextStyle(
       fontSize: 19.0,
-      color: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
+      color: ColorsConstant.lightThemeContentColor,
     ),
     descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
     pageColor: Colors.white,
@@ -75,12 +75,10 @@ class _IntroScreenState extends State<IntroScreen> {
             color: Theme.of(context).primaryColor,
           ),
         ),
-        bodyWidget: Container(
-          child: Text(
-            'Find the books you want nearby.',
-            style: TextStyle(
-              fontSize: 16,
-            ),
+        bodyWidget: const Text(
+          'Find the books you want nearby.',
+          style: TextStyle(
+            fontSize: 16,
           ),
         ),
         decoration: pageDecoration,
@@ -94,11 +92,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Help Others",
-        bodyWidget: Container(
-          child: Text(
-            'Upload the books you don\'t want anymore and give it to some one in need.',
-            textAlign: TextAlign.center,
-          ),
+        bodyWidget: const Text(
+          'Upload the books you don\'t want anymore and give it to some one in need.',
+          textAlign: TextAlign.center,
         ),
         decoration: pageDecoration,
         image: Center(
@@ -111,11 +107,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Location based Recommendations",
-        bodyWidget: Container(
-          child: Text(
-            'Bookology uses your approximate location to show you books listed near you.',
-            textAlign: TextAlign.center,
-          ),
+        bodyWidget: const Text(
+          'Bookology uses your approximate location to show you books listed near you.',
+          textAlign: TextAlign.center,
         ),
         decoration: pageDecoration,
         image: Center(
@@ -128,11 +122,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Complete your Profile",
-        bodyWidget: Container(
-          child: Text(
-            'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
-            textAlign: TextAlign.center,
-          ),
+        bodyWidget: const Text(
+          'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
+          textAlign: TextAlign.center,
         ),
         decoration: pageDecoration,
         image: Center(
@@ -148,7 +140,7 @@ class _IntroScreenState extends State<IntroScreen> {
       body: SafeArea(
         child: IntroductionScreen(
           key: introKey,
-          globalBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
+          globalBackgroundColor: ColorsConstant.backgroundColor,
           showDoneButton: true,
           showNextButton: true,
           showSkipButton: false,
@@ -162,20 +154,20 @@ class _IntroScreenState extends State<IntroScreen> {
           done: Container(
             width: 250,
             alignment: Alignment.center,
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,
               right: 8,
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: ColorsConstant.SECONDARY_COLOR,
+              color: ColorsConstant.secondaryColor,
               border: Border.all(
                 color: Theme.of(context).primaryColor,
                 width: 1,
               ),
               borderRadius:
-                  BorderRadius.circular(ValuesConstant.SECONDARY_BORDER_RADIUS),
+                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),
             child: Text(
               'Complete Profile',
@@ -187,20 +179,20 @@ class _IntroScreenState extends State<IntroScreen> {
           next: Container(
             width: 200,
             alignment: Alignment.center,
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 10,
               bottom: 10,
               right: 8,
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: ColorsConstant.SECONDARY_COLOR,
+              color: ColorsConstant.secondaryColor,
               border: Border.all(
                 color: Theme.of(context).primaryColor,
                 width: 1,
               ),
               borderRadius:
-                  BorderRadius.circular(ValuesConstant.SECONDARY_BORDER_RADIUS),
+                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),
             child: Text(
               'Next',

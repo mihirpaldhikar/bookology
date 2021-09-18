@@ -53,8 +53,8 @@ class ConfirmationScreen extends StatefulWidget {
 }
 
 class _ConfirmationScreenState extends State<ConfirmationScreen> {
-  final ApiService apiService = new ApiService();
-  final locationService = new LocationService();
+  final ApiService apiService = ApiService();
+  final locationService = LocationService();
   String currentLocation = '';
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -64,9 +64,9 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   String imageDownloadURL4 = '';
   bool isUploading = false;
   String imagesCollectionsID = '';
-  String _chars =
+  final String _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890_';
-  Random _random = Random();
+  final Random _random = Random();
 
   @override
   void initState() {
@@ -83,50 +83,48 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
         elevation: 0,
         title: Text(
-          StringConstants.TITLE_CONFIRMATION,
+          StringConstants.titleConfirmation,
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
       body: SafeArea(
           child: isUploading
-              ? Container(
-                  child: Center(
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      child: LiquidCircularProgressIndicator(
-                        value: 0.35,
-                        valueColor: AlwaysStoppedAnimation(
-                          Theme.of(context).colorScheme.secondary,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderColor: ColorsConstant.DARK_COLOR,
-                        borderWidth: 5.0,
-                        direction: Axis.vertical,
-                        center: Text(
-                          StringConstants.DIALOG_UPLOADING,
-                        ),
+              ? Center(
+                  child: SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: LiquidCircularProgressIndicator(
+                      value: 0.35,
+                      valueColor: AlwaysStoppedAnimation(
+                        Theme.of(context).colorScheme.secondary,
+                      ),
+                      backgroundColor: Colors.white,
+                      borderColor: ColorsConstant.darkColor,
+                      borderWidth: 5.0,
+                      direction: Axis.vertical,
+                      center: const Text(
+                        StringConstants.dialogUploading,
                       ),
                     ),
                   ),
                 )
               : Container(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     left: 20,
                     right: 20,
                     top: 30,
                   ),
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Align(
@@ -137,7 +135,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.ISBN}:  ',
+                                text: '${StringConstants.isbn}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -152,12 +150,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.BOOK_NAME}:  ',
+                                text: '${StringConstants.bookName}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -172,12 +170,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.AUTHOR}:  ',
+                                text: '${StringConstants.author}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -192,12 +190,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.PUBLISHER}:  ',
+                                text: '${StringConstants.publisher}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -212,14 +210,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             RichText(
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               text: TextSpan(
-                                text: '${StringConstants.DESCRIPTION}:  ',
+                                text: '${StringConstants.description}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -236,15 +234,14 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text:
-                                        '${StringConstants.ORIGINAL_PRICE}:  ',
+                                    text: '${StringConstants.originalPrice}:  ',
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -259,12 +256,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 20,
                                 ),
                                 RichText(
                                   text: TextSpan(
-                                    text: '${StringConstants.SELLING_PRICE}:  ',
+                                    text: '${StringConstants.sellingPrice}:  ',
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -281,7 +278,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
@@ -289,7 +286,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                               width: MediaQuery.of(context).size.width,
                               child: ListView(
                                 shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 children: [
                                   ImageHolder(
@@ -299,7 +296,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                         .book.additionalInformation.images[0],
                                     showCloseButton: false,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   ImageHolder(
@@ -309,7 +306,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                         .book.additionalInformation.images[1],
                                     showCloseButton: false,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   ImageHolder(
@@ -319,7 +316,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                         .book.additionalInformation.images[2],
                                     showCloseButton: false,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   ImageHolder(
@@ -329,13 +326,13 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                         .book.additionalInformation.images[3],
                                     showCloseButton: false,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -343,7 +340,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 OutLinedButton(
-                                  text: StringConstants.UPLOAD,
+                                  text: StringConstants.upload,
                                   showText: true,
                                   showIcon: false,
                                   onPressed: () async {
@@ -425,12 +422,12 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                               widget.book.pricing.originalPrice,
                                           currency:
                                               CurrencyManager().setCurrency(
-                                            location: this.currentLocation,
+                                            location: currentLocation,
                                           ),
                                         ),
                                         createdOn: widget.book.createdOn,
                                         slugs: widget.book.slugs,
-                                        location: this.currentLocation,
+                                        location: currentLocation,
                                       ),
                                     );
                                     if (result == true) {
@@ -481,9 +478,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               'Users/${user.user?.uid}/BookImages/$imagesCollectionsID/$name.png')
           .getDownloadURL();
       return downloadURL;
-    } on firebase_core.FirebaseException catch (e) {
-      print(e);
-      return e;
+    } on firebase_core.FirebaseException {
+      rethrow;
     }
   }
 

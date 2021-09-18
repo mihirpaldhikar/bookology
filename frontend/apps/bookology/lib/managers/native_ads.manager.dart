@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NativeInlineAd extends StatefulWidget {
-  NativeInlineAd();
+  const NativeInlineAd();
 
   @override
   State createState() => _NativeInlineAdState();
@@ -49,8 +49,8 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     // COMPLETE: Create a NativeAd instance
     _ad = NativeAd(
       adUnitId: 'ca-app-pub-3940256099942544/2247696110',
-      factoryId: 'bookCardAd',
-      request: AdRequest(),
+      factoryId: 'googleNativeAdsCard',
+      request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (_) {
           setState(() {
@@ -61,7 +61,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
           // Releases an ad resource when it fails to load
           ad.dispose();
 
-          print('Ad load failed (code=${error.code} message=${error.message})');
+          throw 'Ad load failed (code=${error.code} message=${error.message})';
         },
       ),
     );
@@ -85,7 +85,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 10,
                       right: 10,
                       top: 3,
@@ -94,38 +94,38 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                     decoration: BoxDecoration(
                       color: Colors.yellow.shade100,
                       borderRadius: BorderRadius.circular(
-                        ValuesConstant.SECONDARY_BORDER_RADIUS,
+                        ValuesConstant.secondaryBorderRadius,
                       ),
                       border: Border.all(
                         color: Colors.yellow,
                         width: 1,
                       ),
                     ),
-                    child: Text('Sponsored'),
+                    child: const Text('Sponsored'),
                   ),
                   InkWell(
                     onTap: () {
                       DialogsManager(context).showAboutSponsoredDialog();
                     },
                     child: Container(
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                        color: ColorsConstant.SECONDARY_COLOR,
+                        color: ColorsConstant.secondaryColor,
                         borderRadius: BorderRadius.circular(
-                            ValuesConstant.SECONDARY_BORDER_RADIUS),
+                            ValuesConstant.secondaryBorderRadius),
                         border: Border.all(
                           color: Colors.black,
                           width: 1,
                         ),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.help_outline_outlined,
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               SizedBox(height: 200, child: AdWidget(ad: _ad)),
@@ -133,7 +133,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
           ),
         ),
         height: 270,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
@@ -143,7 +143,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
         alignment: Alignment.center,
       );
     }
-    return Container(
+    return const SizedBox(
       height: 72.0,
       child: Center(
         child: CircularProgressIndicator(

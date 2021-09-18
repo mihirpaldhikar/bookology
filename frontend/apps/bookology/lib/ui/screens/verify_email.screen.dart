@@ -39,87 +39,84 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final auth = Provider.of<AuthService>(context);
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: ListView(
-            padding: EdgeInsets.only(
-              top: 60,
-            ),
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      'Verify your email',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 80,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      height: 200,
-                      width: 150,
-                      child: SvgPicture.asset('assets/svg/verify_email.svg'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    child: Text(
-                      'We have sent an email to your email address please verify by '
-                      'clicking on \'Verify Email\' button in email. Once verified,'
-                      ' click the \'Verified\' button below.',
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Center(
-                    child: OutLinedButton(
-                      onPressed: () async {
-                        if (await auth.isEmailVerified() == true) {
-                          await Navigator.pushReplacementNamed(
-                              context, '/home');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Email not verified.'),
-                            ),
-                          );
-                        }
-                      },
-                      text: 'Verified',
-                      showText: true,
-                      showIcon: false,
-                      outlineColor: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 170,
-                  ),
-                  Center(
-                    child: Text(
-                      'The link in email will expire in 5 minutes.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        child: ListView(
+          padding: const EdgeInsets.only(
+            top: 60,
           ),
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    'Verify your email',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 80,
+                ),
+                Center(
+                  child: SizedBox(
+                    height: 200,
+                    width: 150,
+                    child: SvgPicture.asset('assets/svg/verify_email.svg'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Text(
+                    'We have sent an email to your email address please verify by '
+                    'clicking on \'Verify Email\' button in email. Once verified,'
+                    ' click the \'Verified\' button below.',
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Center(
+                  child: OutLinedButton(
+                    onPressed: () async {
+                      if (await auth.isEmailVerified() == true) {
+                        await Navigator.pushReplacementNamed(context, '/home');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Email not verified.'),
+                          ),
+                        );
+                      }
+                    },
+                    text: 'Verified',
+                    showText: true,
+                    showIcon: false,
+                    outlineColor: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                const SizedBox(
+                  height: 170,
+                ),
+                const Center(
+                  child: Text(
+                    'The link in email will expire in 5 minutes.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

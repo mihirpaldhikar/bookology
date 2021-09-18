@@ -38,12 +38,12 @@ class NotificationModel {
       required String notificationBody,
       required String notificationType,
       required CreatedOn createdOn}) {
-    this.senderId = senderId;
-    this.receiverId = receiverId;
-    this.notificationTitle = notificationTitle;
-    this.notificationBody = notificationBody;
-    this.notificationType = notificationType;
-    this.createdOn = createdOn;
+    senderId = senderId;
+    receiverId = receiverId;
+    notificationTitle = notificationTitle;
+    notificationBody = notificationBody;
+    notificationType = notificationType;
+    createdOn = createdOn;
   }
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
@@ -53,18 +53,18 @@ class NotificationModel {
     notificationBody = json['notification_body'];
     notificationType = json['notification_type'];
     createdOn = (json['created_on'] != null
-        ? new CreatedOn.fromJson(json['created_on'])
+        ? CreatedOn.fromJson(json['created_on'])
         : null)!;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['sender_id'] = this.senderId;
-    data['receiver_id'] = this.receiverId;
-    data['notification_title'] = this.notificationTitle;
-    data['notification_body'] = this.notificationBody;
-    data['notification_type'] = this.notificationType;
-    data['created_on'] = this.createdOn.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sender_id'] = senderId;
+    data['receiver_id'] = receiverId;
+    data['notification_title'] = notificationTitle;
+    data['notification_body'] = notificationBody;
+    data['notification_type'] = notificationType;
+    data['created_on'] = createdOn.toJson();
     return data;
   }
 }
@@ -74,8 +74,8 @@ class CreatedOn {
   String time = '';
 
   CreatedOn({required String date, required String time}) {
-    this.date = date;
-    this.time = time;
+    date = date;
+    time = time;
   }
 
   CreatedOn.fromJson(Map<String, dynamic> json) {
@@ -84,9 +84,9 @@ class CreatedOn {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['time'] = this.time;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['date'] = date;
+    data['time'] = time;
     return data;
   }
 }

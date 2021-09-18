@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -37,15 +36,18 @@ class ScreenManager extends StatefulWidget {
 class _ScreenManagerState extends State<ScreenManager>
     with AfterLayoutMixin<ScreenManager> {
   Future checkFirstSeen() async {
-    final CacheService cacheService = new CacheService();
+    final CacheService cacheService = CacheService();
     bool _seen = (cacheService.isIntroScreenSeen());
 
     if (_seen) {
-      Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (context) => new ViewManager(currentIndex: 0)));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ViewManager(currentIndex: 0),
+        ),
+      );
     } else {
       Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new IntroScreen()));
+          MaterialPageRoute(builder: (context) => const IntroScreen()));
     }
   }
 

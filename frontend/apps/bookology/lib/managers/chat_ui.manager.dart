@@ -28,8 +28,8 @@ import 'package:google_fonts/google_fonts.dart';
 class ChatUiManager extends ChatTheme {
   ChatUiManager()
       : super(
-            primaryColor: Color(0xffEEEEEE),
-            secondaryColor: Color(0xFF673AB7),
+            primaryColor: const Color(0xffEEEEEE),
+            secondaryColor: const Color(0xff2E79F3),
             backgroundColor: Colors.white,
             messageBorderRadius: 35,
             receivedMessageBodyTextStyle: GoogleFonts.poppins(
@@ -38,32 +38,32 @@ class ChatUiManager extends ChatTheme {
             sentMessageBodyTextStyle: GoogleFonts.poppins(
               color: Colors.black,
             ),
-            sendButtonIcon: Icon(
+            sendButtonIcon: const Icon(
               Icons.send_outlined,
               size: 28,
             ),
-            deliveredIcon: Icon(
+            deliveredIcon: const Icon(
               Icons.done_outlined,
               size: 15,
             ),
-            seenIcon: Icon(
+            seenIcon: const Icon(
               Icons.done_all_outlined,
               size: 17,
               color: Colors.green,
             ),
-            sendingIcon: Icon(
+            sendingIcon: const Icon(
               Icons.send_outlined,
               size: 28,
             ),
             inputBackgroundColor: Colors.white,
-            documentIcon: Icon(
+            documentIcon: const Icon(
               Icons.description_outlined,
             ),
-            inputPadding: EdgeInsets.all(0),
-            inputTextDecoration: InputDecoration(),
+            inputPadding: const EdgeInsets.all(0),
+            inputTextDecoration: const InputDecoration(),
             inputBorderRadius: BorderRadius.circular(100),
             dateDividerTextStyle: GoogleFonts.poppins(),
-            attachmentButtonIcon: Icon(
+            attachmentButtonIcon: const Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -82,28 +82,28 @@ class ChatUiManager extends ChatTheme {
               color: Colors.white,
             ),
             sentMessageCaptionTextStyle: GoogleFonts.poppins(
-              color: Color(0xFF757575),
+              color: const Color(0xFF757575),
             ),
             messageInsetsHorizontal: 0.0,
             messageInsetsVertical: 0.0,
             sentMessageLinkDescriptionTextStyle: GoogleFonts.poppins(),
             sentMessageLinkTitleTextStyle: GoogleFonts.poppins(),
             errorColor: Colors.red,
-            errorIcon: Icon(
+            errorIcon: const Icon(
               Icons.error_outlined,
             ),
-            userAvatarImageBackgroundColor: ColorsConstant.ACCENT_COLOR,
+            userAvatarImageBackgroundColor: ColorsConstant.accentColor,
             receivedMessageDocumentIconColor: Colors.white,
             userAvatarNameColors: [
-              Color(0xffff6767),
-              Color(0xff66e0da),
-              Color(0xfff5a2d9),
-              Color(0xfff0c722),
-              Color(0xff6a85e5),
-              Color(0xfffd9a6f),
-              Color(0xff92db6e),
-              Color(0xff73b8e5),
-              Color(0xfffd7590),
-              Color(0xffc78ae5),
+              const Color(0xffff6767),
+              const Color(0xff66e0da),
+              const Color(0xfff5a2d9),
+              const Color(0xfff0c722),
+              const Color(0xff6a85e5),
+              const Color(0xfffd9a6f),
+              const Color(0xff92db6e),
+              const Color(0xff73b8e5),
+              const Color(0xfffd7590),
+              const Color(0xffc78ae5),
             ]);
 }

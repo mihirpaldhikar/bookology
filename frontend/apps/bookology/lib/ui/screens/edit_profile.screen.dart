@@ -64,12 +64,12 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final apiService = new ApiService();
+  final apiService = ApiService();
   final userNameController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final bioController = TextEditingController();
-  final CacheService cacheService = new CacheService();
+  final CacheService cacheService = CacheService();
   String imageURL = '';
 
   bool isImageUpdated = false;
@@ -91,7 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: !widget.isInitialUpdate,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
         title: !widget.isInitialUpdate
@@ -126,7 +126,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ViewManager(currentIndex: 0),
+                            builder: (context) =>
+                                const ViewManager(currentIndex: 0),
                           ),
                           (_) => false,
                         );
@@ -134,14 +135,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ViewManager(currentIndex: 3),
+                            builder: (context) =>
+                                const ViewManager(currentIndex: 3),
                           ),
                           (_) => false,
                         );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('An error occurred.'),
                         ),
                       );
@@ -163,7 +165,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ViewManager(currentIndex: 0),
+                          builder: (context) =>
+                              const ViewManager(currentIndex: 0),
                         ),
                         (_) => false,
                       );
@@ -171,14 +174,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ViewManager(currentIndex: 3),
+                          builder: (context) =>
+                              const ViewManager(currentIndex: 3),
                         ),
                         (_) => false,
                       );
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('An error occurred.'),
                       ),
                     );
@@ -186,7 +190,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
               }
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.done_outlined,
             ),
           )
@@ -194,8 +198,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.only(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(
             top: 10,
             right: 20,
             left: 20,
@@ -205,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Center(
@@ -250,7 +254,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         bottom: -5,
                         right: -10,
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(50),
@@ -258,14 +262,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Color(0xFFE0E0E0),
                                   blurRadius: 2,
                                   offset: Offset(-4, 4),
                                 )
                               ]),
-                          child: Icon(
+                          child: const Icon(
                             Icons.add_a_photo_outlined,
                           ),
                         ),
@@ -274,7 +278,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Form(
@@ -282,21 +286,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Username",
                         fillColor: Colors.white,
                       ),
                       controller: userNameController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
-                            new RegExp("[^a-z^A-Z^0-9]+"))
+                            RegExp("[^a-z^A-Z^0-9]+"))
                         //Regex for accepting only alphanumeric characters
                       ],
                       validator: (val) {
-                        if (val?.length == 0) {
+                        if (val!.isEmpty) {
                           return "Username cannot be empty.";
                         } else {
-                          if (val!.length < 2) {
+                          if (val.length < 2) {
                             return "Username is not valid.";
                           } else {
                             return null;
@@ -304,20 +308,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "First Name",
                         fillColor: Colors.white,
                       ),
                       controller: firstNameController,
                       validator: (val) {
-                        if (val?.length == 0) {
+                        if (val!.isEmpty) {
                           return "First Name cannot be empty.";
                         } else {
-                          if (val!.length < 1) {
+                          if (val.isEmpty) {
                             return "First Name is not valid.";
                           } else {
                             return null;
@@ -325,20 +329,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Last Name",
                         fillColor: Colors.white,
                       ),
                       controller: lastNameController,
                       validator: (val) {
-                        if (val?.length == 0) {
+                        if (val!.isEmpty) {
                           return "Last Name cannot be empty.";
                         } else {
-                          if (val!.length < 1) {
+                          if (val.isEmpty) {
                             return "Last Name is not valid.";
                           } else {
                             return null;
@@ -346,11 +350,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Bio",
                         fillColor: Colors.white,
                       ),
@@ -375,13 +379,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 20,
               right: 20,
               top: 10,
               bottom: 10,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
@@ -399,7 +403,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 OutLinedButton(
@@ -410,7 +414,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   showIcon: true,
                   align: Alignment.center,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
@@ -444,8 +448,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     File? cropped = await ImageCropper.cropImage(
       sourcePath: pickedImage!.path,
       cropStyle: CropStyle.circle,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      androidUiSettings: AndroidUiSettings(
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      androidUiSettings: const AndroidUiSettings(
         toolbarColor: Colors.white,
         toolbarTitle: 'Crop Image',
       ),
@@ -467,27 +471,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .ref('Users/${widget.userID}/profile/$name.png')
           .getDownloadURL();
       return downloadURL;
-    } on firebase_core.FirebaseException catch (e) {
-      print(e);
-      return e;
+    } on firebase_core.FirebaseException {
+      rethrow;
     }
   }
 
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
-      content: new Row(
+      content: Row(
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
               Theme.of(context).colorScheme.secondary,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Container(
-            margin: EdgeInsets.only(left: 7),
-            child: Text("Updating..."),
+            margin: const EdgeInsets.only(left: 7),
+            child: const Text("Updating..."),
           ),
         ],
       ),

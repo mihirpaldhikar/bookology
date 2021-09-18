@@ -43,15 +43,15 @@ class CircularImage extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: this.outlineColor!,
-            width: this.outLineWidth!,
+            color: outlineColor!,
+            width: outLineWidth!,
           )),
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl: this.image,
+          imageUrl: image,
           fit: BoxFit.fill,
-          height: this.radius,
-          width: this.radius,
+          height: radius,
+          width: radius,
         ),
       ),
     );

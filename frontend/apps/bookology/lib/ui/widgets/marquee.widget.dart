@@ -27,12 +27,12 @@ class Marquee extends StatefulWidget {
   final Axis direction;
   final Duration animationDuration, backDuration, pauseDuration;
 
-  Marquee({
+  const Marquee({
     required this.child,
-    this.direction: Axis.horizontal,
-    this.animationDuration: const Duration(milliseconds: 3000),
-    this.backDuration: const Duration(milliseconds: 800),
-    this.pauseDuration: const Duration(milliseconds: 800),
+    this.direction = Axis.horizontal,
+    this.animationDuration = const Duration(milliseconds: 3000),
+    this.backDuration = const Duration(milliseconds: 800),
+    this.pauseDuration = const Duration(milliseconds: 800),
   });
 
   @override
@@ -67,15 +67,17 @@ class _MarqueeState extends State<Marquee> {
   void scroll(_) async {
     while (scrollController.hasClients) {
       await Future.delayed(widget.pauseDuration);
-      if (scrollController.hasClients)
+      if (scrollController.hasClients) {
         await scrollController.animateTo(
             scrollController.position.maxScrollExtent,
             duration: widget.animationDuration,
             curve: Curves.ease);
+      }
       await Future.delayed(widget.pauseDuration);
-      if (scrollController.hasClients)
+      if (scrollController.hasClients) {
         await scrollController.animateTo(0.0,
             duration: widget.backDuration, curve: Curves.easeOut);
+      }
     }
   }
 }

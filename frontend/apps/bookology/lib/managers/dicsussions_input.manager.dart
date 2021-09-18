@@ -152,12 +152,12 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
             autofocus: true,
             child: Container(
               height: 52,
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 left: 10,
                 right: 10,
                 bottom: 10,
               ),
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 10,
                 right: 0,
               ),
@@ -176,52 +176,50 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                     InheritedChatTheme.of(context).theme.inputBorderRadius,
                 color:
                     InheritedChatTheme.of(context).theme.inputBackgroundColor,
-                child: Container(
-                  child: Row(
-                    children: [
-                      if (widget.onAttachmentPressed != null) _leftWidget(),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _textController,
-                          decoration: InputDecoration.collapsed(
-                            hintStyle: InheritedChatTheme.of(context)
-                                .theme
-                                .inputTextStyle
-                                .copyWith(
-                                  color: InheritedChatTheme.of(context)
-                                      .theme
-                                      .inputTextColor
-                                      .withOpacity(0.5),
-                                ),
-                            hintText: 'Message...',
-                          ),
-                          focusNode: _inputFocusNode,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 5,
-                          minLines: 1,
-                          onChanged: widget.onTextChanged,
-                          style: InheritedChatTheme.of(context)
+                child: Row(
+                  children: [
+                    if (widget.onAttachmentPressed != null) _leftWidget(),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _textController,
+                        decoration: InputDecoration.collapsed(
+                          hintStyle: InheritedChatTheme.of(context)
                               .theme
                               .inputTextStyle
                               .copyWith(
                                 color: InheritedChatTheme.of(context)
                                     .theme
-                                    .inputTextColor,
+                                    .inputTextColor
+                                    .withOpacity(0.5),
                               ),
-                          textCapitalization: TextCapitalization.sentences,
+                          hintText: 'Message...',
                         ),
+                        focusNode: _inputFocusNode,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 5,
+                        minLines: 1,
+                        onChanged: widget.onTextChanged,
+                        style: InheritedChatTheme.of(context)
+                            .theme
+                            .inputTextStyle
+                            .copyWith(
+                              color: InheritedChatTheme.of(context)
+                                  .theme
+                                  .inputTextColor,
+                            ),
+                        textCapitalization: TextCapitalization.sentences,
                       ),
-                      Visibility(
-                        visible: _sendButtonVisible,
-                        child: SendChatButton(
-                          onPressed: _handleSendPressed,
-                        ),
+                    ),
+                    Visibility(
+                      visible: _sendButtonVisible,
+                      child: SendChatButton(
+                        onPressed: _handleSendPressed,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -47,8 +47,7 @@ class FirestoreService {
       }
       return cacheStorage.read('userIdentifierKey');
     } catch (error) {
-      print(error);
-      return '';
+      rethrow;
     }
   }
 
@@ -62,8 +61,7 @@ class FirestoreService {
       data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
       return types.User.fromJson(data);
     } catch (error) {
-      print(error);
-      return types.User(id: '');
+      rethrow;
     }
   }
 
@@ -77,7 +75,7 @@ class FirestoreService {
         await doc.reference.delete();
       }
     } catch (error) {
-      print(error);
+      rethrow;
     }
   }
 
@@ -119,8 +117,7 @@ class FirestoreService {
       }
       return true;
     } catch (error) {
-      print(error);
-      return false;
+      rethrow;
     }
   }
 
@@ -176,7 +173,7 @@ class FirestoreService {
           .doc(discussionRoomID)
           .delete();
     } catch (error) {
-      print(error);
+      rethrow;
     }
   }
 
@@ -196,7 +193,7 @@ class FirestoreService {
         },
       );
     } catch (error) {
-      print(error);
+      rethrow;
     }
   }
 
@@ -217,7 +214,7 @@ class FirestoreService {
       }
       return data.data()?['accepted'];
     } catch (error) {
-      print(error);
+      rethrow;
     }
   }
 

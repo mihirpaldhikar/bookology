@@ -23,7 +23,7 @@
 import 'package:bookology/managers/secrets.manager.dart';
 
 class StartUpService {
-  final SecretsManager _secretsManager = new SecretsManager();
+  final SecretsManager _secretsManager = SecretsManager();
 
   Future<void> startService() async {
     await _secretsManager.setApiUrl();

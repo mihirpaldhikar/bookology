@@ -26,9 +26,9 @@ import 'package:shimmer/shimmer.dart';
 
 Widget homeShimmer() {
   return ListView.builder(
-    physics: BouncingScrollPhysics(),
+    physics: const BouncingScrollPhysics(),
     itemCount: 5,
-    padding: EdgeInsets.only(
+    padding: const EdgeInsets.only(
       left: 15,
       right: 15,
       top: 10,
@@ -43,8 +43,8 @@ Widget homeShimmer() {
             children: [
               Shimmer.fromColors(
                 enabled: true,
-                baseColor: Color(0xFFE0E0E0),
-                highlightColor: Color(0xFFF5F5F5),
+                baseColor: const Color(0xFFE0E0E0),
+                highlightColor: const Color(0xFFF5F5F5),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,11 +54,11 @@ Widget homeShimmer() {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             top: 10,
                           ),
                           child: Container(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                               left: 10,
                               right: 10,
                               top: 5,
@@ -66,7 +66,7 @@ Widget homeShimmer() {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
-                                  ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                  ValuesConstant.secondaryBorderRadius),
                               border: Border.all(
                                 color: Colors.black,
                                 width: 1,
@@ -78,7 +78,7 @@ Widget homeShimmer() {
                                   Icons.place_outlined,
                                   color: Colors.grey.shade900,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Container(
@@ -90,14 +90,14 @@ Widget homeShimmer() {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             right: 15,
                             top: 6,
                           ),
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.grey,
@@ -105,7 +105,7 @@ Widget homeShimmer() {
                               ),
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.add,
                               size: 25,
                               color: Colors.grey,
@@ -113,12 +113,12 @@ Widget homeShimmer() {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             right: 5,
                             top: 6,
                           ),
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.grey,
@@ -126,7 +126,7 @@ Widget homeShimmer() {
                               ),
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.notifications_outlined,
                               size: 25,
                               color: Colors.grey,
@@ -135,7 +135,7 @@ Widget homeShimmer() {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Container(
@@ -147,7 +147,7 @@ Widget homeShimmer() {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                         top: 20,
                       ),
                       child: Column(
@@ -159,7 +159,7 @@ Widget homeShimmer() {
                             height: 15,
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Container(
@@ -180,8 +180,8 @@ Widget homeShimmer() {
         return Container(
           height: 250,
           width: double.infinity,
-          padding: EdgeInsets.all(8),
-          margin: EdgeInsets.only(
+          padding: const EdgeInsets.all(8),
+          margin: const EdgeInsets.only(
             bottom: 20,
           ),
           decoration: BoxDecoration(
@@ -194,8 +194,8 @@ Widget homeShimmer() {
           ),
           child: Shimmer.fromColors(
               enabled: true,
-              baseColor: Color(0xFFE0E0E0),
-              highlightColor: Color(0xFFF5F5F5),
+              baseColor: const Color(0xFFE0E0E0),
+              highlightColor: const Color(0xFFF5F5F5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +208,7 @@ Widget homeShimmer() {
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
@@ -216,7 +216,7 @@ Widget homeShimmer() {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Container(
@@ -224,7 +224,7 @@ Widget homeShimmer() {
                           height: 15,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Container(
@@ -232,7 +232,7 @@ Widget homeShimmer() {
                           height: 15,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Container(
@@ -240,7 +240,7 @@ Widget homeShimmer() {
                           height: 10,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Row(
@@ -250,7 +250,7 @@ Widget homeShimmer() {
                               height: 10,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Container(
@@ -258,7 +258,7 @@ Widget homeShimmer() {
                               height: 10,
                               color: Colors.white,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Container(
@@ -268,7 +268,7 @@ Widget homeShimmer() {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Container(
@@ -276,7 +276,7 @@ Widget homeShimmer() {
                           height: 10,
                           color: Colors.white,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Container(
@@ -285,7 +285,7 @@ Widget homeShimmer() {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
-                                ValuesConstant.SECONDARY_BORDER_RADIUS),
+                                ValuesConstant.secondaryBorderRadius),
                           ),
                         )
                       ],

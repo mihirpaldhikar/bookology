@@ -33,7 +33,7 @@ import 'package:flutter/material.dart';
 
 class BottomSheetManager {
   final BuildContext context;
-  final AuthService authService = new AuthService(FirebaseAuth.instance);
+  final AuthService authService = AuthService(FirebaseAuth.instance);
 
   BottomSheetManager(this.context);
 
@@ -59,15 +59,15 @@ class BottomSheetManager {
             },
           ),
           Visibility(
-            visible: this.authService.currentUser()!.uid == book.uploaderId
+            visible: authService.currentUser()!.uid == book.uploaderId
                 ? false
                 : true,
-            child: SizedBox(
+            child: const SizedBox(
               height: 20,
             ),
           ),
           Visibility(
-            visible: this.authService.currentUser()!.uid == book.uploaderId
+            visible: authService.currentUser()!.uid == book.uploaderId
                 ? false
                 : true,
             child: OutLinedButton(
@@ -78,8 +78,8 @@ class BottomSheetManager {
               icon: Icons.report_outlined,
               iconColor: Colors.redAccent,
               textColor: Colors.redAccent,
-              outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-              backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
+              outlineColor: ColorsConstant.dangerBorderColor,
+              backgroundColor: ColorsConstant.dangerBackgroundColor,
               onPressed: () {},
             ),
           ),
@@ -108,7 +108,7 @@ class BottomSheetManager {
                 Navigator.push(
                   this.context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => LicenseScreen(),
+                    builder: (BuildContext context) => const AboutScreen(),
                   ),
                 );
               }),
@@ -142,21 +142,21 @@ class BottomSheetManager {
       builder: (BuildContext context) => BottomSheetView(
         title: 'Update Available',
         contents: [
-          Text(
+          const Text(
             'A new version of the app is available please update to enjoy latest features! ',
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Text(
+          const Text(
             'What\'s New?',
             textAlign: TextAlign.left,
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
-          Container(
+          SizedBox(
             height: 150,
             width: double.infinity,
             child: ListView(
@@ -177,7 +177,7 @@ class BottomSheetManager {
             alignContent: MainAxisAlignment.center,
             onPressed: onUpdateClicked,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           OutLinedButton(

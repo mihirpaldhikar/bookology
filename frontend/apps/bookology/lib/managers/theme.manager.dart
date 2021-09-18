@@ -29,32 +29,32 @@ import 'package:google_fonts/google_fonts.dart';
 class ThemeManager {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: ColorsConstant.LIGHT_THEME_CONTENT_COLOR,
-    backgroundColor: ColorsConstant.BACKGROUND_COLOR,
+    primaryColor: ColorsConstant.lightThemeContentColor,
+    backgroundColor: ColorsConstant.backgroundColor,
     cardTheme: CardTheme(
-      color: ColorsConstant.CARD_COLOR,
+      color: ColorsConstant.cardColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
-        side: BorderSide(
+        side: const BorderSide(
           color: Colors.grey,
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(ValuesConstant.BORDER_RADIUS),
+        borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
       ),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     textTheme: GoogleFonts.poppinsTextTheme(),
-    iconTheme: IconThemeData(
+    iconTheme: const IconThemeData(
       color: Colors.black,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: ColorsConstant.SECONDARY_COLOR,
+      backgroundColor: ColorsConstant.secondaryColor,
       brightness: Brightness.light,
       disabledColor: Colors.grey,
       labelStyle: GoogleFonts.poppins(),
       shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: ColorsConstant.ACCENT_COLOR,
+        side: const BorderSide(
+          color: ColorsConstant.accentColor,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(100),
@@ -62,40 +62,40 @@ class ThemeManager {
       elevation: 0,
       showCheckmark: false,
       pressElevation: 2.0,
-      padding: EdgeInsets.all(4),
-      selectedColor: ColorsConstant.ACCENT_COLOR,
-      secondarySelectedColor: ColorsConstant.SECONDARY_COLOR,
+      padding: const EdgeInsets.all(4),
+      selectedColor: ColorsConstant.accentColor,
+      secondarySelectedColor: ColorsConstant.secondaryColor,
       deleteIconColor: Colors.redAccent,
-      secondaryLabelStyle: TextStyle(),
+      secondaryLabelStyle: const TextStyle(),
     ),
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: GoogleFonts.poppins(),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
           topLeft: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
           bottomLeft: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
           bottomRight: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
         ),
       ),
     ),
-    scaffoldBackgroundColor: ColorsConstant.BACKGROUND_COLOR,
+    scaffoldBackgroundColor: ColorsConstant.backgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorsConstant.APP_BAR_COLOR,
+      backgroundColor: ColorsConstant.appBarColor,
       elevation: 0,
       toolbarTextStyle: GoogleFonts.poppins(
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: Colors.black,
       ),
       titleTextStyle: GoogleFonts.poppins(
@@ -103,36 +103,36 @@ class ThemeManager {
         fontWeight: FontWeight.bold,
         fontSize: 20,
       ),
-      actionsIconTheme: IconThemeData(
+      actionsIconTheme: const IconThemeData(
         color: Colors.black,
       ),
     ),
-    bottomSheetTheme: BottomSheetThemeData(
-      modalBackgroundColor: ColorsConstant.SECONDARY_COLOR,
+    bottomSheetTheme: const BottomSheetThemeData(
+      modalBackgroundColor: ColorsConstant.secondaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
           topLeft: Radius.circular(
-            ValuesConstant.BORDER_RADIUS,
+            ValuesConstant.borderRadius,
           ),
         ),
       ),
     ),
-    dialogTheme: DialogTheme(
-      backgroundColor: ColorsConstant.SECONDARY_COLOR,
+    dialogTheme: const DialogTheme(
+      backgroundColor: ColorsConstant.secondaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(ValuesConstant.BORDER_RADIUS),
+          Radius.circular(ValuesConstant.borderRadius),
         ),
       ),
     ),
     colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: ColorsConstant.PRIMARY_SWATCH,
+      primarySwatch: ColorsConstant.primarySwatch,
     ).copyWith(
-      secondary: ColorsConstant.ACCENT_COLOR,
-      background: ColorsConstant.SECONDARY_COLOR,
+      secondary: ColorsConstant.accentColor,
+      background: ColorsConstant.secondaryColor,
     ),
   );
 }

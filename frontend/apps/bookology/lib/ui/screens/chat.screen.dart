@@ -64,7 +64,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
-  final firestoreService = new FirestoreService(FirebaseFirestore.instance);
+  final firestoreService = FirestoreService(FirebaseFirestore.instance);
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
@@ -74,12 +74,12 @@ class _ChatPageState extends State<ChatPage> {
           child: Container(
             height: 200,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 10,
               left: 20,
               right: 20,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
@@ -91,7 +91,7 @@ class _ChatPageState extends State<ChatPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 5,
                   ),
                   width: 50,
@@ -101,11 +101,11 @@ class _ChatPageState extends State<ChatPage> {
                     borderRadius: BorderRadius.circular(50),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
-                  text: StringConstants.CAMERA,
+                  text: StringConstants.camera,
                   icon: Icons.photo_camera_outlined,
                   showText: true,
                   showIcon: true,
@@ -115,11 +115,11 @@ class _ChatPageState extends State<ChatPage> {
                     _handleImageSelection();
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 OutLinedButton(
-                  text: StringConstants.FILE,
+                  text: StringConstants.file,
                   icon: Icons.description_outlined,
                   showText: true,
                   showIcon: true,
@@ -146,7 +146,7 @@ class _ChatPageState extends State<ChatPage> {
       _setAttachmentUploading(true);
       final name = result.files.single.name;
       final filePath = result.files.single.path;
-      final file = File(filePath);
+      final file = File(filePath!);
       final collectionID =
           '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
       try {
@@ -168,9 +168,9 @@ class _ChatPageState extends State<ChatPage> {
 
         firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
-      } on FirebaseException catch (e) {
+      } on FirebaseException {
         _setAttachmentUploading(false);
-        print(e);
+        rethrow;
       }
     }
   }
@@ -212,9 +212,9 @@ class _ChatPageState extends State<ChatPage> {
 
         firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
-      } on FirebaseException catch (e) {
+      } on FirebaseException {
         _setAttachmentUploading(false);
-        print(e);
+        rethrow;
       }
     }
   }
@@ -270,22 +270,22 @@ class _ChatPageState extends State<ChatPage> {
               image: widget.userProfileImage,
               radius: 35,
             ),
-            SizedBox(
+            const SizedBox(
               width: 18,
             ),
             Text(
               widget.userName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Visibility(
               visible: widget.isVerified,
-              child: Icon(
+              child: const Icon(
                 Icons.verified,
                 color: Colors.blue,
                 size: 20,
@@ -293,15 +293,15 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ],
         ),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           Tooltip(
-            message: StringConstants.HINT_CONNECTION_SECURED,
+            message: StringConstants.hintConnectionSecured,
             child: IconButton(
               onPressed: () {
                 DialogsManager(context).showSecuredConnectionDialog();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.lock_outlined,
                 color: Colors.green,
               ),
@@ -310,7 +310,7 @@ class _ChatPageState extends State<ChatPage> {
           PopupMenuButton(
             onSelected: menuAction,
             itemBuilder: (BuildContext itemBuilder) =>
-                StringConstants.MENU_DELETE_DISCUSSION
+                StringConstants.menuDeleteDiscussion
                     .map(
                       (value) => PopupMenuItem(
                         child: Text(value),

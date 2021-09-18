@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Mihir Paldhikar
  *
@@ -43,13 +42,13 @@ class ConnectivityService {
   ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.mobile:
-        return ConnectivityStatus.Cellular;
+        return ConnectivityStatus.cellular;
       case ConnectivityResult.wifi:
-        return ConnectivityStatus.WiFi;
+        return ConnectivityStatus.wifi;
       case ConnectivityResult.none:
-        return ConnectivityStatus.Offline;
+        return ConnectivityStatus.offline;
       default:
-        return ConnectivityStatus.Offline;
+        return ConnectivityStatus.offline;
     }
   }
 }

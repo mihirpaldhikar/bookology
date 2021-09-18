@@ -44,14 +44,14 @@ class _BottomSheetViewState extends State<BottomSheetView> {
   Widget build(BuildContext context) {
     return Container(
       height: widget.height,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
         right: 20,
         left: 20,
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class _BottomSheetViewState extends State<BottomSheetView> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  margin: EdgeInsets.only(
+                  margin: const EdgeInsets.only(
                     top: 5,
                     bottom: 10,
                   ),
