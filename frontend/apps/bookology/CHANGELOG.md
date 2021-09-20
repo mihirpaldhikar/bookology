@@ -1,1 +1,3 @@
-#Bookology Changelog
+# Bookology Changelogs
+
+* Initial Testing Build.
