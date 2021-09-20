@@ -1,0 +1,51 @@
+name: Deploy Production Bookology Website to Firebase Hosting.
+
+on:
+  push:
+    branches:
+      - production-website
+
+jobs:
+  build:
+    name: Compile the Website Source
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js Version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Build the Website Source
+        run: |
+          cd ${{ github.workspace }}/frontend/websites/bookology-web/
+          npm ci
+          npm run build
+      - name: Create the Atrifact from the Compiled Source
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-bookology-website
+          path: ./frontend/websites/bookology-web/build/
+          retention-days: 7
+  deploy:
+    name: Deploy to Firebase
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Artifiacts Build
+        uses: actions/download-artifact@v2
+        with:
+          name: production-bookology-website
+          path: ./frontend/websites/bookology-web/build/
+      - name: Upload the Artifacts to the Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.SERVER_AUTH_KEY }}"
+          firebaseServiceAccount: "${{ secrets.GOOGLE_CLOUD_SERVICE_ACCOUNT }}"
+          expires: 30d
+          projectId: "${{ secrets.SERVER_NAME }}"
+          channelId: live
