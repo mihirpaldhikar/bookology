@@ -1,4 +1,4 @@
-name: Ruby
+name: Build & Release Production App
 
 on:
   push:
@@ -59,7 +59,8 @@ jobs:
       - name: Create A Release Of Build On GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
+          name: Bookology Version - ${{ secrets.BOOKOLOGY_PRODUCATION_APP_VERSION }}
           body_path: ${{ github.workspace }}/frontend/apps/bookology/CHANGELOG.md
-          tag_name: Bookology Version-${{ secrets.BOOKOLOGY_PRODUCATION_APP_VERSION }}
+          tag_name: production-release
           files: ${{ github.workspace }}/frontend/apps/bookology/build/app/outputs/bundle/release/app-release.aab
 
