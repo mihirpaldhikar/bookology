@@ -10,6 +10,7 @@
 *.ipr
 *.iws
 *.tgz
+*.jks
 *.http
 *.env.json
 google-services.json
@@ -37,6 +38,7 @@ docker-args.txt
 **/lib-cov
 **/.grunt
 **/secrets/
+**/release.jks
 
 **/lib/generated_plugin_registrant.dart
 **/app.*.symbols
