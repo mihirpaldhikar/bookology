@@ -119,12 +119,18 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
           return false;
         }
 
-        const userFcmToken = (await firebaseAdmin.firestore().collection('users').doc(receiverUserID.toString()).get()).data()['secrets']['fcmToken'];
+        const userFcmToken = (await firebaseAdmin.firestore()
+          .collection('users')
+          .doc(receiverUserID.toString())
+          .get())
+          .data()['secrets']['fcmToken'];
 
         const notification = {
           data: {
             sender_id: notificationData.sender_id,
             receiver_id: notificationData.receiver_id,
+          },
+          notification: {
             notification_title: notificationData.notification_title,
             notification_body: notificationData.notification_body,
             notification_type: notificationData.notification_type,
@@ -132,7 +138,9 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
         };
 
         firebaseAdmin.messaging().sendToDevice(userFcmToken.toString(), notification).then((result) => {
-          if (result['results']['messageID'] !== null || result['results']['messageID'] !== undefined || result['results']['messageID'] !== '') {
+          if (result['results']['messageID'] !== null ||
+            result['results']['messageID'] !== undefined ||
+            result['results']['messageID'] !== '') {
             response.status(200).json({
               result: {
                 message: 'Notification Sent Successfully.',

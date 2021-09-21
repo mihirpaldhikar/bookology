@@ -17,6 +17,7 @@ const setBooklet = (book) => {
     additional_information: {
       description: book.description,
       condition: book.condition,
+      categories: book.categories,
       images_collection_id: book.images_collection_id,
       images: book.images,
     },
@@ -52,6 +53,7 @@ const updateBook = (book) => {
     additional_information: {
       description: book.description,
       condition: book.condition,
+      categories: book.categories,
       images_collection_id: book.images_collection_id,
       images: book.images,
     },
@@ -88,6 +90,7 @@ const getBooklet = (book) => {
     additional_information: {
       description: book.additional_information.description,
       condition: book.additional_information.condition,
+      categories: book.additional_information.categories,
       images_collection_id: book.additional_information.images_collection_id,
       images: book.additional_information.images,
     },
@@ -119,6 +122,7 @@ const getBookletWithUploader = (book, user) => {
     additional_information: {
       description: book.additional_information.description,
       condition: book.additional_information.condition,
+      categories: book.additional_information.categories,
       images_collection_id: book.additional_information.images_collection_id,
       images: book.additional_information.images,
     },
