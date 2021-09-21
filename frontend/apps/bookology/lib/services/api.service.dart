@@ -30,6 +30,7 @@ import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
@@ -72,7 +73,11 @@ class ApiService {
       } else {
         return message;
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -95,7 +100,11 @@ class ApiService {
           isVerified: cacheData['user_information']['verified']);
       final userData = UserModel.fromJson(response);
       return userData;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -120,7 +129,11 @@ class ApiService {
             .toList(),
       );
       return books;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -136,7 +149,11 @@ class ApiService {
         },
       );
       return jsonDecode(response.body);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -158,7 +175,11 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -198,7 +219,11 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -226,7 +251,11 @@ class ApiService {
 
         return notifications;
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -259,7 +288,11 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -299,7 +332,11 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

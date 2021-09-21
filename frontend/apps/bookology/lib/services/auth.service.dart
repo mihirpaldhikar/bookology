@@ -30,6 +30,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
@@ -132,7 +133,11 @@ class AuthService {
         password: password,
       );
       return true;
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -143,16 +148,20 @@ class AuthService {
       await SecretsManager().removeAllSecrets();
       await CacheService().clearCacheStorage();
       return true;
-    } on FirebaseAuthException catch (error) {
-      return error;
+    } on FirebaseAuthException catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
   }
 
-  dynamic isEmailVerified() {
+  dynamic isEmailVerified() async {
     try {
-      _firebaseAuth.currentUser?.reload();
+      await _firebaseAuth.currentUser?.reload();
       if (_firebaseAuth.currentUser?.emailVerified == true) {
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
             .doc(_firebaseAuth.currentUser?.uid)
             .set(
@@ -181,7 +190,11 @@ class AuthService {
       }
 
       return false;
-    } catch (error) {
+    } on FirebaseAuthException catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

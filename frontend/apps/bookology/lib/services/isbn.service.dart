@@ -24,6 +24,7 @@ import 'dart:convert';
 
 import 'package:bookology/managers/secrets.manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class IsbnService {
   final SecretsManager _secretsManager = SecretsManager();
@@ -38,7 +39,11 @@ class IsbnService {
       final response = await http.get(requestURL);
       final data = jsonDecode(response.body);
       return data;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -50,7 +55,11 @@ class IsbnService {
       final authorResponse = await http.get(authorUri);
       final authorData = jsonDecode(authorResponse.body);
       return authorData['name'];
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

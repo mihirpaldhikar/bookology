@@ -29,6 +29,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,10 +38,16 @@ Future<void> main() async {
   await StartUpService().startService();
   await Firebase.initializeApp();
   await GetStorage.init();
-  runApp(
-    Provider.value(
-      value: AdsService(adsM),
-      builder: (context, child) => const AppManager(),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn =
+          'https://31374a6b13514ef28c9ecd9717e11a34@o796692.ingest.sentry.io/5972010';
+    },
+    appRunner: () => runApp(
+      Provider.value(
+        value: AdsService(adsM),
+        builder: (context, child) => const AppManager(),
+      ),
     ),
   );
 }

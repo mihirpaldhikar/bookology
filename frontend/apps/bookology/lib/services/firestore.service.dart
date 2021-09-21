@@ -26,6 +26,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get_storage/get_storage.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class FirestoreService {
   final cacheStorage = GetStorage();
@@ -46,7 +47,11 @@ class FirestoreService {
         cacheStorage.write('userIdentifierKey', userKey);
       }
       return cacheStorage.read('userIdentifierKey');
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -60,7 +65,11 @@ class FirestoreService {
       data['lastSeen'] = data['lastSeen']?.millisecondsSinceEpoch;
       data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
       return types.User.fromJson(data);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -74,7 +83,11 @@ class FirestoreService {
       for (var doc in snapshots.docs) {
         await doc.reference.delete();
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -116,7 +129,11 @@ class FirestoreService {
         return false;
       }
       return true;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -172,7 +189,11 @@ class FirestoreService {
           .collection('rooms')
           .doc(discussionRoomID)
           .delete();
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -192,7 +213,11 @@ class FirestoreService {
           'accepted': false,
         },
       );
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -213,7 +238,11 @@ class FirestoreService {
         return 'null';
       }
       return data.data()?['accepted'];
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

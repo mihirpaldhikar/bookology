@@ -156,78 +156,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15,
-                                      top: 20,
-                                    ),
-                                    child: Text(
-                                      'Book Categories',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 25,
-                                      ),
+                                  const Text(
+                                    'Book Categories',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 25,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 60,
-                                    child: ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        physics: const BouncingScrollPhysics(),
-                                        padding: const EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                        ),
-                                        itemCount: StringConstants
-                                            .bookCategories.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                              padding: const EdgeInsets.only(
-                                                left: 10,
-                                                right: 10,
-                                                top: 5,
-                                                bottom: 5,
-                                              ),
-                                              margin: const EdgeInsets.only(
-                                                left: 10,
-                                                top: 25,
-                                              ),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                  color: Theme.of(context)
-                                                      .bottomNavigationBarTheme
-                                                      .unselectedItemColor,
-                                                  border: Border.all(
-                                                    color: Colors.black,
-                                                    width: 1,
-                                                  ),
-                                                  borderRadius: BorderRadius
-                                                      .circular(ValuesConstant
-                                                          .secondaryBorderRadius)),
-                                              child: Text(
-                                                StringConstants
-                                                    .bookCategories[index],
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ));
-                                        }),
-                                  ),
+                                  bookCategories(),
                                 ],
                               );
                             }
                             if (homeFeed.data![index - 1] is BannerAd) {
-                              return const Padding(
-                                padding: EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  top: 20,
-                                ),
-                                child: NativeInlineAd(),
-                              );
+                              return const NativeInlineAd();
                             } else {
                               return bookList(
                                 book: homeFeed.data![index - 1] as BookModel,
@@ -246,6 +188,55 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ));
       },
+    );
+  }
+
+  Widget bookCategories() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 60,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
+        itemCount: StringConstants.bookCategories.length,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 5,
+              bottom: 5,
+            ),
+            margin: const EdgeInsets.only(
+              left: 10,
+              top: 25,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .bottomNavigationBarTheme
+                  .unselectedItemColor,
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),
+              borderRadius:
+                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+            ),
+            child: Text(
+              StringConstants.bookCategories[index],
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -71,7 +71,7 @@ class _ViewManagerState extends State<ViewManager> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return auth.isEmailVerified() != true
+    return auth.currentUser()!.emailVerified != true
         ? const VerifyEmailScreen()
         : Scaffold(
             bottomNavigationBar: BottomNavyBar(

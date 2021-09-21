@@ -74,6 +74,7 @@ class StringConstants {
   static const String privacyPolicy = 'Privacy Policy';
   static const String checkForUpdates = 'Check for Updates';
   static const String sendFeedback = 'Send Feedback';
+  static const String advertisement = 'Advertisement';
 
   // Title Constants
   static const String titleConfirmation = 'Confirmation';

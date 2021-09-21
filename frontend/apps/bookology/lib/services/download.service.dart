@@ -27,6 +27,7 @@ import 'package:bookology/managers/permission.manager.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class DownloadService {
   final Dio _dio = Dio();
@@ -79,7 +80,11 @@ class DownloadService {
         );
         return true;
       }
-    } catch (e) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
     return false;
