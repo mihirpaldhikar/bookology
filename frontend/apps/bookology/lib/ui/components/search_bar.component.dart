@@ -114,7 +114,9 @@ class _SearchBarState extends State<SearchBar> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context)
+                                  .bottomNavigationBarTheme
+                                  .unselectedItemColor,
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: const Icon(
@@ -148,7 +150,9 @@ class _SearchBarState extends State<SearchBar> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                              color: Theme.of(context).colorScheme.background,
+                              color: Theme.of(context)
+                                  .bottomNavigationBarTheme
+                                  .unselectedItemColor,
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Badge(
@@ -227,6 +231,9 @@ class _SearchBarState extends State<SearchBar> {
                                   color: Colors.black,
                                   width: 1,
                                 ),
+                                color: Theme.of(context)
+                                    .bottomNavigationBarTheme
+                                    .unselectedItemColor,
                               ),
                               child: Row(
                                 children: [
@@ -273,6 +280,9 @@ class _SearchBarState extends State<SearchBar> {
                                       width: 1,
                                     ),
                                     borderRadius: BorderRadius.circular(100),
+                                    color: Theme.of(context)
+                                        .bottomNavigationBarTheme
+                                        .unselectedItemColor,
                                   ),
                                   child: const Icon(
                                     Icons.add,
@@ -307,6 +317,9 @@ class _SearchBarState extends State<SearchBar> {
                                       width: 1,
                                     ),
                                     borderRadius: BorderRadius.circular(100),
+                                    color: Theme.of(context)
+                                        .bottomNavigationBarTheme
+                                        .unselectedItemColor,
                                   ),
                                   child: Badge(
                                     showBadge: true,

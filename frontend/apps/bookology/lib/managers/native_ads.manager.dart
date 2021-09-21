@@ -20,7 +20,6 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/cupertino.dart';
@@ -110,9 +109,12 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                     child: Container(
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                        color: ColorsConstant.secondaryColor,
+                        color: Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor!,
                         borderRadius: BorderRadius.circular(
-                            ValuesConstant.secondaryBorderRadius),
+                          ValuesConstant.secondaryBorderRadius,
+                        ),
                         border: Border.all(
                           color: Colors.black,
                           width: 1,
@@ -135,11 +137,15 @@ class _NativeInlineAdState extends State<NativeInlineAd>
         height: 270,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              width: 1,
-              color: Colors.black,
-            )),
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.borderRadius,
+          ),
+          border: Border.all(
+            width: 1,
+            color: Colors.black,
+          ),
+          color: Theme.of(context).cardTheme.color,
+        ),
         alignment: Alignment.center,
       );
     }

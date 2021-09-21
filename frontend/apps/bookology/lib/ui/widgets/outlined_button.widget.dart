@@ -46,7 +46,7 @@ class OutLinedButton extends StatelessWidget {
     this.outlineWidth = 1.0,
     this.outlineColor = ColorsConstant.accentColor,
     required this.onPressed,
-    this.backgroundColor = ColorsConstant.secondaryColor,
+    this.backgroundColor = ColorsConstant.lightThemeButtonColor,
     required this.text,
     this.icon,
     required this.showText,

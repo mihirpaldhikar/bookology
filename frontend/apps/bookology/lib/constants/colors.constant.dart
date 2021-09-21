@@ -51,7 +51,7 @@ class ColorsConstant {
 
   static const Color darkColor = Color(0xFF07357E);
 
-  static const Color cardColor = Color(0xFFffffff);
+  static const Color cardColor = Colors.white;
 
   static const Color appBarButtonsBackground = Color(0xFF4285F4);
 
@@ -62,4 +62,7 @@ class ColorsConstant {
   static const Color statusBarColor = Color(0xFFF2F6FE);
 
   static const Color lightThemeContentColor = Colors.black;
+  static const Color lightThemeButtonColor = Color(0xFFE1F5FE);
+  static const Color lightThemeBottomNavigationBarBackgroundColor =
+      secondaryColor;
 }
