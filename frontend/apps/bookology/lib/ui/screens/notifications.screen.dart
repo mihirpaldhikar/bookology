@@ -125,7 +125,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 children: [
                                   AutoSizeText(
                                     notifications
-                                        .data![index].notificationTitle,
+                                        .data![index].notification.title,
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
@@ -136,7 +136,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     height: 5,
                                   ),
                                   AutoSizeText(
-                                    notifications.data![index].notificationBody,
+                                    notifications
+                                        .data![index].notification.body,
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,

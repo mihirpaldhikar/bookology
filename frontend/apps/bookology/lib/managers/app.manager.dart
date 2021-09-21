@@ -120,7 +120,8 @@ class _AppState extends State<App> {
       const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: ColorsConstant.statusBarColor,
-        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarColor:
+            ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
       ),
     );
     super.initState();

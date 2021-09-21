@@ -22,7 +22,6 @@
 
 import 'dart:async';
 
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -137,12 +136,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     slivers: [
                       SliverAppBar(
-                        elevation: 3,
+                        elevation: 0,
                         pinned: true,
                         floating: false,
                         titleSpacing: 0.0,
                         backgroundColor:
-                            const Color.fromARGB(245, 242, 246, 254),
+                            Theme.of(context).appBarTheme.backgroundColor,
                         automaticallyImplyLeading: false,
                         expandedHeight: 250.0,
                         flexibleSpace: SearchBar(
@@ -198,8 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                  color: ColorsConstant
-                                                      .secondaryColor,
+                                                  color: Theme.of(context)
+                                                      .bottomNavigationBarTheme
+                                                      .unselectedItemColor,
                                                   border: Border.all(
                                                     color: Colors.black,
                                                     width: 1,

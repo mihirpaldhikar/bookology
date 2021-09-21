@@ -120,6 +120,12 @@ class ThemeManager {
         ),
       ),
     ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor:
+          ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+      selectedItemColor: Color(0xff039BE5),
+      unselectedItemColor: ColorsConstant.lightThemeButtonColor,
+    ),
     dialogTheme: const DialogTheme(
       backgroundColor: ColorsConstant.secondaryColor,
       shape: RoundedRectangleBorder(

@@ -21,7 +21,6 @@
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/currency.manager.dart';
@@ -77,7 +76,7 @@ class _BookCardState extends State<BookCard> {
                   color: Colors.black,
                   width: 1,
                 ),
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).cardTheme.color,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -128,9 +127,12 @@ class _BookCardState extends State<BookCard> {
                                 child: Container(
                                   padding: const EdgeInsets.all(3),
                                   decoration: BoxDecoration(
-                                    color: ColorsConstant.secondaryColor,
+                                    color: Theme.of(context)
+                                        .bottomNavigationBarTheme
+                                        .unselectedItemColor,
                                     borderRadius: BorderRadius.circular(
-                                        ValuesConstant.secondaryBorderRadius),
+                                      ValuesConstant.secondaryBorderRadius,
+                                    ),
                                     border: Border.all(
                                       color: Colors.black,
                                       width: 1,

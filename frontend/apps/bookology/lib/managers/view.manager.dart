@@ -75,7 +75,8 @@ class _ViewManagerState extends State<ViewManager> {
         ? const VerifyEmailScreen()
         : Scaffold(
             bottomNavigationBar: BottomNavyBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor:
+                  Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               showElevation: false,
               selectedIndex: screenIndex,
               onItemSelected: (value) {
@@ -95,7 +96,9 @@ class _ViewManagerState extends State<ViewManager> {
                       color: Colors.black,
                     ),
                   ),
-                  activeColor: Theme.of(context).colorScheme.secondary,
+                  activeColor: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .selectedItemColor!,
                   inactiveColor: Colors.grey,
                   textAlign: TextAlign.center,
                 ),
@@ -110,7 +113,9 @@ class _ViewManagerState extends State<ViewManager> {
                       color: Colors.black,
                     ),
                   ),
-                  activeColor: Theme.of(context).colorScheme.secondary,
+                  activeColor: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .selectedItemColor!,
                   inactiveColor: Colors.grey,
                   textAlign: TextAlign.center,
                 ),
@@ -125,7 +130,9 @@ class _ViewManagerState extends State<ViewManager> {
                       color: Colors.black,
                     ),
                   ),
-                  activeColor: Theme.of(context).colorScheme.secondary,
+                  activeColor: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .selectedItemColor!,
                   inactiveColor: Colors.grey,
                   textAlign: TextAlign.center,
                 ),
@@ -140,7 +147,9 @@ class _ViewManagerState extends State<ViewManager> {
                       color: Colors.black,
                     ),
                   ),
-                  activeColor: Theme.of(context).colorScheme.secondary,
+                  activeColor: Theme.of(context)
+                      .bottomNavigationBarTheme
+                      .selectedItemColor!,
                   inactiveColor: Colors.grey,
                   textAlign: TextAlign.center,
                 ),
