@@ -20,7 +20,7 @@ router.get('/', verifyUser, async (request, response, next) => {
         return false;
       } else {
         const userID = authData.user_id;
-        await NotificationsCollection.find({receiver_id: userID}).toArray(function(error, notifications) {
+        await NotificationsCollection.find({'metadata.receiver_id': userID}).toArray(function(error, notifications) {
           if (notifications.length === 0) {
             response.status(200).json({
               result: {
@@ -64,7 +64,7 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
     }
 
     if (notificationType === 'book_enquiry_notification') {
-      const senderUserID = request.headers['receiver-user-id'];
+      const senderUserID = request.headers['sender-user-id'];
       if (senderUserID === undefined || senderUserID === null || senderUserID === '') {
         response.status(403).json({
           result: {
@@ -127,13 +127,13 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
 
         const notification = {
           data: {
-            sender_id: notificationData.sender_id,
-            receiver_id: notificationData.receiver_id,
+            sender_id: senderUserID,
+            receiver_id: receiverUserID,
+            type: 'book_enquiry_notification',
           },
           notification: {
-            notification_title: notificationData.notification_title,
-            notification_body: notificationData.notification_body,
-            notification_type: notificationData.notification_type,
+            title: 'Book Enquiry Request',
+            body: `@${senderUserName} is requesting to enquire about a book.`,
           },
         };
 
