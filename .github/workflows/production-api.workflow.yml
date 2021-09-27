@@ -1,0 +1,33 @@
+on: [ push ]
+name: Deploy Production Bookology API Docker Image to Azure Container Registry
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: 'Create Secrets Directory'
+        run: |
+          mkdir ${{ github.workspace }}/api/secrets/
+      - name: 'Write Secrets Files'
+        uses: "finnp/create-file-action@master"
+        env:
+          FILE_NAME: ${{ secrets.PRODUCTION_API_GOOGLE_SERVICE_ACCOUNT_PATH }}
+          FILE_BASE64: ${{ secrets.PRODUCTION_API_GOOGLE_SERVICE_ACCOUNT }}
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and Push Image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build --build-arg DOMAIN_NAME=${{ secrets.PRODUCTION_API_DOMAIN_NAME }} --build-arg MONGO_URI=${{ secrets.PRODUCTION_API_MONGO_DB_URL }} --build-arg GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.PRODUCTION_API_GOOGLE_SERVICE_ACCOUNT_PATH }} --build-arg CLOUD_STORAGE_BUCKET_NAME=${{ secrets.PRODUCTION_API_CLOUD_STORAGE_BUCKET_NAME}} --build-arg ENCRYPTION_KEY=${{ secrets.PRODUCTION_API_ENCRYPTION_KEY }} --build-arg ACCESS_TOKEN=${{ secrets.PRODUCTION_API_ACCESS_KEY }} --build-arg JWT_SECRET_TOKEN=${{secrets.PRODUCTION_API_JWT_SECRET_KEY }} --build-arg JWT_EMAIL_VERIFICATION_TOKEN=${{secrets.PRODUCTION_API_JWT_EMAIL_VERIFICATION_KEY }} --build-arg SENDGRID_API_KEY=${{secrets.PRODUCTION_API_SENDGRID_API_KEY }} --build-arg SENDGRID_WELCOME_TEMPLATE_ID=${{ secrets.PRODUCTION_API_SENDGRID_WELCOME_TEMPLATE_ID }} --build-arg SENDGRID_DELETE_TEMPLATE_ID=${{ secrets.PRODUCTION_API_SENDGRID_DELETE_TEMPLATE_ID }} --build-arg SENDER_ID=${{ secrets.PRODUCTION_API_SENDER_ID }} . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.PRODUCTION_API_DOCKER_IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.PRODUCTION_API_DOCKER_IMAGE_NAME }}:${{ github.sha }}
