@@ -24,6 +24,7 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -48,7 +49,9 @@ class _NativeInlineAdState extends State<NativeInlineAd>
 
     // COMPLETE: Create a NativeAd instance
     _ad = NativeAd(
-      adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+      adUnitId: kReleaseMode
+          ? 'ca-app-pub-6991839116816523/3520713190'
+          : 'ca-app-pub-3940256099942544/2247696110',
       factoryId: 'googleNativeAdsCard',
       request: const AdRequest(),
       listener: NativeAdListener(

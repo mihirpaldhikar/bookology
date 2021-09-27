@@ -152,21 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             if (index == 0) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Book Categories',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 25,
-                                    ),
-                                  ),
-                                  bookCategories(),
-                                ],
-                              );
+                              return bookCategories();
                             }
                             if (homeFeed.data![index - 1] is BannerAd) {
                               return const NativeInlineAd();
