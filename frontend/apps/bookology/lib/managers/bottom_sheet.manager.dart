@@ -21,6 +21,7 @@
  */
 
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/share.service.dart';
@@ -89,46 +90,79 @@ class BottomSheetManager {
     );
   }
 
-  void showMoreMenuBottomSheet() {
+  void showMoreProfileMenuBottomSheet() {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) => BottomSheetView(
         contents: [
+          const SizedBox(
+            height: 20,
+          ),
           OutLinedButton(
-              text: 'About',
-              icon: Icons.info_outlined,
-              iconColor: Colors.black,
-              textColor: Colors.black,
-              outlineColor: Colors.black,
-              showText: true,
-              showIcon: true,
-              alignContent: MainAxisAlignment.start,
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  this.context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const AboutScreen(),
-                  ),
-                );
-              }),
-          // SizedBox(
-          //   height: 20,
-          // ),
-          // OutLinedButton(
-          //   text: 'Report this book',
-          //   showIcon: true,
-          //   showText: true,
-          //   alignContent: MainAxisAlignment.start,
-          //   icon: Icons.report_outlined,
-          //   iconColor: Colors.redAccent,
-          //   textColor: Colors.redAccent,
-          //   outlineColor: ColorsConstant.DANGER_BORDER_COLOR,
-          //   backgroundColor: ColorsConstant.DANGER_BACKGROUND_COLOR,
-          //   onPressed: () {},
-          // ),
+            text: 'About',
+            icon: Icons.info_outlined,
+            iconColor: Colors.black,
+            textColor: Colors.black,
+            outlineColor: Colors.black,
+            showText: true,
+            showIcon: true,
+            alignContent: MainAxisAlignment.start,
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                this.context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AboutScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          OutLinedButton(
+            onPressed: () {
+              authService.signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/auth',
+                (_) => false,
+              );
+            },
+            text: StringConstants.wordLogout,
+            showIcon: true,
+            showText: true,
+            icon: Icons.logout_outlined,
+            iconColor: Colors.redAccent,
+            outlineColor: ColorsConstant.dangerBorderColor,
+            backgroundColor: ColorsConstant.dangerBackgroundColor,
+            textColor: Colors.redAccent,
+            alignContent: MainAxisAlignment.start,
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              Text(
+                StringConstants.wordSupport,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                ),
+              ),
+              Text(
+                StringConstants.wordContactUs,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          )
         ],
-        height: 200,
+        height: 250,
       ),
     );
   }

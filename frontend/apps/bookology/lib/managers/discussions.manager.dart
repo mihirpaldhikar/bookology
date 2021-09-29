@@ -199,6 +199,8 @@ class _DiscussionsState extends State<Discussions> {
         dateLocale: widget.dateLocale,
         showUserNames: widget.showUserNames,
         timeFormat: widget.timeFormat,
+        groupMessagesThreshold: 1000,
+        dateHeaderThreshold: 1000,
       );
 
       _chatMessages = result[0] as List<Object>;

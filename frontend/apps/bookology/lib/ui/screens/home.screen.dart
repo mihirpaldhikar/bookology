@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
           left: 10,
           right: 10,
         ),
-        itemCount: StringConstants.bookCategories.length,
+        itemCount: StringConstants.listBookCategories.length,
         itemBuilder: (context, index) {
           return Container(
             padding: const EdgeInsets.only(
@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),
             child: Text(
-              StringConstants.bookCategories[index],
+              StringConstants.listBookCategories[index],
               style: const TextStyle(
                 color: Colors.black,
               ),

@@ -105,7 +105,7 @@ class _ChatPageState extends State<ChatPage> {
                   height: 20,
                 ),
                 OutLinedButton(
-                  text: StringConstants.camera,
+                  text: StringConstants.wordCamera,
                   icon: Icons.photo_camera_outlined,
                   showText: true,
                   showIcon: true,
@@ -119,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
                   height: 20,
                 ),
                 OutLinedButton(
-                  text: StringConstants.file,
+                  text: StringConstants.wordFile,
                   icon: Icons.description_outlined,
                   showText: true,
                   showIcon: true,

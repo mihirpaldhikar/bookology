@@ -103,7 +103,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                       width: 1,
                     ),
                   ),
-                  child: const Text(StringConstants.advertisement),
+                  child: const Text(StringConstants.wordAdvertisement),
                 ),
                 InkWell(
                   onTap: () {

@@ -22,10 +22,12 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/models/notification.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -53,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Notifications',
+          StringConstants.navigationNotifications,
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
         automaticallyImplyLeading: true,
@@ -69,6 +71,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
                 itemCount: notifications.data!.length,
+                padding: const EdgeInsets.only(
+                  top: 30,
+                ),
                 itemBuilder: (BuildContext context, index) {
                   return Container(
                     margin: const EdgeInsets.only(
@@ -78,16 +83,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       top: 10,
                     ),
                     decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(ValuesConstant.borderRadius),
+                      borderRadius: BorderRadius.circular(
+                        ValuesConstant.borderRadius,
+                      ),
                       border: Border.all(
-                        color: Colors.grey,
-                        width: 1,
+                        color: Colors.grey.shade600,
+                        width: 1.5,
                       ),
                     ),
                     child: InkWell(
-                      borderRadius:
-                          BorderRadius.circular(ValuesConstant.borderRadius),
+                      borderRadius: BorderRadius.circular(
+                        ValuesConstant.borderRadius,
+                      ),
                       onLongPress: () async {
                         //DialogsManager(context).showDeleteDiscussionDialog();
                       },
@@ -107,12 +114,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               height: 50,
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: ColorsConstant.secondaryColor,
+                                color:
+                                    notifications.data![index].notification.seen
+                                        ? Colors.green.shade50
+                                        : ColorsConstant.secondaryColor,
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Icon(
-                                Icons.notifications_outlined,
-                                color: Theme.of(context).colorScheme.secondary,
+                                notifications.data![index].notification.seen
+                                    ? Icons.done_outlined
+                                    : Icons.notifications_active_outlined,
+                                color: notifications
+                                        .data![index].notification.seen
+                                    ? Colors.green.shade800
+                                    : Theme.of(context).colorScheme.secondary,
                               ),
                             ),
                             const SizedBox(
@@ -129,8 +144,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.headline6,
+                                    style: TextStyle(
+                                      fontWeight: notifications
+                                              .data![index].notification.seen
+                                          ? FontWeight.normal
+                                          : FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 5,
@@ -155,9 +175,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 },
               );
             }
-            return const Text('An error occurred');
+            return const Error(
+              message: StringConstants.errorLoadingNotifications,
+            );
           } else {
-            return const Text('Loading');
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),

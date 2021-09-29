@@ -20,44 +20,35 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/strings.constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({
+class Error extends StatelessWidget {
+  final String? message;
+
+  const Error({
     Key? key,
+    this.message,
   }) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            StringConstants.navigationSearch,
-            style: Theme.of(context).appBarTheme.titleTextStyle,
-          ),
-          automaticallyImplyLeading: true,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SvgPicture.asset('assets/svg/error.svg'),
+        SizedBox(
+          height: message!.isEmpty ? 0 : 20,
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: const Text(
-            'Work in Progress!',
-            style: TextStyle(
-              fontSize: 20,
-            ),
+        Visibility(
+          visible: message!.isNotEmpty,
+          child: Text(
+            message!,
+            textAlign: TextAlign.center,
           ),
-        ));
+        ),
+      ],
+    );
   }
 }

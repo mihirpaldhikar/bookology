@@ -88,7 +88,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         ),
         elevation: 0,
         title: Text(
-          StringConstants.titleConfirmation,
+          StringConstants.navigationConfirmation,
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
@@ -135,7 +135,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.isbn}:  ',
+                                text: '${StringConstants.wordIsbn}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -155,7 +155,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.bookName}:  ',
+                                text: '${StringConstants.wordBookName}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -175,7 +175,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.author}:  ',
+                                text: '${StringConstants.wordAuthor}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -195,7 +195,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                             ),
                             RichText(
                               text: TextSpan(
-                                text: '${StringConstants.publisher}:  ',
+                                text: '${StringConstants.wordPublisher}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -217,7 +217,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               text: TextSpan(
-                                text: '${StringConstants.description}:  ',
+                                text: '${StringConstants.wordDescription}:  ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -241,7 +241,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: '${StringConstants.originalPrice}:  ',
+                                    text:
+                                        '${StringConstants.wordOriginalPrice}:  ',
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -261,7 +262,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                                 ),
                                 RichText(
                                   text: TextSpan(
-                                    text: '${StringConstants.sellingPrice}:  ',
+                                    text:
+                                        '${StringConstants.wordSellingPrice}:  ',
                                     style: GoogleFonts.poppins(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -340,7 +342,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 OutLinedButton(
-                                  text: StringConstants.upload,
+                                  text: StringConstants.wordUpload,
                                   showText: true,
                                   showIcon: false,
                                   onPressed: () async {

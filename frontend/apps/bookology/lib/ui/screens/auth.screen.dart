@@ -143,7 +143,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 30,
                         ),
                         OutLinedButton(
-                          text: StringConstants.login,
+                          text: StringConstants.wordLogin,
                           icon: Icons.mail_outline_rounded,
                           showIcon: true,
                           showText: true,
@@ -174,7 +174,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: ' ${StringConstants.signUp}',
+                                  text: ' ${StringConstants.wordSignUp}',
                                   style: GoogleFonts.poppins(
                                     color:
                                         Theme.of(context).colorScheme.secondary,

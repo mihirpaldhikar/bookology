@@ -50,7 +50,7 @@ class UpdateService {
           duration: const Duration(seconds: 5),
           content: const Text(StringConstants.appUpdateAvailable),
           actionBuilder: (context, close) => TextButton(
-            child: const Text(StringConstants.update),
+            child: const Text(StringConstants.wordUpdate),
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               BottomSheetManager(context).showUpdateAvailableBottomSheet(

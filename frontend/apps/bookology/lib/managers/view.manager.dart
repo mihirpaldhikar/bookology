@@ -23,9 +23,9 @@
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/ui/screens/discussions.screen.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
 import 'package:bookology/ui/screens/profile.screen.dart';
-import 'package:bookology/ui/screens/room.screen.dart';
 import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
@@ -52,7 +52,7 @@ class _ViewManagerState extends State<ViewManager> {
   List<Widget> screenList = [
     const HomeScreen(),
     const SearchScreen(),
-    const RoomsPage(),
+    const DiscussionsScreen(),
     const ProfileScreen(),
   ];
   final cacheService = CacheService();

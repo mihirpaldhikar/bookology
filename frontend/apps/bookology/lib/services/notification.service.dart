@@ -88,6 +88,10 @@ class NotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
     FirebaseMessaging.onMessage.listen(_handleNotification);
   }
+
+  String notificationType() {
+    return '';
+  }
 }
 
 void _handleNotification(RemoteMessage message) async {

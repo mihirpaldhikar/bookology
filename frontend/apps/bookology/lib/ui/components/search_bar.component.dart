@@ -422,7 +422,7 @@ class BackendService {
 class CitiesService {
   static List<String> getSuggestions(String query) {
     List<String> matches = <String>[];
-    matches.addAll(StringConstants.cities);
+    matches.addAll(StringConstants.listCities);
 
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;

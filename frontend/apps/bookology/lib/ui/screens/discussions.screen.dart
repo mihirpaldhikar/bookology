@@ -21,6 +21,7 @@
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/auth.service.dart';
@@ -39,16 +40,16 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class RoomsPage extends StatefulWidget {
-  const RoomsPage({
+class DiscussionsScreen extends StatefulWidget {
+  const DiscussionsScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _RoomsPageState createState() => _RoomsPageState();
+  _DiscussionsScreenState createState() => _DiscussionsScreenState();
 }
 
-class _RoomsPageState extends State<RoomsPage> {
+class _DiscussionsScreenState extends State<DiscussionsScreen> {
   bool _error = false;
   bool _initialized = false;
   User? _user;
@@ -140,7 +141,7 @@ class _RoomsPageState extends State<RoomsPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                'Discussions',
+                StringConstants.navigationDiscussions,
                 style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
               automaticallyImplyLeading: false,
@@ -169,7 +170,7 @@ class _RoomsPageState extends State<RoomsPage> {
                           height: 30,
                         ),
                         const Text(
-                          'No Discussions',
+                          StringConstants.wordNoDiscussions,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -178,8 +179,7 @@ class _RoomsPageState extends State<RoomsPage> {
                           height: 30,
                         ),
                         const Text(
-                          'To Start a discussion, request book uploader to allow '
-                          'enquiry of the book.',
+                          StringConstants.sentenceEmptyDiscussion,
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey,
@@ -279,7 +279,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                           children: [
                                             Chip(
                                               label: Text(
-                                                'You',
+                                                StringConstants.wordYou,
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .colorScheme

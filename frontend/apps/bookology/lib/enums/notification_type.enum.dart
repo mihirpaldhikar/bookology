@@ -20,44 +20,4 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/strings.constant.dart';
-import 'package:flutter/material.dart';
-
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  _SearchScreenState createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            StringConstants.navigationSearch,
-            style: Theme.of(context).appBarTheme.titleTextStyle,
-          ),
-          automaticallyImplyLeading: true,
-        ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: const Text(
-            'Work in Progress!',
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
-        ));
-  }
-}
+enum NotificationType { enquiryNotification, accountNotification }

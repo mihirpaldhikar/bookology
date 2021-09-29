@@ -178,10 +178,10 @@ class _AboutScreenState extends State<AboutScreen> {
                             child: OutLinedButton(
                               onPressed: () async {
                                 launchURL(
-                                  url: StringConstants.appPrivacyPolicy,
+                                  url: StringConstants.urlPrivacyPolicy,
                                 );
                               },
-                              text: StringConstants.privacyPolicy,
+                              text: StringConstants.wordPrivacyPolicy,
                               showText: true,
                               showIcon: true,
                               icon: Icons.security_outlined,
@@ -202,7 +202,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                   url: googlePlayStoreUrl,
                                 );
                               },
-                              text: StringConstants.checkForUpdates,
+                              text: StringConstants.wordCheckForUpdates,
                               showText: true,
                               showIcon: true,
                               icon: FontAwesomeIcons.googlePlay,
@@ -222,7 +222,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                   url: googlePlayStoreUrl,
                                 );
                               },
-                              text: StringConstants.sendFeedback,
+                              text: StringConstants.wordSendFeedback,
                               showText: true,
                               showIcon: true,
                               icon: Icons.feedback_outlined,
@@ -235,7 +235,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             height: 40,
                           ),
                           Text(
-                            StringConstants.appNotice,
+                            StringConstants.sentenceAppNotice,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 15,

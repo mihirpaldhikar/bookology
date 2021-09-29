@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: const Icon(Icons.menu_outlined),
                 onPressed: () {
-                  BottomSheetManager(context).showMoreMenuBottomSheet();
+                  BottomSheetManager(context).showMoreProfileMenuBottomSheet();
                 },
               ),
             ],

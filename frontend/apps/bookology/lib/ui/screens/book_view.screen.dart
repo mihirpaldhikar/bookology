@@ -257,7 +257,7 @@ class _BookViewerState extends State<BookViewer> {
                           height: 10,
                         ),
                         AutoSizeText(
-                          '${StringConstants.by} ${widget.book.bookInformation.author}',
+                          '${StringConstants.wordBy} ${widget.book.bookInformation.author}',
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -273,7 +273,7 @@ class _BookViewerState extends State<BookViewer> {
                         Row(
                           children: [
                             const AutoSizeText(
-                              '${StringConstants.price}:',
+                              '${StringConstants.wordPrice}:',
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
@@ -316,7 +316,7 @@ class _BookViewerState extends State<BookViewer> {
                           height: 10,
                         ),
                         AutoSizeText(
-                          '${StringConstants.youSave} $currencySymbol ${saving.toString()}',
+                          '${StringConstants.wordYouSave} $currencySymbol ${saving.toString()}',
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -339,7 +339,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: OutLinedButton(
                               showIcon: false,
                               showText: true,
-                              text: StringConstants.enquire,
+                              text: StringConstants.wordEnquire,
                               textColor: Colors.black,
                               outlineColor: isLoadingCompleted
                                   ? Colors.orange
@@ -415,7 +415,7 @@ class _BookViewerState extends State<BookViewer> {
                             child: OutLinedButton(
                                 showIcon: false,
                                 showText: true,
-                                text: StringConstants.addToWishList,
+                                text: StringConstants.wordAddToWishList,
                                 textColor: Colors.black,
                                 outlineColor: Colors.teal,
                                 backgroundColor: Colors.tealAccent[100],
@@ -441,7 +441,7 @@ class _BookViewerState extends State<BookViewer> {
                               width: 10,
                             ),
                             Text(
-                              '${StringConstants.bookLocation} : $location',
+                              '${StringConstants.wordBookLocation} : $location',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary,
                                 fontWeight: FontWeight.bold,
@@ -454,7 +454,7 @@ class _BookViewerState extends State<BookViewer> {
                           height: 40,
                         ),
                         const AutoSizeText(
-                          StringConstants.description,
+                          StringConstants.wordDescription,
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -489,7 +489,7 @@ class _BookViewerState extends State<BookViewer> {
                           height: 40,
                         ),
                         const AutoSizeText(
-                          StringConstants.bookDetails,
+                          StringConstants.wordBookDetails,
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -509,7 +509,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.isbn} :',
+                                '${StringConstants.wordIsbn} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -540,7 +540,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.author} :',
+                                '${StringConstants.wordAuthor} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -571,7 +571,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.publisher} :',
+                                '${StringConstants.wordPublisher} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -602,7 +602,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.bookCondition} :',
+                                '${StringConstants.wordBookCondition} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -627,7 +627,7 @@ class _BookViewerState extends State<BookViewer> {
                           height: 30,
                         ),
                         const AutoSizeText(
-                          StringConstants.uploadDetails,
+                          StringConstants.wordUploadDetails,
                           maxLines: 4,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
@@ -647,7 +647,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.username} :',
+                                '${StringConstants.wordUsername} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -689,7 +689,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.name} :',
+                                '${StringConstants.wordName} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
@@ -720,7 +720,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: Row(
                             children: [
                               Text(
-                                '${StringConstants.uploadedOn} :',
+                                '${StringConstants.wordUploadedOn} :',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
