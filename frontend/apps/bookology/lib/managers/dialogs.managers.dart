@@ -74,7 +74,6 @@ class DialogsManager {
                       text: 'Delete',
                       showIcon: false,
                       showText: true,
-                      outlineColor: Colors.redAccent,
                       backgroundColor: Colors.red[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -136,7 +135,6 @@ class DialogsManager {
                 text: 'Unsend',
                 showIcon: false,
                 showText: true,
-                outlineColor: Colors.redAccent,
                 backgroundColor: Colors.red[100],
                 onPressed: () async {
                   Navigator.of(context).pop();
@@ -204,7 +202,6 @@ class DialogsManager {
                       text: 'OK',
                       showIcon: false,
                       showText: true,
-                      outlineColor: Colors.green,
                       backgroundColor: Colors.green[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -389,7 +386,6 @@ class DialogsManager {
                       text: 'Delete',
                       showIcon: false,
                       showText: true,
-                      outlineColor: Colors.redAccent,
                       backgroundColor: Colors.red[100],
                       onPressed: onDelete,
                     ),
@@ -447,7 +443,6 @@ class DialogsManager {
                       text: 'Delete',
                       showIcon: false,
                       showText: true,
-                      outlineColor: Colors.redAccent,
                       backgroundColor: Colors.red[100],
                       onPressed: onRequest,
                     ),

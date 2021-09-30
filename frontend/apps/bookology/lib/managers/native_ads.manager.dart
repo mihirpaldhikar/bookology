@@ -98,10 +98,6 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                     borderRadius: BorderRadius.circular(
                       ValuesConstant.secondaryBorderRadius,
                     ),
-                    border: Border.all(
-                      color: Colors.yellow,
-                      width: 1,
-                    ),
                   ),
                   child: const Text(StringConstants.wordAdvertisement),
                 ),
@@ -117,10 +113,6 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                           .unselectedItemColor!,
                       borderRadius: BorderRadius.circular(
                         ValuesConstant.secondaryBorderRadius,
-                      ),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1,
                       ),
                     ),
                     child: const Icon(

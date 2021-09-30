@@ -187,7 +187,6 @@ class _AboutScreenState extends State<AboutScreen> {
                               icon: Icons.security_outlined,
                               iconColor: Colors.green,
                               textColor: Colors.green,
-                              outlineColor: Colors.green,
                               backgroundColor: Colors.green.shade50,
                             ),
                           ),
@@ -208,7 +207,6 @@ class _AboutScreenState extends State<AboutScreen> {
                               icon: FontAwesomeIcons.googlePlay,
                               iconColor: Colors.black,
                               textColor: Colors.black,
-                              outlineColor: Colors.black,
                             ),
                           ),
                           const SizedBox(
@@ -228,7 +226,6 @@ class _AboutScreenState extends State<AboutScreen> {
                               icon: Icons.feedback_outlined,
                               iconColor: Colors.black,
                               textColor: Colors.black,
-                              outlineColor: Colors.black,
                             ),
                           ),
                           const SizedBox(

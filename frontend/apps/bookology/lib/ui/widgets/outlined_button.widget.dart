@@ -27,7 +27,6 @@ import 'package:flutter/widgets.dart';
 
 class OutLinedButton extends StatelessWidget {
   final double? outlineWidth;
-  final Color? outlineColor;
   final String text;
   final Color? textColor;
   final IconData? icon;
@@ -44,7 +43,6 @@ class OutLinedButton extends StatelessWidget {
   const OutLinedButton({
     Key? key,
     this.outlineWidth = 1.0,
-    this.outlineColor = Colors.transparent,
     required this.onPressed,
     this.backgroundColor = ColorsConstant.lightThemeButtonColor,
     required this.text,
@@ -53,7 +51,7 @@ class OutLinedButton extends StatelessWidget {
     required this.showIcon,
     this.align = Alignment.center,
     this.iconColor = ColorsConstant.accentColor,
-    this.textColor = ColorsConstant.accentColor,
+    this.textColor = ColorsConstant.lightThemeContentColor,
     this.inverted = false,
     this.alignContent = MainAxisAlignment.center,
     this.spaceBetween = 20,
@@ -79,10 +77,6 @@ class OutLinedButton extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: backgroundColor,
-            border: Border.all(
-              color: outlineColor!,
-              width: 1,
-            ),
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: inverted!

@@ -37,19 +37,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class SearchBar extends StatefulWidget {
+class HomeBar extends StatefulWidget {
   final String currentLocation;
 
-  const SearchBar({
+  const HomeBar({
     Key? key,
     required this.currentLocation,
   }) : super(key: key);
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _HomeBarState createState() => _HomeBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _HomeBarState extends State<HomeBar> {
   final cacheService = CacheService();
   final locationService = LocationService();
   var top = 0.0;
@@ -110,10 +110,6 @@ class _SearchBarState extends State<SearchBar> {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1,
-                              ),
                               color: Theme.of(context)
                                   .bottomNavigationBarTheme
                                   .unselectedItemColor,
@@ -146,10 +142,6 @@ class _SearchBarState extends State<SearchBar> {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1,
-                              ),
                               color: Theme.of(context)
                                   .bottomNavigationBarTheme
                                   .unselectedItemColor,
@@ -165,7 +157,7 @@ class _SearchBarState extends State<SearchBar> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                 ),
                               ),
                               child: const Icon(
@@ -227,10 +219,6 @@ class _SearchBarState extends State<SearchBar> {
                                 borderRadius: BorderRadius.circular(
                                   ValuesConstant.secondaryBorderRadius,
                                 ),
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 1,
-                                ),
                                 color: Theme.of(context)
                                     .bottomNavigationBarTheme
                                     .unselectedItemColor,
@@ -275,10 +263,6 @@ class _SearchBarState extends State<SearchBar> {
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
                                         .bottomNavigationBarTheme
@@ -312,10 +296,6 @@ class _SearchBarState extends State<SearchBar> {
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
                                         .bottomNavigationBarTheme
@@ -331,7 +311,7 @@ class _SearchBarState extends State<SearchBar> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                       ),
                                     ),
                                     child: const Icon(

@@ -45,7 +45,7 @@ class ColorsConstant {
 
   static const Color dangerBorderColor = Colors.redAccent;
 
-  static const Color dangerBackgroundColor = Color(0xffFFEBEE);
+  static const Color dangerBackgroundColor = Color(0xFFFFCDD2);
 
   static const Color backgroundColor = Color(0xFFFFFFFF);
 
@@ -62,7 +62,7 @@ class ColorsConstant {
   static const Color statusBarColor = Color(0xFFF2F6FE);
 
   static const Color lightThemeContentColor = Colors.black;
-  static const Color lightThemeButtonColor = Color(0xFFE1F5FE);
+  static const Color lightThemeButtonColor = Color(0xFFBBDEFB);
   static const Color lightThemeBottomNavigationBarBackgroundColor =
       secondaryColor;
 }

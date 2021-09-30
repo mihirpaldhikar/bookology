@@ -89,10 +89,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).backgroundColor,
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1,
-                              ),
                               borderRadius: BorderRadius.circular(
                                   ValuesConstant.secondaryBorderRadius),
                             ),
@@ -149,7 +145,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           showText: true,
                           iconColor: Theme.of(context).primaryColor,
                           textColor: Theme.of(context).primaryColor,
-                          outlineColor: Theme.of(context).primaryColor,
                           alignContent: MainAxisAlignment.start,
                           spaceBetween: 115,
                           onPressed: () {

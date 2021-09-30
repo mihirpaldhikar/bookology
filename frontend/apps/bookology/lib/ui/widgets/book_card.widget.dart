@@ -133,10 +133,6 @@ class _BookCardState extends State<BookCard> {
                                     borderRadius: BorderRadius.circular(
                                       ValuesConstant.secondaryBorderRadius,
                                     ),
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
                                   ),
                                   child: const Icon(
                                     Icons.more_vert_outlined,
@@ -234,7 +230,6 @@ class _BookCardState extends State<BookCard> {
                             text: widget.buttonText!,
                             showIcon: false,
                             showText: true,
-                            outlineColor: Colors.black,
                             textColor: Colors.black,
                             onPressed: widget.onClicked,
                           ),

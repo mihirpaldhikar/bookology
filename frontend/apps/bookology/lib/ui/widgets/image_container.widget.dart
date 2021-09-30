@@ -38,14 +38,11 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
   Widget build(BuildContext context) {
     const double _borderRadius = 15;
     return Container(
-      width: 150,
-      height: 150,
+      width: 120,
+      height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_borderRadius),
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
+        color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(_borderRadius),
@@ -53,7 +50,7 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
         child: const Center(
           child: Icon(
             Icons.add,
-            color: Colors.grey,
+            color: Colors.black,
           ),
         ),
       ),
@@ -84,34 +81,33 @@ class _ImageHolderState extends State<ImageHolder> {
   Widget build(BuildContext context) {
     const double _borderRadius = 15;
     return Container(
-      width: 150,
-      height: 150,
+      width: 120,
+      height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_borderRadius),
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
+        color: Colors.transparent,
       ),
       child: Stack(
         children: [
           Container(
-            width: 150,
-            height: 150,
+            width: 120,
+            height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),
             child: InkWell(
               onTap: widget.onPressed,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(_borderRadius),
-                child: Image.file(
-                  File.fromUri(
-                    Uri.parse(widget.imageURL),
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(_borderRadius),
+                  child: Image.file(
+                    File.fromUri(
+                      Uri.parse(widget.imageURL),
+                    ),
+                    width: 120,
+                    height: 200,
+                    fit: BoxFit.contain,
                   ),
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.contain,
                 ),
               ),
             ),

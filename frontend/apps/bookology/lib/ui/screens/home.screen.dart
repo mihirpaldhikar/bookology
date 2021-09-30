@@ -32,8 +32,8 @@ import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/update.service.dart';
+import 'package:bookology/ui/components/home_bar.component.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
-import 'package:bookology/ui/components/search_bar.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Theme.of(context).appBarTheme.backgroundColor,
                         automaticallyImplyLeading: false,
                         expandedHeight: 250.0,
-                        flexibleSpace: SearchBar(
+                        flexibleSpace: HomeBar(
                           currentLocation: currentLocation,
                         ),
                       ),
@@ -207,10 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Theme.of(context)
                   .bottomNavigationBarTheme
                   .unselectedItemColor,
-              border: Border.all(
-                color: Colors.black,
-                width: 1,
-              ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),

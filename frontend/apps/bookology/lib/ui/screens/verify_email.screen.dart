@@ -99,7 +99,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     text: 'Verified',
                     showText: true,
                     showIcon: false,
-                    outlineColor: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 const SizedBox(

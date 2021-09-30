@@ -29,14 +29,17 @@ import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/ui/screens/confirmation.screen.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
+import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_snackbar/material_snackbar.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -71,6 +74,7 @@ class _CreateScreenState extends State<CreateScreen> {
   String _imageUrl2 = '';
   String _imageUrl3 = '';
   String _imageUrl4 = '';
+  String _nextStep = 'Next';
 
   ScanResult? scanResult;
   final _aspectTolerance = 0.00;
@@ -125,252 +129,364 @@ class _CreateScreenState extends State<CreateScreen> {
                     ],
                   ),
                 )
-              : Form(
-                  key: _formKey,
-                  child: Stepper(
-                    type: StepperType.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    currentStep: _currentStep,
-                    onStepTapped: (step) => tapped(step),
-                    controlsBuilder: (
-                      BuildContext context, {
-                      VoidCallback? onStepContinue,
-                      VoidCallback? onStepCancel,
-                    }) {
-                      return Column(
-                        children: [
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            children: [
-                              TextButton(
-                                child: const Text('Previous'),
-                                onPressed: cancel,
-                              ),
-                              const SizedBox(
-                                width: 30,
-                              ),
-                              SizedBox(
-                                width: 100,
-                                child: OutLinedButton(
-                                  text: 'Next',
-                                  outlineColor: Theme.of(context).primaryColor,
-                                  textColor: Theme.of(context).primaryColor,
-                                  showText: true,
-                                  showIcon: false,
-                                  onPressed: () {
-                                    continued();
-                                    if (_currentStep == 4) {
-                                      if (_isImage1Selected &&
-                                          _isImage2Selected &&
-                                          _isImage3Selected &&
-                                          _isImage4Selected) {
+              : Padding(
+                  padding: const EdgeInsets.only(
+                    top: 30,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Stepper(
+                      type: StepperType.vertical,
+                      physics: const BouncingScrollPhysics(),
+                      currentStep: _currentStep,
+                      onStepTapped: (step) => tapped(step),
+                      controlsBuilder: (
+                        BuildContext context, {
+                        VoidCallback? onStepContinue,
+                        VoidCallback? onStepCancel,
+                      }) {
+                        return Column(
+                          children: [
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                              children: [
+                                TextButton(
+                                  child: Visibility(
+                                    visible: _currentStep != 0,
+                                    child: const Text('Previous'),
+                                  ),
+                                  onPressed: cancel,
+                                ),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: OutLinedButton(
+                                    text: _nextStep,
+                                    textColor: Theme.of(context).primaryColor,
+                                    showText: true,
+                                    showIcon: false,
+                                    onPressed: () {
+                                      continued();
+                                      if (_currentStep == 4) {
                                         setState(() {
-                                          _isImagesSelected = true;
+                                          _nextStep = 'Continue';
                                         });
-                                      } else {
-                                        setState(() {
-                                          _isImagesSelected = false;
-                                        });
-                                      }
-                                      if (bookSellingPriceController
-                                              .text.isNotEmpty &&
-                                          bookSellingPriceController
-                                              .text.isNotEmpty) {
-                                        if (int.parse(
-                                                bookOriginalPriceController
-                                                    .text) <
-                                            int.parse(bookSellingPriceController
-                                                .text)) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Selling price cannot be '
-                                                  'more than Original Price.'),
-                                            ),
-                                          );
-                                          return false;
+                                        if (_isImage1Selected &&
+                                            _isImage2Selected &&
+                                            _isImage3Selected &&
+                                            _isImage4Selected) {
+                                          setState(() {
+                                            _isImagesSelected = true;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _isImagesSelected = false;
+                                          });
                                         }
-                                      }
-                                      if (_formKey.currentState!.validate() &&
-                                          _isBookConditionSelected &&
-                                          _isImagesSelected) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                ConfirmationScreen(
-                                              book: BookModel(
-                                                bookId: '',
-                                                uploaderId: '',
-                                                bookInformation:
-                                                    BookInformation(
-                                                  isbn: isbnController.text
-                                                      .toString(),
-                                                  name: bookNameController.text
-                                                      .toString(),
-                                                  author: bookAuthorController
-                                                      .text
-                                                      .toString(),
-                                                  publisher:
-                                                      bookPublisherController
-                                                          .text
-                                                          .toString(),
+                                        if (bookSellingPriceController
+                                                .text.isNotEmpty &&
+                                            bookSellingPriceController
+                                                .text.isNotEmpty) {
+                                          if (int.parse(
+                                                  bookOriginalPriceController
+                                                      .text) <
+                                              int.parse(
+                                                  bookSellingPriceController
+                                                      .text)) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Selling price cannot be '
+                                                    'more than Original Price.'),
+                                              ),
+                                            );
+                                            return false;
+                                          }
+                                        }
+                                        if (_formKey.currentState!.validate() &&
+                                            _isBookConditionSelected &&
+                                            _isImagesSelected) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ConfirmationScreen(
+                                                book: BookModel(
+                                                  bookId: '',
+                                                  uploaderId: '',
+                                                  bookInformation:
+                                                      BookInformation(
+                                                    isbn: isbnController.text
+                                                        .toString(),
+                                                    name: bookNameController
+                                                        .text
+                                                        .toString(),
+                                                    author: bookAuthorController
+                                                        .text
+                                                        .toString(),
+                                                    publisher:
+                                                        bookPublisherController
+                                                            .text
+                                                            .toString(),
+                                                  ),
+                                                  additionalInformation:
+                                                      AdditionalInformation(
+                                                    condition: _bookCondition,
+                                                    description:
+                                                        bookDescriptionController
+                                                            .text
+                                                            .toString(),
+                                                    imagesCollectionId: '',
+                                                    images: [
+                                                      _imageUrl1,
+                                                      _imageUrl2,
+                                                      _imageUrl3,
+                                                      _imageUrl4,
+                                                    ],
+                                                  ),
+                                                  pricing: Pricing(
+                                                    currency: '',
+                                                    originalPrice:
+                                                        bookOriginalPriceController
+                                                            .text
+                                                            .toString(),
+                                                    sellingPrice:
+                                                        bookSellingPriceController
+                                                            .text
+                                                            .toString(),
+                                                  ),
+                                                  createdOn: CreatedOn(
+                                                    date: '',
+                                                    time: '',
+                                                  ),
+                                                  slugs: Slugs(
+                                                    name: '',
+                                                  ),
+                                                  location: '',
                                                 ),
-                                                additionalInformation:
-                                                    AdditionalInformation(
-                                                  condition: _bookCondition,
-                                                  description:
-                                                      bookDescriptionController
-                                                          .text
-                                                          .toString(),
-                                                  imagesCollectionId: '',
-                                                  images: [
-                                                    _imageUrl1,
-                                                    _imageUrl2,
-                                                    _imageUrl3,
-                                                    _imageUrl4,
-                                                  ],
-                                                ),
-                                                pricing: Pricing(
-                                                  currency: '',
-                                                  originalPrice:
-                                                      bookOriginalPriceController
-                                                          .text
-                                                          .toString(),
-                                                  sellingPrice:
-                                                      bookSellingPriceController
-                                                          .text
-                                                          .toString(),
-                                                ),
-                                                createdOn: CreatedOn(
-                                                  date: '',
-                                                  time: '',
-                                                ),
-                                                slugs: Slugs(
-                                                  name: '',
-                                                ),
-                                                location: '',
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text('All fields are '
-                                                'compulsory.'),
-                                          ),
-                                        );
+                                          );
+                                        } else {
+                                          MaterialSnackBarMessenger.of(context)
+                                              .showSnackBar(
+                                            snackbar: const MaterialSnackbar(
+                                              duration: Duration(seconds: 2),
+                                              content: Text(
+                                                'All fields are compulsory.',
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       }
-                                    }
-                                  },
+                                    },
+                                  ),
                                 ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                      steps: [
+                        Step(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.info_outlined,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Book Info',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Fill the basic book info',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      );
-                    },
-                    steps: [
-                      Step(
-                        title: Row(
-                          children: const [
-                            Icon(Icons.info_outlined),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Book Info'),
-                          ],
+                          content: bookInfo(),
+                          isActive: _currentStep >= 0,
+                          state: _currentStep >= 0
+                              ? StepState.complete
+                              : StepState.disabled,
                         ),
-                        subtitle:
-                            const Text('           Fill the basic book info'),
-                        content: bookInfo(),
-                        isActive: _currentStep >= 0,
-                        state: _currentStep >= 0
-                            ? StepState.complete
-                            : StepState.disabled,
-                      ),
-                      Step(
-                        title: Row(
-                          children: const [
-                            Icon(Icons.description_outlined),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Description'),
-                          ],
+                        Step(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.description_outlined,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Description',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Write the description of book',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          content: bookDescription(),
+                          isActive: _currentStep >= 0,
+                          state: _currentStep >= 1
+                              ? StepState.complete
+                              : StepState.disabled,
                         ),
-                        subtitle:
-                            const Text('           Write the description of '
-                                'book'),
-                        content: bookDescription(),
-                        isActive: _currentStep >= 0,
-                        state: _currentStep >= 1
-                            ? StepState.complete
-                            : StepState.disabled,
-                      ),
-                      Step(
-                        title: Row(
-                          children: const [
-                            Icon(Icons.sell_outlined),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Pricing'),
-                          ],
+                        Step(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.sell_outlined,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Pricing',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Write the price you want to sell the book at',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          content: bookPricing(),
+                          isActive: _currentStep >= 0,
+                          state: _currentStep >= 2
+                              ? StepState.complete
+                              : StepState.disabled,
                         ),
-                        subtitle:
-                            const Text('           Write the price you want '
-                                'to sell the book at'),
-                        content: bookPricing(),
-                        isActive: _currentStep >= 0,
-                        state: _currentStep >= 2
-                            ? StepState.complete
-                            : StepState.disabled,
-                      ),
-                      Step(
-                        title: Row(
-                          children: const [
-                            Icon(Icons.rule_outlined),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Book Condition'),
-                          ],
+                        Step(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.rule_outlined,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Book Condition',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Select the condition of the book',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          content: bookCondition(),
+                          isActive: _currentStep >= 0,
+                          state: _currentStep >= 3
+                              ? StepState.complete
+                              : StepState.disabled,
                         ),
-                        subtitle:
-                            const Text('           Select the condition of '
-                                'the book'),
-                        content: bookCondition(),
-                        isActive: _currentStep >= 0,
-                        state: _currentStep >= 3
-                            ? StepState.complete
-                            : StepState.disabled,
-                      ),
-                      Step(
-                        title: Row(
-                          children: const [
-                            Icon(Icons.image_outlined),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Upload Images'),
-                          ],
+                        Step(
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.image_outlined,
+                                size: 25,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Book Images',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Upload the images of the book',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          content: bookImagesContainer(context: context),
+                          isActive: _currentStep >= 0,
+                          state: _currentStep >= 4
+                              ? StepState.complete
+                              : StepState.disabled,
                         ),
-                        subtitle:
-                            const Text('           Upload the images of the '
-                                'book'),
-                        content: bookImagesContainer(context: context),
-                        isActive: _currentStep >= 0,
-                        state: _currentStep >= 4
-                            ? StepState.complete
-                            : StepState.disabled,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
         ),
@@ -460,7 +576,6 @@ class _CreateScreenState extends State<CreateScreen> {
                   showIcon: true,
                   showText: true,
                   text: 'Scan',
-                  outlineColor: Theme.of(context).primaryColor,
                   textColor: Theme.of(context).primaryColor,
                   iconColor: Theme.of(context).primaryColor,
                   icon: Icons.qr_code_scanner,
@@ -967,7 +1082,8 @@ class _CreateScreenState extends State<CreateScreen> {
                 DropdownButton<String>(
                   //elevation: 5,
                   style: const TextStyle(color: Colors.black),
-
+                  borderRadius: BorderRadius.circular(20),
+                  alignment: AlignmentDirectional.topCenter,
                   items: <String>[
                     'Select',
                     'New',
@@ -980,8 +1096,8 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: Text(
                         value,
                         style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     );
@@ -1050,7 +1166,7 @@ class _CreateScreenState extends State<CreateScreen> {
           height: 10,
         ),
         SizedBox(
-          height: 150,
+          height: 200,
           width: MediaQuery.of(context).size.width,
           child: ListView(
             physics: const BouncingScrollPhysics(),
@@ -1323,7 +1439,6 @@ class _CreateScreenState extends State<CreateScreen> {
               bottom: 10,
             ),
             decoration: const BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
                 topRight: Radius.circular(15),
@@ -1333,20 +1448,7 @@ class _CreateScreenState extends State<CreateScreen> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 5,
-                  ),
-                  width: 50,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                dragIndicator(),
                 Center(
                   child: Text(
                     'Pic Image From',
@@ -1360,9 +1462,10 @@ class _CreateScreenState extends State<CreateScreen> {
                   onPressed: onCameraPressed,
                   text: 'Camera',
                   icon: Icons.photo_camera_outlined,
+                  iconColor: Colors.black,
                   showText: true,
                   showIcon: true,
-                  align: Alignment.center,
+                  alignContent: MainAxisAlignment.start,
                 ),
                 const SizedBox(
                   height: 20,
@@ -1371,9 +1474,10 @@ class _CreateScreenState extends State<CreateScreen> {
                   onPressed: onGalleryPressed,
                   text: 'Gallery',
                   icon: Icons.collections_outlined,
+                  iconColor: Colors.black,
                   showText: true,
                   showIcon: true,
-                  align: Alignment.center,
+                  alignContent: MainAxisAlignment.start,
                 ),
               ],
             ),

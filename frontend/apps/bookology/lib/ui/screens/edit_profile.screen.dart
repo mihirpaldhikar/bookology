@@ -386,7 +386,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               bottom: 10,
             ),
             decoration: const BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15),
                 topRight: Radius.circular(15),
@@ -410,9 +409,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onPressed: onCameraPressed,
                   text: 'Camera',
                   icon: Icons.photo_camera_outlined,
+                  iconColor: Colors.black,
                   showText: true,
                   showIcon: true,
-                  align: Alignment.center,
+                  alignContent: MainAxisAlignment.start,
                 ),
                 const SizedBox(
                   height: 20,
@@ -421,9 +421,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onPressed: onGalleryPressed,
                   text: 'Gallery',
                   icon: Icons.collections_outlined,
+                  iconColor: Colors.black,
                   showText: true,
                   showIcon: true,
-                  align: Alignment.center,
+                  alignContent: MainAxisAlignment.start,
                 ),
               ],
             ),
