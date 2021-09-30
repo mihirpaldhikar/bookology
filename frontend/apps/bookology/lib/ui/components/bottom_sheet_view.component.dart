@@ -67,14 +67,14 @@ class _BottomSheetViewState extends State<BottomSheetView> {
                 child: Container(
                   margin: const EdgeInsets.only(
                     top: 5,
-                    bottom: 10,
+                    bottom: 25,
                   ),
                   child: Text(
                     widget.title.toString(),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

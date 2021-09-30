@@ -157,6 +157,21 @@ class AuthService {
     }
   }
 
+  Future<bool> updateProfile(
+      {required String name, required String profilePictureUrl}) async {
+    try {
+      await _firebaseAuth.currentUser!.updateDisplayName(name);
+      await _firebaseAuth.currentUser!.updatePhotoURL(profilePictureUrl);
+      return true;
+    } on FirebaseAuthException catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
   dynamic isEmailVerified() async {
     try {
       await _firebaseAuth.currentUser?.reload();

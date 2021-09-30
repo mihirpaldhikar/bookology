@@ -22,18 +22,18 @@
 
 import 'dart:io';
 
+import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/handlers/image.handler.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
-import 'package:firebase_core/firebase_core.dart' as firebase_core;
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -96,102 +96,122 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         title: !widget.isInitialUpdate
             ? Text(
-                'Edit '
-                'Profile',
+                StringConstants.navigationEditProfile,
                 style: Theme.of(context).appBarTheme.titleTextStyle,
               )
             : Text(
-                'Complete Profile',
+                StringConstants.navigationCompleteProfile,
                 style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
         actions: [
-          IconButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                showLoaderDialog(context);
-                if (widget.profilePicture.toString() != imageURL.toString()) {
-                  await uploadFile(imageURL).then((value) async {
-                    final result = await apiService.updateUserProfile(
-                      userID: widget.userID,
-                      userName: userNameController.text,
-                      isVerified: widget.isVerified,
-                      firstName: firstNameController.text,
-                      lastName: lastNameController.text,
-                      bio: bioController.text,
-                      profilePicture: value,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 100,
+              height: 20,
+              child: OutLinedButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    DialogsManager(context).showProgressDialog(
+                      content: StringConstants.dialogUpdating,
+                      contentColor: Theme.of(context).primaryColor,
+                      progressColor: Theme.of(context).colorScheme.secondary,
                     );
-                    if (result == true) {
-                      if (widget.isInitialUpdate) {
-                        cacheService.setIntroScreenView(seen: true);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ViewManager(currentIndex: 0),
-                          ),
-                          (_) => false,
-                        );
+                    if (widget.profilePicture.toString() !=
+                        imageURL.toString()) {
+                      await ImageHandler(context)
+                          .uploadImage(
+                        filePath: imageURL,
+                        imageName:
+                            '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}',
+                        imagePath: 'Users/${widget.userID}/profile',
+                      )
+                          .then(
+                        (value) async {
+                          final result = await apiService.updateUserProfile(
+                            userID: widget.userID,
+                            userName: userNameController.text,
+                            isVerified: widget.isVerified,
+                            firstName: firstNameController.text,
+                            lastName: lastNameController.text,
+                            bio: bioController.text,
+                            profilePicture: value,
+                          );
+                          if (result == true) {
+                            if (widget.isInitialUpdate) {
+                              cacheService.setIntroScreenView(seen: true);
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ViewManager(currentIndex: 0),
+                                ),
+                                (_) => false,
+                              );
+                            } else {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ViewManager(currentIndex: 3),
+                                ),
+                                (_) => false,
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(StringConstants.errorOccurred),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    } else {
+                      final result = await apiService.updateUserProfile(
+                        userID: widget.userID,
+                        userName: userNameController.text,
+                        isVerified: widget.isVerified,
+                        firstName: firstNameController.text,
+                        lastName: lastNameController.text,
+                        bio: bioController.text,
+                        profilePicture: widget.profilePicture,
+                      );
+                      if (result == true) {
+                        if (widget.isInitialUpdate) {
+                          cacheService.setIntroScreenView(seen: true);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ViewManager(currentIndex: 0),
+                            ),
+                            (_) => false,
+                          );
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ViewManager(currentIndex: 3),
+                            ),
+                            (_) => false,
+                          );
+                        }
                       } else {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ViewManager(currentIndex: 3),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(StringConstants.errorOccurred),
                           ),
-                          (_) => false,
                         );
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('An error occurred.'),
-                        ),
-                      );
                     }
-                  });
-                } else {
-                  final result = await apiService.updateUserProfile(
-                    userID: widget.userID,
-                    userName: userNameController.text,
-                    isVerified: widget.isVerified,
-                    firstName: firstNameController.text,
-                    lastName: lastNameController.text,
-                    bio: bioController.text,
-                    profilePicture: widget.profilePicture,
-                  );
-                  if (result == true) {
-                    if (widget.isInitialUpdate) {
-                      cacheService.setIntroScreenView(seen: true);
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const ViewManager(currentIndex: 0),
-                        ),
-                        (_) => false,
-                      );
-                    } else {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const ViewManager(currentIndex: 3),
-                        ),
-                        (_) => false,
-                      );
-                    }
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('An error occurred.'),
-                      ),
-                    );
                   }
-                }
-              }
-            },
-            icon: const Icon(
-              Icons.done_outlined,
+                },
+                text: StringConstants.wordDone,
+                showIcon: false,
+                showText: true,
+              ),
             ),
           )
         ],
@@ -215,8 +235,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    _imagePickerBottomSheet(onCameraPressed: () async {
-                      final pickedImage = await _picImage(
+                    BottomSheetManager(context).imagePickerBottomSheet(
+                        onCameraPressed: () async {
+                      final pickedImage = await ImageHandler(context).picImage(
                           source: ImageSource.camera, imageURI: imageURL);
                       setState(() {
                         imageURL = pickedImage;
@@ -224,7 +245,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       });
                       Navigator.pop(context);
                     }, onGalleryPressed: () async {
-                      final pickedImage = await _picImage(
+                      final pickedImage = await ImageHandler(context).picImage(
                           source: ImageSource.gallery, imageURI: imageURL);
                       setState(() {
                         imageURL = pickedImage;
@@ -243,7 +264,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: Image.file(
-                                    File.fromUri(Uri.parse(imageURL))),
+                                  File.fromUri(
+                                    Uri.parse(imageURL),
+                                  ),
+                                ),
                               ),
                             )
                           : CircularImage(
@@ -287,13 +311,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: "Username",
+                        labelText: StringConstants.wordUsername,
                         fillColor: Colors.white,
                       ),
                       controller: userNameController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
-                            RegExp("[^a-z^A-Z^0-9]+"))
+                          RegExp("[^a-z^A-Z^0-9]+"),
+                        ),
                         //Regex for accepting only alphanumeric characters
                       ],
                       validator: (val) {
@@ -369,139 +394,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  void _imagePickerBottomSheet(
-      {required VoidCallback onCameraPressed,
-      required VoidCallback onGalleryPressed}) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 10,
-              bottom: 10,
-            ),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            height: 250,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                dragIndicator(),
-                Center(
-                  child: Text(
-                    'Pic Image From',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                OutLinedButton(
-                  onPressed: onCameraPressed,
-                  text: 'Camera',
-                  icon: Icons.photo_camera_outlined,
-                  iconColor: Colors.black,
-                  showText: true,
-                  showIcon: true,
-                  alignContent: MainAxisAlignment.start,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OutLinedButton(
-                  onPressed: onGalleryPressed,
-                  text: 'Gallery',
-                  icon: Icons.collections_outlined,
-                  iconColor: Colors.black,
-                  showText: true,
-                  showIcon: true,
-                  alignContent: MainAxisAlignment.start,
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<dynamic> _picImage(
-      {required ImageSource source, required String imageURI}) async {
-    final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo =
-        (await _picker.pickImage(source: source)) as PickedFile?;
-
-    final croppedImage =
-        await _cropImage(pickedImage: photo, imageURI: imageURI);
-
-    return croppedImage;
-  }
-
-  Future<dynamic> _cropImage(
-      {required PickedFile? pickedImage, required String imageURI}) async {
-    File? cropped = await ImageCropper.cropImage(
-      sourcePath: pickedImage!.path,
-      cropStyle: CropStyle.circle,
-      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-      androidUiSettings: const AndroidUiSettings(
-        toolbarColor: Colors.white,
-        toolbarTitle: 'Crop Image',
-      ),
-      compressQuality: 50,
-    ) as File;
-    return imageURI = 'file://${cropped.path}';
-  }
-
-  Future<dynamic> uploadFile(String filePath) async {
-    final name =
-        '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
-    File file = File(filePath.split('file://')[1]);
-
-    try {
-      await firebase_storage.FirebaseStorage.instance
-          .ref('Users/${widget.userID}/profile/$name.png')
-          .putFile(file);
-      String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('Users/${widget.userID}/profile/$name.png')
-          .getDownloadURL();
-      return downloadURL;
-    } on firebase_core.FirebaseException {
-      rethrow;
-    }
-  }
-
-  showLoaderDialog(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-      content: Row(
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 7),
-            child: const Text("Updating..."),
-          ),
-        ],
-      ),
-    );
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 }

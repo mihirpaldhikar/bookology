@@ -225,4 +225,41 @@ class BottomSheetManager {
       ),
     );
   }
+
+  void imagePickerBottomSheet(
+      {required VoidCallback onCameraPressed,
+      required VoidCallback onGalleryPressed}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BottomSheetView(
+          title: 'Pick Image From',
+          contents: [
+            OutLinedButton(
+              onPressed: onCameraPressed,
+              text: 'Camera',
+              icon: Icons.photo_camera_outlined,
+              iconColor: Colors.black,
+              showText: true,
+              showIcon: true,
+              alignContent: MainAxisAlignment.start,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            OutLinedButton(
+              onPressed: onGalleryPressed,
+              text: 'Gallery',
+              icon: Icons.collections_outlined,
+              iconColor: Colors.black,
+              showText: true,
+              showIcon: true,
+              alignContent: MainAxisAlignment.start,
+            ),
+          ],
+          height: 250,
+        );
+      },
+    );
+  }
 }

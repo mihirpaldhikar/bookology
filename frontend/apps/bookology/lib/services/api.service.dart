@@ -29,6 +29,7 @@ import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -36,6 +37,7 @@ class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
   final _cacheService = CacheService();
   final SecretsManager _secretsManager = SecretsManager();
+  //final _authService = AuthService(FirebaseAuth.instance);
   final _client = http.Client();
 
   Future<dynamic> createUser({
@@ -327,6 +329,9 @@ class ApiService {
       );
       final receivedData = jsonDecode(response.body);
       if (receivedData['result']['status_code'] == 200) {
+        await FirebaseAuth.instance.currentUser!
+            .updateDisplayName('$firstName $lastName');
+        await FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicture);
         _cacheService.setCurrentUser(
             userName: userName, isVerified: isVerified);
         return true;

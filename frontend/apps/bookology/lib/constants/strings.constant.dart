@@ -39,6 +39,7 @@ class StringConstants {
   static const String wordLogin = 'Login';
   static const String wordSupport = 'Support';
   static const String wordSearch = 'Search';
+  static const String wordDone = 'Done';
   static const String wordContactUs = 'Contact Us';
   static const String wordOk = 'OK';
   static const String wordBy = 'By';
@@ -80,6 +81,8 @@ class StringConstants {
   static const String navigationDiscussions = 'Discussions';
   static const String navigationSearch = 'Search';
   static const String navigationConfirmation = 'Confirmation';
+  static const String navigationEditProfile = 'Edit Profile';
+  static const String navigationCompleteProfile = 'Complete Profile';
 
   // Hints Constants
   static const String hintCreateNewBook = 'Create new Book';
@@ -92,14 +95,18 @@ class StringConstants {
   static const String hintConnectionSecured = 'Connection is Secured';
   static const String hintShareBook = 'Share this book';
   static const String hintReportBook = 'Report this book';
+  static const String hintSelectBookCondition = 'Please Select book Condition';
 
   // Error Constant
   static const String errorLoadingNotifications =
       'A problem occurred while loading the notifications';
+  static const String errorUploadAllImages = 'Please Upload all Images';
+  static const String errorOccurred = 'An error occurred.';
 
   // Dialog Constants
   static const String dialogDeleting = 'Deleting...';
   static const String dialogUploading = 'Uploading...';
+  static const String dialogUpdating = 'Updating...';
 
   // Sentences Constants
   static const String sentenceEmptyDiscussion =
@@ -111,6 +118,14 @@ class StringConstants {
       '\nLegal Action Will be taken without any Prior Notice.';
 
   // List Constants
+
+  static const List<String> listBookCondition = [
+    'Select',
+    'New',
+    'Excellent',
+    'Okay',
+    'Bad',
+  ];
   static const List<String> listCities = [
     'Beirut',
     'Damascus',

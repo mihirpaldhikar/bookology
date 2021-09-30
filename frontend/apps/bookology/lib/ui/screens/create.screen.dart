@@ -20,16 +20,16 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'dart:io';
-
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/handlers/image.handler.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/ui/screens/confirmation.screen.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
-import 'package:bookology/ui/widgets/drag_indicator.widget.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -1084,13 +1084,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   style: const TextStyle(color: Colors.black),
                   borderRadius: BorderRadius.circular(20),
                   alignment: AlignmentDirectional.topCenter,
-                  items: <String>[
-                    'Select',
-                    'New',
-                    'Excellent',
-                    'Okay',
-                    'Bad',
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: StringConstants.listBookCondition
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
@@ -1145,7 +1140,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   left: 10,
                 ),
                 child: Text(
-                  'Please Select book Condition',
+                  StringConstants.hintSelectBookCondition,
                   style: TextStyle(
                     color: Colors.redAccent,
                     fontSize: 12,
@@ -1179,9 +1174,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     visible: !_showBookImage1,
                     child: ImagePlaceholder(
                       onPressed: () async {
-                        _imagePickerBottomSheet(onCameraPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.camera, imageURI: _imageUrl1);
+                        BottomSheetManager(context).imagePickerBottomSheet(
+                            onCameraPressed: () async {
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.camera,
+                            imageURI: _imageUrl1,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl1 = pickedImage;
                             _isImage1Selected = true;
@@ -1189,9 +1191,14 @@ class _CreateScreenState extends State<CreateScreen> {
                           });
                           Navigator.pop(context);
                         }, onGalleryPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.gallery,
-                              imageURI: _imageUrl1);
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.gallery,
+                            imageURI: _imageUrl1,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl1 = pickedImage;
                             _isImage1Selected = true;
@@ -1235,9 +1242,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     visible: !_showBookImage2,
                     child: ImagePlaceholder(
                       onPressed: () async {
-                        _imagePickerBottomSheet(onCameraPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.camera, imageURI: _imageUrl2);
+                        BottomSheetManager(context).imagePickerBottomSheet(
+                            onCameraPressed: () async {
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.camera,
+                            imageURI: _imageUrl2,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl2 = pickedImage;
                             _isImage2Selected = true;
@@ -1245,9 +1259,14 @@ class _CreateScreenState extends State<CreateScreen> {
                           });
                           Navigator.pop(context);
                         }, onGalleryPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.gallery,
-                              imageURI: _imageUrl2);
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.gallery,
+                            imageURI: _imageUrl2,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl2 = pickedImage;
                             _isImage2Selected = true;
@@ -1266,8 +1285,9 @@ class _CreateScreenState extends State<CreateScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ImageViewer(imageURl: _imageUrl2),
+                            builder: (BuildContext context) => ImageViewer(
+                              imageURl: _imageUrl2,
+                            ),
                           ),
                         );
                       },
@@ -1291,9 +1311,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     visible: !_showBookImage3,
                     child: ImagePlaceholder(
                       onPressed: () async {
-                        _imagePickerBottomSheet(onCameraPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.camera, imageURI: _imageUrl3);
+                        BottomSheetManager(context).imagePickerBottomSheet(
+                            onCameraPressed: () async {
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.camera,
+                            imageURI: _imageUrl3,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl3 = pickedImage;
                             _isImage3Selected = true;
@@ -1301,9 +1328,14 @@ class _CreateScreenState extends State<CreateScreen> {
                           });
                           Navigator.pop(context);
                         }, onGalleryPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.gallery,
-                              imageURI: _imageUrl3);
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.gallery,
+                            imageURI: _imageUrl3,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl3 = pickedImage;
                             _isImage3Selected = true;
@@ -1347,9 +1379,16 @@ class _CreateScreenState extends State<CreateScreen> {
                     visible: !_showBookImage4,
                     child: ImagePlaceholder(
                       onPressed: () async {
-                        _imagePickerBottomSheet(onCameraPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.camera, imageURI: _imageUrl4);
+                        BottomSheetManager(context).imagePickerBottomSheet(
+                            onCameraPressed: () async {
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.camera,
+                            imageURI: _imageUrl4,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl4 = pickedImage;
                             _isImage4Selected = true;
@@ -1357,9 +1396,14 @@ class _CreateScreenState extends State<CreateScreen> {
                           });
                           Navigator.pop(context);
                         }, onGalleryPressed: () async {
-                          final pickedImage = await _picImage(
-                              source: ImageSource.gallery,
-                              imageURI: _imageUrl4);
+                          final pickedImage =
+                              await ImageHandler(context).picImage(
+                            source: ImageSource.gallery,
+                            imageURI: _imageUrl4,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
+                          );
                           setState(() {
                             _imageUrl4 = pickedImage;
                             _isImage4Selected = true;
@@ -1412,7 +1456,7 @@ class _CreateScreenState extends State<CreateScreen> {
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Text(
-                'Please Upload all Images',
+                StringConstants.errorUploadAllImages,
                 style: TextStyle(
                   color: Colors.redAccent,
                   fontSize: 12,
@@ -1423,90 +1467,5 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
       ],
     );
-  }
-
-  void _imagePickerBottomSheet(
-      {required VoidCallback onCameraPressed,
-      required VoidCallback onGalleryPressed}) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 10,
-              bottom: 10,
-            ),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            height: 250,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                dragIndicator(),
-                Center(
-                  child: Text(
-                    'Pic Image From',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                OutLinedButton(
-                  onPressed: onCameraPressed,
-                  text: 'Camera',
-                  icon: Icons.photo_camera_outlined,
-                  iconColor: Colors.black,
-                  showText: true,
-                  showIcon: true,
-                  alignContent: MainAxisAlignment.start,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OutLinedButton(
-                  onPressed: onGalleryPressed,
-                  text: 'Gallery',
-                  icon: Icons.collections_outlined,
-                  iconColor: Colors.black,
-                  showText: true,
-                  showIcon: true,
-                  alignContent: MainAxisAlignment.start,
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<dynamic> _picImage(
-      {required ImageSource source, required String imageURI}) async {
-    final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo = (await _picker.getImage(source: source));
-
-    final croppedImage =
-        await _cropImage(pickedImage: photo, imageURI: imageURI);
-
-    return croppedImage;
-  }
-
-  Future<dynamic> _cropImage(
-      {required PickedFile? pickedImage, required String imageURI}) async {
-    File? cropped = await ImageCropper.cropImage(
-      sourcePath: pickedImage!.path,
-      aspectRatio: const CropAspectRatio(ratioX: 9, ratioY: 16),
-      androidUiSettings: const AndroidUiSettings(
-        toolbarColor: Colors.white,
-        toolbarTitle: 'Crop Image',
-      ),
-      compressQuality: 50,
-    ) as File;
-    return imageURI = 'file://${cropped.path}';
   }
 }
