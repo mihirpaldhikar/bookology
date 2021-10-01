@@ -37,6 +37,7 @@ class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
   final _cacheService = CacheService();
   final SecretsManager _secretsManager = SecretsManager();
+
   //final _authService = AuthService(FirebaseAuth.instance);
   final _client = http.Client();
 
@@ -187,7 +188,21 @@ class ApiService {
   }
 
   Future<bool> postBookData({
-    required BookModel book,
+    required String isbn,
+    required String bookName,
+    required String bookAuthor,
+    required String bookPublisher,
+    required String bookDescription,
+    required String bookOriginalPrice,
+    required String bookSellingPrice,
+    required String bookCondition,
+    required String bookImage1,
+    required String bookImage2,
+    required String bookImage3,
+    required String bookImage4,
+    required String bookCurrency,
+    required String bookImagesCollectionId,
+    required String bookLocation,
   }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
@@ -200,19 +215,24 @@ class ApiService {
         },
         body: jsonEncode(
           {
-            "isbn": book.bookInformation.isbn,
-            "name": book.bookInformation.name,
-            "author": book.bookInformation.author,
-            "publisher": book.bookInformation.publisher,
-            "description": book.additionalInformation.description,
-            "original_price": book.pricing.originalPrice,
-            "selling_price": book.pricing.sellingPrice,
-            "currency": book.pricing.currency,
-            "condition": book.additionalInformation.condition,
-            "images_collection_id":
-                book.additionalInformation.imagesCollectionId,
-            "images": book.additionalInformation.images,
-            "location": book.location
+            "isbn": isbn,
+            "name": bookName,
+            "author": bookAuthor,
+            "publisher": bookPublisher,
+            "description": bookDescription,
+            "categories": "All",
+            "original_price": bookOriginalPrice,
+            "selling_price": bookSellingPrice,
+            "currency": bookCurrency,
+            "condition": bookCondition,
+            "images_collection_id": bookImagesCollectionId,
+            "images": [
+              bookImage1,
+              bookImage2,
+              bookImage3,
+              bookImage4,
+            ],
+            "location": bookLocation
           },
         ),
       );

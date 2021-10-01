@@ -51,7 +51,6 @@ class HomeBar extends StatefulWidget {
 
 class _HomeBarState extends State<HomeBar> {
   final cacheService = CacheService();
-  final locationService = LocationService();
   var top = 0.0;
   bool isCollapsed = false;
 

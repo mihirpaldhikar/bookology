@@ -24,22 +24,24 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/handlers/image.handler.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
+import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
-import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/api.service.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/isbn.service.dart';
-import 'package:bookology/ui/screens/confirmation.screen.dart';
+import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/utils/random_string_generator.util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_snackbar/material_snackbar.dart';
+import 'package:provider/provider.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -67,6 +69,7 @@ class _CreateScreenState extends State<CreateScreen> {
   bool _isImage2Selected = false;
   bool _isImage3Selected = false;
   bool _isImage4Selected = false;
+  bool _isUploading = false;
 
   String switchText = 'Book has ISBN number';
   String _bookCondition = 'Select';
@@ -75,6 +78,12 @@ class _CreateScreenState extends State<CreateScreen> {
   String _imageUrl3 = '';
   String _imageUrl4 = '';
   String _nextStep = 'Next';
+  String _currentLocation = '';
+  String imageDownloadURL1 = '';
+  String imageDownloadURL2 = '';
+  String imageDownloadURL3 = '';
+  String imageDownloadURL4 = '';
+  String imagesCollectionsID = '';
 
   ScanResult? scanResult;
   final _aspectTolerance = 0.00;
@@ -104,7 +113,19 @@ class _CreateScreenState extends State<CreateScreen> {
   StepperType stepperType = StepperType.horizontal;
 
   @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    await LocationService(context).getCurrentLocation().then((location) {
+      setState(() {
+        _currentLocation = location;
+        imagesCollectionsID = RandomString().generate(15);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthService>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -211,72 +232,152 @@ class _CreateScreenState extends State<CreateScreen> {
                                         if (_formKey.currentState!.validate() &&
                                             _isBookConditionSelected &&
                                             _isImagesSelected) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  ConfirmationScreen(
-                                                book: BookModel(
-                                                  bookId: '',
-                                                  uploaderId: '',
-                                                  bookInformation:
-                                                      BookInformation(
-                                                    isbn: isbnController.text
-                                                        .toString(),
-                                                    name: bookNameController
-                                                        .text
-                                                        .toString(),
-                                                    author: bookAuthorController
-                                                        .text
-                                                        .toString(),
-                                                    publisher:
-                                                        bookPublisherController
-                                                            .text
-                                                            .toString(),
-                                                  ),
-                                                  additionalInformation:
-                                                      AdditionalInformation(
-                                                    condition: _bookCondition,
-                                                    description:
-                                                        bookDescriptionController
-                                                            .text
-                                                            .toString(),
-                                                    imagesCollectionId: '',
-                                                    images: [
-                                                      _imageUrl1,
-                                                      _imageUrl2,
-                                                      _imageUrl3,
-                                                      _imageUrl4,
-                                                    ],
-                                                  ),
-                                                  pricing: Pricing(
-                                                    currency: '',
-                                                    originalPrice:
-                                                        bookOriginalPriceController
-                                                            .text
-                                                            .toString(),
-                                                    sellingPrice:
-                                                        bookSellingPriceController
-                                                            .text
-                                                            .toString(),
-                                                  ),
-                                                  createdOn: CreatedOn(
-                                                    date: '',
-                                                    time: '',
-                                                  ),
-                                                  slugs: Slugs(
-                                                    name: '',
-                                                  ),
-                                                  location: '',
+                                          BottomSheetManager(context)
+                                              .showUploadBookConfirmationBottomSheet(
+                                            isbn: isbnController.text,
+                                            bookName: bookNameController.text,
+                                            bookAuthor:
+                                                bookAuthorController.text,
+                                            bookPublisher:
+                                                bookPublisherController.text,
+                                            bookDescription:
+                                                bookDescriptionController.text,
+                                            bookOriginalPrice:
+                                                bookOriginalPriceController
+                                                    .text,
+                                            bookSellingPrice:
+                                                bookSellingPriceController.text,
+                                            bookCondition: _bookCondition,
+                                            bookImage1: _imageUrl1,
+                                            bookImage2: _imageUrl2,
+                                            bookImage3: _imageUrl3,
+                                            bookImage4: _imageUrl4,
+                                            onUploadClicked: () async {
+                                              setState(() {
+                                                _isUploading = true;
+                                              });
+                                              final name =
+                                                  '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                              await ImageHandler(context)
+                                                  .uploadImage(
+                                                filePath: _imageUrl1,
+                                                imagePath:
+                                                    'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                imageName: name,
+                                              )
+                                                  .then((value) {
+                                                setState(
+                                                  () {
+                                                    imageDownloadURL1 = value;
+                                                  },
+                                                );
+                                              }).then(
+                                                (value) async {
+                                                  final name =
+                                                      '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                  await ImageHandler(context)
+                                                      .uploadImage(
+                                                    filePath: _imageUrl2,
+                                                    imagePath:
+                                                        'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                    imageName: name,
+                                                  )
+                                                      .then(
+                                                    (value) {
+                                                      setState(() {
+                                                        imageDownloadURL2 =
+                                                            value;
+                                                      });
+                                                    },
+                                                  ).then(
+                                                    (value) async {
+                                                      final name =
+                                                          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                      await ImageHandler(
+                                                              context)
+                                                          .uploadImage(
+                                                        filePath: _imageUrl3,
+                                                        imagePath:
+                                                            'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                        imageName: name,
+                                                      )
+                                                          .then((value) {
+                                                        setState(() {
+                                                          imageDownloadURL3 =
+                                                              value;
+                                                        });
+                                                      }).then(
+                                                        (value) async {
+                                                          final name =
+                                                              '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                          await ImageHandler(
+                                                                  context)
+                                                              .uploadImage(
+                                                            filePath:
+                                                                _imageUrl4,
+                                                            imagePath:
+                                                                'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                            imageName: name,
+                                                          )
+                                                              .then(
+                                                            (value) {
+                                                              setState(() {
+                                                                imageDownloadURL4 =
+                                                                    value;
+                                                              });
+                                                            },
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              );
+
+                                              final result =
+                                                  await apiService.postBookData(
+                                                isbn: isbnController.text,
+                                                bookName:
+                                                    bookNameController.text,
+                                                bookAuthor:
+                                                    bookAuthorController.text,
+                                                bookPublisher:
+                                                    bookPublisherController
+                                                        .text,
+                                                bookDescription:
+                                                    bookDescriptionController
+                                                        .text,
+                                                bookOriginalPrice:
+                                                    bookOriginalPriceController
+                                                        .text,
+                                                bookSellingPrice:
+                                                    bookSellingPriceController
+                                                        .text,
+                                                bookCondition: _bookCondition,
+                                                bookImage1: imageDownloadURL1,
+                                                bookImage2: imageDownloadURL2,
+                                                bookImage3: imageDownloadURL3,
+                                                bookImage4: imageDownloadURL4,
+                                                bookCurrency: CurrencyManager()
+                                                    .setCurrency(
+                                                  location: _currentLocation,
                                                 ),
-                                              ),
-                                            ),
+                                                bookImagesCollectionId: imagesCollectionsID,
+                                                bookLocation: _currentLocation,
+                                              );
+                                              if (result == true) {
+                                                setState(() {
+                                                  _isUploading = false;
+                                                });
+                                                Navigator.pushReplacementNamed(
+                                                    context, '/profile');
+                                              }
+                                            },
                                           );
                                         } else {
                                           MaterialSnackBarMessenger.of(context)
                                               .showSnackBar(
                                             snackbar: const MaterialSnackbar(
-                                              duration: Duration(seconds: 2),
                                               content: Text(
                                                 'All fields are compulsory.',
                                               ),
@@ -1180,9 +1281,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl1,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl1 = pickedImage;
@@ -1195,9 +1293,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl1,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl1 = pickedImage;
@@ -1248,9 +1343,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl2,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl2 = pickedImage;
@@ -1263,9 +1355,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl2,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl2 = pickedImage;
@@ -1317,9 +1406,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl3,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl3 = pickedImage;
@@ -1332,9 +1418,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl3,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl3 = pickedImage;
@@ -1385,9 +1468,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl4,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl4 = pickedImage;
@@ -1400,9 +1480,6 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl4,
-                            aspectRatioX: 9,
-                            aspectRatioY: 16,
-                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl4 = pickedImage;

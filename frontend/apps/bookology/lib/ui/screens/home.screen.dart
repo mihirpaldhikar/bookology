@@ -40,7 +40,6 @@ import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -55,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final apiService = ApiService();
-  final locationService = LocationService();
   final AuthService authService = AuthService(FirebaseAuth.instance);
   late Future<List<Object>?> feed;
   late BannerAd _ad;
@@ -91,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
       listener: BannerAdListener(
         onAdLoaded: (_) {},
         onAdFailedToLoad: (ad, error) {
-          // Releases an ad resource when it fails to load
           ad.dispose();
 
           throw 'Ad load failed (code=${error.code} message=${error.message})';
@@ -102,7 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _ad.load();
 
-    getCurrentLocation().then((_) {});
+    await LocationService(context).getCurrentLocation().then((location) {
+      setState(() {
+        currentLocation = location;
+      });
+    });
   }
 
   @override
@@ -275,18 +276,5 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onLoading() async {
     _refreshController.loadComplete();
-  }
-
-  Future<void> getCurrentLocation() async {
-    final currentLocation =
-        await locationService.determinePosition(context: context);
-    List<Placemark> placeMarks = await placemarkFromCoordinates(
-        currentLocation.latitude, currentLocation.longitude);
-
-    Placemark place = placeMarks[0];
-    setState(() {
-      this.currentLocation =
-          '${place.locality}, ${place.administrativeArea}, ${place.country}';
-    });
   }
 }

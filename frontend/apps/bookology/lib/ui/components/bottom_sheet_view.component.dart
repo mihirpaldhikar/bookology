@@ -26,12 +26,12 @@ import 'package:flutter/material.dart';
 class BottomSheetView extends StatefulWidget {
   final List<Widget> contents;
   final String? title;
-  final double height;
+  final double? height;
 
   const BottomSheetView({
     Key? key,
     required this.contents,
-    required this.height,
+    this.height,
     this.title = '',
   }) : super(key: key);
 

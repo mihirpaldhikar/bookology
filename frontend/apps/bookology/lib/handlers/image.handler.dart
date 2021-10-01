@@ -50,7 +50,6 @@ class ImageHandler {
       aspectRatioY: aspectRatioY,
       cropStyle: cropStyle,
     );
-
     return croppedImage;
   }
 
