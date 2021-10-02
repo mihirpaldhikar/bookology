@@ -72,8 +72,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Delete',
-                      showIcon: false,
-                      showText: true,
                       backgroundColor: Colors.red[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -86,8 +84,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -133,8 +129,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Unsend',
-                showIcon: false,
-                showText: true,
                 backgroundColor: Colors.red[100],
                 onPressed: () async {
                   Navigator.of(context).pop();
@@ -151,8 +145,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Cancel',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -200,8 +192,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'OK',
-                      showIcon: false,
-                      showText: true,
                       backgroundColor: Colors.green[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -251,8 +241,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'OK',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -286,8 +274,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'OK',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -338,8 +324,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Next',
-                showIcon: false,
-                showText: true,
                 onPressed: onPressed,
               )
             ],
@@ -384,8 +368,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Delete',
-                      showIcon: false,
-                      showText: true,
                       backgroundColor: Colors.red[100],
                       onPressed: onDelete,
                     ),
@@ -394,8 +376,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -441,8 +421,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Delete',
-                      showIcon: false,
-                      showText: true,
                       backgroundColor: Colors.red[100],
                       onPressed: onRequest,
                     ),
@@ -451,8 +429,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },

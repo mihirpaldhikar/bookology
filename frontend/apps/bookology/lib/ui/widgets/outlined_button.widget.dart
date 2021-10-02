@@ -32,8 +32,6 @@ class OutLinedButton extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
   final Alignment? align;
-  final bool showText;
-  final bool showIcon;
   final bool? inverted;
   final Function onPressed;
   final Color? backgroundColor;
@@ -47,8 +45,6 @@ class OutLinedButton extends StatelessWidget {
     this.backgroundColor = ColorsConstant.lightThemeButtonColor,
     required this.text,
     this.icon,
-    required this.showText,
-    required this.showIcon,
     this.align = Alignment.center,
     this.iconColor = ColorsConstant.accentColor,
     this.textColor = ColorsConstant.lightThemeContentColor,
@@ -73,7 +69,7 @@ class OutLinedButton extends StatelessWidget {
             top: 10,
             bottom: 10,
             right: 8,
-            left: showIcon ? 20 : 8,
+            left: icon.hashCode != 2011 ? 20 : 8,
           ),
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -85,7 +81,7 @@ class OutLinedButton extends StatelessWidget {
                   mainAxisAlignment: alignContent!,
                   children: [
                     Visibility(
-                      visible: showText,
+                      visible: text.hashCode != 2011,
                       child: Padding(
                         padding: const EdgeInsets.only(
                           top: 100,
@@ -105,13 +101,13 @@ class OutLinedButton extends StatelessWidget {
                       ),
                     ),
                     Visibility(
-                      visible: showIcon && showText,
+                      visible: icon.hashCode != 2011 && text.hashCode != 2011,
                       child: SizedBox(
                         width: spaceBetween,
                       ),
                     ),
                     Visibility(
-                      visible: showIcon,
+                      visible: icon.hashCode != 2011,
                       child: Icon(
                         icon,
                         color: iconColor,
@@ -124,23 +120,23 @@ class OutLinedButton extends StatelessWidget {
                   mainAxisAlignment: alignContent!,
                   children: [
                     Visibility(
-                      visible: showIcon,
+                      visible: icon.hashCode != 2011,
                       child: Icon(
                         icon,
                         color: iconColor,
                       ),
                     ),
                     Visibility(
-                      visible: showIcon && showText,
+                      visible: icon.hashCode != 2011 && text.hashCode != 2011,
                       child: SizedBox(
                         width: spaceBetween,
                       ),
                     ),
                     Visibility(
-                      visible: showText,
+                      visible: text.hashCode != 2011,
                       child: Padding(
                         padding: EdgeInsets.only(
-                          top: showIcon ? 3 : 0,
+                          top: text.hashCode != 2011 ? 3 : 0,
                         ),
                         child: Text(
                           text,

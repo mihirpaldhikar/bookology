@@ -30,7 +30,6 @@ class ToastManager {
 
   void showToast({
     required String message,
-    bool showIcon = false,
     int durationSeconds = 3,
     IconData? icon,
     Color? iconColor,
@@ -52,7 +51,7 @@ class ToastManager {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: showIcon,
+              visible: icon.hashCode != 2011,
               child: Icon(
                 icon,
                 color: iconColor,

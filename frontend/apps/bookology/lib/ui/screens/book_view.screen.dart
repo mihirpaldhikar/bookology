@@ -407,8 +407,6 @@ class _BookViewerState extends State<BookViewer> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: OutLinedButton(
-                                    showIcon: false,
-                                    showText: true,
                                     text: StringConstants.wordEnquire,
                                     textColor: Colors.black,
                                     backgroundColor: isLoadingCompleted
@@ -483,8 +481,6 @@ class _BookViewerState extends State<BookViewer> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: OutLinedButton(
-                                      showIcon: false,
-                                      showText: true,
                                       text: StringConstants.wordAddToWishList,
                                       textColor: Colors.black,
                                       backgroundColor: Colors.tealAccent[100],

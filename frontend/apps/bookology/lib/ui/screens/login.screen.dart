@@ -71,8 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: OutLinedButton(
                             text: 'Close',
                             icon: Icons.close,
-                            showIcon: true,
-                            showText: false,
                             onPressed: () {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
@@ -209,9 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           text: 'Login',
                           icon: Icons.arrow_forward,
-                          showIcon: true,
                           inverted: true,
-                          showText: true,
                         ),
                       ),
                     ],

@@ -21,11 +21,13 @@
  */
 
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/handlers/image.handler.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/isbn.service.dart';
@@ -40,7 +42,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_snackbar/material_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -188,8 +189,6 @@ class _CreateScreenState extends State<CreateScreen> {
                                   child: OutLinedButton(
                                     text: _nextStep,
                                     textColor: Theme.of(context).primaryColor,
-                                    showText: true,
-                                    showIcon: false,
                                     onPressed: () {
                                       continued();
                                       if (_currentStep == 4) {
@@ -362,7 +361,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                                     .setCurrency(
                                                   location: _currentLocation,
                                                 ),
-                                                bookImagesCollectionId: imagesCollectionsID,
+                                                bookImagesCollectionId:
+                                                    imagesCollectionsID,
                                                 bookLocation: _currentLocation,
                                               );
                                               if (result == true) {
@@ -375,13 +375,14 @@ class _CreateScreenState extends State<CreateScreen> {
                                             },
                                           );
                                         } else {
-                                          MaterialSnackBarMessenger.of(context)
-                                              .showSnackBar(
-                                            snackbar: const MaterialSnackbar(
-                                              content: Text(
-                                                'All fields are compulsory.',
-                                              ),
-                                            ),
+                                          ToastManager(context).showToast(
+                                            message: StringConstants
+                                                .errorFieldsCompulsory,
+                                            backGroundColor: ColorsConstant
+                                                .dangerBackgroundColor,
+                                            textColor: Colors.black,
+                                            iconColor: Colors.black,
+                                            icon: Icons.error_outline_outlined,
                                           );
                                         }
                                       }
@@ -674,8 +675,6 @@ class _CreateScreenState extends State<CreateScreen> {
                   onPressed: () {
                     _scan();
                   },
-                  showIcon: true,
-                  showText: true,
                   text: 'Scan',
                   textColor: Theme.of(context).primaryColor,
                   iconColor: Theme.of(context).primaryColor,
@@ -748,8 +747,6 @@ class _CreateScreenState extends State<CreateScreen> {
                   Visibility(
                     visible: _showSearchButton,
                     child: OutLinedButton(
-                      showIcon: true,
-                      showText: false,
                       text: 'Search',
                       icon: Icons.search,
                       onPressed: () {

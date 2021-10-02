@@ -228,8 +228,6 @@ class _BookCardState extends State<BookCard> {
                           width: MediaQuery.of(context).size.width,
                           child: OutLinedButton(
                             text: widget.buttonText!,
-                            showIcon: false,
-                            showText: true,
                             textColor: Colors.black,
                             onPressed: widget.onClicked,
                           ),

@@ -97,8 +97,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       }
                     },
                     text: 'Verified',
-                    showText: true,
-                    showIcon: false,
                   ),
                 ),
                 const SizedBox(

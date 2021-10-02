@@ -102,6 +102,7 @@ class StringConstants {
       'A problem occurred while loading the notifications';
   static const String errorUploadAllImages = 'Please Upload all Images';
   static const String errorOccurred = 'An error occurred.';
+  static const String errorFieldsCompulsory = 'All fields compulsory.';
 
   // Dialog Constants
   static const String dialogDeleting = 'Deleting...';

@@ -48,8 +48,6 @@ class BottomSheetManager {
           icon: Icons.share_outlined,
           iconColor: Colors.black,
           textColor: Colors.black,
-          showText: true,
-          showIcon: true,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -70,8 +68,6 @@ class BottomSheetManager {
               authService.currentUser()!.uid == book.uploaderId ? false : true,
           child: OutLinedButton(
             text: 'Report this book',
-            showIcon: true,
-            showText: true,
             alignContent: MainAxisAlignment.start,
             icon: Icons.report_outlined,
             iconColor: Colors.redAccent,
@@ -96,8 +92,6 @@ class BottomSheetManager {
           icon: Icons.info_outlined,
           iconColor: Colors.black,
           textColor: Colors.black,
-          showText: true,
-          showIcon: true,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -122,8 +116,6 @@ class BottomSheetManager {
             );
           },
           text: StringConstants.wordLogout,
-          showIcon: true,
-          showText: true,
           icon: Icons.logout_outlined,
           iconColor: Theme.of(context).primaryColor,
           backgroundColor: ColorsConstant.dangerBackgroundColor,
@@ -192,8 +184,6 @@ class BottomSheetManager {
           icon: Icons.share_outlined,
           iconColor: Colors.black,
           textColor: Colors.black,
-          showText: true,
-          showIcon: false,
           alignContent: MainAxisAlignment.center,
           onPressed: onUpdateClicked,
         ),
@@ -202,8 +192,6 @@ class BottomSheetManager {
         ),
         OutLinedButton(
           text: 'Remind me later',
-          showIcon: false,
-          showText: true,
           align: Alignment.center,
           alignContent: MainAxisAlignment.center,
           icon: Icons.report_outlined,
@@ -229,8 +217,6 @@ class BottomSheetManager {
           text: 'Camera',
           icon: Icons.photo_camera_outlined,
           iconColor: Colors.black,
-          showText: true,
-          showIcon: true,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -241,8 +227,6 @@ class BottomSheetManager {
           text: 'Gallery',
           icon: Icons.collections_outlined,
           iconColor: Colors.black,
-          showText: true,
-          showIcon: true,
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -471,8 +455,6 @@ class BottomSheetManager {
           children: [
             OutLinedButton(
               text: StringConstants.wordUpload,
-              showText: true,
-              showIcon: false,
               onPressed: onUploadClicked,
             ),
           ],

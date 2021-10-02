@@ -325,10 +325,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 150,
                                           child: OutLinedButton(
                                             text: 'Edit Profile',
-                                            showIcon: false,
                                             textColor:
                                                 Theme.of(context).primaryColor,
-                                            showText: true,
                                             onPressed: () {
                                               Navigator.push(
                                                 context,
@@ -371,8 +369,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 150,
                                           child: OutLinedButton(
                                             text: 'Account Settings',
-                                            showText: true,
-                                            showIcon: false,
                                             backgroundColor:
                                                 Colors.grey.shade100,
                                             textColor: Colors.black,

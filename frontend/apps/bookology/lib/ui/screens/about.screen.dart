@@ -182,8 +182,6 @@ class _AboutScreenState extends State<AboutScreen> {
                                 );
                               },
                               text: StringConstants.wordPrivacyPolicy,
-                              showText: true,
-                              showIcon: true,
                               icon: Icons.security_outlined,
                               iconColor: Colors.green,
                               textColor: Colors.green,
@@ -202,8 +200,6 @@ class _AboutScreenState extends State<AboutScreen> {
                                 );
                               },
                               text: StringConstants.wordCheckForUpdates,
-                              showText: true,
-                              showIcon: true,
                               icon: FontAwesomeIcons.googlePlay,
                               iconColor: Colors.black,
                               textColor: Colors.black,
@@ -221,8 +217,6 @@ class _AboutScreenState extends State<AboutScreen> {
                                 );
                               },
                               text: StringConstants.wordSendFeedback,
-                              showText: true,
-                              showIcon: true,
                               icon: Icons.feedback_outlined,
                               iconColor: Colors.black,
                               textColor: Colors.black,

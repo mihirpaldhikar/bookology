@@ -107,8 +107,6 @@ class _ChatPageState extends State<ChatPage> {
                 OutLinedButton(
                   text: StringConstants.wordCamera,
                   icon: Icons.photo_camera_outlined,
-                  showText: true,
-                  showIcon: true,
                   align: Alignment.center,
                   onPressed: () {
                     Navigator.pop(context);
@@ -121,8 +119,6 @@ class _ChatPageState extends State<ChatPage> {
                 OutLinedButton(
                   text: StringConstants.wordFile,
                   icon: Icons.description_outlined,
-                  showText: true,
-                  showIcon: true,
                   align: Alignment.center,
                   onPressed: () {
                     Navigator.pop(context);

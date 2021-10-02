@@ -73,8 +73,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: OutLinedButton(
                             text: 'Close',
                             icon: Icons.close,
-                            showIcon: true,
-                            showText: false,
                             onPressed: () {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
@@ -216,8 +214,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                           },
                           inverted: true,
-                          showText: true,
-                          showIcon: true,
                           text: 'Sign Up',
                           icon: Icons.arrow_forward,
                         ),

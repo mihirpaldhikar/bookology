@@ -209,8 +209,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   }
                 },
                 text: StringConstants.wordDone,
-                showIcon: false,
-                showText: true,
               ),
             ),
           )

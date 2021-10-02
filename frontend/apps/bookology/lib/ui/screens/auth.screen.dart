@@ -141,8 +141,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         OutLinedButton(
                           text: StringConstants.wordLogin,
                           icon: Icons.mail_outline_rounded,
-                          showIcon: true,
-                          showText: true,
                           iconColor: Theme.of(context).primaryColor,
                           textColor: Theme.of(context).primaryColor,
                           alignContent: MainAxisAlignment.start,
