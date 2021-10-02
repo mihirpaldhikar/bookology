@@ -27,12 +27,14 @@ class BottomSheetView extends StatefulWidget {
   final List<Widget> contents;
   final String? title;
   final double? height;
+  final CrossAxisAlignment? alignment;
 
   const BottomSheetView({
     Key? key,
     required this.contents,
     this.height,
     this.title = '',
+    this.alignment = CrossAxisAlignment.center,
   }) : super(key: key);
 
   @override
@@ -81,6 +83,7 @@ class _BottomSheetViewState extends State<BottomSheetView> {
               ),
             ),
             Column(
+              crossAxisAlignment: widget.alignment!,
               children: widget.contents,
             )
           ],

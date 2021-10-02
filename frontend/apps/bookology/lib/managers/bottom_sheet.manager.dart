@@ -250,88 +250,94 @@ class BottomSheetManager {
     required VoidCallback onUploadClicked,
   }) {
     BottomSheetViewManager(context).createBottomSheet(
-      height: 800,
+      height: 810,
       title: 'Confirm Book Details',
+      alignment: CrossAxisAlignment.start,
       contents: [
         RichText(
+          textAlign: TextAlign.left,
           text: TextSpan(
             text: '${StringConstants.wordIsbn}:  ',
             style: GoogleFonts.poppins(
               color: Colors.black,
-              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: isbn,
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordBookName}:  ',
             style: GoogleFonts.poppins(
               color: Colors.black,
-              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookName,
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordAuthor}:  ',
             style: GoogleFonts.poppins(
               color: Colors.black,
-              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookAuthor,
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordPublisher}:  ',
             style: GoogleFonts.poppins(
               color: Colors.black,
-              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookPublisher,
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         RichText(
           overflow: TextOverflow.ellipsis,
@@ -340,20 +346,21 @@ class BottomSheetManager {
             text: '${StringConstants.wordDescription}:  ',
             style: GoogleFonts.poppins(
               color: Colors.black,
-              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookDescription.trim(),
                 style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
         Row(
           children: [
@@ -362,13 +369,14 @@ class BottomSheetManager {
                 text: '${StringConstants.wordOriginalPrice}:  ',
                 style: GoogleFonts.poppins(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
                 children: [
                   TextSpan(
                     text: bookOriginalPrice,
                     style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
                     ),
                   ),
                 ],
@@ -382,13 +390,14 @@ class BottomSheetManager {
                 text: '${StringConstants.wordSellingPrice}:  ',
                 style: GoogleFonts.poppins(
                   color: Colors.black,
-                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
                 ),
                 children: [
                   TextSpan(
                     text: bookSellingPrice,
                     style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
                     ),
                   ),
                 ],
@@ -399,65 +408,70 @@ class BottomSheetManager {
         const SizedBox(
           height: 10,
         ),
-        SizedBox(
-          height: 150,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            children: [
-              ImageHolder(
-                onPressed: () {},
-                onCancelled: () {},
-                imageURL: bookImage1,
-                showCloseButton: false,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Book Images:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              ImageHolder(
-                onPressed: () {},
-                onCancelled: () {},
-                imageURL: bookImage2,
-                showCloseButton: false,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              ImageHolder(
-                onPressed: () {},
-                onCancelled: () {},
-                imageURL: bookImage3,
-                showCloseButton: false,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              ImageHolder(
-                onPressed: () {},
-                onCancelled: () {},
-                imageURL: bookImage4,
-                showCloseButton: false,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-            ],
-          ),
+            ),
+            GridView.count(
+              physics: const BouncingScrollPhysics(),
+              crossAxisCount: 2,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                Center(
+                  child: ImageHolder(
+                    onPressed: () {},
+                    onCancelled: () {},
+                    imageURL: bookImage1,
+                    showCloseButton: false,
+                  ),
+                ),
+                Center(
+                  child: ImageHolder(
+                    onPressed: () {},
+                    onCancelled: () {},
+                    imageURL: bookImage2,
+                    showCloseButton: false,
+                  ),
+                ),
+                Center(
+                  child: ImageHolder(
+                    onPressed: () {},
+                    onCancelled: () {},
+                    imageURL: bookImage3,
+                    showCloseButton: false,
+                  ),
+                ),
+                Center(
+                  child: ImageHolder(
+                    onPressed: () {},
+                    onCancelled: () {},
+                    imageURL: bookImage4,
+                    showCloseButton: false,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(
           height: 10,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            OutLinedButton(
-              text: StringConstants.wordUpload,
-              onPressed: onUploadClicked,
-            ),
-          ],
+        OutLinedButton(
+          text: StringConstants.wordUpload,
+          onPressed: onUploadClicked,
+          icon: Icons.cloud_upload_outlined,
+          iconColor: Theme.of(context).primaryColor,
+        ),
+        const SizedBox(
+          height: 20,
         ),
       ],
     );

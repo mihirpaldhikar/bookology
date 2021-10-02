@@ -32,6 +32,7 @@ class BottomSheetViewManager {
     required List<Widget> contents,
     double? height = 200,
     String? title = '',
+    CrossAxisAlignment? alignment = CrossAxisAlignment.start,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -41,6 +42,7 @@ class BottomSheetViewManager {
         contents: contents,
         title: title,
         height: height,
+        alignment: alignment,
       ),
     );
   }

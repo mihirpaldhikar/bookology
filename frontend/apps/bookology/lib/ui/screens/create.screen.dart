@@ -252,9 +252,12 @@ class _CreateScreenState extends State<CreateScreen> {
                                             bookImage3: _imageUrl3,
                                             bookImage4: _imageUrl4,
                                             onUploadClicked: () async {
-                                              setState(() {
-                                                _isUploading = true;
-                                              });
+                                              DialogsManager(context)
+                                                  .showProgressDialog(
+                                                content: 'Uploading',
+                                                contentColor: Colors.black,
+                                                progressColor: Colors.black,
+                                              );
                                               final name =
                                                   '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
                                               await ImageHandler(context)
@@ -366,9 +369,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 bookLocation: _currentLocation,
                                               );
                                               if (result == true) {
-                                                setState(() {
-                                                  _isUploading = false;
-                                                });
+                                                Navigator.pop(context);
                                                 Navigator.pushReplacementNamed(
                                                     context, '/profile');
                                               }
