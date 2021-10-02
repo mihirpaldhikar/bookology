@@ -70,7 +70,6 @@ class _CreateScreenState extends State<CreateScreen> {
   bool _isImage2Selected = false;
   bool _isImage3Selected = false;
   bool _isImage4Selected = false;
-  bool _isUploading = false;
 
   String switchText = 'Book has ISBN number';
   String _bookCondition = 'Select';
@@ -1254,18 +1253,13 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   Widget bookImagesContainer({required BuildContext context}) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          height: 200,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
+    return SizedBox(
+      height: 450,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -1325,9 +1319,6 @@ class _CreateScreenState extends State<CreateScreen> {
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                width: 20,
               ),
               Column(
                 children: [
@@ -1389,9 +1380,15 @@ class _CreateScreenState extends State<CreateScreen> {
                   ),
                 ],
               ),
-              const SizedBox(
-                width: 20,
-              ),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
               Column(
                 children: [
                   Visibility(
@@ -1450,9 +1447,6 @@ class _CreateScreenState extends State<CreateScreen> {
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                width: 20,
               ),
               Column(
                 children: [
@@ -1514,33 +1508,9 @@ class _CreateScreenState extends State<CreateScreen> {
                 ],
               ),
             ],
-          ),
-        ),
-        Visibility(
-          visible: !_isImagesSelected,
-          child: const SizedBox(
-            height: 10,
-          ),
-        ),
-        Visibility(
-          visible: !_isImagesSelected,
-          child: const Padding(
-            padding: EdgeInsets.only(
-              left: 10,
-            ),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                StringConstants.errorUploadAllImages,
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
+          )
+        ],
+      ),
     );
   }
 }
