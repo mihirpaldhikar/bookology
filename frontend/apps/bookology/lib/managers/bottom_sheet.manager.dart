@@ -419,11 +419,15 @@ class BottomSheetManager {
                 fontSize: 17,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             GridView.count(
               physics: const BouncingScrollPhysics(),
               crossAxisCount: 2,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
+              mainAxisSpacing: 40,
               children: [
                 Center(
                   child: ImageHolder(
@@ -462,7 +466,7 @@ class BottomSheetManager {
           ],
         ),
         const SizedBox(
-          height: 10,
+          height: 40,
         ),
         OutLinedButton(
           text: StringConstants.wordUpload,
