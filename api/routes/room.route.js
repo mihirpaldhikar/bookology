@@ -6,6 +6,7 @@ const {RoomsCollection} = require('../managers/collection.manager');
 const {firebaseAdmin} = require('../configs/firebase.config');
 const Room = require('../models/room.model');
 FieldValue = require('firebase-admin').firestore.FieldValue;
+const {NotificationsCollection} = require('../managers/collection.manager');
 
 router.post('/create', verifyUser, async (request, response, next) => {
   try {
@@ -19,6 +20,7 @@ router.post('/create', verifyUser, async (request, response, next) => {
         });
         return false;
       } else {
+        const notificationId = request.body.notification_id;
         const bookID = request.body.book_id;
         const roomOwner = authData.user_id;
         const secondUser = request.body.users[1];
@@ -45,12 +47,11 @@ router.post('/create', verifyUser, async (request, response, next) => {
           time: request.body.time,
         });
 
-        response.status(201).json({
-          result: {
-            message: 'Room successfully created.',
-            status_code: 201,
-          },
+        await firebaseAdmin.firestore().collection('users').doc(request.body.users[1]).collection('requests').doc(bookID).update({
+          accepted: true,
+          room_id: room.id,
         });
+
         await RoomsCollection.insertOne(roomData, async (error, result) => {
           if (error) {
             response.status(500).json({
@@ -62,9 +63,15 @@ router.post('/create', verifyUser, async (request, response, next) => {
 
             return false;
           }
-          await firebaseAdmin.firestore().collection('users').doc(request.body.users[1]).collection('requests').doc(bookID).update({
-            accepted: true,
-            room_id: room.id,
+
+          await NotificationsCollection.update({'_id': notificationId}, {'$set': {'notification.seen': true}},
+            {'upsert': true});
+
+          response.status(201).json({
+            result: {
+              message: 'Room successfully created.',
+              status_code: 201,
+            },
           });
         });
       }
