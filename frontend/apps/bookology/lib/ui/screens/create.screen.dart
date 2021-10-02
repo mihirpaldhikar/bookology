@@ -41,6 +41,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -1273,6 +1274,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl1,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl1 = pickedImage;
@@ -1285,6 +1289,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl1,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl1 = pickedImage;
@@ -1332,6 +1339,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl2,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl2 = pickedImage;
@@ -1344,6 +1354,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl2,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl2 = pickedImage;
@@ -1401,6 +1414,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl3,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl3 = pickedImage;
@@ -1413,6 +1429,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl3,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl3 = pickedImage;
@@ -1460,6 +1479,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.camera,
                             imageURI: _imageUrl4,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl4 = pickedImage;
@@ -1472,6 +1494,9 @@ class _CreateScreenState extends State<CreateScreen> {
                               await ImageHandler(context).picImage(
                             source: ImageSource.gallery,
                             imageURI: _imageUrl4,
+                            aspectRatioX: 9,
+                            aspectRatioY: 16,
+                            cropStyle: CropStyle.rectangle,
                           );
                           setState(() {
                             _imageUrl4 = pickedImage;
