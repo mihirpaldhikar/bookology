@@ -25,6 +25,7 @@ import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/models/notification.model.dart';
+import 'package:bookology/models/room.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/error.widget.dart';
@@ -67,6 +68,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             AsyncSnapshot<List<NotificationModel>?> notifications) {
           if (notifications.connectionState == ConnectionState.done) {
             if (notifications.hasData) {
+              if (notifications.data!.isEmpty) {
+                return const Center(
+                  child: Text('No Notifications'),
+                );
+              }
               return ListView.builder(
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
@@ -95,6 +101,28 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       borderRadius: BorderRadius.circular(
                         ValuesConstant.borderRadius,
                       ),
+                      onTap: () async {
+                        final result = await apiService.createRoom(
+                            room: RoomModel(
+                          bookId: notifications.data![index].metadata.bookId,
+                          notificationId:
+                              notifications.data![index].notificationId,
+                          title: notifications.data![index].notification.title,
+                          roomIcon:
+                              'https://png.pngtree.com/element_our/png_detail/20181229/vector-chat-icon-png_302635.jpg',
+                          date: DateTime.now().day.toString(),
+                          time: DateTime.now().hour.toString(),
+                          users: [
+                            notifications.data![index].metadata.receiverId,
+                            notifications.data![index].metadata.senderId,
+                          ],
+                        ));
+                        if (result) {
+                          print('done');
+                        } else {
+                          print('not done');
+                        }
+                      },
                       onLongPress: () async {
                         //DialogsManager(context).showDeleteDiscussionDialog();
                       },

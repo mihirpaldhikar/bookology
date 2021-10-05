@@ -25,6 +25,7 @@ import 'dart:convert';
 import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/notification.model.dart';
+import 'package:bookology/models/room.model.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
@@ -261,7 +262,8 @@ class ApiService {
           'Content-type': 'application/json',
         },
       );
-      final Iterable response = jsonDecode(request.body);
+      final Iterable response = jsonDecode(request.body) as Iterable;
+      print(jsonDecode(request.body));
       if (request.statusCode == 200) {
         final notifications = List<NotificationModel>.from(
           response
@@ -354,6 +356,41 @@ class ApiService {
         await FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicture);
         _cacheService.setCurrentUser(
             userName: userName, isVerified: isVerified);
+        return true;
+      }
+      return false;
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<bool> createRoom({required RoomModel room}) async {
+    try {
+      final String? apiURL = await _secretsManager.getApiUrl();
+      final requestURL = Uri.parse('$apiURL/rooms/create/');
+      final response = await _client.post(
+        requestURL,
+        headers: <String, String>{
+          'user-identifier-key': await _firestoreService.getAccessToken(),
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(
+          {
+            "book_id": room.bookId,
+            "notification_id": room.notificationId,
+            "title": room.title,
+            "room_icon": room.roomIcon,
+            "date": room.date,
+            "time": room.time,
+            "users": room.users,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
         return true;
       }
       return false;

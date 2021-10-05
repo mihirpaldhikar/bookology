@@ -20,42 +20,24 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+class RequestModel {
+  bool accepted = false;
+  String roomId = '';
 
-class Error extends StatelessWidget {
-  final String? message;
+  RequestModel({
+    required this.accepted,
+    required this.roomId,
+  });
 
-  const Error({
-    Key? key,
-    this.message,
-  }) : super(key: key);
+  RequestModel.fromJson(Map<String, dynamic> json) {
+    accepted = json['accepted'];
+    roomId = json['room_id'];
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          'assets/svg/error.svg',
-          height: 200,
-          width: 200,
-        ),
-        SizedBox(
-          height: message!.isEmpty ? 0 : 20,
-        ),
-        Visibility(
-          visible: message!.isNotEmpty,
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              message!,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['accepted'] = accepted;
+    data['room_id'] = roomId;
+    return data;
   }
 }

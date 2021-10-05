@@ -20,42 +20,44 @@
  *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+class RoomModel {
+  String bookId = '';
+  String notificationId = '';
+  String title = '';
+  String roomIcon = '';
+  String date = '';
+  String time = '';
+  List<String> users = [];
 
-class Error extends StatelessWidget {
-  final String? message;
+  RoomModel({
+    required this.bookId,
+    required this.notificationId,
+    required this.title,
+    required this.roomIcon,
+    required this.date,
+    required this.time,
+    required this.users,
+  });
 
-  const Error({
-    Key? key,
-    this.message,
-  }) : super(key: key);
+  RoomModel.fromJson(Map<String, dynamic> json) {
+    bookId = json['book_id'];
+    notificationId = json['notification_id'];
+    title = json['title'];
+    roomIcon = json['room_icon'];
+    date = json['date'];
+    time = json['time'];
+    users = json['users'].cast<String>();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          'assets/svg/error.svg',
-          height: 200,
-          width: 200,
-        ),
-        SizedBox(
-          height: message!.isEmpty ? 0 : 20,
-        ),
-        Visibility(
-          visible: message!.isNotEmpty,
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              message!,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['book_id'] = bookId;
+    data['notification_id'] = notificationId;
+    data['title'] = title;
+    data['room_icon'] = roomIcon;
+    data['date'] = date;
+    data['time'] = time;
+    data['users'] = users;
+    return data;
   }
 }

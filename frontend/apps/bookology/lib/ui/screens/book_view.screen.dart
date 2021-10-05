@@ -33,6 +33,7 @@ import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
+import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,6 +79,7 @@ class _BookViewerState extends State<BookViewer> {
   String currencySymbol = '';
   late BannerAd _ad;
   bool _isAdLoaded = false;
+  bool _isRequestAccepted = false;
 
   @override
   void initState() {
@@ -420,7 +422,9 @@ class _BookViewerState extends State<BookViewer> {
                                           userID: userID,
                                         );
 
-                                        if (result == 'null') {
+                                        _isRequestAccepted = result.accepted;
+
+                                        if (result.roomId == 'null') {
                                           await apiService
                                               .sendEnquiryNotification(
                                             userID:
@@ -437,28 +441,26 @@ class _BookViewerState extends State<BookViewer> {
                                           );
                                         }
 
-                                        if (result == true) {}
-                                        // final room =
-                                        //     await ChatsService().createChatRoom(
-                                        //   ownerUserID:
-                                        //       authService.currentUser()?.uid,
-                                        //   userID: userID,
-                                        //   bookName: widget.bookName,
-                                        //   bookCoverImage: widget.images![0],
-                                        // );
-                                        // Navigator.of(context).pop();
-                                        // await Navigator.of(context).push(
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => ChatPage(
-                                        //       room: room,
-                                        //       roomTitle:
-                                        //           '$userFirstName $userLastName',
-                                        //       userName: username,
-                                        //       isVerified: isVerified,
-                                        //       userProfileImage: userProfilePicture,
-                                        //     ),
-                                        //   ),
-                                        // );
+                                        if (_isRequestAccepted == true) {
+                                          final room = await firestoreService
+                                              .getRoomData(
+                                            roomId: result.roomId,
+                                          );
+
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                room: room,
+                                                roomTitle:
+                                                    '$userFirstName $userLastName',
+                                                userName: username,
+                                                isVerified: isVerified,
+                                                userProfileImage:
+                                                    userProfilePicture,
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       }
                                     },
                                   ),

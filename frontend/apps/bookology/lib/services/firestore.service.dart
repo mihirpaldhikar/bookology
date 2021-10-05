@@ -21,6 +21,7 @@
  */
 
 import 'package:bookology/models/app.model.dart';
+import 'package:bookology/models/request.model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -209,9 +210,7 @@ class FirestoreService {
           .collection('requests')
           .doc(bookID)
           .set(
-        {
-          'accepted': false,
-        },
+        {'accepted': false, 'room_id': 'null'},
       );
     } catch (error, stackTrace) {
       await Sentry.captureException(
@@ -222,7 +221,7 @@ class FirestoreService {
     }
   }
 
-  Future<dynamic> getRequest({
+  Future<RequestModel> getRequest({
     required String bookID,
     required String userID,
   }) async {
@@ -235,9 +234,23 @@ class FirestoreService {
           .get();
 
       if (data.data()?['accepted'] == null) {
-        return 'null';
+        return RequestModel(accepted: false, roomId: 'null');
       }
-      return data.data()?['accepted'];
+      return RequestModel.fromJson(data.data()!);
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<types.Room> getRoomData({required String roomId}) async {
+    try {
+      final roomData = await _firestore.collection('rooms').doc(roomId).get();
+
+      return types.Room.fromJson(roomData.data()!);
     } catch (error, stackTrace) {
       await Sentry.captureException(
         error,
