@@ -7,6 +7,7 @@ const {firebaseAdmin} = require('../configs/firebase.config');
 const Room = require('../models/room.model');
 FieldValue = require('firebase-admin').firestore.FieldValue;
 const {NotificationsCollection} = require('../managers/collection.manager');
+const mongodb = require('mongodb');
 
 router.post('/create', verifyUser, async (request, response, next) => {
   try {
@@ -43,8 +44,7 @@ router.post('/create', verifyUser, async (request, response, next) => {
           room_icon: request.body.room_icon,
           room_owner: authData.user_id,
           users: request.body.users,
-          date: request.body.date,
-          time: request.body.time,
+          created_on: (await room.get()).get('createdAt').toDate(),
         });
 
         await firebaseAdmin.firestore().collection('users').doc(request.body.users[1]).collection('requests').doc(bookID).update({
@@ -64,8 +64,7 @@ router.post('/create', verifyUser, async (request, response, next) => {
             return false;
           }
 
-          await NotificationsCollection.update({'_id': notificationId}, {'$set': {'notification.seen': true}},
-            {'upsert': true});
+          await NotificationsCollection.updateOne({_id: mongodb.ObjectID(notificationId)}, {'$set': {'notification.seen': true}});
 
           response.status(201).json({
             result: {
