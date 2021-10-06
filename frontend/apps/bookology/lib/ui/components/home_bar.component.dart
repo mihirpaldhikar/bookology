@@ -3,21 +3,21 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'dart:math';
@@ -37,21 +37,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class SearchBar extends StatefulWidget {
+class HomeBar extends StatefulWidget {
   final String currentLocation;
 
-  const SearchBar({
+  const HomeBar({
     Key? key,
     required this.currentLocation,
   }) : super(key: key);
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _HomeBarState createState() => _HomeBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _HomeBarState extends State<HomeBar> {
   final cacheService = CacheService();
-  final locationService = LocationService();
   var top = 0.0;
   bool isCollapsed = false;
 
@@ -110,10 +109,6 @@ class _SearchBarState extends State<SearchBar> {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1,
-                              ),
                               color: Theme.of(context)
                                   .bottomNavigationBarTheme
                                   .unselectedItemColor,
@@ -146,10 +141,6 @@ class _SearchBarState extends State<SearchBar> {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1,
-                              ),
                               color: Theme.of(context)
                                   .bottomNavigationBarTheme
                                   .unselectedItemColor,
@@ -165,7 +156,7 @@ class _SearchBarState extends State<SearchBar> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                 ),
                               ),
                               child: const Icon(
@@ -227,10 +218,6 @@ class _SearchBarState extends State<SearchBar> {
                                 borderRadius: BorderRadius.circular(
                                   ValuesConstant.secondaryBorderRadius,
                                 ),
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 1,
-                                ),
                                 color: Theme.of(context)
                                     .bottomNavigationBarTheme
                                     .unselectedItemColor,
@@ -275,10 +262,6 @@ class _SearchBarState extends State<SearchBar> {
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
                                         .bottomNavigationBarTheme
@@ -312,10 +295,6 @@ class _SearchBarState extends State<SearchBar> {
                                 child: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
                                         .bottomNavigationBarTheme
@@ -331,7 +310,7 @@ class _SearchBarState extends State<SearchBar> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                       ),
                                     ),
                                     child: const Icon(
@@ -422,7 +401,7 @@ class BackendService {
 class CitiesService {
   static List<String> getSuggestions(String query) {
     List<String> matches = <String>[];
-    matches.addAll(StringConstants.cities);
+    matches.addAll(StringConstants.listCities);
 
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;

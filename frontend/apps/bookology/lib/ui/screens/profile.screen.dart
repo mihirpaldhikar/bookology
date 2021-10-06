@@ -3,25 +3,24 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/models/user.model.dart';
@@ -138,12 +137,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30,
                       padding: const EdgeInsets.all(0),
                       decoration: BoxDecoration(
-                        color: ColorsConstant.secondaryColor,
+                        color: Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor,
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
                       ),
                       child: const Icon(
                         Icons.add,
@@ -156,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: const Icon(Icons.menu_outlined),
                 onPressed: () {
-                  BottomSheetManager(context).showMoreMenuBottomSheet();
+                  BottomSheetManager(context).showMoreProfileMenuBottomSheet();
                 },
               ),
             ],
@@ -211,13 +208,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     children: [
                                       Text(
                                         '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(
-                                        height: 10,
+                                        height: 20,
                                       ),
                                       Text(
                                         userData.data!.userInformation.bio
@@ -231,55 +231,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 30,
                                 ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          userData.data!.books.length
-                                              .toString(),
-                                          style: TextStyle(
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .bottomNavigationBarTheme
+                                            .unselectedItemColor,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            userData.data!.books.length
+                                                .toString(),
+                                            style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              fontSize: 30),
-                                        ),
-                                        Text(
-                                          'Books',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                        ),
-                                      ],
+                                                  .primaryColor,
+                                              fontSize: 30,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Books',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          userData.data!.books.length
-                                              .toString(),
-                                          style: const TextStyle(
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .bottomNavigationBarTheme
+                                            .unselectedItemColor,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            userData.data!.books.length
+                                                .toString(),
+                                            style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 30,
-                                              color: Colors.deepOrangeAccent),
-                                        ),
-                                        Text(
-                                          'Points',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                        ),
-                                      ],
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Points',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(
-                                  height: 30,
+                                  height: 40,
                                 ),
                                 Visibility(
                                   visible: isCurrentUser,
@@ -295,12 +325,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 150,
                                           child: OutLinedButton(
                                             text: 'Edit Profile',
-                                            showIcon: false,
-                                            outlineColor:
-                                                Theme.of(context).primaryColor,
                                             textColor:
                                                 Theme.of(context).primaryColor,
-                                            showText: true,
                                             onPressed: () {
                                               Navigator.push(
                                                 context,
@@ -343,9 +369,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 150,
                                           child: OutLinedButton(
                                             text: 'Account Settings',
-                                            showText: true,
-                                            showIcon: false,
-                                            outlineColor: Colors.black,
                                             backgroundColor:
                                                 Colors.grey.shade100,
                                             textColor: Colors.black,
@@ -355,7 +378,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
+                                const Divider(
+                                  thickness: 2,
+                                  height: 30,
+                                ),
                               ],
                             );
                           } else {
