@@ -5,6 +5,7 @@ const setNotification = (notification) => {
     metadata: {
       sender_id: notification.sender_id,
       receiver_id: notification.receiver_id,
+      book_id: notification.book_id,
     },
     notification: {
       title: notification.notification_title,
@@ -25,6 +26,7 @@ const getNotification = (notification) => {
     metadata: {
       sender_id: notification.metadata.sender_id,
       receiver_id: notification.metadata.receiver_id,
+      book_id: notification.metadata.book_id,
     },
     notification: {
       title: notification.notification.title,
