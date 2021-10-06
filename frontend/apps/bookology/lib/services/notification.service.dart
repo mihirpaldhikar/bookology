@@ -59,7 +59,6 @@ class NotificationService {
             android: AndroidNotificationDetails(
               androidNotificationChannel.id,
               androidNotificationChannel.name,
-              androidNotificationChannel.description,
             ),
           ),
         );
@@ -117,7 +116,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       android: AndroidNotificationDetails(
         androidNotificationChannel.id,
         androidNotificationChannel.name,
-        androidNotificationChannel.description,
       ),
     ),
   );

@@ -14,7 +14,7 @@ dependencies:
       url: https://github.com/SuaMusica/googleads-mobile-flutter.git
       path: packages/google_mobile_ads
       ref: feature/suamusica
-  http: ^0.13.3
+  http: ^0.13.4
   firebase_core: ^1.7.0
   firebase_auth: ^3.1.2
   cloud_firestore: ^2.5.3
@@ -33,7 +33,7 @@ dependencies:
   geolocator: ^7.6.2
   geocoding: ^2.0.1
   firebase_messaging: ^10.0.8
-  flutter_local_notifications: ^8.2.0
+  flutter_local_notifications: ^9.0.0
   flutter_typeahead: ^3.2.1
   image_cropper: ^1.4.1
   cross_file: ^0.3.1+5
@@ -46,17 +46,17 @@ dependencies:
   open_file: ^3.2.1
   mime: ^1.0.0
   file_picker: ^4.1.3
-  connectivity_plus: ^1.2.0
+  connectivity_plus: ^2.0.1
   introduction_screen: ^2.1.0
   after_layout: ^1.1.0
   badges: ^2.0.1
   bottom_navy_bar: ^6.0.0
   package_info: ^2.0.2
   material_snackbar: ^2.0.0-nullsafety.1
-  permission_handler: ^8.1.6
+  permission_handler: ^8.2.2
   dio: ^4.0.0
   fluttertoast: ^8.0.8
-  share_plus: ^2.2.0
+  share_plus: ^3.0.1
   flutter_secure_storage: ^4.2.1
   flutter_dotenv: ^5.0.2
   sentry_flutter: ^6.0.1
