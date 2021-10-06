@@ -2,14 +2,11 @@ const createRoom = (roomData) => {
   return {
     _id: roomData.room_id,
     book_id: roomData.book_id,
-    title: roomData.time,
+    title: roomData.title,
     room_icon: roomData.room_icon,
     room_owner: roomData.room_owner,
     users: roomData.users,
-    created_on: {
-      date: roomData.date,
-      time: roomData.time,
-    },
+    created_on: roomData.created_on,
   };
 };
 
@@ -21,10 +18,7 @@ const getRoom = (roomData) => {
     room_icon: roomData.room_icon,
     room_owner: roomData.room_owner,
     users: roomData.users,
-    created_on: {
-      date: roomData.created_on.date,
-      time: roomData.created_on.time,
-    },
+    created_on: roomData.created_on,
   };
 };
 
