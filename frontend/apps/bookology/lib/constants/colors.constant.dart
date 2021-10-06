@@ -3,21 +3,21 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:flutter/material.dart';
@@ -45,13 +45,13 @@ class ColorsConstant {
 
   static const Color dangerBorderColor = Colors.redAccent;
 
-  static const Color dangerBackgroundColor = Color(0xffFFEBEE);
+  static const Color dangerBackgroundColor = Color(0xFFFFCDD2);
 
   static const Color backgroundColor = Color(0xFFFFFFFF);
 
   static const Color darkColor = Color(0xFF07357E);
 
-  static const Color cardColor = Color(0xFFffffff);
+  static const Color cardColor = Colors.white;
 
   static const Color appBarButtonsBackground = Color(0xFF4285F4);
 
@@ -62,4 +62,7 @@ class ColorsConstant {
   static const Color statusBarColor = Color(0xFFF2F6FE);
 
   static const Color lightThemeContentColor = Colors.black;
+  static const Color lightThemeButtonColor = Color(0xFFBBDEFB);
+  static const Color lightThemeBottomNavigationBarBackgroundColor =
+      secondaryColor;
 }

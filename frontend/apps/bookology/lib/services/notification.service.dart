@@ -59,7 +59,6 @@ class NotificationService {
             android: AndroidNotificationDetails(
               androidNotificationChannel.id,
               androidNotificationChannel.name,
-              androidNotificationChannel.description,
             ),
           ),
         );
@@ -88,6 +87,10 @@ class NotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
     FirebaseMessaging.onMessage.listen(_handleNotification);
   }
+
+  String notificationType() {
+    return '';
+  }
 }
 
 void _handleNotification(RemoteMessage message) async {
@@ -113,7 +116,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       android: AndroidNotificationDetails(
         androidNotificationChannel.id,
         androidNotificationChannel.name,
-        androidNotificationChannel.description,
       ),
     ),
   );

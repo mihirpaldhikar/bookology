@@ -3,21 +3,21 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:bookology/constants/strings.constant.dart';
@@ -89,10 +89,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).backgroundColor,
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1,
-                              ),
                               borderRadius: BorderRadius.circular(
                                   ValuesConstant.secondaryBorderRadius),
                             ),
@@ -143,13 +139,10 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 30,
                         ),
                         OutLinedButton(
-                          text: StringConstants.login,
+                          text: StringConstants.wordLogin,
                           icon: Icons.mail_outline_rounded,
-                          showIcon: true,
-                          showText: true,
                           iconColor: Theme.of(context).primaryColor,
                           textColor: Theme.of(context).primaryColor,
-                          outlineColor: Theme.of(context).primaryColor,
                           alignContent: MainAxisAlignment.start,
                           spaceBetween: 115,
                           onPressed: () {
@@ -174,7 +167,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: ' ${StringConstants.signUp}',
+                                  text: ' ${StringConstants.wordSignUp}',
                                   style: GoogleFonts.poppins(
                                     color:
                                         Theme.of(context).colorScheme.secondary,
