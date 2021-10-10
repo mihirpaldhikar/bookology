@@ -23,6 +23,7 @@
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/utils/validator.utli.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -102,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (val!.isEmpty) {
                           return "Email cannot be empty.";
                         } else {
-                          if (!isEmail(val)) {
+                          if (!Validator().validateEmail(val)) {
                             return "Email is not valid.";
                           } else {
                             return null;
@@ -134,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (val!.isEmpty) {
                           return "Password cannot be empty.";
                         } else {
-                          if (!validatePassword(val)) {
+                          if (!Validator().validatePassword(val)) {
                             return "Enter a valid password.";
                           }
                           return null;
@@ -207,22 +208,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return 'Please enter email.';
     }
     return null;
-  }
-
-  bool isEmail(String em) {
-    String p =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-    RegExp regExp = RegExp(p);
-
-    return regExp.hasMatch(em);
-  }
-
-  bool validatePassword(String value) {
-    Pattern pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regex = RegExp(pattern.toString());
-
-    return regex.hasMatch(value);
   }
 }

@@ -123,6 +123,13 @@ class AuthService {
     }
   }
 
+  Future<bool> sendResetPasswordEmail({required String email}) async {
+    await _firebaseAuth.sendPasswordResetEmail(
+      email: email,
+    );
+    return true;
+  }
+
   Future<dynamic> signInWithEmailAndPassword({
     required String email,
     required String password,
