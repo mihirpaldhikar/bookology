@@ -607,12 +607,10 @@ packages:
   google_mobile_ads:
     dependency: "direct main"
     description:
-      path: "packages/google_mobile_ads"
-      ref: "feature/suamusica"
-      resolved-ref: "43f499706fabf59fc5248ee94e97f69cdd8d1a2f"
-      url: "https://github.com/SuaMusica/googleads-mobile-flutter.git"
-    source: git
-    version: "0.13.6"
+      name: google_mobile_ads
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.5"
   google_sign_in:
     dependency: "direct main"
     description:

@@ -9,11 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.3
-  google_mobile_ads:
-    git:
-      url: https://github.com/SuaMusica/googleads-mobile-flutter.git
-      path: packages/google_mobile_ads
-      ref: feature/suamusica
+  google_mobile_ads: ^0.13.5
   http: ^0.13.4
   firebase_core: ^1.7.0
   firebase_auth: ^3.1.3

@@ -48,7 +48,7 @@ class UpdateService {
         SnackBar(
           content: const Text(StringConstants.appUpdateAvailable),
           duration: const Duration(
-            seconds: 300,
+            seconds: 5,
           ),
           action: SnackBarAction(
             label: 'View',
