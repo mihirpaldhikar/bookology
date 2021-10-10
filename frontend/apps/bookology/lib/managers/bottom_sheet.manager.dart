@@ -157,20 +157,31 @@ class BottomSheetManager {
       contents: [
         const Text(
           'A new version of the app is available please update to enjoy latest features! ',
-          style: TextStyle(fontSize: 20, color: Colors.black),
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(
           height: 20,
         ),
-        const Text(
-          'What\'s New?',
-          textAlign: TextAlign.left,
+        const Align(
+          alignment: Alignment.center,
+          child: Text(
+            'What\'s New?',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(
-          height: 15,
+          height: 20,
         ),
         SizedBox(
-          height: 150,
+          height: 170,
           width: double.infinity,
           child: ListView(
             children: [
@@ -181,9 +192,6 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'Update',
           align: Alignment.center,
-          icon: Icons.share_outlined,
-          iconColor: Colors.black,
-          textColor: Colors.black,
           alignContent: MainAxisAlignment.center,
           onPressed: onUpdateClicked,
         ),
@@ -194,14 +202,11 @@ class BottomSheetManager {
           text: 'Remind me later',
           align: Alignment.center,
           alignContent: MainAxisAlignment.center,
-          icon: Icons.report_outlined,
-          iconColor: Colors.redAccent,
-          textColor: Colors.black,
-          backgroundColor: Colors.grey.shade50,
+          backgroundColor: Colors.grey.shade200,
           onPressed: onCancelClicked,
         ),
       ],
-      height: 500,
+      height: 550,
     );
   }
 

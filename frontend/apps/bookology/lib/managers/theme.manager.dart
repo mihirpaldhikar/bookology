@@ -70,6 +70,7 @@ class ThemeManager {
     ),
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: GoogleFonts.poppins(),
+      behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           ValuesConstant.borderRadius,

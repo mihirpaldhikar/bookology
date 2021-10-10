@@ -28,11 +28,10 @@ import 'package:bookology/services/app.service.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:material_snackbar/material_snackbar.dart';
-import 'package:material_snackbar/snackbar_messenger.dart';
 
 class UpdateService {
   final BuildContext context;
+
   UpdateService(this.context);
 
   Future<void> checkForAppUpdate() async {
@@ -45,14 +44,15 @@ class UpdateService {
         int.parse(remoteAppInfo.appVersion.trim().replaceAll('.', ''));
     if (localAppVersion <= remoteAppVersion &&
         localAppVersion != remoteAppVersion) {
-      MaterialSnackBarMessenger.of(context).showSnackBar(
-        snackbar: MaterialSnackbar(
-          duration: const Duration(seconds: 5),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
           content: const Text(StringConstants.appUpdateAvailable),
-          actionBuilder: (context, close) => TextButton(
-            child: const Text(StringConstants.wordUpdate),
+          duration: const Duration(
+            seconds: 300,
+          ),
+          action: SnackBarAction(
+            label: 'View',
             onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               BottomSheetManager(context).showUpdateAvailableBottomSheet(
                 changeLog: remoteAppInfo.changelogs.replaceAll('\\n', '\n'),
                 onCancelClicked: () {

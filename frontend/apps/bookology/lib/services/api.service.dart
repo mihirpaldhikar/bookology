@@ -289,7 +289,6 @@ class ApiService {
         final notifications = List<NotificationModel>.from(
           response.map(
             (notification) {
-              print(notification);
               return NotificationModel.fromJson(notification);
             },
           ),

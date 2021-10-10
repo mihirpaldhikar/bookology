@@ -48,7 +48,6 @@ class DiscussionsScreen extends StatefulWidget {
 class _DiscussionsScreenState extends State<DiscussionsScreen> {
   bool _error = false;
   bool _initialized = false;
-  User? _user;
   String _groupOwner = '';
   String _userName = '';
   String _userImageProfile = '';
@@ -66,7 +65,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       await Firebase.initializeApp();
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         setState(() {
-          _user = user;
         });
       });
       setState(() {
@@ -80,18 +78,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   }
 
   Widget _buildAvatar(types.Room room) {
-
-    if (room.type == types.RoomType.direct) {
-      try {
-        final otherUser = room.users.firstWhere(
-          (u) => u.id != _user!.uid,
-        );
-
-      } catch (e) {
-        // Do nothing if other user is not found
-      }
-    }
-
     return Container(
       width: 60,
       height: 60,

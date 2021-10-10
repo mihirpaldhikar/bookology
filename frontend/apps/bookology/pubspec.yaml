@@ -52,7 +52,6 @@ dependencies:
   badges: ^2.0.1
   bottom_navy_bar: ^6.0.0
   package_info: ^2.0.2
-  material_snackbar: ^2.0.0-nullsafety.1
   permission_handler: ^8.2.2
   dio: ^4.0.0
   fluttertoast: ^8.0.8
