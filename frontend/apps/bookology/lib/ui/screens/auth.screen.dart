@@ -192,10 +192,10 @@ class _AuthScreenState extends State<AuthScreen> {
 Widget _logo(BuildContext context) {
   return Column(
     children: [
-      const Image(
-        image: AssetImage('assets/icons/splash.icon.png'),
-        width: 200,
-        height: 200,
+      Image.asset(
+        'assets/icons/splash.icon.png',
+        width: 250,
+        height: 250,
       ),
       const SizedBox(
         height: 20,

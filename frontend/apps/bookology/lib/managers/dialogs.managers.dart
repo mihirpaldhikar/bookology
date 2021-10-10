@@ -314,7 +314,7 @@ class DialogsManager {
           ],
         ),
         content: SizedBox(
-          height: 300,
+          height: 350,
           child: Column(
             children: [
               const Text(

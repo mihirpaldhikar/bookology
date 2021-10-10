@@ -124,7 +124,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   title: notifications
                                       .data![index].notification.title,
                                   roomIcon:
-                                      'https://png.pngtree.com/element_our/png_detail/20181229/vector-chat-icon-png_302635.jpg',
+                                      'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/SystemAssets%2Foutline_question_answer_black_24dp.png?alt=media&token=73192f36-b85b-4a6a-beba-33859b7b7a8b',
                                   users: [
                                     notifications
                                         .data![index].metadata.receiverId,

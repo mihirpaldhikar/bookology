@@ -83,6 +83,7 @@ class _BookViewerState extends State<BookViewer> {
   late BannerAd _ad;
   bool _isAdLoaded = false;
   bool _isRequestAccepted = false;
+  bool _isEnquireyButonClicked = false;
   String _enquireButtonText = 'Enquire';
 
   @override
@@ -432,7 +433,9 @@ class _BookViewerState extends State<BookViewer> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: OutLinedButton(
-                                    text: _enquireButtonText,
+                                    text: _isEnquireyButonClicked
+                                        ? 'Requested'
+                                        : _enquireButtonText,
                                     textColor: Colors.black,
                                     backgroundColor: _isLoadingCompleted
                                         ? _isRequestAccepted
@@ -441,7 +444,7 @@ class _BookViewerState extends State<BookViewer> {
                                         : Colors.grey[100],
                                     onPressed: () async {
                                       if (_isLoadingCompleted) {
-                                        if (_requestData.roomId == 'null') {
+                                        if (_enquireButtonText == 'Enquire') {
                                           await _apiService
                                               .sendEnquiryNotification(
                                             userID:
@@ -451,12 +454,28 @@ class _BookViewerState extends State<BookViewer> {
                                             userName: _cacheService
                                                 .getCurrentUserNameCache(),
                                           );
-
+                                          setState(() {
+                                            _isEnquireyButonClicked = true;
+                                            _enquireButtonText = 'Requested';
+                                          });
+                                          ToastManager(context).showToast(
+                                            message: 'Discussions Request Sent',
+                                            backGroundColor: Colors.green[100],
+                                            icon: Icons.check_circle_outlined,
+                                            iconColor: Colors.black,
+                                            textColor: Colors.black,
+                                          );
                                           await _firestoreService.createRequest(
                                             bookID: widget.book.bookId,
                                             userID:
                                                 _authService.currentUser()!.uid,
                                           );
+                                        } else {
+                                          if(_enquireButtonText != 'Discuss') {
+                                            ToastManager(context).showToast(
+                                              message: 'Request Already Sent',
+                                            );
+                                          }
                                         }
 
                                         if (_isRequestAccepted == true) {

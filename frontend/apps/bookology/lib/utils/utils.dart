@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 import 'dart:ui';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -47,4 +48,4 @@ String getUserName(types.User user) =>
     '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 
 void launchURL({required String url}) async =>
-    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+    await canLaunch(url) ? await launch(url, universalLinksOnly: true,) : throw 'Could not launch $url';

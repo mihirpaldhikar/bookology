@@ -25,6 +25,7 @@ import 'dart:convert';
 import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/notification.model.dart' as notification;
+import 'package:bookology/models/notification.model.dart';
 import 'package:bookology/models/room.model.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -248,7 +249,7 @@ class ApiService {
     }
   }
 
-  Future<List<notification.NotificationModel>?>
+  Future<List<NotificationModel>?>
       getUserNotifications() async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
@@ -263,14 +264,14 @@ class ApiService {
       if (request.statusCode == 200 &&
           jsonDecode(request.body).toString().contains('No Notifications.')) {
         return [
-          notification.NotificationModel(
+          NotificationModel(
             notificationId: 'null',
-            metadata: notification.Metadata(
+            metadata: Metadata(
               bookId: 'null',
               receiverId: 'null',
               senderId: 'null',
             ),
-            notification: notification.Notification(
+            notification: Notification(
               body: 'null',
               seen: false,
               title: 'null',
@@ -285,12 +286,13 @@ class ApiService {
       }
       final Iterable response = jsonDecode(request.body) as Iterable;
       if (request.statusCode == 200) {
-        final notifications = List<notification.NotificationModel>.from(
+        final notifications = List<NotificationModel>.from(
           response.map(
             (notification) {
-              return notification.NotificationModel.fromJson(notification);
+              print(notification);
+              return NotificationModel.fromJson(notification);
             },
-          ).toList(),
+          ),
         );
 
         return notifications;

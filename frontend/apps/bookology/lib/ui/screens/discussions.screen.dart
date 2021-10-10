@@ -29,8 +29,6 @@ import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/utils/utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +80,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   }
 
   Widget _buildAvatar(types.Room room) {
-    var color = Colors.white;
 
     if (room.type == types.RoomType.direct) {
       try {
@@ -90,29 +87,26 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
           (u) => u.id != _user!.uid,
         );
 
-        color = getUserAvatarNameColor(otherUser);
       } catch (e) {
         // Do nothing if other user is not found
       }
     }
 
     return Container(
-      width: 80,
-      height: 100,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.only(right: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(
-              room.imageUrl!,
-            ),
-          ),
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: const Icon(
+          Icons.people_outlined,
+          size: 40,
         ),
       ),
     );

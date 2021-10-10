@@ -22,6 +22,7 @@
 
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/permission.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
@@ -145,8 +146,11 @@ class _IntroScreenState extends State<IntroScreen> {
           onDone: () => _onIntroEnd(context),
           onChange: (pageIndex) {
             if (pageIndex == 3) {
-              PermissionManager()
-                  .requestPermission(Permission.locationWhenInUse);
+              DialogsManager(context).showLocationPermissionDialog(() {
+                PermissionManager()
+                    .requestPermission(Permission.locationWhenInUse);
+                Navigator.pop(context);
+              });
             }
           },
           done: Container(
