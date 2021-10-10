@@ -3,26 +3,30 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/managers/toast.manager.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/utils/validator.utli.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -72,9 +76,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Delete',
-                      showIcon: false,
-                      showText: true,
-                      outlineColor: Colors.redAccent,
                       backgroundColor: Colors.red[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -87,8 +88,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -134,9 +133,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Unsend',
-                showIcon: false,
-                showText: true,
-                outlineColor: Colors.redAccent,
                 backgroundColor: Colors.red[100],
                 onPressed: () async {
                   Navigator.of(context).pop();
@@ -153,8 +149,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Cancel',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -202,9 +196,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'OK',
-                      showIcon: false,
-                      showText: true,
-                      outlineColor: Colors.green,
                       backgroundColor: Colors.green[100],
                       onPressed: () async {
                         Navigator.of(context).pop();
@@ -254,8 +245,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'OK',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -289,8 +278,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'OK',
-                showIcon: false,
-                showText: true,
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
@@ -327,7 +314,7 @@ class DialogsManager {
           ],
         ),
         content: SizedBox(
-          height: 300,
+          height: 350,
           child: Column(
             children: [
               const Text(
@@ -341,8 +328,6 @@ class DialogsManager {
               ),
               OutLinedButton(
                 text: 'Next',
-                showIcon: false,
-                showText: true,
                 onPressed: onPressed,
               )
             ],
@@ -387,9 +372,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Delete',
-                      showIcon: false,
-                      showText: true,
-                      outlineColor: Colors.redAccent,
                       backgroundColor: Colors.red[100],
                       onPressed: onDelete,
                     ),
@@ -398,66 +380,6 @@ class DialogsManager {
                     ),
                     OutLinedButton(
                       text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ));
-  }
-
-  void showInstallAppDialog(VoidCallback onRequest) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Row(
-                children: const [
-                  Icon(
-                    Icons.delete_forever_outlined,
-                    color: Colors.red,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Permission Required',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-              content: SizedBox(
-                height: 200,
-                child: Column(
-                  children: [
-                    const Text(
-                      'This book will be deleted. This action '
-                      'is not irreversible.',
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    OutLinedButton(
-                      text: 'Delete',
-                      showIcon: false,
-                      showText: true,
-                      outlineColor: Colors.redAccent,
-                      backgroundColor: Colors.red[100],
-                      onPressed: onRequest,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    OutLinedButton(
-                      text: 'Cancel',
-                      showIcon: false,
-                      showText: true,
                       onPressed: () async {
                         Navigator.of(context).pop();
                       },
@@ -498,6 +420,164 @@ class DialogsManager {
       builder: (BuildContext context) {
         return alert;
       },
+    );
+  }
+
+  void acceptDiscussionRequestDialog({
+    required VoidCallback onRequestAccepted,
+    required String requestText,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: const [
+            Icon(
+              Icons.check_circle_outlined,
+              color: Colors.green,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Accept Request?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          height: 300,
+          child: Column(
+            children: [
+              Text(
+                '$requestText.\nThis will create a Discussions Between you and the requesting user.',
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              OutLinedButton(
+                text: 'Accept',
+                backgroundColor: Colors.green[100],
+                onPressed: onRequestAccepted,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              OutLinedButton(
+                text: 'Reject',
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showResetPasswordDialog() {
+    final _formKey = GlobalKey<FormState>();
+    final emailController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: const [
+            Icon(
+              Icons.restart_alt_outlined,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Reset Password',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          height: 350,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text(
+                  'Please enter the Email from which you have created the Bookology Account.',
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: "Email",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(),
+                      ),
+                      prefixIcon: const Icon(Icons.mail_outline_rounded)
+                      //fillColor: Colors.green
+                      ),
+                  controller: emailController,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Email cannot be empty.";
+                    } else {
+                      if (!Validator().validateEmail(val)) {
+                        return "Email is not valid.";
+                      } else {
+                        return null;
+                      }
+                    }
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                OutLinedButton(
+                  text: 'Send Reset Link',
+                  backgroundColor: Colors.green[100],
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final result = await AuthService(FirebaseAuth.instance)
+                          .sendResetPasswordEmail(
+                        email: emailController.text,
+                      );
+                      if (result) {
+                        Navigator.of(context).pop();
+                        ToastManager(context).showToast(
+                          message: 'Check the Email for the reset link.',
+                          backGroundColor: Colors.green[100],
+                          icon: Icons.check_circle_outlined,
+                          iconColor: Colors.black,
+                          textColor: Colors.black,
+                        );
+                      }
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                OutLinedButton(
+                  text: 'Cancel',
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

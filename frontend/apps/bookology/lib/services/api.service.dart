@@ -3,33 +3,37 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'dart:convert';
 
 import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/models/book.model.dart';
+import 'package:bookology/models/notification.model.dart' as notification;
 import 'package:bookology/models/notification.model.dart';
+import 'package:bookology/models/room.model.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
@@ -72,7 +76,11 @@ class ApiService {
       } else {
         return message;
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -88,14 +96,17 @@ class ApiService {
         },
       );
       final response = jsonDecode(request.body);
-      final cacheData = jsonDecode(request.body);
-
       _cacheService.setCurrentUser(
-          userName: cacheData['user_information']['username'],
-          isVerified: cacheData['user_information']['verified']);
-      final userData = UserModel.fromJson(response);
-      return userData;
-    } catch (error) {
+          userName: response['user_information']['username'],
+          isVerified: response['user_information']['verified']);
+      if (request.statusCode == 200) {
+        return UserModel.fromJson(response);
+      }
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -120,7 +131,11 @@ class ApiService {
             .toList(),
       );
       return books;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -136,7 +151,11 @@ class ApiService {
         },
       );
       return jsonDecode(response.body);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -158,13 +177,31 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
 
   Future<bool> postBookData({
-    required BookModel book,
+    required String isbn,
+    required String bookName,
+    required String bookAuthor,
+    required String bookPublisher,
+    required String bookDescription,
+    required String bookOriginalPrice,
+    required String bookSellingPrice,
+    required String bookCondition,
+    required String bookImage1,
+    required String bookImage2,
+    required String bookImage3,
+    required String bookImage4,
+    required String bookCurrency,
+    required String bookImagesCollectionId,
+    required String bookLocation,
   }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
@@ -177,19 +214,24 @@ class ApiService {
         },
         body: jsonEncode(
           {
-            "isbn": book.bookInformation.isbn,
-            "name": book.bookInformation.name,
-            "author": book.bookInformation.author,
-            "publisher": book.bookInformation.publisher,
-            "description": book.additionalInformation.description,
-            "original_price": book.pricing.originalPrice,
-            "selling_price": book.pricing.sellingPrice,
-            "currency": book.pricing.currency,
-            "condition": book.additionalInformation.condition,
-            "images_collection_id":
-                book.additionalInformation.imagesCollectionId,
-            "images": book.additionalInformation.images,
-            "location": book.location
+            "isbn": isbn,
+            "name": bookName,
+            "author": bookAuthor,
+            "publisher": bookPublisher,
+            "description": bookDescription,
+            "categories": "All",
+            "original_price": bookOriginalPrice,
+            "selling_price": bookSellingPrice,
+            "currency": bookCurrency,
+            "condition": bookCondition,
+            "images_collection_id": bookImagesCollectionId,
+            "images": [
+              bookImage1,
+              bookImage2,
+              bookImage3,
+              bookImage4,
+            ],
+            "location": bookLocation
           },
         ),
       );
@@ -198,12 +240,17 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
 
-  Future<List<NotificationModel>?> getUserNotifications() async {
+  Future<List<NotificationModel>?>
+      getUserNotifications() async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/notifications');
@@ -214,27 +261,56 @@ class ApiService {
           'Content-type': 'application/json',
         },
       );
-      final Iterable response = jsonDecode(request.body);
+      if (request.statusCode == 200 &&
+          jsonDecode(request.body).toString().contains('No Notifications.')) {
+        return [
+          NotificationModel(
+            notificationId: 'null',
+            metadata: Metadata(
+              bookId: 'null',
+              receiverId: 'null',
+              senderId: 'null',
+            ),
+            notification: Notification(
+              body: 'null',
+              seen: false,
+              title: 'null',
+              type: 'null',
+            ),
+            createdOn: notification.CreatedOn(
+              date: 'null',
+              time: 'null',
+            ),
+          )
+        ];
+      }
+      final Iterable response = jsonDecode(request.body) as Iterable;
       if (request.statusCode == 200) {
         final notifications = List<NotificationModel>.from(
-          response
-              .map(
-                (notification) => NotificationModel.fromJson(notification),
-              )
-              .toList(),
+          response.map(
+            (notification) {
+              return NotificationModel.fromJson(notification);
+            },
+          ),
         );
 
         return notifications;
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
 
-  Future<bool> sendEnquiryNotification(
-      {required String userID,
-      required String receiverID,
-      required String userName}) async {
+  Future<bool> sendEnquiryNotification({
+    required String userID,
+    required String receiverID,
+    required String bookId,
+    required String userName,
+  }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final String? apiKey = await _secretsManager.getApiKey();
@@ -251,7 +327,9 @@ class ApiService {
           'Content-type': 'application/json',
         },
         body: jsonEncode(
-          {},
+          {
+            "book_id": bookId,
+          },
         ),
       );
       final response = jsonDecode(request.body);
@@ -259,7 +337,11 @@ class ApiService {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -294,12 +376,52 @@ class ApiService {
       );
       final receivedData = jsonDecode(response.body);
       if (receivedData['result']['status_code'] == 200) {
+        await FirebaseAuth.instance.currentUser!
+            .updateDisplayName('$firstName $lastName');
+        await FirebaseAuth.instance.currentUser!.updatePhotoURL(profilePicture);
         _cacheService.setCurrentUser(
             userName: userName, isVerified: isVerified);
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<bool> createRoom({required RoomModel room}) async {
+    try {
+      final String? apiURL = await _secretsManager.getApiUrl();
+      final requestURL = Uri.parse('$apiURL/rooms/create/');
+      final response = await _client.post(
+        requestURL,
+        headers: <String, String>{
+          'user-identifier-key': await _firestoreService.getAccessToken(),
+          'Content-type': 'application/json',
+        },
+        body: jsonEncode(
+          {
+            "book_id": room.bookId,
+            "notification_id": room.notificationId,
+            "title": room.title,
+            "room_icon": room.roomIcon,
+            "users": room.users,
+          },
+        ),
+      );
+      if (response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

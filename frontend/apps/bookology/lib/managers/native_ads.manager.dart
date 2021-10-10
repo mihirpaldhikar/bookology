@@ -3,27 +3,28 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -48,7 +49,9 @@ class _NativeInlineAdState extends State<NativeInlineAd>
 
     // COMPLETE: Create a NativeAd instance
     _ad = NativeAd(
-      adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+      adUnitId: kReleaseMode
+          ? 'ca-app-pub-6991839116816523/3520713190'
+          : 'ca-app-pub-3940256099942544/2247696110',
       factoryId: 'googleNativeAdsCard',
       request: const AdRequest(),
       listener: NativeAdListener(
@@ -75,71 +78,73 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     super.build(context);
     if (_isAdLoaded) {
       return Container(
-        child: Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      top: 3,
-                      bottom: 3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 3,
+                    bottom: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow.shade100,
+                    borderRadius: BorderRadius.circular(
+                      ValuesConstant.secondaryBorderRadius,
                     ),
+                  ),
+                  child: const Text(StringConstants.wordAdvertisement),
+                ),
+                InkWell(
+                  onTap: () {
+                    DialogsManager(context).showAboutSponsoredDialog();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                      color: Colors.yellow.shade100,
+                      color: Theme.of(context)
+                          .bottomNavigationBarTheme
+                          .unselectedItemColor!,
                       borderRadius: BorderRadius.circular(
                         ValuesConstant.secondaryBorderRadius,
                       ),
-                      border: Border.all(
-                        color: Colors.yellow,
-                        width: 1,
-                      ),
                     ),
-                    child: const Text('Sponsored'),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      DialogsManager(context).showAboutSponsoredDialog();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        color: ColorsConstant.secondaryColor,
-                        borderRadius: BorderRadius.circular(
-                            ValuesConstant.secondaryBorderRadius),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.help_outline_outlined,
-                      ),
+                    child: const Icon(
+                      Icons.help_outline_outlined,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(height: 200, child: AdWidget(ad: _ad)),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(height: 200, child: AdWidget(ad: _ad)),
+          ],
         ),
         height: 270,
+        margin: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 5,
+        ),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              width: 1,
-              color: Colors.black,
-            )),
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.borderRadius,
+          ),
+          border: Border.all(
+            width: 1,
+            color: Colors.black,
+          ),
+          color: Theme.of(context).cardTheme.color,
+        ),
         alignment: Alignment.center,
       );
     }

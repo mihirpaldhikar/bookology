@@ -3,35 +3,32 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
-import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/utils/utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -39,25 +36,23 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class RoomsPage extends StatefulWidget {
-  const RoomsPage({
+class DiscussionsScreen extends StatefulWidget {
+  const DiscussionsScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _RoomsPageState createState() => _RoomsPageState();
+  _DiscussionsScreenState createState() => _DiscussionsScreenState();
 }
 
-class _RoomsPageState extends State<RoomsPage> {
+class _DiscussionsScreenState extends State<DiscussionsScreen> {
   bool _error = false;
   bool _initialized = false;
-  User? _user;
-  String groupOwner = '';
-  String userName = '';
-  String userImageProfile = '';
-  bool isVerified = false;
-  final authService = AuthService(FirebaseAuth.instance);
-  final firestoreService = FirestoreService(FirebaseFirestore.instance);
+  String _groupOwner = '';
+  String _userName = '';
+  String _userImageProfile = '';
+  bool _isVerified = false;
+  final _authService = AuthService(FirebaseAuth.instance);
 
   @override
   void initState() {
@@ -70,7 +65,6 @@ class _RoomsPageState extends State<RoomsPage> {
       await Firebase.initializeApp();
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         setState(() {
-          _user = user;
         });
       });
       setState(() {
@@ -84,37 +78,21 @@ class _RoomsPageState extends State<RoomsPage> {
   }
 
   Widget _buildAvatar(types.Room room) {
-    var color = Colors.white;
-
-    if (room.type == types.RoomType.direct) {
-      try {
-        final otherUser = room.users.firstWhere(
-          (u) => u.id != _user!.uid,
-        );
-
-        color = getUserAvatarNameColor(otherUser);
-      } catch (e) {
-        // Do nothing if other user is not found
-      }
-    }
-
     return Container(
-      width: 80,
-      height: 100,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.only(right: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(
-              room.imageUrl!,
-            ),
-          ),
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: const Icon(
+          Icons.people_outlined,
+          size: 40,
         ),
       ),
     );
@@ -140,13 +118,13 @@ class _RoomsPageState extends State<RoomsPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                'Discussions',
+                StringConstants.navigationDiscussions,
                 style: Theme.of(context).appBarTheme.titleTextStyle,
               ),
               automaticallyImplyLeading: false,
             ),
             body: StreamBuilder<List<types.Room>>(
-              stream: FirebaseChatCore.instance.rooms(),
+              stream: FirebaseChatCore.instance.rooms(orderByUpdatedAt: true,),
               initialData: const [],
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -169,7 +147,7 @@ class _RoomsPageState extends State<RoomsPage> {
                           height: 30,
                         ),
                         const Text(
-                          'No Discussions',
+                          StringConstants.wordNoDiscussions,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -178,8 +156,7 @@ class _RoomsPageState extends State<RoomsPage> {
                           height: 30,
                         ),
                         const Text(
-                          'To Start a discussion, request book uploader to allow '
-                          'enquiry of the book.',
+                          StringConstants.sentenceEmptyDiscussion,
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.grey,
@@ -204,11 +181,11 @@ class _RoomsPageState extends State<RoomsPage> {
                       for (var element in room.users) {
                         if (element.id.toString() !=
                             FirebaseAuth.instance.currentUser!.uid.toString()) {
-                          groupOwner =
+                          _groupOwner =
                               '${element.firstName.toString()} ${element.lastName}';
-                          userName = element.metadata!['userName'];
-                          isVerified = element.metadata!['isVerified'];
-                          userImageProfile = element.imageUrl!;
+                          _userName = element.metadata!['userName'];
+                          _isVerified = element.metadata!['isVerified'];
+                          _userImageProfile = element.imageUrl!;
                         }
                       }
                       return Container(
@@ -230,11 +207,11 @@ class _RoomsPageState extends State<RoomsPage> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                  isVerified: isVerified,
-                                  userName: userName,
+                                  isVerified: _isVerified,
+                                  userName: _userName,
                                   room: room,
-                                  roomTitle: groupOwner,
-                                  userProfileImage: userImageProfile,
+                                  roomTitle: _groupOwner,
+                                  userProfileImage: _userImageProfile,
                                 ),
                               ),
                             );
@@ -279,7 +256,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                           children: [
                                             Chip(
                                               label: Text(
-                                                'You',
+                                                StringConstants.wordYou,
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .colorScheme
@@ -298,7 +275,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                                     BorderRadius.circular(100),
                                               ),
                                               avatar: CircularImage(
-                                                image: authService
+                                                image: _authService
                                                     .currentUser()!
                                                     .photoURL
                                                     .toString(),
@@ -310,7 +287,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                             ),
                                             Chip(
                                               label: Text(
-                                                groupOwner,
+                                                _groupOwner,
                                                 style: const TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -325,7 +302,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                                     BorderRadius.circular(100),
                                               ),
                                               avatar: CircularImage(
-                                                image: userImageProfile,
+                                                image: _userImageProfile,
                                                 radius: 25,
                                               ),
                                             ),

@@ -3,25 +3,24 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/models/user.model.dart';
@@ -52,21 +51,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<UserModel> userData;
-  String userName = '';
-  String profileImage = '';
-  bool isCurrentUser = false;
-  int booksListed = 0;
-  final apiService = ApiService();
-  final authService = AuthService(FirebaseAuth.instance);
-  final cacheService = CacheService();
+  late Future<UserModel> _userData;
+  bool _isCurrentUser = false;
+  final _apiService = ApiService();
+  final _authService = AuthService(FirebaseAuth.instance);
+  final _cacheService = CacheService();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
-    userData = _fetchUserData();
+    _userData = _fetchUserData();
   }
 
   @override
@@ -98,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 10,
                     ),
                     AutoSizeText(
-                      cacheService.getCurrentUserNameCache(),
+                      _cacheService.getCurrentUserNameCache(),
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -108,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 5,
                     ),
                     Visibility(
-                      visible: cacheService.getCurrentIsVerifiedCache(),
+                      visible: _cacheService.getCurrentIsVerifiedCache(),
                       child: const Icon(
                         Icons.verified,
                         color: Colors.blue,
@@ -138,12 +134,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30,
                       padding: const EdgeInsets.all(0),
                       decoration: BoxDecoration(
-                        color: ColorsConstant.secondaryColor,
+                        color: Theme.of(context)
+                            .bottomNavigationBarTheme
+                            .unselectedItemColor,
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
                       ),
                       child: const Icon(
                         Icons.add,
@@ -156,231 +150,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: const Icon(Icons.menu_outlined),
                 onPressed: () {
-                  BottomSheetManager(context).showMoreMenuBottomSheet();
+                  BottomSheetManager(context).showMoreProfileMenuBottomSheet();
                 },
               ),
             ],
           ),
           body: SafeArea(
             child: FutureBuilder<UserModel>(
-              future: userData,
+              future: _userData,
               builder:
                   (BuildContext context, AsyncSnapshot<UserModel> userData) {
                 if (userData.connectionState == ConnectionState.done) {
                   if (userData.hasData) {
-                    return SmartRefresher(
-                      controller: _refreshController,
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      enablePullDown: true,
-                      header: const ClassicHeader(),
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: ListView.builder(
-                        padding:
-                            const EdgeInsets.only(top: 20, left: 10, right: 10),
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: userData.data!.books.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                CircularImage(
-                                  image: userData
-                                      .data!.userInformation.profilePicture
-                                      .toString(),
-                                  radius: 100,
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        userData.data!.userInformation.bio
-                                            .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle1,
-                                        textAlign: TextAlign.center,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          userData.data!.books.length
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              fontSize: 30),
-                                        ),
-                                        Text(
-                                          'Books',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          userData.data!.books.length
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 30,
-                                              color: Colors.deepOrangeAccent),
-                                        ),
-                                        Text(
-                                          'Points',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Visibility(
-                                  visible: isCurrentUser,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 150,
-                                          child: OutLinedButton(
-                                            text: 'Edit Profile',
-                                            showIcon: false,
-                                            outlineColor:
-                                                Theme.of(context).primaryColor,
-                                            textColor:
-                                                Theme.of(context).primaryColor,
-                                            showText: true,
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditProfileScreen(
-                                                    userID: authService
-                                                        .currentUser()!
-                                                        .uid,
-                                                    profilePicture: authService
-                                                        .currentUser()!
-                                                        .photoURL
-                                                        .toString(),
-                                                    userName: userData
-                                                        .data!
-                                                        .userInformation
-                                                        .username,
-                                                    isVerified: userData
-                                                        .data!
-                                                        .userInformation
-                                                        .verified,
-                                                    bio: userData.data!
-                                                        .userInformation.bio,
-                                                    firstName: userData
-                                                        .data!
-                                                        .userInformation
-                                                        .firstName,
-                                                    lastName: userData
-                                                        .data!
-                                                        .userInformation
-                                                        .lastName,
-                                                    isInitialUpdate: false,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 150,
-                                          child: OutLinedButton(
-                                            text: 'Account Settings',
-                                            showText: true,
-                                            showIcon: false,
-                                            outlineColor: Colors.black,
-                                            backgroundColor:
-                                                Colors.grey.shade100,
-                                            textColor: Colors.black,
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          } else {
-                            return BookCard(
-                              showMenu: true,
-                              buttonText: 'Edit',
-                              id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                              book: userData.data!.books[index - 1],
-                              onClicked: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        BookViewer(
-                                      id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
-                                      book: userData.data!.books[index - 1],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    );
+                    if (userData.data!.books.isEmpty) {
+                      return _profileWithoutBooks(userData);
+                    }
+
+                    return _profileWithBooks(userData);
                   }
                 }
                 return profileShimmer();
@@ -392,21 +178,269 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  _profileWithBooks(AsyncSnapshot<UserModel> userData) {
+    return SmartRefresher(
+      controller: _refreshController,
+      scrollDirection: Axis.vertical,
+      physics: const BouncingScrollPhysics(),
+      enablePullDown: true,
+      header: const ClassicHeader(),
+      onRefresh: _onRefresh,
+      onLoading: _onLoading,
+      child: ListView.builder(
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
+        itemCount: userData.data!.books.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _profileSection(userData);
+          } else {
+            return _booksSection(userData, index);
+          }
+        },
+      ),
+    );
+  }
+
+  _profileWithoutBooks(AsyncSnapshot<UserModel> userData) {
+    return SmartRefresher(
+      controller: _refreshController,
+      scrollDirection: Axis.vertical,
+      physics: const BouncingScrollPhysics(),
+      enablePullDown: true,
+      header: const ClassicHeader(),
+      onRefresh: _onRefresh,
+      onLoading: _onLoading,
+      child: ListView.builder(
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _profileSection(userData);
+          } else {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 250,
+              child: const Center(
+                child: Text(
+                  'No Books',
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  _profileSection(AsyncSnapshot<UserModel> userData) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        CircularImage(
+          image: userData.data!.userInformation.profilePicture.toString(),
+          radius: 100,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 15,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                userData.data!.userInformation.bio.toString(),
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 10,
+                bottom: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .bottomNavigationBarTheme
+                    .unselectedItemColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    userData.data!.books.length.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Text(
+                    'Books',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 10,
+                bottom: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .bottomNavigationBarTheme
+                    .unselectedItemColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    userData.data!.books.length.toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  Text(
+                    'Points',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Visibility(
+          visible: _isCurrentUser,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: OutLinedButton(
+                    text: 'Edit Profile',
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileScreen(
+                            userID: _authService.currentUser()!.uid,
+                            profilePicture:
+                                _authService.currentUser()!.photoURL.toString(),
+                            userName: userData.data!.userInformation.username,
+                            isVerified: userData.data!.userInformation.verified,
+                            bio: userData.data!.userInformation.bio,
+                            firstName: userData.data!.userInformation.firstName,
+                            lastName: userData.data!.userInformation.lastName,
+                            isInitialUpdate: false,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  child: OutLinedButton(
+                    text: 'Account Settings',
+                    backgroundColor: Colors.grey.shade100,
+                    textColor: Colors.black,
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Divider(
+          thickness: 2,
+          height: 30,
+        ),
+      ],
+    );
+  }
+
+  _booksSection(AsyncSnapshot<UserModel> userData, int index) {
+    return BookCard(
+      showMenu: true,
+      buttonText: 'Edit',
+      id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+      book: userData.data!.books[index - 1],
+      onClicked: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => BookViewer(
+              id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
+              book: userData.data!.books[index - 1],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<UserModel> _fetchUserData() async {
     final data =
-        await apiService.getUserProfile(userID: authService.currentUser()!.uid);
+        await _apiService.getUserProfile(userID: _authService.currentUser()!.uid);
 
-    if (cacheService.getCurrentUserNameCache() ==
+    if (_cacheService.getCurrentUserNameCache() ==
         data!.userInformation.username) {
       setState(
         () {
-          isCurrentUser = true;
+          _isCurrentUser = true;
         },
       );
     } else {
       setState(
         () {
-          isCurrentUser = false;
+          _isCurrentUser = false;
         },
       );
     }
@@ -416,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _onRefresh() async {
     setState(
       () {
-        userData = _fetchUserData();
+        _userData = _fetchUserData();
       },
     );
     _refreshController.refreshCompleted();

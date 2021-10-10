@@ -3,21 +3,21 @@
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- *  the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ *  to deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies
+ *  or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
- *  ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- *  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import 'package:bookology/constants/colors.constant.dart';
@@ -70,20 +70,10 @@ class ThemeManager {
     ),
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: GoogleFonts.poppins(),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          topLeft: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          bottomLeft: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          bottomRight: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
         ),
       ),
     ),
@@ -107,6 +97,15 @@ class ThemeManager {
         color: Colors.black,
       ),
     ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: ColorsConstant.secondaryColor,
+      enableFeedback: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
+        ),
+      ),
+    ),
     bottomSheetTheme: const BottomSheetThemeData(
       modalBackgroundColor: ColorsConstant.secondaryColor,
       shape: RoundedRectangleBorder(
@@ -119,6 +118,12 @@ class ThemeManager {
           ),
         ),
       ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor:
+          ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+      selectedItemColor: Color(0xff039BE5),
+      unselectedItemColor: ColorsConstant.lightThemeButtonColor,
     ),
     dialogTheme: const DialogTheme(
       backgroundColor: ColorsConstant.secondaryColor,
