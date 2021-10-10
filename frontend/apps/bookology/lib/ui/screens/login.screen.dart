@@ -45,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final passwordController = TextEditingController();
     final AuthHandler authHandler = AuthHandler();
     return Scaffold(
+      appBar: AppBar(),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -52,166 +53,131 @@ class _LoginScreenState extends State<LoginScreen> {
           : SafeArea(
               child: Form(
                 key: _formKey,
-                child: SingleChildScrollView(
+                child: ListView(
                   padding: const EdgeInsets.only(
                     right: 30,
                     left: 30,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20,
-                          left: 0,
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                      child: Text(
+                        'Welcome Back!',
+                        style: TextStyle(
+                          fontStyle:
+                              Theme.of(context).textTheme.headline4!.fontStyle,
+                          fontWeight:
+                              Theme.of(context).textTheme.headline4!.fontWeight,
+                          fontSize:
+                              Theme.of(context).textTheme.headline4!.fontSize,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                        child: SizedBox(
-                          width: 50,
-                          child: OutLinedButton(
-                            text: 'Close',
-                            icon: Icons.close,
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/auth',
-                                (_) => false,
-                              );
-                            },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 150,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "Email",
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Center(
-                        child: Text(
-                          'Welcome Back!',
-                          style: TextStyle(
-                            fontStyle: Theme.of(context)
-                                .textTheme
-                                .headline4!
-                                .fontStyle,
-                            fontWeight: Theme.of(context)
-                                .textTheme
-                                .headline4!
-                                .fontWeight,
-                            fontSize:
-                                Theme.of(context).textTheme.headline4!.fontSize,
-                            color: Theme.of(context).colorScheme.secondary,
+                          prefixIcon: const Icon(Icons.mail_outline_rounded)
+                          //fillColor: Colors.green
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 150,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "Email",
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(),
-                            ),
-                            prefixIcon: const Icon(Icons.mail_outline_rounded)
-                            //fillColor: Colors.green
-                            ),
-                        controller: emailController,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Email cannot be empty.";
+                      controller: emailController,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Email cannot be empty.";
+                        } else {
+                          if (!isEmail(val)) {
+                            return "Email is not valid.";
                           } else {
-                            if (!isEmail(val)) {
-                              return "Email is not valid.";
-                            } else {
-                              return null;
-                            }
-                          }
-                        },
-                        keyboardType: TextInputType.emailAddress,
-                        textCapitalization: TextCapitalization.none,
-                        textInputAction: TextInputAction.next,
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            labelText: "Password",
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.lock_outlined,
-                            )
-                            //fillColor: Colors.green
-                            ),
-                        controller: passwordController,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Password cannot be empty.";
-                          } else {
-                            if (!validatePassword(val)) {
-                              return "Enter a valid password.";
-                            }
                             return null;
                           }
-                        },
-                        keyboardType: TextInputType.emailAddress,
-                        obscureText: true,
-                        textCapitalization: TextCapitalization.none,
-                        textInputAction: TextInputAction.done,
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          right: 50,
-                          left: 50,
-                        ),
-                        child: OutLinedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              try {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await auth
-                                    .signInWithEmailAndPassword(
-                                        email: emailController.text,
-                                        password: passwordController.text)
-                                    .then(
-                                  (value) {
-                                    if (value != true) {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-                                      authHandler.firebaseError(
-                                          value: value, context: context);
-                                    } else {
-                                      setState(() {
-                                        _isLoading = false;
-                                        Navigator.pushReplacementNamed(
-                                            context, '/home');
-                                      });
-                                    }
-                                  },
-                                );
-                              } catch (e) {
-                                rethrow;
-                              }
-                            }
-                          },
-                          text: 'Login',
-                          icon: Icons.arrow_forward,
-                          inverted: true,
-                        ),
-                      ),
-                    ],
-                  ),
+                        }
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "Password",
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.lock_outlined,
+                          )
+                          //fillColor: Colors.green
+                          ),
+                      controller: passwordController,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "Password cannot be empty.";
+                        } else {
+                          if (!validatePassword(val)) {
+                            return "Enter a valid password.";
+                          }
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      obscureText: true,
+                      textCapitalization: TextCapitalization.none,
+                      textInputAction: TextInputAction.done,
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    OutLinedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await auth
+                                .signInWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text)
+                                .then(
+                              (value) {
+                                if (value != true) {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                  authHandler.firebaseError(
+                                      value: value, context: context);
+                                } else {
+                                  setState(() {
+                                    _isLoading = false;
+                                    Navigator.pushReplacementNamed(
+                                        context, '/home');
+                                  });
+                                }
+                              },
+                            );
+                          } catch (e) {
+                            rethrow;
+                          }
+                        }
+                      },
+                      text: 'Login',
+                    ),
+                  ],
                 ),
               ),
             ),

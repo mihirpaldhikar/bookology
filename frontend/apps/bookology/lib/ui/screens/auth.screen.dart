@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
@@ -88,9 +89,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               left: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).backgroundColor,
+                              color: ColorsConstant.lightThemeButtonColor,
                               borderRadius: BorderRadius.circular(
-                                  ValuesConstant.secondaryBorderRadius),
+                                ValuesConstant.secondaryBorderRadius,
+                              ),
                             ),
                             child: Row(
                               children: [
