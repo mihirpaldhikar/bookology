@@ -234,6 +234,35 @@ class BottomSheetManager {
     );
   }
 
+  void filePickerBottomSheet({
+    required VoidCallback onImagePressed,
+    required VoidCallback onFilePressed,
+  }) {
+    BottomSheetViewManager(context).createBottomSheet(
+      title: 'Pick Attachment From',
+      contents: [
+        OutLinedButton(
+          onPressed: onImagePressed,
+          text: StringConstants.wordImage,
+          icon: Icons.image_outlined,
+          iconColor: Colors.black,
+          alignContent: MainAxisAlignment.start,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        OutLinedButton(
+          onPressed: onFilePressed,
+          text: StringConstants.wordFile,
+          icon: Icons.note_add_outlined,
+          iconColor: Colors.black,
+          alignContent: MainAxisAlignment.start,
+        ),
+      ],
+      height: 250,
+    );
+  }
+
   void showUploadBookConfirmationBottomSheet({
     required String isbn,
     required String bookName,

@@ -386,59 +386,6 @@ class DialogsManager {
             ));
   }
 
-  void showInstallAppDialog(VoidCallback onRequest) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Row(
-                children: const [
-                  Icon(
-                    Icons.delete_forever_outlined,
-                    color: Colors.red,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Permission Required',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-              content: SizedBox(
-                height: 200,
-                child: Column(
-                  children: [
-                    const Text(
-                      'This book will be deleted. This action '
-                      'is not irreversible.',
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    OutLinedButton(
-                      text: 'Delete',
-                      backgroundColor: Colors.red[100],
-                      onPressed: onRequest,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    OutLinedButton(
-                      text: 'Cancel',
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ));
-  }
-
   void showProgressDialog(
       {required String content,
       required Color contentColor,
@@ -469,6 +416,61 @@ class DialogsManager {
       builder: (BuildContext context) {
         return alert;
       },
+    );
+  }
+
+  void acceptDiscussionRequestDialog({
+    required VoidCallback onRequestAccepted,
+    required String requestText,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: const [
+            Icon(
+              Icons.check_circle_outlined,
+              color: Colors.green,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Accept Request?',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          height: 300,
+          child: Column(
+            children: [
+              Text(
+                '$requestText.\nThis will create a Discussions Between you and the requesting user.',
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              OutLinedButton(
+                text: 'Accept',
+                backgroundColor: Colors.green[100],
+                onPressed: onRequestAccepted,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              OutLinedButton(
+                text: 'Reject',
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

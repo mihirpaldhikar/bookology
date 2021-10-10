@@ -63,6 +63,7 @@ class StringConstants {
   static const String wordUsername = 'Username';
   static const String wordName = 'Name';
   static const String wordCamera = 'Camera';
+  static const String wordImage = 'Image';
   static const String wordFile = 'File';
   static const String wordUploadedOn = 'Uploaded On';
   static const String wordUpdate = 'Update';

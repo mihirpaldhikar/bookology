@@ -24,6 +24,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
+import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/models/notification.model.dart';
 import 'package:bookology/models/room.model.dart';
 import 'package:bookology/services/api.service.dart';
@@ -68,7 +71,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             AsyncSnapshot<List<NotificationModel>?> notifications) {
           if (notifications.connectionState == ConnectionState.done) {
             if (notifications.hasData) {
-              if (notifications.data!.isEmpty) {
+              if (notifications.data!.length == 1 &&
+                  notifications.data![0].metadata.senderId == 'null') {
                 return const Center(
                   child: Text('No Notifications'),
                 );
@@ -102,25 +106,68 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ValuesConstant.borderRadius,
                       ),
                       onTap: () async {
-                        final result = await apiService.createRoom(
-                            room: RoomModel(
-                          bookId: notifications.data![index].metadata.bookId,
-                          notificationId:
-                              notifications.data![index].notificationId,
-                          title: notifications.data![index].notification.title,
-                          roomIcon:
-                              'https://png.pngtree.com/element_our/png_detail/20181229/vector-chat-icon-png_302635.jpg',
-                          date: DateTime.now().day.toString(),
-                          time: DateTime.now().hour.toString(),
-                          users: [
-                            notifications.data![index].metadata.receiverId,
-                            notifications.data![index].metadata.senderId,
-                          ],
-                        ));
-                        if (result) {
-                          print('done');
+                        if (!notifications.data![index].notification.seen) {
+                          DialogsManager(context).acceptDiscussionRequestDialog(
+                            onRequestAccepted: () async {
+                              Navigator.pop(context);
+                              DialogsManager(context).showProgressDialog(
+                                content: 'Creating Discussion',
+                                contentColor: Colors.black,
+                                progressColor: Colors.black,
+                              );
+                              final result = await apiService.createRoom(
+                                room: RoomModel(
+                                  bookId: notifications
+                                      .data![index].metadata.bookId,
+                                  notificationId:
+                                      notifications.data![index].notificationId,
+                                  title: notifications
+                                      .data![index].notification.title,
+                                  roomIcon:
+                                      'https://png.pngtree.com/element_our/png_detail/20181229/vector-chat-icon-png_302635.jpg',
+                                  users: [
+                                    notifications
+                                        .data![index].metadata.receiverId,
+                                    notifications
+                                        .data![index].metadata.senderId,
+                                  ],
+                                ),
+                              );
+                              if (result) {
+                                Navigator.pop(context);
+                                ToastManager(context).showToast(
+                                  message: 'Discussions Created',
+                                  backGroundColor: Colors.green[100],
+                                  icon: Icons.check_circle_outlined,
+                                  iconColor: Colors.black,
+                                  textColor: Colors.black,
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const ViewManager(screenIndex: 2),
+                                  ),
+                                );
+                              } else {
+                                ToastManager(context).showToast(
+                                  message:
+                                      'An Error Occurred while creating the Discussions',
+                                  backGroundColor:
+                                      ColorsConstant.dangerBackgroundColor,
+                                  icon: Icons.error_outlined,
+                                  iconColor: Colors.black,
+                                  textColor: Colors.black,
+                                );
+                              }
+                            },
+                            requestText:
+                                notifications.data![index].notification.body,
+                          );
                         } else {
-                          print('not done');
+                          ToastManager(context).showToast(
+                            message: 'Request Already Accepted',
+                          );
                         }
                       },
                       onLongPress: () async {

@@ -25,8 +25,6 @@ class RoomModel {
   String notificationId = '';
   String title = '';
   String roomIcon = '';
-  String date = '';
-  String time = '';
   List<String> users = [];
 
   RoomModel({
@@ -34,8 +32,6 @@ class RoomModel {
     required this.notificationId,
     required this.title,
     required this.roomIcon,
-    required this.date,
-    required this.time,
     required this.users,
   });
 
@@ -44,8 +40,6 @@ class RoomModel {
     notificationId = json['notification_id'];
     title = json['title'];
     roomIcon = json['room_icon'];
-    date = json['date'];
-    time = json['time'];
     users = json['users'].cast<String>();
   }
 
@@ -55,8 +49,6 @@ class RoomModel {
     data['notification_id'] = notificationId;
     data['title'] = title;
     data['room_icon'] = roomIcon;
-    data['date'] = date;
-    data['time'] = time;
     data['users'] = users;
     return data;
   }

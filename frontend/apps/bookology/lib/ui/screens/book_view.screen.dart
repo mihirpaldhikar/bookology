@@ -27,6 +27,7 @@ import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/models/book.model.dart';
+import 'package:bookology/models/request.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -37,12 +38,12 @@ import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 class BookViewer extends StatefulWidget {
   final BookModel book;
@@ -65,6 +66,8 @@ class _BookViewerState extends State<BookViewer> {
       FirestoreService(FirebaseFirestore.instance);
   final CacheService cacheService = CacheService();
   final CurrencyManager currencyManager = CurrencyManager();
+  final AuthService authService = AuthService(FirebaseAuth.instance);
+  RequestModel requestData = RequestModel(accepted: false, roomId: 'null');
   String username = 'loading...';
   String userID = '';
   String userFirstName = 'loading...';
@@ -80,6 +83,7 @@ class _BookViewerState extends State<BookViewer> {
   late BannerAd _ad;
   bool _isAdLoaded = false;
   bool _isRequestAccepted = false;
+  String _enquireButtonText = 'Enquire';
 
   @override
   void initState() {
@@ -107,7 +111,6 @@ class _BookViewerState extends State<BookViewer> {
       ),
     );
     _ad.load();
-    _getBookInfo();
     _pageController.addListener(() {
       int next = _pageController.page!.round();
 
@@ -124,21 +127,41 @@ class _BookViewerState extends State<BookViewer> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    setState(
-      () {
+    await _getBookInfo();
+    if (widget.book.uploaderId != authService.currentUser()!.uid) {
+      requestData = await firestoreService.getRequest(
+        bookID: widget.book.bookId,
+        userID: authService.currentUser()!.uid,
+      );
+      setState(() {
         currencySymbol = currencyManager.getCurrencySymbol(
-            currency: widget.book.pricing.currency);
-      },
-    );
+          currency: widget.book.pricing.currency,
+        );
+        _isRequestAccepted = requestData.accepted;
+      });
+      if (_isRequestAccepted) {
+        setState(() {
+          _enquireButtonText = 'Discuss';
+        });
+      } else {
+        setState(() {
+          _enquireButtonText = 'Requested';
+        });
+      }
+      if (!await firestoreService.isRequestExist(bookId: widget.book.bookId)) {
+        setState(() {
+          _enquireButtonText = 'Enquire';
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     int saving = int.parse(widget.book.pricing.originalPrice) -
         int.parse(widget.book.pricing.sellingPrice);
-    final authService = Provider.of<AuthService>(context);
     return Hero(
       tag: widget.id,
       child: Material(
@@ -198,7 +221,7 @@ class _BookViewerState extends State<BookViewer> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewManager(currentIndex: 3),
+                                  const ViewManager(screenIndex: 3),
                             ),
                             (_) => false,
                           );
@@ -409,33 +432,28 @@ class _BookViewerState extends State<BookViewer> {
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: OutLinedButton(
-                                    text: StringConstants.wordEnquire,
+                                    text: _enquireButtonText,
                                     textColor: Colors.black,
                                     backgroundColor: isLoadingCompleted
-                                        ? Colors.orange[100]
+                                        ? _isRequestAccepted
+                                            ? Colors.green[100]
+                                            : Colors.orange[100]
                                         : Colors.grey[100],
                                     onPressed: () async {
                                       if (isLoadingCompleted) {
-                                        final result =
-                                            await firestoreService.getRequest(
-                                          bookID: widget.id,
-                                          userID: userID,
-                                        );
-
-                                        _isRequestAccepted = result.accepted;
-
-                                        if (result.roomId == 'null') {
+                                        if (requestData.roomId == 'null') {
                                           await apiService
                                               .sendEnquiryNotification(
                                             userID:
                                                 authService.currentUser()!.uid,
                                             receiverID: userID,
+                                            bookId: widget.book.bookId,
                                             userName: cacheService
                                                 .getCurrentUserNameCache(),
                                           );
 
                                           await firestoreService.createRequest(
-                                            bookID: widget.id,
+                                            bookID: widget.book.bookId,
                                             userID:
                                                 authService.currentUser()!.uid,
                                           );
@@ -444,9 +462,8 @@ class _BookViewerState extends State<BookViewer> {
                                         if (_isRequestAccepted == true) {
                                           final room = await firestoreService
                                               .getRoomData(
-                                            roomId: result.roomId,
+                                            roomId: requestData.roomId,
                                           );
-
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) => ChatPage(
@@ -893,7 +910,7 @@ class _BookViewerState extends State<BookViewer> {
     );
   }
 
-  _getBookInfo() async {
+  Future<String> _getBookInfo() async {
     final bookData = await apiService.getBookByID(
         bookID: widget.id.contains('@') ? widget.id.split('@')[0] : widget.id);
     setState(() {
@@ -908,5 +925,7 @@ class _BookViewerState extends State<BookViewer> {
       isVerified = bookData['uploader']['verified'];
       userProfilePicture = bookData['uploader']['profile_picture_url'];
     });
+
+    return bookData['uploader']['user_id'];
   }
 }

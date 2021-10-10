@@ -24,7 +24,7 @@ import 'dart:convert';
 
 import 'package:bookology/managers/secrets.manager.dart';
 import 'package:bookology/models/book.model.dart';
-import 'package:bookology/models/notification.model.dart';
+import 'package:bookology/models/notification.model.dart' as notification;
 import 'package:bookology/models/room.model.dart';
 import 'package:bookology/models/user.model.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -38,8 +38,6 @@ class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
   final _cacheService = CacheService();
   final SecretsManager _secretsManager = SecretsManager();
-
-  //final _authService = AuthService(FirebaseAuth.instance);
   final _client = http.Client();
 
   Future<dynamic> createUser({
@@ -97,13 +95,12 @@ class ApiService {
         },
       );
       final response = jsonDecode(request.body);
-      final cacheData = jsonDecode(request.body);
-
       _cacheService.setCurrentUser(
-          userName: cacheData['user_information']['username'],
-          isVerified: cacheData['user_information']['verified']);
-      final userData = UserModel.fromJson(response);
-      return userData;
+          userName: response['user_information']['username'],
+          isVerified: response['user_information']['verified']);
+      if (request.statusCode == 200) {
+        return UserModel.fromJson(response);
+      }
     } catch (error, stackTrace) {
       await Sentry.captureException(
         error,
@@ -251,7 +248,8 @@ class ApiService {
     }
   }
 
-  Future<List<NotificationModel>?> getUserNotifications() async {
+  Future<List<notification.NotificationModel>?>
+      getUserNotifications() async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/notifications');
@@ -262,15 +260,37 @@ class ApiService {
           'Content-type': 'application/json',
         },
       );
+      if (request.statusCode == 200 &&
+          jsonDecode(request.body).toString().contains('No Notifications.')) {
+        return [
+          notification.NotificationModel(
+            notificationId: 'null',
+            metadata: notification.Metadata(
+              bookId: 'null',
+              receiverId: 'null',
+              senderId: 'null',
+            ),
+            notification: notification.Notification(
+              body: 'null',
+              seen: false,
+              title: 'null',
+              type: 'null',
+            ),
+            createdOn: notification.CreatedOn(
+              date: 'null',
+              time: 'null',
+            ),
+          )
+        ];
+      }
       final Iterable response = jsonDecode(request.body) as Iterable;
-      print(jsonDecode(request.body));
       if (request.statusCode == 200) {
-        final notifications = List<NotificationModel>.from(
-          response
-              .map(
-                (notification) => NotificationModel.fromJson(notification),
-              )
-              .toList(),
+        final notifications = List<notification.NotificationModel>.from(
+          response.map(
+            (notification) {
+              return notification.NotificationModel.fromJson(notification);
+            },
+          ).toList(),
         );
 
         return notifications;
@@ -284,10 +304,12 @@ class ApiService {
     }
   }
 
-  Future<bool> sendEnquiryNotification(
-      {required String userID,
-      required String receiverID,
-      required String userName}) async {
+  Future<bool> sendEnquiryNotification({
+    required String userID,
+    required String receiverID,
+    required String bookId,
+    required String userName,
+  }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final String? apiKey = await _secretsManager.getApiKey();
@@ -304,7 +326,9 @@ class ApiService {
           'Content-type': 'application/json',
         },
         body: jsonEncode(
-          {},
+          {
+            "book_id": bookId,
+          },
         ),
       );
       final response = jsonDecode(request.body);
@@ -384,13 +408,11 @@ class ApiService {
             "notification_id": room.notificationId,
             "title": room.title,
             "room_icon": room.roomIcon,
-            "date": room.date,
-            "time": room.time,
             "users": room.users,
           },
         ),
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return true;
       }
       return false;

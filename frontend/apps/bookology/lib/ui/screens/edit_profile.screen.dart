@@ -144,7 +144,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ViewManager(currentIndex: 0),
+                                      const ViewManager(screenIndex: 0),
                                 ),
                                 (_) => false,
                               );
@@ -153,7 +153,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ViewManager(currentIndex: 3),
+                                      const ViewManager(screenIndex: 3),
                                 ),
                                 (_) => false,
                               );
@@ -184,7 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewManager(currentIndex: 0),
+                                  const ViewManager(screenIndex: 0),
                             ),
                             (_) => false,
                           );
@@ -193,7 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewManager(currentIndex: 3),
+                                  const ViewManager(screenIndex: 3),
                             ),
                             (_) => false,
                           );

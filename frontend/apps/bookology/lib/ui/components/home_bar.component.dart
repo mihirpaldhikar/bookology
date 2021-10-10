@@ -27,7 +27,6 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
-import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
@@ -147,7 +146,7 @@ class _HomeBarState extends State<HomeBar> {
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Badge(
-                              showBadge: true,
+                              showBadge: false,
                               toAnimate: false,
                               badgeColor: Colors.red,
                               elevation: 0,
@@ -301,7 +300,7 @@ class _HomeBarState extends State<HomeBar> {
                                         .unselectedItemColor,
                                   ),
                                   child: Badge(
-                                    showBadge: true,
+                                    showBadge: false,
                                     toAnimate: false,
                                     badgeColor: Colors.red,
                                     elevation: 0,

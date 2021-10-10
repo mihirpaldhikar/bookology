@@ -147,7 +147,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
               automaticallyImplyLeading: false,
             ),
             body: StreamBuilder<List<types.Room>>(
-              stream: FirebaseChatCore.instance.rooms(),
+              stream: FirebaseChatCore.instance.rooms(orderByUpdatedAt: true,),
               initialData: const [],
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {

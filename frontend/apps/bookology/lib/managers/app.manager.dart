@@ -139,7 +139,7 @@ class _AppState extends State<App> {
       routes: {
         '/home': (context) => const ScreenManager(),
         '/profile': (context) => const ViewManager(
-              currentIndex: 3,
+              screenIndex: 3,
             ),
         '/create': (context) => const CreateScreen(),
         '/login': (context) => const LoginScreen(),
