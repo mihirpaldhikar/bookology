@@ -25,7 +25,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 class ChatsService {
-  final firestoreService = FirestoreService(FirebaseFirestore.instance);
+  final _firestoreService = FirestoreService(FirebaseFirestore.instance);
 
   Future<dynamic> createChatRoom({
     required String? bookName,
@@ -37,8 +37,8 @@ class ChatsService {
       name: bookName as String,
       imageUrl: bookCoverImage,
       users: [
-        await firestoreService.getFirestoreUser(userID: ownerUserID as String),
-        await firestoreService.getFirestoreUser(userID: userID as String),
+        await _firestoreService.getFirestoreUser(userID: ownerUserID as String),
+        await _firestoreService.getFirestoreUser(userID: userID as String),
       ],
     );
 

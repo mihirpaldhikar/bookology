@@ -26,7 +26,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:package_info/package_info.dart';
 
 class AppService {
-  final FirestoreService firestoreService =
+  final FirestoreService _firestoreService =
       FirestoreService(FirebaseFirestore.instance);
   Future<AppModel> getAppInfo() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -46,7 +46,7 @@ class AppService {
   }
 
   Future<AppModel> getRemoteAppInfo() async {
-    final remoteAppInfo = await firestoreService.getServerSideAppDetails();
+    final remoteAppInfo = await _firestoreService.getServerSideAppDetails();
     return remoteAppInfo;
   }
 }

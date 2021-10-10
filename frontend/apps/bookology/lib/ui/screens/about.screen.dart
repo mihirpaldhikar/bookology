@@ -41,9 +41,9 @@ class _AboutScreenState extends State<AboutScreen> {
   final List<Widget> _licenses = <Widget>[];
   final Map<String, List> _licenseContent = {};
   bool _loaded = false;
-  String appVersion = '';
-  String appBuildNumber = '';
-  String googlePlayStoreUrl = '';
+  String _appVersion = '';
+  String _appBuildNumber = '';
+  String _googlePlayStoreUrl = '';
 
   @override
   void didChangeDependencies() async {
@@ -52,9 +52,9 @@ class _AboutScreenState extends State<AboutScreen> {
     final appInfo = await appService.getAppInfo();
     final remoteAppInfo = await appService.getRemoteAppInfo();
     setState(() {
-      appVersion = appInfo.appVersion;
-      appBuildNumber = appInfo.appBuildNumber;
-      googlePlayStoreUrl = remoteAppInfo.googlePlayStoreUrl;
+      _appVersion = appInfo.appVersion;
+      _appBuildNumber = appInfo.appBuildNumber;
+      _googlePlayStoreUrl = remoteAppInfo.googlePlayStoreUrl;
     });
   }
 
@@ -176,7 +176,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             height: 20,
                           ),
                           Text(
-                            'Version: $appVersion',
+                            'Version: $_appVersion',
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 17,
@@ -186,7 +186,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             height: 5,
                           ),
                           Text(
-                            'Build Number: $appBuildNumber',
+                            'Build Number: $_appBuildNumber',
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 17,
@@ -218,7 +218,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             child: OutLinedButton(
                               onPressed: () async {
                                 launchURL(
-                                  url: googlePlayStoreUrl,
+                                  url: _googlePlayStoreUrl,
                                 );
                               },
                               text: StringConstants.wordCheckForUpdates,
@@ -235,7 +235,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             child: OutLinedButton(
                               onPressed: () async {
                                 launchURL(
-                                  url: googlePlayStoreUrl,
+                                  url: _googlePlayStoreUrl,
                                 );
                               },
                               text: StringConstants.wordSendFeedback,

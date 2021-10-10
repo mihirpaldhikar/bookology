@@ -51,21 +51,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<UserModel> userData;
-  String userName = '';
-  String profileImage = '';
-  bool isCurrentUser = false;
-  int booksListed = 0;
-  final apiService = ApiService();
-  final authService = AuthService(FirebaseAuth.instance);
-  final cacheService = CacheService();
+  late Future<UserModel> _userData;
+  bool _isCurrentUser = false;
+  final _apiService = ApiService();
+  final _authService = AuthService(FirebaseAuth.instance);
+  final _cacheService = CacheService();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
-    userData = _fetchUserData();
+    _userData = _fetchUserData();
   }
 
   @override
@@ -97,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 10,
                     ),
                     AutoSizeText(
-                      cacheService.getCurrentUserNameCache(),
+                      _cacheService.getCurrentUserNameCache(),
                       maxLines: 1,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -107,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 5,
                     ),
                     Visibility(
-                      visible: cacheService.getCurrentIsVerifiedCache(),
+                      visible: _cacheService.getCurrentIsVerifiedCache(),
                       child: const Icon(
                         Icons.verified,
                         color: Colors.blue,
@@ -160,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           body: SafeArea(
             child: FutureBuilder<UserModel>(
-              future: userData,
+              future: _userData,
               builder:
                   (BuildContext context, AsyncSnapshot<UserModel> userData) {
                 if (userData.connectionState == ConnectionState.done) {
@@ -356,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 40,
         ),
         Visibility(
-          visible: isCurrentUser,
+          visible: _isCurrentUser,
           child: Container(
             margin: const EdgeInsets.only(bottom: 20),
             child: Row(
@@ -373,9 +370,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditProfileScreen(
-                            userID: authService.currentUser()!.uid,
+                            userID: _authService.currentUser()!.uid,
                             profilePicture:
-                                authService.currentUser()!.photoURL.toString(),
+                                _authService.currentUser()!.photoURL.toString(),
                             userName: userData.data!.userInformation.username,
                             isVerified: userData.data!.userInformation.verified,
                             bio: userData.data!.userInformation.bio,
@@ -431,19 +428,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<UserModel> _fetchUserData() async {
     final data =
-        await apiService.getUserProfile(userID: authService.currentUser()!.uid);
+        await _apiService.getUserProfile(userID: _authService.currentUser()!.uid);
 
-    if (cacheService.getCurrentUserNameCache() ==
+    if (_cacheService.getCurrentUserNameCache() ==
         data!.userInformation.username) {
       setState(
         () {
-          isCurrentUser = true;
+          _isCurrentUser = true;
         },
       );
     } else {
       setState(
         () {
-          isCurrentUser = false;
+          _isCurrentUser = false;
         },
       );
     }
@@ -453,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _onRefresh() async {
     setState(
       () {
-        userData = _fetchUserData();
+        _userData = _fetchUserData();
       },
     );
     _refreshController.refreshCompleted();

@@ -35,7 +35,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final apiService = ApiService();
+  final _apiService = ApiService();
   final User? user = FirebaseAuth.instance.currentUser;
 
   AuthService(this._firebaseAuth);
@@ -54,7 +54,7 @@ class AuthService {
         email: email,
         password: password,
       );
-      final result = await apiService.createUser(
+      final result = await _apiService.createUser(
         uuid: _firebaseAuth.currentUser?.uid,
         email: _firebaseAuth.currentUser?.email,
         profilePhotoUrl: profilePictureURL,
@@ -81,7 +81,7 @@ class AuthService {
       );
 
       await _firebaseAuth.signInWithCredential(credential);
-      final result = await apiService.createUser(
+      final result = await _apiService.createUser(
         uuid: _firebaseAuth.currentUser?.uid,
         email: _firebaseAuth.currentUser?.email,
         profilePhotoUrl: _firebaseAuth.currentUser?.photoURL,

@@ -28,7 +28,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 class IsbnService {
   final SecretsManager _secretsManager = SecretsManager();
-  final client = http.Client();
 
   IsbnService();
 

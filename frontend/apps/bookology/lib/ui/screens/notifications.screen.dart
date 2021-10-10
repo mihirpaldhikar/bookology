@@ -44,14 +44,14 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  late Future<List<NotificationModel>?> notifications;
-  final ApiService apiService = ApiService();
-  final CacheService cacheService = CacheService();
+  late Future<List<NotificationModel>?> _notifications;
+  final ApiService _apiService = ApiService();
+  final CacheService _cacheService = CacheService();
 
   @override
   void initState() {
     super.initState();
-    notifications = getNotifications();
+    _notifications = getNotifications();
   }
 
   @override
@@ -65,7 +65,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         automaticallyImplyLeading: true,
       ),
       body: FutureBuilder<List<NotificationModel>?>(
-        future: notifications,
+        future: _notifications,
         initialData: const [],
         builder: (BuildContext context,
             AsyncSnapshot<List<NotificationModel>?> notifications) {
@@ -115,7 +115,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 contentColor: Colors.black,
                                 progressColor: Colors.black,
                               );
-                              final result = await apiService.createRoom(
+                              final result = await _apiService.createRoom(
                                 room: RoomModel(
                                   bookId: notifications
                                       .data![index].metadata.bookId,
@@ -264,8 +264,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   Future<List<NotificationModel>?> getNotifications() async {
-    final notifications = await apiService.getUserNotifications();
-    cacheService.setNewNotificationNumber(count: notifications!.length);
+    final notifications = await _apiService.getUserNotifications();
+    _cacheService.setNewNotificationNumber(count: notifications!.length);
     return notifications;
   }
 }

@@ -66,7 +66,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
-  final firestoreService = FirestoreService(FirebaseFirestore.instance);
+  final _firestoreService = FirestoreService(FirebaseFirestore.instance);
 
   void _handleAttachmentPressed() {
     BottomSheetManager(context).filePickerBottomSheet(onImagePressed: () {
@@ -108,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
           uri: uri,
         );
 
-        firestoreService.sendMessage(message, widget.room.id, collectionID);
+        _firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException {
         _setAttachmentUploading(false);
@@ -152,7 +152,7 @@ class _ChatPageState extends State<ChatPage> {
           width: image.width.toDouble(),
         );
 
-        firestoreService.sendMessage(message, widget.room.id, collectionID);
+        _firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException {
         _setAttachmentUploading(false);
@@ -192,7 +192,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    firestoreService.sendMessage(message, widget.room.id,
+    _firestoreService.sendMessage(message, widget.room.id,
         '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}');
   }
 

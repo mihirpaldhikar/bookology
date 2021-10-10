@@ -53,21 +53,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  final apiService = ApiService();
-  final AuthService authService = AuthService(FirebaseAuth.instance);
-  late Future<List<Object>?> feed;
+  final _apiService = ApiService();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
+  late Future<List<Object>?> _feed;
   late BannerAd _ad;
-  List<Object> homeFeed = [];
-  String userName = '';
-  String displayName = '';
-  String profileImageURL = '';
-  String currentLocation = '';
-  bool isVerified = false;
+  List<Object> _homeFeed = [];
+  String _currentLocation = '';
 
   @override
   void initState() {
     super.initState();
-    feed = getFeed();
+    _feed = getFeed();
   }
 
   @override
@@ -101,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await LocationService(context).getCurrentLocation().then((location) {
       setState(() {
-        currentLocation = location;
+        _currentLocation = location;
       });
     });
   }
@@ -119,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
             body: FutureBuilder<List<Object>?>(
           initialData: const [],
-          future: feed,
+          future: _feed,
           builder:
               (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
             if (homeFeed.connectionState == ConnectionState.done) {
@@ -146,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         automaticallyImplyLeading: false,
                         expandedHeight: 250.0,
                         flexibleSpace: HomeBar(
-                          currentLocation: currentLocation,
+                          currentLocation: _currentLocation,
                         ),
                       ),
                       SliverList(
@@ -232,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: BookCard(
         buttonText:
-            authService.currentUser()!.uid == book.uploaderId ? 'Edit' : 'View',
+            _authService.currentUser()!.uid == book.uploaderId ? 'Edit' : 'View',
         id: book.bookId,
         book: book,
         onClicked: () {
@@ -251,25 +247,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Object>?> getFeed() async {
-    final books = await apiService.getBooks();
+    final books = await _apiService.getBooks();
     setState(() {
-      homeFeed = List.from(books!);
+      _homeFeed = List.from(books!);
     });
     MobileAds.instance.initialize().then((value) {
       setState(() {
-        for (int i = homeFeed.length - 2; i >= 1; i -= 10) {
-          homeFeed.insert(i, _ad);
+        for (int i = _homeFeed.length - 2; i >= 1; i -= 10) {
+          _homeFeed.insert(i, _ad);
         }
       });
     });
 
-    return homeFeed;
+    return _homeFeed;
   }
 
   void _onRefresh() async {
     setState(() {
-      homeFeed.clear();
-      feed = getFeed();
+      _homeFeed.clear();
+      _feed = getFeed();
       _refreshController.refreshCompleted();
     });
   }

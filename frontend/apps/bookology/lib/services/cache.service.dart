@@ -23,46 +23,46 @@
 import 'package:get_storage/get_storage.dart';
 
 class CacheService {
-  final cacheStorage = GetStorage();
+  final _cacheStorage = GetStorage();
 
   void setCurrentUser({required String userName, bool? isVerified}) {
-    cacheStorage.write('userName', userName);
-    cacheStorage.write('isVerified', isVerified);
+    _cacheStorage.write('userName', userName);
+    _cacheStorage.write('isVerified', isVerified);
   }
 
   void setNewNotificationNumber({required int count}) {
-    cacheStorage.write('newNotificationNumber', count);
+    _cacheStorage.write('newNotificationNumber', count);
   }
 
   void setOldNotificationNumber({required int count}) {
-    cacheStorage.write('oldNotificationNumber', count);
+    _cacheStorage.write('oldNotificationNumber', count);
   }
 
   int getNewNotificationNumber() {
-    return cacheStorage.read('newNotificationNumber');
+    return _cacheStorage.read('newNotificationNumber');
   }
 
   int getOldNotificationNumber() {
-    return cacheStorage.read('oldNotificationNumber');
+    return _cacheStorage.read('oldNotificationNumber');
   }
 
   String getCurrentUserNameCache() {
-    return cacheStorage.read('userName');
+    return _cacheStorage.read('userName');
   }
 
   void setIntroScreenView({required bool seen}) {
-    cacheStorage.write('seenIntroScreen', seen);
+    _cacheStorage.write('seenIntroScreen', seen);
   }
 
   bool isIntroScreenSeen() {
-    return cacheStorage.read('seenIntroScreen');
+    return _cacheStorage.read('seenIntroScreen');
   }
 
   bool getCurrentIsVerifiedCache() {
-    return cacheStorage.read('isVerified');
+    return _cacheStorage.read('isVerified');
   }
 
   Future<void> clearCacheStorage() async {
-    await cacheStorage.erase();
+    await _cacheStorage.erase();
   }
 }

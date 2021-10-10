@@ -40,11 +40,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
+    final _auth = Provider.of<AuthService>(context);
     final _formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final AuthHandler authHandler = AuthHandler();
+    final _emailController = TextEditingController();
+    final _passwordController = TextEditingController();
+    final AuthHandler _authHandler = AuthHandler();
     return _isLoading
         ? const Scaffold(
             body: Center(
@@ -98,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           prefixIcon: const Icon(Icons.mail_outline_rounded)
                           //fillColor: Colors.green
                           ),
-                      controller: emailController,
+                      controller: _emailController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "Email cannot be empty.";
@@ -130,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )
                           //fillColor: Colors.green
                           ),
-                      controller: passwordController,
+                      controller: _passwordController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "Password cannot be empty.";
@@ -161,10 +161,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() {
                                 _isLoading = true;
                               });
-                              await auth
+                              await _auth
                                   .signUpWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text,
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
                                       firstName: '',
                                       lastName: '',
                                       profilePictureURL:
@@ -175,7 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     _isLoading = false;
                                   });
                                   if (value != true) {
-                                    authHandler.firebaseError(
+                                    _authHandler.firebaseError(
                                         value: value, context: context);
                                   } else {
                                     setState(() {

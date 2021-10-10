@@ -61,25 +61,25 @@ class BookViewer extends StatefulWidget {
 
 class _BookViewerState extends State<BookViewer> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
-  final ApiService apiService = ApiService();
-  final FirestoreService firestoreService =
+  final ApiService _apiService = ApiService();
+  final FirestoreService _firestoreService =
       FirestoreService(FirebaseFirestore.instance);
-  final CacheService cacheService = CacheService();
-  final CurrencyManager currencyManager = CurrencyManager();
-  final AuthService authService = AuthService(FirebaseAuth.instance);
-  RequestModel requestData = RequestModel(accepted: false, roomId: 'null');
-  String username = 'loading...';
-  String userID = '';
-  String userFirstName = 'loading...';
-  String userLastName = '';
-  String uploadedOn = 'loading...';
-  String location = 'loading...';
-  String userProfilePicture = '';
-  String bookCondition = 'loading...';
-  bool isVerified = false;
-  bool isLoadingCompleted = false;
-  int currentPage = 0;
-  String currencySymbol = '';
+  final CacheService _cacheService = CacheService();
+  final CurrencyManager _currencyManager = CurrencyManager();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
+  RequestModel _requestData = RequestModel(accepted: false, roomId: 'null');
+  String _username = 'loading...';
+  String _userID = '';
+  String _userFirstName = 'loading...';
+  String _userLastName = '';
+  String _uploadedOn = 'loading...';
+  String _location = 'loading...';
+  String _userProfilePicture = '';
+  String _bookCondition = 'loading...';
+  bool _isVerified = false;
+  bool _isLoadingCompleted = false;
+  int _currentPage = 0;
+  String _currencySymbol = '';
   late BannerAd _ad;
   bool _isAdLoaded = false;
   bool _isRequestAccepted = false;
@@ -115,7 +115,7 @@ class _BookViewerState extends State<BookViewer> {
       int next = _pageController.page!.round();
 
       setState(() {
-        currentPage = next;
+        _currentPage = next;
       });
     });
   }
@@ -130,16 +130,16 @@ class _BookViewerState extends State<BookViewer> {
   void didChangeDependencies() async {
     super.didChangeDependencies();
     await _getBookInfo();
-    if (widget.book.uploaderId != authService.currentUser()!.uid) {
-      requestData = await firestoreService.getRequest(
+    if (widget.book.uploaderId != _authService.currentUser()!.uid) {
+      _requestData = await _firestoreService.getRequest(
         bookID: widget.book.bookId,
-        userID: authService.currentUser()!.uid,
+        userID: _authService.currentUser()!.uid,
       );
       setState(() {
-        currencySymbol = currencyManager.getCurrencySymbol(
+        _currencySymbol = _currencyManager.getCurrencySymbol(
           currency: widget.book.pricing.currency,
         );
-        _isRequestAccepted = requestData.accepted;
+        _isRequestAccepted = _requestData.accepted;
       });
       if (_isRequestAccepted) {
         setState(() {
@@ -150,7 +150,7 @@ class _BookViewerState extends State<BookViewer> {
           _enquireButtonText = 'Requested';
         });
       }
-      if (!await firestoreService.isRequestExist(bookId: widget.book.bookId)) {
+      if (!await _firestoreService.isRequestExist(bookId: widget.book.bookId)) {
         setState(() {
           _enquireButtonText = 'Enquire';
         });
@@ -184,7 +184,7 @@ class _BookViewerState extends State<BookViewer> {
               ),
               Visibility(
                 visible:
-                    widget.book.uploaderId == authService.currentUser()!.uid
+                    widget.book.uploaderId == _authService.currentUser()!.uid
                         ? true
                         : false,
                 child: Tooltip(
@@ -197,7 +197,7 @@ class _BookViewerState extends State<BookViewer> {
               ),
               Visibility(
                 visible:
-                    widget.book.uploaderId == authService.currentUser()!.uid
+                    widget.book.uploaderId == _authService.currentUser()!.uid
                         ? true
                         : false,
                 child: Tooltip(
@@ -211,7 +211,7 @@ class _BookViewerState extends State<BookViewer> {
                           contentColor: Colors.redAccent,
                           progressColor: Colors.redAccent,
                         );
-                        final result = await apiService.deleteBook(
+                        final result = await _apiService.deleteBook(
                           bookID: widget.id.contains('@')
                               ? widget.id.split('@')[0]
                               : widget.id,
@@ -246,7 +246,7 @@ class _BookViewerState extends State<BookViewer> {
               ),
               Visibility(
                 visible:
-                    widget.book.uploaderId != authService.currentUser()!.uid
+                    widget.book.uploaderId != _authService.currentUser()!.uid
                         ? true
                         : false,
                 child: Tooltip(
@@ -283,7 +283,7 @@ class _BookViewerState extends State<BookViewer> {
                                   .book.additionalInformation.images.length,
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                bool activePage = index == currentPage;
+                                bool activePage = index == _currentPage;
                                 return _imagePager(
                                     active: activePage,
                                     image: widget.book.additionalInformation
@@ -294,7 +294,7 @@ class _BookViewerState extends State<BookViewer> {
                           child: PageViewIndicator(
                             length:
                                 widget.book.additionalInformation.images.length,
-                            currentIndex: currentPage,
+                            currentIndex: _currentPage,
                             currentColor:
                                 Theme.of(context).colorScheme.secondary,
                             currentSize: 10,
@@ -355,7 +355,7 @@ class _BookViewerState extends State<BookViewer> {
                                     width: 15,
                                   ),
                                   AutoSizeText(
-                                    '$currencySymbol ${widget.book.pricing.sellingPrice}',
+                                    '$_currencySymbol ${widget.book.pricing.sellingPrice}',
                                     maxLines: 4,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
@@ -385,7 +385,7 @@ class _BookViewerState extends State<BookViewer> {
                                 height: 10,
                               ),
                               AutoSizeText(
-                                '${StringConstants.wordYouSave} $currencySymbol ${saving.toString()}',
+                                '${StringConstants.wordYouSave} $_currencySymbol ${saving.toString()}',
                                 maxLines: 4,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
@@ -410,7 +410,7 @@ class _BookViewerState extends State<BookViewer> {
                                     width: 10,
                                   ),
                                   Text(
-                                    location,
+                                    _location,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -426,7 +426,7 @@ class _BookViewerState extends State<BookViewer> {
                               ),
                               Visibility(
                                 visible: widget.book.uploaderId !=
-                                        authService.currentUser()!.uid
+                                        _authService.currentUser()!.uid
                                     ? true
                                     : false,
                                 child: SizedBox(
@@ -434,46 +434,46 @@ class _BookViewerState extends State<BookViewer> {
                                   child: OutLinedButton(
                                     text: _enquireButtonText,
                                     textColor: Colors.black,
-                                    backgroundColor: isLoadingCompleted
+                                    backgroundColor: _isLoadingCompleted
                                         ? _isRequestAccepted
                                             ? Colors.green[100]
                                             : Colors.orange[100]
                                         : Colors.grey[100],
                                     onPressed: () async {
-                                      if (isLoadingCompleted) {
-                                        if (requestData.roomId == 'null') {
-                                          await apiService
+                                      if (_isLoadingCompleted) {
+                                        if (_requestData.roomId == 'null') {
+                                          await _apiService
                                               .sendEnquiryNotification(
                                             userID:
-                                                authService.currentUser()!.uid,
-                                            receiverID: userID,
+                                                _authService.currentUser()!.uid,
+                                            receiverID: _userID,
                                             bookId: widget.book.bookId,
-                                            userName: cacheService
+                                            userName: _cacheService
                                                 .getCurrentUserNameCache(),
                                           );
 
-                                          await firestoreService.createRequest(
+                                          await _firestoreService.createRequest(
                                             bookID: widget.book.bookId,
                                             userID:
-                                                authService.currentUser()!.uid,
+                                                _authService.currentUser()!.uid,
                                           );
                                         }
 
                                         if (_isRequestAccepted == true) {
-                                          final room = await firestoreService
+                                          final room = await _firestoreService
                                               .getRoomData(
-                                            roomId: requestData.roomId,
+                                            roomId: _requestData.roomId,
                                           );
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) => ChatPage(
                                                 room: room,
                                                 roomTitle:
-                                                    '$userFirstName $userLastName',
-                                                userName: username,
-                                                isVerified: isVerified,
+                                                    '$_userFirstName $_userLastName',
+                                                userName: _username,
+                                                isVerified: _isVerified,
                                                 userProfileImage:
-                                                    userProfilePicture,
+                                                    _userProfilePicture,
                                               ),
                                             ),
                                           );
@@ -485,7 +485,7 @@ class _BookViewerState extends State<BookViewer> {
                               ),
                               Visibility(
                                 visible: widget.book.uploaderId !=
-                                        authService.currentUser()!.uid
+                                        _authService.currentUser()!.uid
                                     ? true
                                     : false,
                                 child: const SizedBox(
@@ -494,7 +494,7 @@ class _BookViewerState extends State<BookViewer> {
                               ),
                               Visibility(
                                 visible: widget.book.uploaderId !=
-                                        authService.currentUser()!.uid
+                                        _authService.currentUser()!.uid
                                     ? true
                                     : false,
                                 child: SizedBox(
@@ -508,7 +508,7 @@ class _BookViewerState extends State<BookViewer> {
                               ),
                               Visibility(
                                 visible: widget.book.uploaderId !=
-                                        authService.currentUser()!.uid
+                                        _authService.currentUser()!.uid
                                     ? true
                                     : false,
                                 child: const SizedBox(
@@ -700,7 +700,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      bookCondition,
+                                      _bookCondition,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -760,7 +760,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      '$userFirstName $userLastName',
+                                      '$_userFirstName $_userLastName',
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -789,7 +789,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      '@$username',
+                                      '@$_username',
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -802,7 +802,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 5,
                                     ),
                                     Visibility(
-                                      visible: isVerified,
+                                      visible: _isVerified,
                                       child: const Icon(
                                         Icons.verified,
                                         color: Colors.blue,
@@ -833,7 +833,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     AutoSizeText(
-                                      uploadedOn,
+                                      _uploadedOn,
                                       maxLines: 4,
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
@@ -911,19 +911,19 @@ class _BookViewerState extends State<BookViewer> {
   }
 
   Future<String> _getBookInfo() async {
-    final bookData = await apiService.getBookByID(
+    final bookData = await _apiService.getBookByID(
         bookID: widget.id.contains('@') ? widget.id.split('@')[0] : widget.id);
     setState(() {
-      isLoadingCompleted = true;
-      userID = bookData['uploader']['user_id'];
-      username = bookData['uploader']['username'];
-      bookCondition = bookData['additional_information']['condition'];
-      location = bookData['location'] ?? 'Unknown';
-      uploadedOn = '${bookData['created_on']['date']}';
-      userFirstName = bookData['uploader']['first_name'];
-      userLastName = bookData['uploader']['last_name'];
-      isVerified = bookData['uploader']['verified'];
-      userProfilePicture = bookData['uploader']['profile_picture_url'];
+      _isLoadingCompleted = true;
+      _userID = bookData['uploader']['user_id'];
+      _username = bookData['uploader']['username'];
+      _bookCondition = bookData['additional_information']['condition'];
+      _location = bookData['location'] ?? 'Unknown';
+      _uploadedOn = '${bookData['created_on']['date']}';
+      _userFirstName = bookData['uploader']['first_name'];
+      _userLastName = bookData['uploader']['last_name'];
+      _isVerified = bookData['uploader']['verified'];
+      _userProfilePicture = bookData['uploader']['profile_picture_url'];
     });
 
     return bookData['uploader']['user_id'];

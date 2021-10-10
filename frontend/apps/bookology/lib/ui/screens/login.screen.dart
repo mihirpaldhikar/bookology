@@ -41,11 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
+    final _auth = Provider.of<AuthService>(context);
     final _formKey = GlobalKey<FormState>();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final AuthHandler authHandler = AuthHandler();
+    final _emailController = TextEditingController();
+    final _passwordController = TextEditingController();
+    final AuthHandler _authHandler = AuthHandler();
     return Scaffold(
       appBar: AppBar(),
       body: _isLoading
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           prefixIcon: const Icon(Icons.mail_outline_rounded)
                           //fillColor: Colors.green
                           ),
-                      controller: emailController,
+                      controller: _emailController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "Email cannot be empty.";
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           )
                           //fillColor: Colors.green
                           ),
-                      controller: passwordController,
+                      controller: _passwordController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "Password cannot be empty.";
@@ -162,17 +162,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               _isLoading = true;
                             });
-                            await auth
+                            await _auth
                                 .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text)
+                                    email: _emailController.text,
+                                    password: _passwordController.text)
                                 .then(
                               (value) {
                                 if (value != true) {
                                   setState(() {
                                     _isLoading = false;
                                   });
-                                  authHandler.firebaseError(
+                                  _authHandler.firebaseError(
                                       value: value, context: context);
                                 } else {
                                   setState(() {

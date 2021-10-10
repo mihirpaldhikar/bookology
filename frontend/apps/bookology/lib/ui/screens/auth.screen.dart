@@ -41,8 +41,8 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
-  final AuthHandler authHandler = AuthHandler();
-  final CacheService cacheService = CacheService();
+  final AuthHandler _authHandler = AuthHandler();
+  final CacheService _cacheService = CacheService();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           onTap: () async {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             setState(() {
                               _isLoading = true;
                             });
@@ -128,7 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     _isLoading = false;
                                   });
 
-                                  authHandler.firebaseError(
+                                  _authHandler.firebaseError(
                                     value: value,
                                     context: context,
                                   );
@@ -148,7 +148,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           alignContent: MainAxisAlignment.start,
                           spaceBetween: 115,
                           onPressed: () {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
@@ -158,7 +158,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         InkWell(
                           borderRadius: BorderRadius.circular(5),
                           onTap: () {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/signup');
                           },
                           child: RichText(

@@ -26,13 +26,11 @@ import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
-import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -53,12 +51,11 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   bool _error = false;
   bool _initialized = false;
   User? _user;
-  String groupOwner = '';
-  String userName = '';
-  String userImageProfile = '';
-  bool isVerified = false;
-  final authService = AuthService(FirebaseAuth.instance);
-  final firestoreService = FirestoreService(FirebaseFirestore.instance);
+  String _groupOwner = '';
+  String _userName = '';
+  String _userImageProfile = '';
+  bool _isVerified = false;
+  final _authService = AuthService(FirebaseAuth.instance);
 
   @override
   void initState() {
@@ -204,11 +201,11 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                       for (var element in room.users) {
                         if (element.id.toString() !=
                             FirebaseAuth.instance.currentUser!.uid.toString()) {
-                          groupOwner =
+                          _groupOwner =
                               '${element.firstName.toString()} ${element.lastName}';
-                          userName = element.metadata!['userName'];
-                          isVerified = element.metadata!['isVerified'];
-                          userImageProfile = element.imageUrl!;
+                          _userName = element.metadata!['userName'];
+                          _isVerified = element.metadata!['isVerified'];
+                          _userImageProfile = element.imageUrl!;
                         }
                       }
                       return Container(
@@ -230,11 +227,11 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ChatPage(
-                                  isVerified: isVerified,
-                                  userName: userName,
+                                  isVerified: _isVerified,
+                                  userName: _userName,
                                   room: room,
-                                  roomTitle: groupOwner,
-                                  userProfileImage: userImageProfile,
+                                  roomTitle: _groupOwner,
+                                  userProfileImage: _userImageProfile,
                                 ),
                               ),
                             );
@@ -298,7 +295,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                     BorderRadius.circular(100),
                                               ),
                                               avatar: CircularImage(
-                                                image: authService
+                                                image: _authService
                                                     .currentUser()!
                                                     .photoURL
                                                     .toString(),
@@ -310,7 +307,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                             ),
                                             Chip(
                                               label: Text(
-                                                groupOwner,
+                                                _groupOwner,
                                                 style: const TextStyle(
                                                   color: Colors.black,
                                                 ),
@@ -325,7 +322,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                     BorderRadius.circular(100),
                                               ),
                                               avatar: CircularImage(
-                                                image: userImageProfile,
+                                                image: _userImageProfile,
                                                 radius: 25,
                                               ),
                                             ),

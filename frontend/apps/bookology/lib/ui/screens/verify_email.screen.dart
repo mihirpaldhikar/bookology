@@ -36,7 +36,7 @@ class VerifyEmailScreen extends StatefulWidget {
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthService>(context);
+    final _auth = Provider.of<AuthService>(context);
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -86,7 +86,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Center(
                   child: OutLinedButton(
                     onPressed: () async {
-                      if (await auth.isEmailVerified() == true) {
+                      if (await _auth.isEmailVerified() == true) {
                         await Navigator.pushReplacementNamed(context, '/home');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
