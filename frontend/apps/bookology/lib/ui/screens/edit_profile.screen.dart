@@ -64,25 +64,25 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final apiService = ApiService();
-  final userNameController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final bioController = TextEditingController();
-  final CacheService cacheService = CacheService();
-  String imageURL = '';
+  final _apiService = ApiService();
+  final _userNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _bioController = TextEditingController();
+  final CacheService _cacheService = CacheService();
+  String _imageURL = '';
 
-  bool isImageUpdated = false;
+  bool _isImageUpdated = false;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      imageURL = widget.profilePicture;
-      userNameController.text = widget.userName;
-      firstNameController.text = widget.firstName;
-      lastNameController.text = widget.lastName;
-      bioController.text = widget.bio;
+      _imageURL = widget.profilePicture;
+      _userNameController.text = widget.userName;
+      _firstNameController.text = widget.firstName;
+      _lastNameController.text = widget.lastName;
+      _bioController.text = widget.bio;
     });
   }
 
@@ -118,33 +118,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       progressColor: Theme.of(context).colorScheme.secondary,
                     );
                     if (widget.profilePicture.toString() !=
-                        imageURL.toString()) {
+                        _imageURL.toString()) {
                       await ImageHandler(context)
                           .uploadImage(
-                        filePath: imageURL,
+                        filePath: _imageURL,
                         imageName:
                             '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}',
                         imagePath: 'Users/${widget.userID}/profile',
                       )
                           .then(
                         (value) async {
-                          final result = await apiService.updateUserProfile(
+                          final result = await _apiService.updateUserProfile(
                             userID: widget.userID,
-                            userName: userNameController.text,
+                            userName: _userNameController.text,
                             isVerified: widget.isVerified,
-                            firstName: firstNameController.text,
-                            lastName: lastNameController.text,
-                            bio: bioController.text,
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
+                            bio: _bioController.text,
                             profilePicture: value,
                           );
                           if (result == true) {
                             if (widget.isInitialUpdate) {
-                              cacheService.setIntroScreenView(seen: true);
+                              _cacheService.setIntroScreenView(seen: true);
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ViewManager(currentIndex: 0),
+                                      const ViewManager(screenIndex: 0),
                                 ),
                                 (_) => false,
                               );
@@ -153,7 +153,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ViewManager(currentIndex: 3),
+                                      const ViewManager(screenIndex: 3),
                                 ),
                                 (_) => false,
                               );
@@ -168,23 +168,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         },
                       );
                     } else {
-                      final result = await apiService.updateUserProfile(
+                      final result = await _apiService.updateUserProfile(
                         userID: widget.userID,
-                        userName: userNameController.text,
+                        userName: _userNameController.text,
                         isVerified: widget.isVerified,
-                        firstName: firstNameController.text,
-                        lastName: lastNameController.text,
-                        bio: bioController.text,
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                        bio: _bioController.text,
                         profilePicture: widget.profilePicture,
                       );
                       if (result == true) {
                         if (widget.isInitialUpdate) {
-                          cacheService.setIntroScreenView(seen: true);
+                          _cacheService.setIntroScreenView(seen: true);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewManager(currentIndex: 0),
+                                  const ViewManager(screenIndex: 0),
                             ),
                             (_) => false,
                           );
@@ -193,7 +193,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewManager(currentIndex: 3),
+                                  const ViewManager(screenIndex: 3),
                             ),
                             (_) => false,
                           );
@@ -236,18 +236,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     BottomSheetManager(context).imagePickerBottomSheet(
                         onCameraPressed: () async {
                       final pickedImage = await ImageHandler(context).picImage(
-                          source: ImageSource.camera, imageURI: imageURL);
+                          source: ImageSource.camera, imageURI: _imageURL);
                       setState(() {
-                        imageURL = pickedImage;
-                        isImageUpdated = true;
+                        _imageURL = pickedImage;
+                        _isImageUpdated = true;
                       });
                       Navigator.pop(context);
                     }, onGalleryPressed: () async {
                       final pickedImage = await ImageHandler(context).picImage(
-                          source: ImageSource.gallery, imageURI: imageURL);
+                          source: ImageSource.gallery, imageURI: _imageURL);
                       setState(() {
-                        imageURL = pickedImage;
-                        isImageUpdated = true;
+                        _imageURL = pickedImage;
+                        _isImageUpdated = true;
                       });
                       Navigator.pop(context);
                     });
@@ -255,7 +255,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      isImageUpdated
+                      _isImageUpdated
                           ? SizedBox(
                               width: 100,
                               height: 100,
@@ -263,13 +263,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 borderRadius: BorderRadius.circular(100),
                                 child: Image.file(
                                   File.fromUri(
-                                    Uri.parse(imageURL),
+                                    Uri.parse(_imageURL),
                                   ),
                                 ),
                               ),
                             )
                           : CircularImage(
-                              image: imageURL,
+                              image: _imageURL,
                               radius: 100,
                             ),
                       Positioned(
@@ -312,7 +312,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         labelText: StringConstants.wordUsername,
                         fillColor: Colors.white,
                       ),
-                      controller: userNameController,
+                      controller: _userNameController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
                           RegExp("[^a-z^A-Z^0-9]+"),
@@ -339,7 +339,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         labelText: "First Name",
                         fillColor: Colors.white,
                       ),
-                      controller: firstNameController,
+                      controller: _firstNameController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "First Name cannot be empty.";
@@ -360,7 +360,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         labelText: "Last Name",
                         fillColor: Colors.white,
                       ),
-                      controller: lastNameController,
+                      controller: _lastNameController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "Last Name cannot be empty.";
@@ -381,7 +381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         labelText: "Bio",
                         fillColor: Colors.white,
                       ),
-                      controller: bioController,
+                      controller: _bioController,
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                     ),

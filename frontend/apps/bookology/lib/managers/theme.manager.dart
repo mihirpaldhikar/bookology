@@ -70,20 +70,10 @@ class ThemeManager {
     ),
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: GoogleFonts.poppins(),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          topLeft: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          bottomLeft: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          bottomRight: Radius.circular(
-            ValuesConstant.borderRadius,
-          ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
         ),
       ),
     ),
@@ -105,6 +95,15 @@ class ThemeManager {
       ),
       actionsIconTheme: const IconThemeData(
         color: Colors.black,
+      ),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: ColorsConstant.secondaryColor,
+      enableFeedback: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
+        ),
       ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(

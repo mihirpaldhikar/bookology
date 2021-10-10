@@ -20,8 +20,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/file_attachment_button.component.dart';
 import 'package:bookology/ui/components/send_chat_button.component.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -47,6 +49,7 @@ class DiscussionsInput extends StatefulWidget {
     this.onAttachmentPressed,
     required this.onSendPressed,
     this.onTextChanged,
+    required this.roomId,
   }) : super(key: key);
 
   /// See [AttachmentButton.onPressed]
@@ -64,6 +67,7 @@ class DiscussionsInput extends StatefulWidget {
 
   /// Will be called whenever the text inside [TextField] changes
   final void Function(String)? onTextChanged;
+  final String roomId;
 
   @override
   _DiscussionsInputState createState() => _DiscussionsInputState();
@@ -92,6 +96,11 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
     final _partialText = types.PartialText(text: _textController.text.trim());
     widget.onSendPressed(_partialText);
     _textController.clear();
+    FirestoreService(FirebaseFirestore.instance)
+        .updateTheRoomUpdatedAt(
+          roomId: widget.roomId,
+        )
+        .then((value) => null);
   }
 
   void _handleTextControllerChange() {

@@ -34,12 +34,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ViewManager extends StatefulWidget {
-  final int currentIndex;
+  final int screenIndex;
   final bool isUserProfileUpdated;
 
   const ViewManager({
     Key? key,
-    required this.currentIndex,
+    required this.screenIndex,
     this.isUserProfileUpdated = false,
   }) : super(key: key);
 
@@ -59,7 +59,7 @@ class _ViewManagerState extends State<ViewManager> {
 
   @override
   void initState() {
-    screenIndex = widget.currentIndex;
+    screenIndex = widget.screenIndex;
     super.initState();
   }
 

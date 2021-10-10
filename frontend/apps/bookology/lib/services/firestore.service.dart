@@ -26,6 +26,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -246,11 +247,26 @@ class FirestoreService {
     }
   }
 
+  Future<bool> isRequestExist({required String bookId}) async {
+    final request = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('requests')
+        .doc(bookId)
+        .get();
+
+    return request.exists;
+  }
+
   Future<types.Room> getRoomData({required String roomId}) async {
     try {
-      final roomData = await _firestore.collection('rooms').doc(roomId).get();
-
-      return types.Room.fromJson(roomData.data()!);
+      final roomData =
+          await _firestore.collection('rooms').doc(roomId).snapshots().first;
+      return processRoomDocument(
+        roomData,
+        _firebaseAuth.currentUser!,
+        'users',
+      );
     } catch (error, stackTrace) {
       await Sentry.captureException(
         error,
@@ -258,6 +274,12 @@ class FirestoreService {
       );
       rethrow;
     }
+  }
+
+  Future<void> updateTheRoomUpdatedAt({required String roomId}) async {
+    await _firestore.collection('rooms').doc(roomId).update({
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
   }
 
   Future<AppModel> getServerSideAppDetails() async {

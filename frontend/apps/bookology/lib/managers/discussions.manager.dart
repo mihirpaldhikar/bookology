@@ -70,6 +70,7 @@ class Discussions extends StatefulWidget {
     this.timeFormat,
     this.usePreviewData = true,
     required this.user,
+    required this.roomId,
   }) : super(key: key);
 
   /// See [Message.buildCustomMessage]
@@ -167,6 +168,8 @@ class Discussions extends StatefulWidget {
 
   /// See [InheritedUser.user]
   final types.User user;
+
+  final String roomId;
 
   @override
   _DiscussionsState createState() => _DiscussionsState();
@@ -390,6 +393,7 @@ class _DiscussionsState extends State<Discussions> {
                         onAttachmentPressed: widget.onAttachmentPressed,
                         onSendPressed: widget.onSendPressed,
                         onTextChanged: widget.onTextChanged,
+                        roomId: widget.roomId,
                       ),
                     ],
                   ),

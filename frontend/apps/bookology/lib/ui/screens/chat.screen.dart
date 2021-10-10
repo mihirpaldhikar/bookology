@@ -22,13 +22,15 @@
 
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/discussions.manager.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/marquee.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,78 +66,22 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
-  final firestoreService = FirestoreService(FirebaseFirestore.instance);
+  final _firestoreService = FirestoreService(FirebaseFirestore.instance);
 
-  void _handleAtachmentPressed() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(
-              top: 10,
-              left: 20,
-              right: 20,
-            ),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 5,
-                  ),
-                  width: 50,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OutLinedButton(
-                  text: StringConstants.wordCamera,
-                  icon: Icons.photo_camera_outlined,
-                  align: Alignment.center,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleImageSelection();
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OutLinedButton(
-                  text: StringConstants.wordFile,
-                  icon: Icons.description_outlined,
-                  align: Alignment.center,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleFileSelection();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  void _handleAttachmentPressed() {
+    BottomSheetManager(context).filePickerBottomSheet(onImagePressed: () {
+      Navigator.pop(context);
+      _handleImageSelection();
+    }, onFilePressed: () {
+      Navigator.pop(context);
+      _handleFileSelection();
+    });
   }
 
   void _handleFileSelection() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'docx', '.html', '.zip'],
     );
 
     if (result != null) {
@@ -162,7 +108,7 @@ class _ChatPageState extends State<ChatPage> {
           uri: uri,
         );
 
-        firestoreService.sendMessage(message, widget.room.id, collectionID);
+        _firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException {
         _setAttachmentUploading(false);
@@ -206,7 +152,7 @@ class _ChatPageState extends State<ChatPage> {
           width: image.width.toDouble(),
         );
 
-        firestoreService.sendMessage(message, widget.room.id, collectionID);
+        _firestoreService.sendMessage(message, widget.room.id, collectionID);
         _setAttachmentUploading(false);
       } on FirebaseException {
         _setAttachmentUploading(false);
@@ -246,7 +192,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    firestoreService.sendMessage(message, widget.room.id,
+    _firestoreService.sendMessage(message, widget.room.id,
         '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}');
   }
 
@@ -264,27 +210,35 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             CircularImage(
               image: widget.userProfileImage,
-              radius: 35,
+              radius: 30,
             ),
             const SizedBox(
-              width: 18,
+              width: 10,
             ),
-            Text(
-              widget.userName,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Visibility(
-              visible: widget.isVerified,
-              child: const Icon(
-                Icons.verified,
-                color: Colors.blue,
-                size: 20,
+            SizedBox(
+              width: 160,
+              child: Marquee(
+                child: Row(
+                  children: [
+                    AutoSizeText(
+                      widget.userName,
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.isVerified,
+                      child: const Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -326,13 +280,14 @@ class _ChatPageState extends State<ChatPage> {
             stream: FirebaseChatCore.instance.messages(snapshot.data!),
             builder: (context, snapshot) {
               return Discussions(
+                roomId: widget.room.id,
                 showUserAvatars: true,
                 showUserNames: false,
                 usePreviewData: true,
                 theme: ChatUiManager(),
                 isAttachmentUploading: _isAttachmentUploading,
                 messages: snapshot.data ?? [],
-                onAttachmentPressed: _handleAtachmentPressed,
+                onAttachmentPressed: _handleAttachmentPressed,
                 onMessageTap: _handleMessageTap,
                 onMessageLongPress: (value) async {
                   if (FirebaseAuth.instance.currentUser!.uid ==

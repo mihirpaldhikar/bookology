@@ -20,33 +20,21 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/models/app.model.dart';
-import 'package:bookology/services/firestore.service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:package_info/package_info.dart';
+class Validator {
+  bool validateEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-class AppService {
-  final FirestoreService _firestoreService =
-      FirestoreService(FirebaseFirestore.instance);
-  Future<AppModel> getAppInfo() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    return AppModel(
-      appName: packageInfo.appName,
-      appVersion: packageInfo.version,
-      appBuildNumber: packageInfo.buildNumber,
-      changelogs: '',
-      androidPackageName: 'com.imihirpaldhikar.bookology',
-      iosBundleId: 'com.imihirpaldhikar.bookology',
-      isPublishedOnGooglePlayStore: false,
-      isPublishedOnAppleAppStore: false,
-      googlePlayStoreUrl: '',
-      directUpdateUrl: '',
-      appleAppStoreUrl: '',
-    );
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
   }
 
-  Future<AppModel> getRemoteAppInfo() async {
-    final remoteAppInfo = await _firestoreService.getServerSideAppDetails();
-    return remoteAppInfo;
+  bool validatePassword(String value) {
+    Pattern pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regex = RegExp(pattern.toString());
+
+    return regex.hasMatch(value);
   }
 }

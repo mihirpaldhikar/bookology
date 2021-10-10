@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
@@ -40,8 +41,8 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
-  final AuthHandler authHandler = AuthHandler();
-  final CacheService cacheService = CacheService();
+  final AuthHandler _authHandler = AuthHandler();
+  final CacheService _cacheService = CacheService();
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +89,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               left: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).backgroundColor,
+                              color: ColorsConstant.lightThemeButtonColor,
                               borderRadius: BorderRadius.circular(
-                                  ValuesConstant.secondaryBorderRadius),
+                                ValuesConstant.secondaryBorderRadius,
+                              ),
                             ),
                             child: Row(
                               children: [
@@ -109,7 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           onTap: () async {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             setState(() {
                               _isLoading = true;
                             });
@@ -126,7 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     _isLoading = false;
                                   });
 
-                                  authHandler.firebaseError(
+                                  _authHandler.firebaseError(
                                     value: value,
                                     context: context,
                                   );
@@ -146,7 +148,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           alignContent: MainAxisAlignment.start,
                           spaceBetween: 115,
                           onPressed: () {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/login');
                           },
                         ),
@@ -156,7 +158,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         InkWell(
                           borderRadius: BorderRadius.circular(5),
                           onTap: () {
-                            cacheService.setIntroScreenView(seen: false);
+                            _cacheService.setIntroScreenView(seen: false);
                             Navigator.pushNamed(context, '/signup');
                           },
                           child: RichText(
@@ -190,10 +192,10 @@ class _AuthScreenState extends State<AuthScreen> {
 Widget _logo(BuildContext context) {
   return Column(
     children: [
-      const Image(
-        image: AssetImage('assets/icons/splash.icon.png'),
-        width: 200,
-        height: 200,
+      Image.asset(
+        'assets/icons/splash.icon.png',
+        width: 250,
+        height: 250,
       ),
       const SizedBox(
         height: 20,

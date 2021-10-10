@@ -42,7 +42,7 @@ class _ScreenManagerState extends State<ScreenManager>
     if (_seen) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const ViewManager(currentIndex: 0),
+          builder: (context) => const ViewManager(screenIndex: 0),
         ),
       );
     } else {

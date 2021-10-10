@@ -22,9 +22,9 @@
 
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/permission.manager.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +40,9 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
-  final introKey = GlobalKey<IntroductionScreenState>();
-  final AuthService authService = AuthService(FirebaseAuth.instance);
-  final CacheService cacheService = CacheService();
-  final pageDecoration = const PageDecoration(
+  final _introKey = GlobalKey<IntroductionScreenState>();
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
+  final _pageDecoration = const PageDecoration(
     titleTextStyle: TextStyle(
       fontSize: 28.0,
       fontWeight: FontWeight.w700,
@@ -81,7 +80,7 @@ class _IntroScreenState extends State<IntroScreen> {
             fontSize: 16,
           ),
         ),
-        decoration: pageDecoration,
+        decoration: _pageDecoration,
         image: const Center(
           child: Image(
             image: AssetImage('assets/icons/splash.icon.png'),
@@ -96,7 +95,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'Upload the books you don\'t want anymore and give it to some one in need.',
           textAlign: TextAlign.center,
         ),
-        decoration: pageDecoration,
+        decoration: _pageDecoration,
         image: Center(
           child: SvgPicture.asset(
             'assets/svg/help.svg',
@@ -111,7 +110,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'Bookology uses your approximate location to show you books listed near you.',
           textAlign: TextAlign.center,
         ),
-        decoration: pageDecoration,
+        decoration: _pageDecoration,
         image: Center(
           child: SvgPicture.asset(
             'assets/svg/location.svg',
@@ -126,7 +125,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
           textAlign: TextAlign.center,
         ),
-        decoration: pageDecoration,
+        decoration: _pageDecoration,
         image: Center(
           child: SvgPicture.asset(
             'assets/svg/profile.svg',
@@ -139,7 +138,7 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
-          key: introKey,
+          key: _introKey,
           globalBackgroundColor: ColorsConstant.backgroundColor,
           showDoneButton: true,
           showNextButton: true,
@@ -147,8 +146,11 @@ class _IntroScreenState extends State<IntroScreen> {
           onDone: () => _onIntroEnd(context),
           onChange: (pageIndex) {
             if (pageIndex == 3) {
-              PermissionManager()
-                  .requestPermission(Permission.locationWhenInUse);
+              DialogsManager(context).showLocationPermissionDialog(() {
+                PermissionManager()
+                    .requestPermission(Permission.locationWhenInUse);
+                Navigator.pop(context);
+              });
             }
           },
           done: Container(
@@ -216,9 +218,9 @@ class _IntroScreenState extends State<IntroScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => EditProfileScreen(
-          userID: authService.currentUser()!.uid,
-          profilePicture: authService.currentUser()!.photoURL.toString(),
-          userName: authService.currentUser()!.email!.split('@')[0],
+          userID: _authService.currentUser()!.uid,
+          profilePicture: _authService.currentUser()!.photoURL.toString(),
+          userName: _authService.currentUser()!.email!.split('@')[0],
           bio: '',
           firstName: '',
           lastName: '',

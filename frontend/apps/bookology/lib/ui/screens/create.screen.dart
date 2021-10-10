@@ -80,13 +80,12 @@ class _CreateScreenState extends State<CreateScreen> {
   String _imageUrl4 = '';
   String _nextStep = 'Next';
   String _currentLocation = '';
-  String imageDownloadURL1 = '';
-  String imageDownloadURL2 = '';
-  String imageDownloadURL3 = '';
-  String imageDownloadURL4 = '';
-  String imagesCollectionsID = '';
+  String _imageDownloadURL1 = '';
+  String _imageDownloadURL2 = '';
+  String _imageDownloadURL3 = '';
+  String _imageDownloadURL4 = '';
+  String _imagesCollectionsID = '';
 
-  ScanResult? scanResult;
   final _aspectTolerance = 0.00;
   final _selectedCamera = -1;
   final _useAutoFocus = true;
@@ -94,24 +93,24 @@ class _CreateScreenState extends State<CreateScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final isbnController = TextEditingController();
-  final bookNameController = TextEditingController();
-  final bookAuthorController = TextEditingController();
-  final bookPublisherController = TextEditingController();
-  final bookDescriptionController = TextEditingController();
-  final bookOriginalPriceController = TextEditingController();
-  final bookSellingPriceController = TextEditingController();
+  final _isbnController = TextEditingController();
+  final _bookNameController = TextEditingController();
+  final _bookAuthorController = TextEditingController();
+  final _bookPublisherController = TextEditingController();
+  final _bookDescriptionController = TextEditingController();
+  final _bookOriginalPriceController = TextEditingController();
+  final _bookSellingPriceController = TextEditingController();
 
-  final isbnService = IsbnService();
+  final _isbnService = IsbnService();
   static final _possibleFormats = BarcodeFormat.values.toList()
     ..removeWhere((e) => e == BarcodeFormat.unknown);
 
-  List<BarcodeFormat> selectedFormats = [..._possibleFormats];
+  final List<BarcodeFormat> _selectedFormats = [..._possibleFormats];
 
-  final apiService = ApiService();
+  final _apiService = ApiService();
 
   int _currentStep = 0;
-  StepperType stepperType = StepperType.horizontal;
+  StepperType _stepperType = StepperType.horizontal;
 
   @override
   void didChangeDependencies() async {
@@ -119,7 +118,7 @@ class _CreateScreenState extends State<CreateScreen> {
     await LocationService(context).getCurrentLocation().then((location) {
       setState(() {
         _currentLocation = location;
-        imagesCollectionsID = RandomString().generate(15);
+        _imagesCollectionsID = RandomString().generate(15);
       });
     });
   }
@@ -207,15 +206,15 @@ class _CreateScreenState extends State<CreateScreen> {
                                             _isImagesSelected = false;
                                           });
                                         }
-                                        if (bookSellingPriceController
+                                        if (_bookSellingPriceController
                                                 .text.isNotEmpty &&
-                                            bookSellingPriceController
+                                            _bookSellingPriceController
                                                 .text.isNotEmpty) {
                                           if (int.parse(
-                                                  bookOriginalPriceController
+                                                  _bookOriginalPriceController
                                                       .text) <
                                               int.parse(
-                                                  bookSellingPriceController
+                                                  _bookSellingPriceController
                                                       .text)) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -233,19 +232,19 @@ class _CreateScreenState extends State<CreateScreen> {
                                             _isImagesSelected) {
                                           BottomSheetManager(context)
                                               .showUploadBookConfirmationBottomSheet(
-                                            isbn: isbnController.text,
-                                            bookName: bookNameController.text,
+                                            isbn: _isbnController.text,
+                                            bookName: _bookNameController.text,
                                             bookAuthor:
-                                                bookAuthorController.text,
+                                                _bookAuthorController.text,
                                             bookPublisher:
-                                                bookPublisherController.text,
+                                                _bookPublisherController.text,
                                             bookDescription:
-                                                bookDescriptionController.text,
+                                                _bookDescriptionController.text,
                                             bookOriginalPrice:
-                                                bookOriginalPriceController
+                                                _bookOriginalPriceController
                                                     .text,
                                             bookSellingPrice:
-                                                bookSellingPriceController.text,
+                                                _bookSellingPriceController.text,
                                             bookCondition: _bookCondition,
                                             bookImage1: _imageUrl1,
                                             bookImage2: _imageUrl2,
@@ -264,13 +263,13 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   .uploadImage(
                                                 filePath: _imageUrl1,
                                                 imagePath:
-                                                    'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                    'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
                                                 imageName: name,
                                               )
                                                   .then((value) {
                                                 setState(
                                                   () {
-                                                    imageDownloadURL1 = value;
+                                                    _imageDownloadURL1 = value;
                                                   },
                                                 );
                                               }).then(
@@ -281,13 +280,13 @@ class _CreateScreenState extends State<CreateScreen> {
                                                       .uploadImage(
                                                     filePath: _imageUrl2,
                                                     imagePath:
-                                                        'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                        'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
                                                     imageName: name,
                                                   )
                                                       .then(
                                                     (value) {
                                                       setState(() {
-                                                        imageDownloadURL2 =
+                                                        _imageDownloadURL2 =
                                                             value;
                                                       });
                                                     },
@@ -300,12 +299,12 @@ class _CreateScreenState extends State<CreateScreen> {
                                                           .uploadImage(
                                                         filePath: _imageUrl3,
                                                         imagePath:
-                                                            'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                            'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
                                                         imageName: name,
                                                       )
                                                           .then((value) {
                                                         setState(() {
-                                                          imageDownloadURL3 =
+                                                          _imageDownloadURL3 =
                                                               value;
                                                         });
                                                       }).then(
@@ -318,13 +317,13 @@ class _CreateScreenState extends State<CreateScreen> {
                                                             filePath:
                                                                 _imageUrl4,
                                                             imagePath:
-                                                                'Users/${user.user?.uid}/BookImages/$imagesCollectionsID',
+                                                                'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
                                                             imageName: name,
                                                           )
                                                               .then(
                                                             (value) {
                                                               setState(() {
-                                                                imageDownloadURL4 =
+                                                                _imageDownloadURL4 =
                                                                     value;
                                                               });
                                                             },
@@ -337,35 +336,35 @@ class _CreateScreenState extends State<CreateScreen> {
                                               );
 
                                               final result =
-                                                  await apiService.postBookData(
-                                                isbn: isbnController.text,
+                                                  await _apiService.postBookData(
+                                                isbn: _isbnController.text,
                                                 bookName:
-                                                    bookNameController.text,
+                                                    _bookNameController.text,
                                                 bookAuthor:
-                                                    bookAuthorController.text,
+                                                    _bookAuthorController.text,
                                                 bookPublisher:
-                                                    bookPublisherController
+                                                    _bookPublisherController
                                                         .text,
                                                 bookDescription:
-                                                    bookDescriptionController
+                                                    _bookDescriptionController
                                                         .text,
                                                 bookOriginalPrice:
-                                                    bookOriginalPriceController
+                                                    _bookOriginalPriceController
                                                         .text,
                                                 bookSellingPrice:
-                                                    bookSellingPriceController
+                                                    _bookSellingPriceController
                                                         .text,
                                                 bookCondition: _bookCondition,
-                                                bookImage1: imageDownloadURL1,
-                                                bookImage2: imageDownloadURL2,
-                                                bookImage3: imageDownloadURL3,
-                                                bookImage4: imageDownloadURL4,
+                                                bookImage1: _imageDownloadURL1,
+                                                bookImage2: _imageDownloadURL2,
+                                                bookImage3: _imageDownloadURL3,
+                                                bookImage4: _imageDownloadURL4,
                                                 bookCurrency: CurrencyManager()
                                                     .setCurrency(
                                                   location: _currentLocation,
                                                 ),
                                                 bookImagesCollectionId:
-                                                    imagesCollectionsID,
+                                                    _imagesCollectionsID,
                                                 bookLocation: _currentLocation,
                                               );
                                               if (result == true) {
@@ -598,9 +597,9 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   switchStepsType() {
-    setState(() => stepperType == StepperType.horizontal
-        ? stepperType = StepperType.vertical
-        : stepperType = StepperType.horizontal);
+    setState(() => _stepperType == StepperType.horizontal
+        ? _stepperType = StepperType.vertical
+        : _stepperType = StepperType.horizontal);
   }
 
   tapped(int step) {
@@ -711,7 +710,7 @@ class _CreateScreenState extends State<CreateScreen> {
                             borderSide: const BorderSide(),
                           ),
                           prefixIcon: const Icon(Icons.fingerprint)),
-                      controller: isbnController,
+                      controller: _isbnController,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "ISBN cannot be empty.";
@@ -751,7 +750,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       text: 'Search',
                       icon: Icons.search,
                       onPressed: () {
-                        fetchBookData(isbnController.text);
+                        fetchBookData(_isbnController.text);
                       },
                     ),
                   ),
@@ -774,7 +773,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.menu_book)
               //fillColor: Colors.green
               ),
-          controller: bookNameController,
+          controller: _bookNameController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Book name cannot be empty.";
@@ -802,7 +801,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.account_circle)
               //fillColor: Colors.green
               ),
-          controller: bookAuthorController,
+          controller: _bookAuthorController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Author cannot be empty.";
@@ -830,7 +829,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.public)
               //fillColor: Colors.green
               ),
-          controller: bookPublisherController,
+          controller: _bookPublisherController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Publisher cannot be empty.";
@@ -859,7 +858,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
       ),
       maxLines: null,
-      controller: bookDescriptionController,
+      controller: _bookDescriptionController,
       validator: (val) {
         if (val!.isEmpty) {
           return "Description cannot be empty.";
@@ -880,25 +879,25 @@ class _CreateScreenState extends State<CreateScreen> {
       setState(() {
         _isLoading = true;
       });
-      await isbnService.getBookInfo(isbn: isbn).then((value) async {
+      await _isbnService.getBookInfo(isbn: isbn).then((value) async {
         if (value.toString().contains("/authors/")) {
-          await isbnService
+          await _isbnService
               .getBookAuthor(path: value['authors'][0]['key'].toString())
               .then((value) {
             setState(() {
               _isLoading = false;
-              bookAuthorController.text = value;
+              _bookAuthorController.text = value;
             });
           });
         } else {
           setState(() {
             _isLoading = false;
-            bookAuthorController.text = '';
+            _bookAuthorController.text = '';
           });
         }
         setState(() {
-          isbnController.text = value['isbn_13'][0].toString();
-          bookNameController.text = value['title'].toString();
+          _isbnController.text = value['isbn_13'][0].toString();
+          _bookNameController.text = value['title'].toString();
         });
       });
     } catch (error) {
@@ -920,7 +919,7 @@ class _CreateScreenState extends State<CreateScreen> {
       });
       final result = await BarcodeScanner.scan(
         options: ScanOptions(
-          restrictFormat: selectedFormats,
+          restrictFormat: _selectedFormats,
           useCamera: _selectedCamera,
           autoEnableFlash: _autoEnableFlash,
           android: AndroidOptions(
@@ -974,7 +973,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   prefixIcon: const Icon(Icons.sell)
                   //fillColor: Colors.green
                   ),
-              controller: bookOriginalPriceController,
+              controller: _bookOriginalPriceController,
               validator: (val) {
                 if (val!.isEmpty) {
                   return "Original Price cannot be empty.";
@@ -1004,7 +1003,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   prefixIcon: const Icon(Icons.sell)
                   //fillColor: Colors.green
                   ),
-              controller: bookSellingPriceController,
+              controller: _bookSellingPriceController,
               validator: (val) {
                 if (val!.isEmpty) {
                   return "Selling Price cannot be empty.";
@@ -1041,7 +1040,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.menu_book)
               //fillColor: Colors.green
               ),
-          controller: bookNameController,
+          controller: _bookNameController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Book name cannot be empty.";
@@ -1069,7 +1068,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.account_circle)
               //fillColor: Colors.green
               ),
-          controller: bookAuthorController,
+          controller: _bookAuthorController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Author cannot be empty.";
@@ -1097,7 +1096,7 @@ class _CreateScreenState extends State<CreateScreen> {
               prefixIcon: const Icon(Icons.public)
               //fillColor: Colors.green
               ),
-          controller: bookPublisherController,
+          controller: _bookPublisherController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Publisher cannot be empty.";
@@ -1124,7 +1123,7 @@ class _CreateScreenState extends State<CreateScreen> {
             ),
           ),
           maxLines: null,
-          controller: bookDescriptionController,
+          controller: _bookDescriptionController,
           validator: (val) {
             if (val!.isEmpty) {
               return "Description cannot be empty.";
