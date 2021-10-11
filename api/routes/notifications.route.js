@@ -103,6 +103,7 @@ router.post('/send', authorizeKey, verifyUser, async (request, response, next) =
       const notificationData = NotificationModel.setNotification({
         sender_id: senderUserID,
         receiver_id: receiverUserID,
+        book_id: request.body.book_id,
         notification_title: 'Book Enquiry Request',
         notification_body: `@${senderUserName} is requesting to enquire about a book.`,
         notification_type: 'book_enquiry_notification',
