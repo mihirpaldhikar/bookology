@@ -50,8 +50,8 @@ class FileAttachmentButton extends StatelessWidget {
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              Colors.blue,
-              Colors.red,
+              Color(0xFF000428),
+              Color(0xFF004e92),
             ],
           ),
         borderRadius: BorderRadius.circular(100),

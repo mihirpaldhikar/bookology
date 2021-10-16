@@ -69,7 +69,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
-  final _authService  =AuthService(FirebaseAuth.instance);
+  final _authService = AuthService(FirebaseAuth.instance);
 
   void _handleAttachmentPressed() {
     BottomSheetManager(context).filePickerBottomSheet(onImagePressed: () {
@@ -88,35 +88,42 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (result != null) {
-      _setAttachmentUploading(true);
-      final name = result.files.single.name;
-      final filePath = result.files.single.path;
-      final file = File(filePath!);
-      final collectionID =
-          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
-      try {
-        final reference = FirebaseStorage.instance
-            .ref('rooms')
-            .child(widget.room.id)
-            .child('documents')
-            .child(collectionID)
-            .child(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+      DialogsManager(context).showSendAttachmentDialog(
+          attachmentName: result.files.single.name,
+          receiverName: widget.userName,
+          onSendClicked: () async {
+            Navigator.of(context).pop();
+            _setAttachmentUploading(true);
+            final name = result.files.single.name;
+            final filePath = result.files.single.path;
+            final file = File(filePath!);
+            final collectionID =
+                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
+            try {
+              final reference = FirebaseStorage.instance
+                  .ref('rooms')
+                  .child(widget.room.id)
+                  .child('documents')
+                  .child(collectionID)
+                  .child(name);
+              await reference.putFile(file);
+              final uri = await reference.getDownloadURL();
 
-        final message = types.PartialFile(
-          mimeType: lookupMimeType(filePath),
-          name: name,
-          size: result.files.single.size,
-          uri: uri,
-        );
+              final message = types.PartialFile(
+                mimeType: lookupMimeType(filePath),
+                name: name,
+                size: result.files.single.size,
+                uri: uri,
+              );
 
-        _firestoreService.sendMessage(message, widget.room.id, collectionID);
-        _setAttachmentUploading(false);
-      } on FirebaseException {
-        _setAttachmentUploading(false);
-        rethrow;
-      }
+              _firestoreService.sendMessage(
+                  message, widget.room.id, collectionID);
+              _setAttachmentUploading(false);
+            } on FirebaseException {
+              _setAttachmentUploading(false);
+              rethrow;
+            }
+          });
     }
   }
 
@@ -128,39 +135,46 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (result != null) {
-      _setAttachmentUploading(true);
-      final file = File(result.path);
-      final size = file.lengthSync();
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
-      final name = DateTime.now().microsecond.toString();
-      final collectionID =
-          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
+      DialogsManager(context).showSendAttachmentDialog(
+          attachmentName: result.name,
+          receiverName: widget.userName,
+          onSendClicked: () async {
+            Navigator.of(context).pop();
+            _setAttachmentUploading(true);
+            final file = File(result.path);
+            final size = file.lengthSync();
+            final bytes = await result.readAsBytes();
+            final image = await decodeImageFromList(bytes);
+            final name = result.name;
+            final collectionID =
+                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
 
-      try {
-        final reference = FirebaseStorage.instance
-            .ref('rooms')
-            .child(widget.room.id)
-            .child('images')
-            .child(collectionID)
-            .child(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+            try {
+              final reference = FirebaseStorage.instance
+                  .ref('rooms')
+                  .child(widget.room.id)
+                  .child('images')
+                  .child(collectionID)
+                  .child(name);
+              await reference.putFile(file);
+              final uri = await reference.getDownloadURL();
 
-        final message = types.PartialImage(
-          height: image.height.toDouble(),
-          name: name,
-          size: size,
-          uri: uri,
-          width: image.width.toDouble(),
-        );
+              final message = types.PartialImage(
+                height: image.height.toDouble(),
+                name: name,
+                size: size,
+                uri: uri,
+                width: image.width.toDouble(),
+              );
 
-        _firestoreService.sendMessage(message, widget.room.id, collectionID);
-        _setAttachmentUploading(false);
-      } on FirebaseException {
-        _setAttachmentUploading(false);
-        rethrow;
-      }
+              _firestoreService.sendMessage(
+                  message, widget.room.id, collectionID);
+              _setAttachmentUploading(false);
+            } on FirebaseException {
+              _setAttachmentUploading(false);
+              rethrow;
+            }
+          });
     }
   }
 
@@ -288,7 +302,7 @@ class _ChatPageState extends State<ChatPage> {
                   showUserNames: false,
                   usePreviewData: true,
                   theme: ChatUiManager(),
-                  bubbleBuilder: _bubbleBuilder!,
+                  bubbleBuilder: _bubbleBuilder,
                   isAttachmentUploading: _isAttachmentUploading,
                   messages: snapshot.data ?? [],
                   onAttachmentPressed: _handleAttachmentPressed,
@@ -320,10 +334,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _bubbleBuilder(
-      Widget child, {
-        required message,
-        required nextMessageInGroup,
-      }) {
+    Widget child, {
+    required message,
+    required nextMessageInGroup,
+  }) {
     return Bubble(
       child: child,
       elevation: 0,
@@ -331,7 +345,7 @@ class _ChatPageState extends State<ChatPage> {
       radius: const Radius.circular(15),
       nipRadius: 3,
       color: _authService.currentUser()!.uid != message.author.id ||
-          message.type == types.MessageType.image
+              message.type == types.MessageType.image
           ? ChatUiManager().secondaryColor
           : ChatUiManager().primaryColor,
       margin: nextMessageInGroup
@@ -340,8 +354,8 @@ class _ChatPageState extends State<ChatPage> {
       nip: nextMessageInGroup
           ? BubbleNip.no
           : _authService.currentUser()!.uid != message.author.id
-          ? BubbleNip.leftBottom
-          : BubbleNip.rightBottom,
+              ? BubbleNip.leftBottom
+              : BubbleNip.rightBottom,
     );
   }
 }

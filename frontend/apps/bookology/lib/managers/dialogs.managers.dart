@@ -501,7 +501,6 @@ class DialogsManager {
           ],
         ),
         content: SizedBox(
-          height: 350,
           child: Form(
             key: _formKey,
             child: Column(
@@ -575,6 +574,46 @@ class DialogsManager {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showSendAttachmentDialog({
+    required String attachmentName,
+    required String receiverName,
+    required VoidCallback onSendClicked,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height / 3.5,
+          child: Column(
+            children: [
+              Text(
+                'Send "$attachmentName" to $receiverName?',
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              OutLinedButton(
+                text: 'Send',
+                backgroundColor: Colors.green.shade100,
+                onPressed: onSendClicked,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              OutLinedButton(
+                text: 'Cancel',
+
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
         ),
       ),
