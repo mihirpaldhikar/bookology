@@ -28,9 +28,11 @@ import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/discussions.manager.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/marquee.widget.dart';
+import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,6 +69,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
+  final _authService  =AuthService(FirebaseAuth.instance);
 
   void _handleAttachmentPressed() {
     BottomSheetManager(context).filePickerBottomSheet(onImagePressed: () {
@@ -280,27 +283,27 @@ class _ChatPageState extends State<ChatPage> {
             stream: FirebaseChatCore.instance.messages(snapshot.data!),
             builder: (context, snapshot) {
               return Discussions(
-                roomId: widget.room.id,
-                showUserAvatars: true,
-                showUserNames: false,
-                usePreviewData: true,
-                theme: ChatUiManager(),
-                isAttachmentUploading: _isAttachmentUploading,
-                messages: snapshot.data ?? [],
-                onAttachmentPressed: _handleAttachmentPressed,
-                onMessageTap: _handleMessageTap,
-                onMessageLongPress: (value) async {
-                  if (FirebaseAuth.instance.currentUser!.uid ==
-                      value.author.id) {
-                    DialogsManager(context).showUnsendMessageDialog(value);
-                  }
-                },
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                user: types.User(
-                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                ),
-              );
+                  roomId: widget.room.id,
+                  showUserAvatars: true,
+                  showUserNames: false,
+                  usePreviewData: true,
+                  theme: ChatUiManager(),
+                  bubbleBuilder: _bubbleBuilder!,
+                  isAttachmentUploading: _isAttachmentUploading,
+                  messages: snapshot.data ?? [],
+                  onAttachmentPressed: _handleAttachmentPressed,
+                  onMessageTap: _handleMessageTap,
+                  onMessageLongPress: (value) async {
+                    if (FirebaseAuth.instance.currentUser!.uid ==
+                        value.author.id) {
+                      DialogsManager(context).showUnsendMessageDialog(value);
+                    }
+                  },
+                  onPreviewDataFetched: _handlePreviewDataFetched,
+                  onSendPressed: _handleSendPressed,
+                  user: types.User(
+                    id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                  ));
             },
           );
         },
@@ -314,5 +317,31 @@ class _ChatPageState extends State<ChatPage> {
         DialogsManager(context).showDeleteDiscussionDialog(widget.room);
         break;
     }
+  }
+
+  Widget _bubbleBuilder(
+      Widget child, {
+        required message,
+        required nextMessageInGroup,
+      }) {
+    return Bubble(
+      child: child,
+      elevation: 0,
+      padding: const BubbleEdges.all(0),
+      radius: const Radius.circular(15),
+      nipRadius: 3,
+      color: _authService.currentUser()!.uid != message.author.id ||
+          message.type == types.MessageType.image
+          ? ChatUiManager().secondaryColor
+          : ChatUiManager().primaryColor,
+      margin: nextMessageInGroup
+          ? const BubbleEdges.symmetric(horizontal: 6)
+          : null,
+      nip: nextMessageInGroup
+          ? BubbleNip.no
+          : _authService.currentUser()!.uid != message.author.id
+          ? BubbleNip.leftBottom
+          : BubbleNip.rightBottom,
+    );
   }
 }

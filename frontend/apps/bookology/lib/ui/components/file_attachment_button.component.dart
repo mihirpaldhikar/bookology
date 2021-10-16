@@ -46,7 +46,14 @@ class FileAttachmentButton extends StatelessWidget {
         bottom: 5,
       ),
       decoration: BoxDecoration(
-        color: Colors.black,
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.blue,
+              Colors.red,
+            ],
+          ),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Center(
