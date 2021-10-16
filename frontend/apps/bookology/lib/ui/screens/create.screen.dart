@@ -53,11 +53,6 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  List<bool> activeTab = [
-    false,
-    false,
-    false,
-  ];
   bool _hasISBN = true;
   bool _isLoading = false;
   bool _showSearchButton = false;
@@ -232,7 +227,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                             _isImagesSelected) {
                                           BottomSheetManager(context)
                                               .showUploadBookConfirmationBottomSheet(
-                                            isbn: _isbnController.text,
+                                            isbn:  _isbnController.text.trim().isEmpty ? 'No ISBN' :_isbnController.text ,
                                             bookName: _bookNameController.text,
                                             bookAuthor:
                                                 _bookAuthorController.text,
@@ -244,7 +239,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 _bookOriginalPriceController
                                                     .text,
                                             bookSellingPrice:
-                                                _bookSellingPriceController.text,
+                                                _bookSellingPriceController
+                                                    .text,
                                             bookCondition: _bookCondition,
                                             bookImage1: _imageUrl1,
                                             bookImage2: _imageUrl2,
@@ -335,9 +331,9 @@ class _CreateScreenState extends State<CreateScreen> {
                                                 },
                                               );
 
-                                              final result =
-                                                  await _apiService.postBookData(
-                                                isbn: _isbnController.text,
+                                              final result = await _apiService
+                                                  .postBookData(
+                                                isbn: _isbnController.text.trim().isEmpty ? 'No ISBN' :_isbnController.text,
                                                 bookName:
                                                     _bookNameController.text,
                                                 bookAuthor:
@@ -712,7 +708,7 @@ class _CreateScreenState extends State<CreateScreen> {
                           prefixIcon: const Icon(Icons.fingerprint)),
                       controller: _isbnController,
                       validator: (val) {
-                        if (val!.isEmpty) {
+                        if (val!.isEmpty || val.characters.isEmpty) {
                           return "ISBN cannot be empty.";
                         } else {
                           if (val.length < 10 || val.length > 13) {
@@ -775,10 +771,10 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
           controller: _bookNameController,
           validator: (val) {
-            if (val!.isEmpty) {
+            if (val!.characters.toString().trim().isEmpty) {
               return "Book name cannot be empty.";
             } else {
-              if (val.length < 5) {
+              if (val.characters.toString().trim().length < 2) {
                 return "Book name is not valid.";
               } else {
                 return null;
@@ -803,10 +799,10 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
           controller: _bookAuthorController,
           validator: (val) {
-            if (val!.isEmpty) {
+            if (val!.characters.toString().trim().isEmpty) {
               return "Author cannot be empty.";
             } else {
-              if (val.length < 5) {
+              if (val.characters.toString().trim().length < 2) {
                 return "Author is not valid.";
               } else {
                 return null;
@@ -831,10 +827,10 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
           controller: _bookPublisherController,
           validator: (val) {
-            if (val!.isEmpty) {
+            if (val!.characters.toString().trim().isEmpty) {
               return "Publisher cannot be empty.";
             } else {
-              if (val.length < 5) {
+              if (val.characters.toString().trim().length < 2) {
                 return "Publisher is not valid.";
               } else {
                 return null;
@@ -860,10 +856,10 @@ class _CreateScreenState extends State<CreateScreen> {
       maxLines: null,
       controller: _bookDescriptionController,
       validator: (val) {
-        if (val!.isEmpty) {
+        if (val!.characters.toString().trim().isEmpty) {
           return "Description cannot be empty.";
         } else {
-          if (val.length < 5) {
+          if (val.characters.toString().trim().length < 10) {
             return "Description is not valid.";
           } else {
             return null;
@@ -902,10 +898,13 @@ class _CreateScreenState extends State<CreateScreen> {
       });
     } catch (error) {
       if (error.toString().contains('FormatException')) {
+        setState(() {
+          _isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('No book found with the ISBN. Please fill details'
-                ' manually.'),
+            content: Text(
+                'No book found with the ISBN. Please fill details manually.'),
           ),
         );
       }
@@ -932,6 +931,9 @@ class _CreateScreenState extends State<CreateScreen> {
     } on PlatformException catch (e) {
       setState(() {
         if (e.code == BarcodeScanner.cameraAccessDenied) {
+          setState(() {
+            _isLoading = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Camera Permission not granted. Allow '
@@ -939,6 +941,9 @@ class _CreateScreenState extends State<CreateScreen> {
             ),
           );
         } else {
+          setState(() {
+            _isLoading = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Unknown Error Occurred.'),
@@ -975,10 +980,10 @@ class _CreateScreenState extends State<CreateScreen> {
                   ),
               controller: _bookOriginalPriceController,
               validator: (val) {
-                if (val!.isEmpty) {
+                if (val!.isEmpty || val.characters.isEmpty) {
                   return "Original Price cannot be empty.";
                 } else {
-                  if (val.isEmpty) {
+                  if (val.isEmpty || val.characters.isEmpty) {
                     return "Original Price is not valid.";
                   } else {
                     return null;
@@ -1005,10 +1010,10 @@ class _CreateScreenState extends State<CreateScreen> {
                   ),
               controller: _bookSellingPriceController,
               validator: (val) {
-                if (val!.isEmpty) {
+                if (val!.isEmpty || val.characters.isEmpty) {
                   return "Selling Price cannot be empty.";
                 } else {
-                  if (val.isEmpty) {
+                  if (val.isEmpty || val.characters.isEmpty) {
                     return "Selling Price is not valid.";
                   } else {
                     return null;

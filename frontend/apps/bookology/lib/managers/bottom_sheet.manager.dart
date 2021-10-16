@@ -299,7 +299,7 @@ class BottomSheetManager {
             ),
             children: [
               TextSpan(
-                text: isbn,
+                text:  isbn,
                 style: GoogleFonts.poppins(
                   fontSize: 17,
                 ),
