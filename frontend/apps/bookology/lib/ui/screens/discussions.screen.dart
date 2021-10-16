@@ -24,17 +24,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
-import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
-import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class DiscussionsScreen extends StatefulWidget {
   const DiscussionsScreen({
@@ -52,7 +51,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
   String _userName = '';
   String _userImageProfile = '';
   bool _isVerified = false;
-  final _authService = AuthService(FirebaseAuth.instance);
 
   @override
   void initState() {
@@ -64,8 +62,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
     try {
       await Firebase.initializeApp();
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        setState(() {
-        });
+        setState(() {});
       });
       setState(() {
         _initialized = true;
@@ -124,7 +121,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
               automaticallyImplyLeading: false,
             ),
             body: StreamBuilder<List<types.Room>>(
-              stream: FirebaseChatCore.instance.rooms(orderByUpdatedAt: true,),
+              stream: FirebaseChatCore.instance.rooms(
+                orderByUpdatedAt: true,
+              ),
               initialData: const [],
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -178,16 +177,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final room = snapshot.data![index];
-                      for (var element in room.users) {
-                        if (element.id.toString() !=
-                            FirebaseAuth.instance.currentUser!.uid.toString()) {
-                          _groupOwner =
-                              '${element.firstName.toString()} ${element.lastName}';
-                          _userName = element.metadata!['userName'];
-                          _isVerified = element.metadata!['isVerified'];
-                          _userImageProfile = element.imageUrl!;
-                        }
-                      }
                       return Container(
                         margin: const EdgeInsets.only(
                           left: 10,
@@ -204,6 +193,19 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(15),
                           onTap: () {
+                            for (var element in room.users) {
+                              if (element.id.toString() !=
+                                  FirebaseAuth.instance.currentUser!.uid
+                                      .toString()) {
+                                setState(() {
+                                  _groupOwner =
+                                      '${element.firstName.toString()} ${element.lastName}';
+                                  _userName = element.metadata!['userName'];
+                                  _isVerified = element.metadata!['isVerified'];
+                                  _userImageProfile = element.imageUrl!;
+                                });
+                              }
+                            }
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ChatPage(
@@ -221,94 +223,50 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                 .showDeleteDiscussionDialog(room);
                           },
                           child: Container(
-                            width: 200,
                             padding: const EdgeInsets.only(
-                              left: 20,
-                              bottom: 20,
-                              top: 20,
+                              left: 10,
+                              bottom: 10,
+                              top: 10,
                             ),
                             child: Row(
                               children: [
                                 _buildAvatar(room),
                                 Expanded(
                                   child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        AutoSizeText(
-                                          room.name ?? 'No Book Name',
-                                          maxLines: 2,
-                                          softWrap: false,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Wrap(
+                                        children: [
+                                          AutoSizeText(
+                                            room.name ?? 'No Name',
+                                            maxLines: 2,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.left,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 5,
+                                          top: 5,
+                                        ),
+                                        child: Text(
+                                          discussionLastUpdatedAt(context,DateTime.fromMicrosecondsSinceEpoch(room.updatedAt! * 1000),DateTime.now(),),
+                                          style: TextStyle(
+                                            color: Colors.grey.shade600,
                                           ),
                                         ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Chip(
-                                              label: Text(
-                                                StringConstants.wordYou,
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                              ),
-                                              backgroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                  width: 1,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                              ),
-                                              avatar: CircularImage(
-                                                image: _authService
-                                                    .currentUser()!
-                                                    .photoURL
-                                                    .toString(),
-                                                radius: 25,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Chip(
-                                              label: Text(
-                                                _groupOwner,
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              backgroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                side: const BorderSide(
-                                                  color: Colors.black,
-                                                  width: 1,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                              ),
-                                              avatar: CircularImage(
-                                                image: _userImageProfile,
-                                                radius: 25,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ]),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -325,4 +283,19 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       },
     );
   }
+}
+
+String discussionLastUpdatedAt(
+    BuildContext context, DateTime from, DateTime to) {
+  if (from.day == to.day && from.month == to.month && from.year == to.year) {
+    return MediaQuery.of(context).alwaysUse24HourFormat
+        ? DateFormat('HH:mm').format(from).toString()
+        : DateFormat('hh:mm').format(from).toString();
+  }
+  from = DateTime(from.year, from.month, from.day);
+  to = DateTime(to.year, to.month, to.day);
+  if ((to.difference(from).inHours / 24).round() == 1) {
+    return '${(to.difference(from).inHours / 24).round()} day ago';
+  }
+  return '${(to.difference(from).inHours / 24).round()} days ago';
 }
