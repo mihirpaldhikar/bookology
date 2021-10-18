@@ -44,7 +44,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -946,8 +945,6 @@ class _BookViewerState extends State<BookViewer> {
     final double blur = active ? 15 : 0;
     final double offset = active ? 20 : 0;
     final double top = active ? 50 : 100;
-    var brightness = SchedulerBinding.instance!.window.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutQuint,
@@ -957,7 +954,7 @@ class _BookViewerState extends State<BookViewer> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-              color: isDarkMode
+              color: Theme.of(context).primaryColor == Colors.white
                   ? const Color(0xFF1A1919)
                   : const Color(0xFFEEEEEE),
               blurRadius: blur,
