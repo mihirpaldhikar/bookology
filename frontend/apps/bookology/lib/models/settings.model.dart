@@ -20,34 +20,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/models/app.model.dart';
-import 'package:bookology/services/firestore.service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:package_info/package_info.dart';
+import 'package:flutter/cupertino.dart';
 
-class AppService {
-  final FirestoreService _firestoreService =
-      FirestoreService(FirebaseFirestore.instance);
+class SettingsModel {
+  final String settingName;
+  final IconData settingIcon;
+  final String settingDescription;
+  final VoidCallback onSettingClicked;
 
-  Future<AppModel> getAppInfo() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    return AppModel(
-      appName: packageInfo.appName,
-      appVersion: packageInfo.version,
-      appBuildNumber: packageInfo.buildNumber,
-      changelogs: '',
-      androidPackageName: 'com.imihirpaldhikar.bookology',
-      iosBundleId: 'com.imihirpaldhikar.bookology',
-      isPublishedOnGooglePlayStore: false,
-      isPublishedOnAppleAppStore: false,
-      googlePlayStoreUrl: '',
-      directUpdateUrl: '',
-      appleAppStoreUrl: '',
-    );
-  }
-
-  Future<AppModel> getRemoteAppInfo() async {
-    final remoteAppInfo = await _firestoreService.getServerSideAppDetails();
-    return remoteAppInfo;
-  }
+  SettingsModel({
+    required this.settingName,
+    required this.settingIcon,
+    required this.settingDescription,
+    required this.onSettingClicked,
+  });
 }

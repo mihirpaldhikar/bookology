@@ -63,7 +63,7 @@ class ToastManager {
             Text(
               message,
               style: TextStyle(
-                color: textColor ?? Theme.of(context).primaryColor,
+                color: textColor ?? Colors.black,
               ),
             ),
           ],

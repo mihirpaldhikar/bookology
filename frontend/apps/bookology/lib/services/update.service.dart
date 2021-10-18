@@ -46,7 +46,9 @@ class UpdateService {
         localAppVersion != remoteAppVersion) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(StringConstants.appUpdateAvailable),
+          content: const Text(
+            StringConstants.appUpdateAvailable,
+          ),
           duration: const Duration(
             seconds: 5,
           ),

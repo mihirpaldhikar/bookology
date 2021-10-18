@@ -33,7 +33,9 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class IntroScreen extends StatefulWidget {
-  const IntroScreen({Key? key}) : super(key: key);
+  const IntroScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _IntroScreenState createState() => _IntroScreenState();
@@ -42,28 +44,23 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   final _introKey = GlobalKey<IntroductionScreenState>();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
-  final _pageDecoration = const PageDecoration(
-    titleTextStyle: TextStyle(
-      fontSize: 28.0,
-      fontWeight: FontWeight.w700,
-      color: ColorsConstant.lightThemeContentColor,
-    ),
-    bodyTextStyle: TextStyle(
-      fontSize: 19.0,
-      color: ColorsConstant.lightThemeContentColor,
-    ),
-    descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-    pageColor: Colors.white,
-    imagePadding: EdgeInsets.zero,
-  );
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final _pageDecoration = PageDecoration(
+      titleTextStyle: TextStyle(
+        fontSize: 28.0,
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).primaryColor,
+      ),
+      bodyTextStyle: TextStyle(
+        fontSize: 19.0,
+        color: Theme.of(context).primaryColor,
+      ),
+      descriptionPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      pageColor: Theme.of(context).scaffoldBackgroundColor,
+      imagePadding: EdgeInsets.zero,
+    );
     final List<PageViewModel> introPages = [
       PageViewModel(
         titleWidget: Text(
@@ -74,10 +71,11 @@ class _IntroScreenState extends State<IntroScreen> {
             color: Theme.of(context).primaryColor,
           ),
         ),
-        bodyWidget: const Text(
+        bodyWidget: Text(
           'Find the books you want nearby.',
           style: TextStyle(
             fontSize: 16,
+            color: Theme.of(context).primaryColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -91,9 +89,12 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Help Others",
-        bodyWidget: const Text(
+        bodyWidget: Text(
           'Upload the books you don\'t want anymore and give it to some one in need.',
           textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -106,9 +107,12 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Location based Recommendations",
-        bodyWidget: const Text(
+        bodyWidget: Text(
           'Bookology uses your approximate location to show you books listed near you.',
           textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -121,9 +125,12 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Complete your Profile",
-        bodyWidget: const Text(
+        bodyWidget: Text(
           'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
           textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -139,7 +146,7 @@ class _IntroScreenState extends State<IntroScreen> {
       body: SafeArea(
         child: IntroductionScreen(
           key: _introKey,
-          globalBackgroundColor: ColorsConstant.backgroundColor,
+          globalBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showDoneButton: true,
           showNextButton: true,
           showSkipButton: false,
@@ -163,16 +170,20 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: ColorsConstant.secondaryColor,
+              color: Theme.of(context).primaryColor == Colors.white
+                  ? ColorsConstant.darkSecondaryColor
+                  : ColorsConstant.lightSecondaryColor,
               border: Border.all(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColor == Colors.black
+                    ? Colors.white
+                    : Colors.black,
                 width: 1,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),
             child: Text(
-              'Complete Profile',
+              'Next',
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
               ),
@@ -188,7 +199,9 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: ColorsConstant.secondaryColor,
+              color: Theme.of(context).primaryColor == Colors.white
+                  ? ColorsConstant.darkSecondaryColor
+                  : ColorsConstant.lightSecondaryColor,
               border: Border.all(
                 color: Theme.of(context).primaryColor,
                 width: 1,

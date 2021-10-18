@@ -30,9 +30,9 @@ class ThemeManager {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: ColorsConstant.lightThemeContentColor,
-    backgroundColor: ColorsConstant.backgroundColor,
+    backgroundColor: ColorsConstant.lightBackgroundColor,
     cardTheme: CardTheme(
-      color: ColorsConstant.cardColor,
+      color: ColorsConstant.lightCardColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
         side: const BorderSide(
@@ -48,13 +48,13 @@ class ThemeManager {
       color: Colors.black,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: ColorsConstant.secondaryColor,
+      backgroundColor: ColorsConstant.lightSecondaryColor,
       brightness: Brightness.light,
       disabledColor: Colors.grey,
       labelStyle: GoogleFonts.poppins(),
       shape: RoundedRectangleBorder(
         side: const BorderSide(
-          color: ColorsConstant.accentColor,
+          color: ColorsConstant.lightAccentColor,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(100),
@@ -63,13 +63,15 @@ class ThemeManager {
       showCheckmark: false,
       pressElevation: 2.0,
       padding: const EdgeInsets.all(4),
-      selectedColor: ColorsConstant.accentColor,
-      secondarySelectedColor: ColorsConstant.secondaryColor,
+      selectedColor: ColorsConstant.lightAccentColor,
+      secondarySelectedColor: ColorsConstant.lightSecondaryColor,
       deleteIconColor: Colors.redAccent,
       secondaryLabelStyle: const TextStyle(),
     ),
     snackBarTheme: SnackBarThemeData(
-      contentTextStyle: GoogleFonts.poppins(),
+      contentTextStyle: GoogleFonts.poppins(
+        color: Colors.white,
+      ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -77,9 +79,15 @@ class ThemeManager {
         ),
       ),
     ),
-    scaffoldBackgroundColor: ColorsConstant.backgroundColor,
+    scaffoldBackgroundColor: ColorsConstant.lightBackgroundColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorsConstant.appBarColor,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: ColorsConstant.lightSecondaryColor,
+        systemNavigationBarColor:
+            ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+      ),
+      backgroundColor: ColorsConstant.lightAppBarColor,
       elevation: 0,
       toolbarTextStyle: GoogleFonts.poppins(
         color: Colors.black,
@@ -98,7 +106,7 @@ class ThemeManager {
       ),
     ),
     popupMenuTheme: PopupMenuThemeData(
-      color: ColorsConstant.secondaryColor,
+      color: ColorsConstant.lightSecondaryColor,
       enableFeedback: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -107,7 +115,7 @@ class ThemeManager {
       ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
-      modalBackgroundColor: ColorsConstant.secondaryColor,
+      modalBackgroundColor: ColorsConstant.lightSecondaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
@@ -123,21 +131,157 @@ class ThemeManager {
       backgroundColor:
           ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
       selectedItemColor: Color(0xff039BE5),
-      unselectedItemColor: ColorsConstant.lightThemeButtonColor,
+      unselectedItemColor: Colors.red,
     ),
     dialogTheme: const DialogTheme(
-      backgroundColor: ColorsConstant.secondaryColor,
+      backgroundColor: ColorsConstant.lightSecondaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(ValuesConstant.borderRadius),
         ),
       ),
     ),
+    buttonTheme: const ButtonThemeData(
+      colorScheme: ColorScheme.light(
+        background: ColorsConstant.lightThemeButtonColor,
+        primary: Colors.black,
+      ),
+    ),
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: ColorsConstant.primarySwatch,
+      brightness: Brightness.light,
     ).copyWith(
-      secondary: ColorsConstant.accentColor,
-      background: ColorsConstant.secondaryColor,
+      secondary: ColorsConstant.lightAccentColor,
+      background: ColorsConstant.lightSecondaryColor,
+    ),
+  );
+
+  static final ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: ColorsConstant.darkThemeContentColor,
+    backgroundColor: ColorsConstant.lightBackgroundColor,
+    cardTheme: CardTheme(
+      color: ColorsConstant.darkCardColor,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(
+          color: Colors.white,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
+      ),
+    ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    textTheme: GoogleFonts.poppinsTextTheme(),
+    iconTheme: const IconThemeData(
+      color: Colors.white,
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: ColorsConstant.lightSecondaryColor,
+      brightness: Brightness.light,
+      disabledColor: Colors.white,
+      labelStyle: GoogleFonts.poppins(),
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(
+          color: ColorsConstant.lightAccentColor,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      elevation: 0,
+      showCheckmark: false,
+      pressElevation: 2.0,
+      padding: const EdgeInsets.all(4),
+      selectedColor: ColorsConstant.lightAccentColor,
+      secondarySelectedColor: ColorsConstant.lightSecondaryColor,
+      deleteIconColor: Colors.redAccent,
+      secondaryLabelStyle: const TextStyle(),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: GoogleFonts.poppins(
+        color: Colors.black,
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
+        ),
+      ),
+    ),
+    scaffoldBackgroundColor: ColorsConstant.darkBackgroundColor,
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarColor: ColorsConstant.darkSecondaryColor,
+        systemNavigationBarColor:
+            ColorsConstant.darkThemeBottomNavigationBarBackgroundColor,
+      ),
+      backgroundColor: ColorsConstant.darkAppBarColor,
+      elevation: 0,
+      toolbarTextStyle: GoogleFonts.poppins(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
+      titleTextStyle: GoogleFonts.poppins(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+      actionsIconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: ColorsConstant.darkSecondaryColor,
+      enableFeedback: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          ValuesConstant.borderRadius,
+        ),
+      ),
+    ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      modalBackgroundColor: ColorsConstant.darkSecondaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(
+            ValuesConstant.borderRadius,
+          ),
+          topLeft: Radius.circular(
+            ValuesConstant.borderRadius,
+          ),
+        ),
+      ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor:
+          ColorsConstant.darkThemeBottomNavigationBarBackgroundColor,
+      selectedItemColor: Color(0xff03a8fc),
+      unselectedItemColor: ColorsConstant.darkThemeButtonColor,
+    ),
+    dialogTheme: const DialogTheme(
+      backgroundColor: ColorsConstant.darkSecondaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(ValuesConstant.borderRadius),
+        ),
+      ),
+    ),
+    buttonTheme: const ButtonThemeData(
+      colorScheme: ColorScheme.dark(
+        background: ColorsConstant.darkThemeButtonColor,
+        primary: Colors.white,
+      ),
+    ),
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: ColorsConstant.primarySwatch,
+      brightness: Brightness.dark,
+    ).copyWith(
+      secondary: ColorsConstant.darkAccentColor,
+      background: ColorsConstant.darkSecondaryColor,
     ),
   );
 }

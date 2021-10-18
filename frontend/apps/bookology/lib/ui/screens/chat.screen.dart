@@ -22,15 +22,18 @@
 
 import 'dart:io';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/discussions.manager.dart';
+import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/marquee.widget.dart';
+import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,6 +70,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   bool _isAttachmentUploading = false;
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
+  final _authService = AuthService(FirebaseAuth.instance);
 
   void _handleAttachmentPressed() {
     BottomSheetManager(context).filePickerBottomSheet(onImagePressed: () {
@@ -85,35 +89,42 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (result != null) {
-      _setAttachmentUploading(true);
-      final name = result.files.single.name;
-      final filePath = result.files.single.path;
-      final file = File(filePath!);
-      final collectionID =
-          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
-      try {
-        final reference = FirebaseStorage.instance
-            .ref('rooms')
-            .child(widget.room.id)
-            .child('documents')
-            .child(collectionID)
-            .child(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+      DialogsManager(context).showSendAttachmentDialog(
+          attachmentName: result.files.single.name,
+          receiverName: widget.userName,
+          onSendClicked: () async {
+            Navigator.of(context).pop();
+            _setAttachmentUploading(true);
+            final name = result.files.single.name;
+            final filePath = result.files.single.path;
+            final file = File(filePath!);
+            final collectionID =
+                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
+            try {
+              final reference = FirebaseStorage.instance
+                  .ref('rooms')
+                  .child(widget.room.id)
+                  .child('documents')
+                  .child(collectionID)
+                  .child(name);
+              await reference.putFile(file);
+              final uri = await reference.getDownloadURL();
 
-        final message = types.PartialFile(
-          mimeType: lookupMimeType(filePath),
-          name: name,
-          size: result.files.single.size,
-          uri: uri,
-        );
+              final message = types.PartialFile(
+                mimeType: lookupMimeType(filePath),
+                name: name,
+                size: result.files.single.size,
+                uri: uri,
+              );
 
-        _firestoreService.sendMessage(message, widget.room.id, collectionID);
-        _setAttachmentUploading(false);
-      } on FirebaseException {
-        _setAttachmentUploading(false);
-        rethrow;
-      }
+              _firestoreService.sendMessage(
+                  message, widget.room.id, collectionID);
+              _setAttachmentUploading(false);
+            } on FirebaseException {
+              _setAttachmentUploading(false);
+              rethrow;
+            }
+          });
     }
   }
 
@@ -125,39 +136,46 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     if (result != null) {
-      _setAttachmentUploading(true);
-      final file = File(result.path);
-      final size = file.lengthSync();
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
-      final name = DateTime.now().microsecond.toString();
-      final collectionID =
-          '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
+      DialogsManager(context).showSendAttachmentDialog(
+          attachmentName: result.name,
+          receiverName: widget.userName,
+          onSendClicked: () async {
+            Navigator.of(context).pop();
+            _setAttachmentUploading(true);
+            final file = File(result.path);
+            final size = file.lengthSync();
+            final bytes = await result.readAsBytes();
+            final image = await decodeImageFromList(bytes);
+            final name = result.name;
+            final collectionID =
+                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().day}${DateTime.now().month}${DateTime.now().year}${DateTime.now().hashCode}';
 
-      try {
-        final reference = FirebaseStorage.instance
-            .ref('rooms')
-            .child(widget.room.id)
-            .child('images')
-            .child(collectionID)
-            .child(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+            try {
+              final reference = FirebaseStorage.instance
+                  .ref('rooms')
+                  .child(widget.room.id)
+                  .child('images')
+                  .child(collectionID)
+                  .child(name);
+              await reference.putFile(file);
+              final uri = await reference.getDownloadURL();
 
-        final message = types.PartialImage(
-          height: image.height.toDouble(),
-          name: name,
-          size: size,
-          uri: uri,
-          width: image.width.toDouble(),
-        );
+              final message = types.PartialImage(
+                height: image.height.toDouble(),
+                name: name,
+                size: size,
+                uri: uri,
+                width: image.width.toDouble(),
+              );
 
-        _firestoreService.sendMessage(message, widget.room.id, collectionID);
-        _setAttachmentUploading(false);
-      } on FirebaseException {
-        _setAttachmentUploading(false);
-        rethrow;
-      }
+              _firestoreService.sendMessage(
+                  message, widget.room.id, collectionID);
+              _setAttachmentUploading(false);
+            } on FirebaseException {
+              _setAttachmentUploading(false);
+              rethrow;
+            }
+          });
     }
   }
 
@@ -204,108 +222,119 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircularImage(
-              image: widget.userProfileImage,
-              radius: 30,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            SizedBox(
-              width: 160,
-              child: Marquee(
-                child: Row(
-                  children: [
-                    AutoSizeText(
-                      widget.userName,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
+    return ValueListenableBuilder(
+        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+        builder: (_, mode, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Row(
+                children: [
+                  CircularImage(
+                    image: widget.userProfileImage,
+                    radius: 30,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 160,
+                    child: Marquee(
+                      child: Row(
+                        children: [
+                          AutoSizeText(
+                            widget.userName,
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Visibility(
+                            visible: widget.isVerified,
+                            child: const Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Visibility(
-                      visible: widget.isVerified,
-                      child: const Icon(
-                        Icons.verified,
-                        color: Colors.blue,
-                        size: 20,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              actions: [
+                Tooltip(
+                  message: StringConstants.hintConnectionSecured,
+                  child: IconButton(
+                    onPressed: () {
+                      DialogsManager(context).showSecuredConnectionDialog();
+                    },
+                    icon: const Icon(
+                      Icons.lock_outlined,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+                PopupMenuButton(
+                  onSelected: menuAction,
+                  itemBuilder: (BuildContext itemBuilder) =>
+                      StringConstants.menuDeleteDiscussion
+                          .map(
+                            (value) => PopupMenuItem(
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              value: value,
+                            ),
+                          )
+                          .toList(),
+                ),
+              ],
             ),
-          ],
-        ),
-        iconTheme: const IconThemeData(color: Colors.black),
-        actions: [
-          Tooltip(
-            message: StringConstants.hintConnectionSecured,
-            child: IconButton(
-              onPressed: () {
-                DialogsManager(context).showSecuredConnectionDialog();
+            body: StreamBuilder<types.Room>(
+              initialData: widget.room,
+              stream: FirebaseChatCore.instance.room(widget.room.id),
+              builder: (context, snapshot) {
+                return StreamBuilder<List<types.Message>>(
+                  initialData: const [],
+                  stream: FirebaseChatCore.instance.messages(snapshot.data!),
+                  builder: (context, snapshot) {
+                    return Discussions(
+                        roomId: widget.room.id,
+                        showUserAvatars: true,
+                        showUserNames: false,
+                        usePreviewData: true,
+                        theme: Theme.of(context).primaryColor == Colors.white
+                            ? DarkChatUi()
+                            : LightChatUi(),
+                        bubbleBuilder: _bubbleBuilder,
+                        isAttachmentUploading: _isAttachmentUploading,
+                        messages: snapshot.data ?? [],
+                        onAttachmentPressed: _handleAttachmentPressed,
+                        onMessageTap: _handleMessageTap,
+                        onMessageLongPress: (value) async {
+                          if (FirebaseAuth.instance.currentUser!.uid ==
+                              value.author.id) {
+                            DialogsManager(context)
+                                .showUnsendMessageDialog(value);
+                          }
+                        },
+                        onPreviewDataFetched: _handlePreviewDataFetched,
+                        onSendPressed: _handleSendPressed,
+                        user: types.User(
+                          id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                        ));
+                  },
+                );
               },
-              icon: const Icon(
-                Icons.lock_outlined,
-                color: Colors.green,
-              ),
             ),
-          ),
-          PopupMenuButton(
-            onSelected: menuAction,
-            itemBuilder: (BuildContext itemBuilder) =>
-                StringConstants.menuDeleteDiscussion
-                    .map(
-                      (value) => PopupMenuItem(
-                        child: Text(value),
-                        value: value,
-                      ),
-                    )
-                    .toList(),
-          ),
-        ],
-      ),
-      body: StreamBuilder<types.Room>(
-        initialData: widget.room,
-        stream: FirebaseChatCore.instance.room(widget.room.id),
-        builder: (context, snapshot) {
-          return StreamBuilder<List<types.Message>>(
-            initialData: const [],
-            stream: FirebaseChatCore.instance.messages(snapshot.data!),
-            builder: (context, snapshot) {
-              return Discussions(
-                roomId: widget.room.id,
-                showUserAvatars: true,
-                showUserNames: false,
-                usePreviewData: true,
-                theme: ChatUiManager(),
-                isAttachmentUploading: _isAttachmentUploading,
-                messages: snapshot.data ?? [],
-                onAttachmentPressed: _handleAttachmentPressed,
-                onMessageTap: _handleMessageTap,
-                onMessageLongPress: (value) async {
-                  if (FirebaseAuth.instance.currentUser!.uid ==
-                      value.author.id) {
-                    DialogsManager(context).showUnsendMessageDialog(value);
-                  }
-                },
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                user: types.User(
-                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                ),
-              );
-            },
           );
-        },
-      ),
-    );
+        });
   }
 
   void menuAction(String value) {
@@ -314,5 +343,31 @@ class _ChatPageState extends State<ChatPage> {
         DialogsManager(context).showDeleteDiscussionDialog(widget.room);
         break;
     }
+  }
+
+  Widget _bubbleBuilder(
+    Widget child, {
+    required message,
+    required nextMessageInGroup,
+  }) {
+    return Bubble(
+      child: child,
+      elevation: 0,
+      padding: const BubbleEdges.all(0),
+      radius: const Radius.circular(15),
+      nipRadius: 3,
+      color: _authService.currentUser()!.uid != message.author.id ||
+              message.type == types.MessageType.image
+          ? LightChatUi().secondaryColor
+          : LightChatUi().primaryColor,
+      margin: nextMessageInGroup
+          ? const BubbleEdges.symmetric(horizontal: 6)
+          : null,
+      nip: nextMessageInGroup
+          ? BubbleNip.no
+          : _authService.currentUser()!.uid != message.author.id
+              ? BubbleNip.leftBottom
+              : BubbleNip.rightBottom,
+    );
   }
 }

@@ -86,7 +86,10 @@ class _AboutScreenState extends State<AboutScreen> {
             padding: const EdgeInsets.all(8),
             child: Text(
               paragraph.text,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
           ));
         } else {
@@ -94,6 +97,9 @@ class _AboutScreenState extends State<AboutScreen> {
             padding: const EdgeInsets.all(8),
             child: Text(
               paragraph.text,
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
             ),
           ));
         }
@@ -113,13 +119,15 @@ class _AboutScreenState extends State<AboutScreen> {
       _licenses.add(ExpansionTile(
         title: Text(
           key,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
           ),
         ),
         subtitle: Text(
           '$count licenses',
-          style: const TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+          ),
         ),
         children: <Widget>[...value],
       ));
@@ -223,8 +231,8 @@ class _AboutScreenState extends State<AboutScreen> {
                               },
                               text: StringConstants.wordCheckForUpdates,
                               icon: FontAwesomeIcons.googlePlay,
-                              iconColor: Colors.black,
-                              textColor: Colors.black,
+                              iconColor: Theme.of(context).primaryColor,
+                              textColor: Theme.of(context).primaryColor,
                             ),
                           ),
                           const SizedBox(
@@ -240,8 +248,8 @@ class _AboutScreenState extends State<AboutScreen> {
                               },
                               text: StringConstants.wordSendFeedback,
                               icon: Icons.feedback_outlined,
-                              iconColor: Colors.black,
-                              textColor: Colors.black,
+                              iconColor: Theme.of(context).primaryColor,
+                              textColor: Theme.of(context).primaryColor,
                             ),
                           ),
                           const SizedBox(
@@ -285,20 +293,22 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             child: Column(
                               children: [
-                                const CircularImage(
-                                  image: 'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/System%2FTeams%2FMihir%20Paldhikar.jpg?alt=media&token=80456c7c-b880-4420-8971-640bb05ea275',
+                                CircularImage(
+                                  image:
+                                      'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/System%2FTeams%2FMihir%20Paldhikar.jpg?alt=media&token=80456c7c-b880-4420-8971-640bb05ea275',
                                   radius: 100,
-                                  outlineColor: Colors.black,
+                                  outlineColor: Theme.of(context).primaryColor,
                                   outLineWidth: 2,
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const Text(
+                                Text(
                                   'Mihir Paldhikar',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 const SizedBox(
@@ -309,15 +319,18 @@ class _AboutScreenState extends State<AboutScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.normal,
-                                    color: Colors.grey.shade800,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Text(
+                                Text(
                                   '🙋‍♂️  Hey there! I am Mihir Paldhikar. \n You can connect with me on all social platforms with the user id @imihirpaldhikar',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(
@@ -358,9 +371,12 @@ class _AboutScreenState extends State<AboutScreen> {
                                             url:
                                                 'https://github.com/imihirpaldhikar');
                                       },
-                                      icon: const Icon(
+                                      icon: Icon(
                                         FontAwesomeIcons.github,
-                                        color: Colors.black,
+                                        color: Theme.of(context).primaryColor ==
+                                                Colors.white
+                                            ? Colors.white
+                                            : Colors.black,
                                         size: 35,
                                       ),
                                     ),
@@ -396,7 +412,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.grey,
+                                color: Theme.of(context).primaryColor,
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(
@@ -405,19 +421,20 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             child: Column(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.person_outline_outlined,
-                                  color: Colors.grey,
+                                  color: Theme.of(context).primaryColor,
                                   size: 60,
                                 ),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const Text(
+                                Text(
                                   'Nandini Gusani',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 const SizedBox(
@@ -428,7 +445,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.normal,
-                                    color: Colors.grey.shade800,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 const SizedBox(

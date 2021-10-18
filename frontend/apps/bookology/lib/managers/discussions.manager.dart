@@ -25,6 +25,7 @@ import 'dart:math';
 import 'package:bookology/managers/dicsussions_input.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_ui/src/chat_l10n.dart';
 import 'package:flutter_chat_ui/src/chat_theme.dart';
 import 'package:flutter_chat_ui/src/conditional/conditional.dart';
@@ -46,12 +47,18 @@ class Discussions extends StatefulWidget {
   /// Creates a chat widget
   const Discussions({
     Key? key,
-    this.buildCustomMessage,
+    this.bubbleBuilder,
+    this.customBottomWidget,
     this.customDateHeaderText,
+    this.customMessageBuilder,
     this.dateFormat,
+    this.dateHeaderThreshold = 900000,
     this.dateLocale,
     this.disableImageGallery,
     this.emptyState,
+    this.fileMessageBuilder,
+    this.groupMessagesThreshold = 60000,
+    this.imageMessageBuilder,
     this.isAttachmentUploading,
     this.isLastPage,
     this.l10n = const ChatL10nEn(),
@@ -64,8 +71,11 @@ class Discussions extends StatefulWidget {
     this.onPreviewDataFetched,
     required this.onSendPressed,
     this.onTextChanged,
+    this.onTextFieldTap,
+    this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
     this.showUserAvatars = false,
     this.showUserNames = false,
+    this.textMessageBuilder,
     this.theme = const DefaultChatTheme(),
     this.timeFormat,
     this.usePreviewData = true,
@@ -73,8 +83,16 @@ class Discussions extends StatefulWidget {
     required this.roomId,
   }) : super(key: key);
 
-  /// See [Message.buildCustomMessage]
-  final Widget Function(types.Message)? buildCustomMessage;
+  /// See [Message.bubbleBuilder]
+  final Widget Function(
+    Widget child, {
+    required types.Message message,
+    required bool nextMessageInGroup,
+  })? bubbleBuilder;
+
+  /// Allows you to replace the default Input widget e.g. if you want to create
+  /// a channel view.
+  final Widget? customBottomWidget;
 
   /// If [dateFormat], [dateLocale] and/or [timeFormat] is not enough to
   /// customize date headers in your case, use this to return an arbitrary
@@ -85,12 +103,22 @@ class Discussions extends StatefulWidget {
   /// date header for any message.
   final String Function(DateTime)? customDateHeaderText;
 
+  /// See [Message.customMessageBuilder]
+  final Widget Function(types.CustomMessage, {required int messageWidth})?
+      customMessageBuilder;
+
   /// Allows you to customize the date format. IMPORTANT: only for the date,
   /// do not return time here. See [timeFormat] to customize the time format.
   /// [dateLocale] will be ignored if you use this, so if you want a localized date
   /// make sure you initialize your [DateFormat] with a locale. See [customDateHeaderText]
   /// for more customization.
   final DateFormat? dateFormat;
+
+  /// Time (in ms) between two messages when we will render a date header.
+  /// Default value is 15 minutes, 900000 ms. When time between two messages
+  /// is higher than this threshold, date header will be rendered. Also,
+  /// not related to this value, date header will be rendered on every new day.
+  final int dateHeaderThreshold;
 
   /// Locale will be passed to the `Intl` package. Make sure you initialized
   /// date formatting in your app before passing any locale here, otherwise
@@ -105,6 +133,19 @@ class Discussions extends StatefulWidget {
   /// in this case.
   final Widget? emptyState;
 
+  /// See [Message.fileMessageBuilder]
+  final Widget Function(types.FileMessage, {required int messageWidth})?
+      fileMessageBuilder;
+
+  /// Time (in ms) between two messages when we will visually group them.
+  /// Default value is 1 minute, 60000 ms. When time between two messages
+  /// is lower than this threshold, they will be visually grouped.
+  final int groupMessagesThreshold;
+
+  /// See [Message.imageMessageBuilder]
+  final Widget Function(types.ImageMessage, {required int messageWidth})?
+      imageMessageBuilder;
+
   /// See [Input.isAttachmentUploading]
   final bool? isAttachmentUploading;
 
@@ -113,7 +154,7 @@ class Discussions extends StatefulWidget {
 
   /// Localized copy. Extend [ChatL10n] class to create your own copy or use
   /// existing one, like the default [ChatL10nEn]. You can customize only
-  /// certain variables, see more here [ChatL10nEn].
+  /// certain properties, see more here [ChatL10nEn].
   final ChatL10n l10n;
 
   /// List of [types.Message] to render in the chat widget
@@ -144,6 +185,12 @@ class Discussions extends StatefulWidget {
   /// See [Input.onTextChanged]
   final void Function(String)? onTextChanged;
 
+  /// See [Input.onTextFieldTap]
+  final void Function()? onTextFieldTap;
+
+  /// See [Input.sendButtonVisibilityMode]
+  final SendButtonVisibilityMode sendButtonVisibilityMode;
+
   /// See [Message.showUserAvatars]
   final bool showUserAvatars;
 
@@ -151,9 +198,16 @@ class Discussions extends StatefulWidget {
   /// shown only on text messages.
   final bool showUserNames;
 
+  /// See [Message.textMessageBuilder]
+  final Widget Function(
+    types.TextMessage, {
+    required int messageWidth,
+    required bool showName,
+  })? textMessageBuilder;
+
   /// Chat theme. Extend [ChatTheme] class to create your own theme or use
   /// existing one, like the [DefaultChatTheme]. You can customize only certain
-  /// variables, see more here [DefaultChatTheme].
+  /// properties, see more here [DefaultChatTheme].
   final ChatTheme theme;
 
   /// Allows you to customize the time format. IMPORTANT: only for the time,
@@ -168,7 +222,6 @@ class Discussions extends StatefulWidget {
 
   /// See [InheritedUser.user]
   final types.User user;
-
   final String roomId;
 
   @override
@@ -199,11 +252,11 @@ class _DiscussionsState extends State<Discussions> {
         widget.user,
         customDateHeaderText: widget.customDateHeaderText,
         dateFormat: widget.dateFormat,
+        dateHeaderThreshold: widget.dateHeaderThreshold,
         dateLocale: widget.dateLocale,
+        groupMessagesThreshold: widget.groupMessagesThreshold,
         showUserNames: widget.showUserNames,
         timeFormat: widget.timeFormat,
-        groupMessagesThreshold: 1000,
-        dateHeaderThreshold: 1000,
       );
 
       _chatMessages = result[0] as List<Object>;
@@ -211,7 +264,7 @@ class _DiscussionsState extends State<Discussions> {
     }
   }
 
-  Widget _buildEmptyState() {
+  Widget _emptyStateBuilder() {
     return widget.emptyState ??
         Container(
           alignment: Alignment.center,
@@ -226,7 +279,7 @@ class _DiscussionsState extends State<Discussions> {
         );
   }
 
-  Widget _buildImageGallery() {
+  Widget _imageGalleryBuilder() {
     return Dismissible(
       key: const Key('photo_view_gallery'),
       direction: DismissDirection.down,
@@ -258,7 +311,24 @@ class _DiscussionsState extends State<Discussions> {
     );
   }
 
-  Widget _buildMessage(Object object) {
+  Widget _imageGalleryLoadingBuilder(
+    BuildContext context,
+    ImageChunkEvent? event,
+  ) {
+    return Center(
+      child: SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(
+          value: event == null || event.expectedTotalBytes == null
+              ? 0
+              : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
+        ),
+      ),
+    );
+  }
+
+  Widget _messageBuilder(Object object, BoxConstraints constraints) {
     if (object is DateHeader) {
       return Container(
         alignment: Alignment.center,
@@ -280,11 +350,15 @@ class _DiscussionsState extends State<Discussions> {
       final message = map['message']! as types.Message;
       final _messageWidth =
           widget.showUserAvatars && message.author.id != widget.user.id
-              ? min(MediaQuery.of(context).size.width * 0.72, 440).floor()
-              : min(MediaQuery.of(context).size.width * 0.78, 440).floor();
+              ? min(constraints.maxWidth * 0.72, 440).floor()
+              : min(constraints.maxWidth * 0.78, 440).floor();
 
       return Message(
         key: ValueKey(message.id),
+        bubbleBuilder: widget.bubbleBuilder,
+        customMessageBuilder: widget.customMessageBuilder,
+        fileMessageBuilder: widget.fileMessageBuilder,
+        imageMessageBuilder: widget.imageMessageBuilder,
         message: message,
         messageWidth: _messageWidth,
         onMessageLongPress: widget.onMessageLongPress,
@@ -298,31 +372,14 @@ class _DiscussionsState extends State<Discussions> {
         },
         onPreviewDataFetched: _onPreviewDataFetched,
         roundBorder: map['nextMessageInGroup'] == true,
-        showAvatar:
-            widget.showUserAvatars && map['nextMessageInGroup'] == false,
+        showAvatar: map['nextMessageInGroup'] == false,
         showName: map['showName'] == true,
         showStatus: map['showStatus'] == true,
         showUserAvatars: widget.showUserAvatars,
+        textMessageBuilder: widget.textMessageBuilder,
         usePreviewData: widget.usePreviewData,
       );
     }
-  }
-
-  Widget _imageGalleryLoadingBuilder(
-    BuildContext context,
-    ImageChunkEvent? event,
-  ) {
-    return Center(
-      child: SizedBox(
-        width: 20.0,
-        height: 20.0,
-        child: CircularProgressIndicator(
-          value: event == null || event.expectedTotalBytes == null
-              ? 0
-              : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
-        ),
-      ),
-    );
   }
 
   void _onCloseGalleryPressed() {
@@ -365,41 +422,42 @@ class _DiscussionsState extends State<Discussions> {
             children: [
               Container(
                 color: widget.theme.backgroundColor,
-                child: SafeArea(
-                  bottom: false,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: widget.messages.isEmpty
-                            ? SizedBox.expand(
-                                child: _buildEmptyState(),
-                              )
-                            : GestureDetector(
-                                onTap: () => FocusManager.instance.primaryFocus
-                                    ?.unfocus(),
-                                child: ChatList(
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: widget.messages.isEmpty
+                          ? SizedBox.expand(
+                              child: _emptyStateBuilder(),
+                            )
+                          : GestureDetector(
+                              onTap: () =>
+                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              child: LayoutBuilder(
+                                builder: (BuildContext context,
+                                        BoxConstraints constraints) =>
+                                    ChatList(
                                   isLastPage: widget.isLastPage,
                                   itemBuilder: (item, index) =>
-                                      _buildMessage(item),
+                                      _messageBuilder(item, constraints),
                                   items: _chatMessages,
                                   onEndReached: widget.onEndReached,
                                   onEndReachedThreshold:
                                       widget.onEndReachedThreshold,
                                 ),
                               ),
-                      ),
-                      DiscussionsInput(
-                        isAttachmentUploading: widget.isAttachmentUploading,
-                        onAttachmentPressed: widget.onAttachmentPressed,
-                        onSendPressed: widget.onSendPressed,
-                        onTextChanged: widget.onTextChanged,
-                        roomId: widget.roomId,
-                      ),
-                    ],
-                  ),
+                            ),
+                    ),
+                    DiscussionsInput(
+                      isAttachmentUploading: widget.isAttachmentUploading,
+                      onAttachmentPressed: widget.onAttachmentPressed,
+                      onSendPressed: widget.onSendPressed,
+                      onTextChanged: widget.onTextChanged,
+                      roomId: widget.roomId,
+                    ),
+                  ],
                 ),
               ),
-              if (_isImageViewVisible) _buildImageGallery(),
+              if (_isImageViewVisible) _imageGalleryBuilder(),
             ],
           ),
         ),

@@ -48,12 +48,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(
+                Center(
                   child: Text(
                     'Verify your email',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -70,14 +71,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
                   child: Text(
                     'We have sent an email to your email address please verify by '
                     'clicking on \'Verify Email\' button in email. Once verified,'
                     ' click the \'Verified\' button below.',
                     softWrap: true,
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
                 const SizedBox(
