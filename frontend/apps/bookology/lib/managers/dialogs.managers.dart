@@ -374,6 +374,44 @@ class DialogsManager {
     );
   }
 
+  void sendDiscussionRequestDialog({
+    required VoidCallback onRequestSend,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AnimatedDialog(
+        title: 'Send Request?',
+        content: [
+          Text(
+            'This will create a request to the uploader. You will only be able to discuss if the uploader accepts your request.',
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+        actions: [
+          OutLinedButton(
+            text: 'Request',
+            backgroundColor: Colors.green[100],
+            onPressed: onRequestSend,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          OutLinedButton(
+            text: 'Cancel',
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+        dialogIcon: const Icon(
+          Icons.question_answer_outlined,
+        ),
+      ),
+    );
+  }
+
   void showResetPasswordDialog() {
     final _formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
@@ -473,7 +511,7 @@ class DialogsManager {
     showDialog(
       context: context,
       builder: (context) => AnimatedDialog(
-        title: 'Send Message?',
+        title: 'Send Attachment?',
         actions: [
           OutLinedButton(
             text: 'Send',
