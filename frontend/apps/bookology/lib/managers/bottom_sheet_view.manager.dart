@@ -30,7 +30,6 @@ class BottomSheetViewManager {
 
   Future<dynamic> createBottomSheet({
     required List<Widget> contents,
-    double? height = 200,
     String? title = '',
     CrossAxisAlignment? alignment = CrossAxisAlignment.start,
   }) {
@@ -41,7 +40,6 @@ class BottomSheetViewManager {
       builder: (context) => BottomSheetView(
         contents: contents,
         title: title,
-        height: height,
         alignment: alignment,
       ),
     );

@@ -66,12 +66,12 @@ class _AuthScreenState extends State<AuthScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 60,
+                      top: 130,
                     ),
                     child: _logo(context),
                   ),
                   const SizedBox(
-                    height: 170,
+                    height: 180,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -89,7 +89,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               left: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: ColorsConstant.lightThemeButtonColor,
+                              color:
+                                  Theme.of(context).primaryColor == Colors.white
+                                      ? ColorsConstant.darkThemeButtonColor
+                                      : ColorsConstant.lightThemeButtonColor,
                               borderRadius: BorderRadius.circular(
                                 ValuesConstant.secondaryBorderRadius,
                               ),
@@ -105,7 +108,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ),
                                 Text(
                                   StringConstants.hintContinueWithGoogle,
-                                  style: Theme.of(context).textTheme.button,
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -165,7 +170,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             text: TextSpan(
                               text: StringConstants.hintCreateNewAccount,
                               style: GoogleFonts.poppins(
-                                color: Colors.black,
+                                color: Theme.of(context).primaryColor,
                               ),
                               children: [
                                 TextSpan(
@@ -194,15 +199,19 @@ Widget _logo(BuildContext context) {
     children: [
       Image.asset(
         'assets/icons/splash.icon.png',
-        width: 250,
-        height: 250,
+        width: 150,
+        height: 150,
       ),
       const SizedBox(
         height: 20,
       ),
       Text(
         StringConstants.appSlogan,
-        style: Theme.of(context).textTheme.subtitle1,
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ],
   );

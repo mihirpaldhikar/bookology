@@ -52,11 +52,10 @@ class _SearchScreenState extends State<SearchScreen> {
           width: double.infinity,
           height: double.infinity,
           alignment: Alignment.center,
-          child: const Text(
+          child: Text(
             'Work in Progress!',
-            style: TextStyle(
-              fontSize: 20,
-            ),
+            style:
+                TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
           ),
         ));
   }

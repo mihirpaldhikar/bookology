@@ -195,6 +195,7 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration.collapsed(
+                          fillColor: Colors.red,
                           hintStyle: InheritedChatTheme.of(context)
                               .theme
                               .inputTextStyle

@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
@@ -42,8 +43,11 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final AdaptiveThemeMode themeMode;
+
   const ProfileScreen({
     Key? key,
+    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -66,11 +70,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectivityStatus>(
       initialData: ConnectivityStatus.cellular,
@@ -78,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
         if (snapshot.data == ConnectivityStatus.offline) {
-          return offlineScreen();
+          return offlineScreen(context: context);
         }
         return Scaffold(
           appBar: AppBar(
@@ -135,22 +134,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.all(0),
                       decoration: BoxDecoration(
                         color: Theme.of(context)
-                            .bottomNavigationBarTheme
-                            .unselectedItemColor,
+                            .buttonTheme
+                            .colorScheme!
+                            .background,
                         borderRadius: BorderRadius.circular(100),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
-                        color: Colors.black,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.menu_outlined),
+                icon: Icon(
+                  Icons.menu_outlined,
+                  color: Theme.of(context).primaryColor,
+                ),
                 onPressed: () {
-                  BottomSheetManager(context).showMoreProfileMenuBottomSheet();
+                  BottomSheetManager(context).showMoreProfileMenuBottomSheet(
+                    themeMode: widget.themeMode,
+                  );
                 },
               ),
             ],
@@ -169,7 +174,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return _profileWithBooks(userData);
                   }
                 }
-                return profileShimmer();
+                return profileShimmer(
+                  context: context,
+                );
               },
             ),
           ),
@@ -263,9 +270,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
+                  color: Theme.of(context).primaryColor,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -274,7 +282,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Text(
                 userData.data!.userInformation.bio.toString(),
-                style: Theme.of(context).textTheme.subtitle1,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
                 textAlign: TextAlign.center,
               )
             ],
@@ -295,9 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 bottom: 10,
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .bottomNavigationBarTheme
-                    .unselectedItemColor,
+                color: Theme.of(context).buttonTheme.colorScheme!.background,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
@@ -312,7 +320,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(
                     'Books',
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -325,9 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 bottom: 10,
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .bottomNavigationBarTheme
-                    .unselectedItemColor,
+                color: Theme.of(context).buttonTheme.colorScheme!.background,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
@@ -342,7 +350,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(
                     'Points',
-                    style: Theme.of(context).textTheme.subtitle2,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -389,8 +399,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 150,
                   child: OutLinedButton(
                     text: 'Account Settings',
-                    backgroundColor: Colors.grey.shade100,
-                    textColor: Colors.black,
+                    textColor: Theme.of(context).primaryColor,
                     onPressed: () {},
                   ),
                 ),
@@ -417,6 +426,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) => BookViewer(
+              themeMode: widget.themeMode,
               id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
               book: userData.data!.books[index - 1],
             ),
@@ -427,8 +437,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<UserModel> _fetchUserData() async {
-    final data =
-        await _apiService.getUserProfile(userID: _authService.currentUser()!.uid);
+    final data = await _apiService.getUserProfile(
+        userID: _authService.currentUser()!.uid);
 
     if (_cacheService.getCurrentUserNameCache() ==
         data!.userInformation.username) {

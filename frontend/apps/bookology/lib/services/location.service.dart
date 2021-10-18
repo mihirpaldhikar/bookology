@@ -24,6 +24,7 @@ import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
   final BuildContext context;
@@ -34,30 +35,32 @@ class LocationService {
     bool serviceEnabled;
     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      DialogsManager(context).showLocationPermissionDialog(
-        () async {
-          permission = await Geolocator.requestPermission();
-          Navigator.pop(context);
-        },
-      );
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+    if (await Permission.locationWhenInUse.isDenied ||
+        await Permission.locationWhenInUse.isPermanentlyDenied ||
+        await Permission.locationWhenInUse.isRestricted) {
+      DialogsManager(context).showLocationNotGrantedDialog(
+          onOpenSettingsClicked: () {
+        Navigator.pop(context);
+        openAppSettings();
+      });
+    } else {
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled don't continue
+        // accessing the position and request users of the
+        // App to enable the location services.
+        return Future.error('Location services are disabled.');
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        DialogsManager(context).showLocationPermissionDialog(
+          () async {
+            permission = await Geolocator.requestPermission();
+            Navigator.pop(context);
+          },
+        );
+      }
     }
     return await Geolocator.getCurrentPosition();
   }

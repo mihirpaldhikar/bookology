@@ -26,13 +26,11 @@ import 'package:flutter/material.dart';
 class BottomSheetView extends StatefulWidget {
   final List<Widget> contents;
   final String? title;
-  final double? height;
   final CrossAxisAlignment? alignment;
 
   const BottomSheetView({
     Key? key,
     required this.contents,
-    this.height,
     this.title = '',
     this.alignment = CrossAxisAlignment.center,
   }) : super(key: key);
@@ -45,16 +43,12 @@ class _BottomSheetViewState extends State<BottomSheetView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height,
-      padding: const EdgeInsets.only(
-        top: 10,
-        right: 20,
-        left: 20,
-      ),
+      padding: const EdgeInsets.only(top: 10, right: 20, left: 20, bottom: 20),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: const BouncingScrollPhysics(),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

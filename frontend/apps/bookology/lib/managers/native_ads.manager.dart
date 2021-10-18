@@ -29,7 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NativeInlineAd extends StatefulWidget {
-  const NativeInlineAd();
+  const NativeInlineAd({Key? key}) : super(key: key);
 
   @override
   State createState() => _NativeInlineAdState();
@@ -108,15 +108,15 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                   child: Container(
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .unselectedItemColor!,
+                      color:
+                          Theme.of(context).buttonTheme.colorScheme!.background,
                       borderRadius: BorderRadius.circular(
                         ValuesConstant.secondaryBorderRadius,
                       ),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.help_outline_outlined,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

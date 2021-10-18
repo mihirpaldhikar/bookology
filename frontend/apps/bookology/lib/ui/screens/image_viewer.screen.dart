@@ -23,7 +23,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewer extends StatefulWidget {
@@ -40,19 +39,16 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
         title: Text(
           'View Image',
-          style: GoogleFonts.poppins(color: Colors.black),
+          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
-        backgroundColor: Colors.white,
       ),
       body: SafeArea(
         child: PhotoView(
-          backgroundDecoration: const BoxDecoration(color: Colors.white),
+          backgroundDecoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+          ),
           imageProvider: FileImage(
             File.fromUri(
               Uri.parse(widget.imageURl),

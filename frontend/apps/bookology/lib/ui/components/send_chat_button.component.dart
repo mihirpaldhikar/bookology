@@ -48,7 +48,7 @@ class SendChatButton extends StatelessWidget {
             child: Text(
               'Send',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),

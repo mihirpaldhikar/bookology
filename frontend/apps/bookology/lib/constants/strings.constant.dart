@@ -84,6 +84,7 @@ class StringConstants {
   static const String navigationConfirmation = 'Confirmation';
   static const String navigationEditProfile = 'Edit Profile';
   static const String navigationCompleteProfile = 'Complete Profile';
+  static const String navigationSettings = 'Settings';
 
   // Hints Constants
   static const String hintCreateNewBook = 'Create new Book';

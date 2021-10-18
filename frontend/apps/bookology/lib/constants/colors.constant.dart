@@ -39,30 +39,40 @@ class ColorsConstant {
     },
   );
 
-  static const Color accentColor = Color(0xff2E79F3);
+  static const Color lightAccentColor = Color(0xff2E79F3);
+  static const Color darkAccentColor = Color(0xff275bb1);
 
-  static const Color secondaryColor = Color(0xFFF2F6FE);
+  static const Color lightSecondaryColor = Color(0xFFF2F6FE);
+  static const Color darkSecondaryColor = Color(0xFF2D2D31);
 
   static const Color dangerBorderColor = Colors.redAccent;
 
   static const Color dangerBackgroundColor = Color(0xFFFFCDD2);
 
-  static const Color backgroundColor = Color(0xFFFFFFFF);
+  static const Color lightBackgroundColor = Color(0xFFFFFFFF);
+  static const Color darkBackgroundColor = Color(0xFF000000);
 
   static const Color darkColor = Color(0xFF07357E);
 
-  static const Color cardColor = Colors.white;
+  static const Color lightCardColor = Colors.white;
+  static const Color darkCardColor = Colors.black;
 
   static const Color appBarButtonsBackground = Color(0xFF4285F4);
 
-  static const Color buttonTextColor = accentColor;
+  static const Color buttonTextColor = lightAccentColor;
 
-  static const Color appBarColor = Color(0xFFF2F6FE);
+  static const Color lightAppBarColor = Color(0xFFF2F6FE);
+  static const Color darkAppBarColor = darkSecondaryColor;
 
-  static const Color statusBarColor = Color(0xFFF2F6FE);
+  static const Color lightStatusBarColor = lightSecondaryColor;
+  static const Color darkStatusBarColor = darkSecondaryColor;
 
   static const Color lightThemeContentColor = Colors.black;
+  static const Color darkThemeContentColor = Colors.white;
   static const Color lightThemeButtonColor = Color(0xFFBBDEFB);
+  static const Color darkThemeButtonColor = Color(0xff0c465e);
   static const Color lightThemeBottomNavigationBarBackgroundColor =
-      secondaryColor;
+      lightSecondaryColor;
+  static const Color darkThemeBottomNavigationBarBackgroundColor =
+      darkSecondaryColor;
 }

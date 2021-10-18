@@ -20,13 +20,16 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet_view.manager.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
+import 'package:bookology/ui/screens/settings.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,8 +49,8 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'Share this book',
           icon: Icons.share_outlined,
-          iconColor: Colors.black,
-          textColor: Colors.black,
+          iconColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -77,21 +80,41 @@ class BottomSheetManager {
           ),
         ),
       ],
-      height: 200,
     );
   }
 
-  void showMoreProfileMenuBottomSheet() {
+  void showMoreProfileMenuBottomSheet({required AdaptiveThemeMode themeMode}) {
     BottomSheetViewManager(context).createBottomSheet(
       contents: [
         const SizedBox(
           height: 20,
         ),
         OutLinedButton(
+          text: 'Settings',
+          icon: Icons.settings_outlined,
+          iconColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).primaryColor,
+          alignContent: MainAxisAlignment.start,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => SettingsScreen(
+                  themeMode: themeMode,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        OutLinedButton(
           text: 'About',
           icon: Icons.info_outlined,
-          iconColor: Colors.black,
-          textColor: Colors.black,
+          iconColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -108,16 +131,19 @@ class BottomSheetManager {
         ),
         OutLinedButton(
           onPressed: () {
-            authService.signOut();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/auth',
-              (_) => false,
-            );
+            Navigator.pop(context);
+            DialogsManager(context).showLogoutDialog(onLogoutClicked: () {
+              authService.signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/auth',
+                (_) => false,
+              );
+            });
           },
           text: StringConstants.wordLogout,
           icon: Icons.logout_outlined,
-          iconColor: Theme.of(context).primaryColor,
+          iconColor: Colors.black,
           backgroundColor: ColorsConstant.dangerBackgroundColor,
           alignContent: MainAxisAlignment.start,
         ),
@@ -144,7 +170,6 @@ class BottomSheetManager {
           ],
         )
       ],
-      height: 250,
     );
   }
 
@@ -155,24 +180,25 @@ class BottomSheetManager {
     BottomSheetViewManager(context).createBottomSheet(
       title: 'Update Available',
       contents: [
-        const Text(
+        Text(
           'A new version of the app is available please update to enjoy latest features! ',
           style: TextStyle(
             fontSize: 15,
-            color: Colors.black,
+            color: Theme.of(context).primaryColor,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(
           height: 20,
         ),
-        const Align(
+        Align(
           alignment: Alignment.center,
           child: Text(
             'What\'s New?',
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -185,12 +211,18 @@ class BottomSheetManager {
           width: double.infinity,
           child: ListView(
             children: [
-              Text(changeLog),
+              Text(
+                changeLog,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ],
           ),
         ),
         OutLinedButton(
           text: 'Update',
+          textColor: Theme.of(context).primaryColor,
           align: Alignment.center,
           alignContent: MainAxisAlignment.center,
           onPressed: onUpdateClicked,
@@ -201,12 +233,12 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'Remind me later',
           align: Alignment.center,
+          textColor: Colors.black,
           alignContent: MainAxisAlignment.center,
-          backgroundColor: Colors.grey.shade200,
+          backgroundColor: Colors.grey.shade300,
           onPressed: onCancelClicked,
         ),
       ],
-      height: 550,
     );
   }
 
@@ -221,7 +253,8 @@ class BottomSheetManager {
           onPressed: onCameraPressed,
           text: 'Camera',
           icon: Icons.photo_camera_outlined,
-          iconColor: Colors.black,
+          textColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -231,11 +264,11 @@ class BottomSheetManager {
           onPressed: onGalleryPressed,
           text: 'Gallery',
           icon: Icons.collections_outlined,
-          iconColor: Colors.black,
+          textColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
         ),
       ],
-      height: 250,
     );
   }
 
@@ -249,8 +282,9 @@ class BottomSheetManager {
         OutLinedButton(
           onPressed: onImagePressed,
           text: StringConstants.wordImage,
+          textColor: Theme.of(context).primaryColor,
           icon: Icons.image_outlined,
-          iconColor: Colors.black,
+          iconColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -259,12 +293,12 @@ class BottomSheetManager {
         OutLinedButton(
           onPressed: onFilePressed,
           text: StringConstants.wordFile,
+          textColor: Theme.of(context).primaryColor,
           icon: Icons.note_add_outlined,
-          iconColor: Colors.black,
+          iconColor: Theme.of(context).primaryColor,
           alignContent: MainAxisAlignment.start,
         ),
       ],
-      height: 250,
     );
   }
 
@@ -284,7 +318,6 @@ class BottomSheetManager {
     required VoidCallback onUploadClicked,
   }) {
     BottomSheetViewManager(context).createBottomSheet(
-      height: 810,
       title: 'Confirm Book Details',
       alignment: CrossAxisAlignment.start,
       contents: [
@@ -293,7 +326,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordIsbn}:  ',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -314,7 +347,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordBookName}:  ',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -335,7 +368,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordAuthor}:  ',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -356,7 +389,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordPublisher}:  ',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -379,7 +412,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordDescription}:  ',
             style: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -402,7 +435,7 @@ class BottomSheetManager {
               text: TextSpan(
                 text: '${StringConstants.wordOriginalPrice}:  ',
                 style: GoogleFonts.poppins(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
@@ -423,7 +456,7 @@ class BottomSheetManager {
               text: TextSpan(
                 text: '${StringConstants.wordSellingPrice}:  ',
                 style: GoogleFonts.poppins(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),

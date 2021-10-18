@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -27,7 +28,12 @@ import 'package:bookology/ui/screens/intro.screen.dart';
 import 'package:flutter/material.dart';
 
 class ScreenManager extends StatefulWidget {
-  const ScreenManager({Key? key}) : super(key: key);
+  final AdaptiveThemeMode themeMode;
+
+  const ScreenManager({
+    Key? key,
+    required this.themeMode,
+  }) : super(key: key);
 
   @override
   _ScreenManagerState createState() => _ScreenManagerState();
@@ -47,7 +53,10 @@ class _ScreenManagerState extends State<ScreenManager>
       );
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const IntroScreen()));
+        MaterialPageRoute(
+          builder: (context) => const IntroScreen(),
+        ),
+      );
     }
   }
 
