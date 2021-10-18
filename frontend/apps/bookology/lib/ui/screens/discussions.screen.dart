@@ -20,8 +20,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/services/connectivity.service.dart';
@@ -36,8 +38,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class DiscussionsScreen extends StatefulWidget {
+  final AdaptiveThemeMode themeMode;
+
   const DiscussionsScreen({
     Key? key,
+    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -84,12 +89,18 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       margin: const EdgeInsets.only(right: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(100),
+          color: widget.themeMode == AdaptiveThemeMode.dark
+              ? Colors.grey.shade800
+              : Colors.grey.shade50,
+          borderRadius:
+              BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
         ),
-        child: const Icon(
+        child: Icon(
           Icons.people_outlined,
           size: 40,
+          color: widget.themeMode == AdaptiveThemeMode.dark
+              ? Colors.white
+              : Colors.black,
         ),
       ),
     );
@@ -110,7 +121,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
         if (snapshot.data == ConnectivityStatus.offline) {
-          return offlineScreen();
+          return offlineScreen(context: context);
         } else {
           return Scaffold(
             appBar: AppBar(
@@ -245,8 +256,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                             softWrap: false,
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -259,9 +271,17 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                           top: 5,
                                         ),
                                         child: Text(
-                                          discussionLastUpdatedAt(context,DateTime.fromMicrosecondsSinceEpoch(room.updatedAt! * 1000),DateTime.now(),),
+                                          discussionLastUpdatedAt(
+                                            context,
+                                            DateTime.fromMicrosecondsSinceEpoch(
+                                                room.updatedAt! * 1000),
+                                            DateTime.now(),
+                                          ),
                                           style: TextStyle(
-                                            color: Colors.grey.shade600,
+                                            color: widget.themeMode ==
+                                                    AdaptiveThemeMode.dark
+                                                ? const Color(0xffc9c3c3)
+                                                : Colors.grey.shade600,
                                           ),
                                         ),
                                       ),

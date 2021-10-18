@@ -22,6 +22,7 @@
 
 import 'dart:async';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -40,11 +41,17 @@ import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final AdaptiveThemeMode themeMode;
+
+  const HomeScreen({
+    Key? key,
+    required this.themeMode,
+  }) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -59,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late BannerAd _ad;
   List<Object> _homeFeed = [];
   String _currentLocation = '';
+  bool isDarkMode = false;
 
   @override
   void initState() {
@@ -75,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    var brightness = SchedulerBinding.instance!.window.platformBrightness;
+    setState(() {
+      isDarkMode = brightness == Brightness.dark;
+    });
     UpdateService(context).checkForAppUpdate();
     _ad = BannerAd(
       size: AdSize(
@@ -110,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
         if (snapshot.data == ConnectivityStatus.offline) {
-          return offlineScreen();
+          return offlineScreen(context: context);
         }
         return Scaffold(
             body: FutureBuilder<List<Object>?>(
@@ -167,7 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
             }
-            return homeShimmer();
+            return homeShimmer(
+              context: context,
+            );
           },
         ));
       },
@@ -201,16 +215,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .bottomNavigationBarTheme
-                  .unselectedItemColor,
+              color: Theme.of(context).buttonTheme.colorScheme!.background,
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
             ),
             child: Text(
               StringConstants.listBookCategories[index],
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
               ),
             ),
           );
@@ -227,8 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: BookCard(
-        buttonText:
-            _authService.currentUser()!.uid == book.uploaderId ? 'Edit' : 'View',
+        buttonText: _authService.currentUser()!.uid == book.uploaderId
+            ? 'Edit'
+            : 'View',
         id: book.bookId,
         book: book,
         onClicked: () {
@@ -236,6 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(
               builder: (BuildContext context) => BookViewer(
+                themeMode: widget.themeMode,
                 id: book.bookId,
                 book: book,
               ),

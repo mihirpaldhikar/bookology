@@ -22,6 +22,7 @@
 
 import 'dart:io';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
@@ -221,108 +222,119 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircularImage(
-              image: widget.userProfileImage,
-              radius: 30,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            SizedBox(
-              width: 160,
-              child: Marquee(
-                child: Row(
-                  children: [
-                    AutoSizeText(
-                      widget.userName,
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 15,
+    return ValueListenableBuilder(
+        valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+        builder: (_, mode, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Row(
+                children: [
+                  CircularImage(
+                    image: widget.userProfileImage,
+                    radius: 30,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 160,
+                    child: Marquee(
+                      child: Row(
+                        children: [
+                          AutoSizeText(
+                            widget.userName,
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Visibility(
+                            visible: widget.isVerified,
+                            child: const Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Visibility(
-                      visible: widget.isVerified,
-                      child: const Icon(
-                        Icons.verified,
-                        color: Colors.blue,
-                        size: 20,
-                      ),
+                  ),
+                ],
+              ),
+              actions: [
+                Tooltip(
+                  message: StringConstants.hintConnectionSecured,
+                  child: IconButton(
+                    onPressed: () {
+                      DialogsManager(context).showSecuredConnectionDialog();
+                    },
+                    icon: const Icon(
+                      Icons.lock_outlined,
+                      color: Colors.green,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                PopupMenuButton(
+                  onSelected: menuAction,
+                  itemBuilder: (BuildContext itemBuilder) =>
+                      StringConstants.menuDeleteDiscussion
+                          .map(
+                            (value) => PopupMenuItem(
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              value: value,
+                            ),
+                          )
+                          .toList(),
+                ),
+              ],
             ),
-          ],
-        ),
-        iconTheme: const IconThemeData(color: Colors.black),
-        actions: [
-          Tooltip(
-            message: StringConstants.hintConnectionSecured,
-            child: IconButton(
-              onPressed: () {
-                DialogsManager(context).showSecuredConnectionDialog();
-              },
-              icon: const Icon(
-                Icons.lock_outlined,
-                color: Colors.green,
-              ),
-            ),
-          ),
-          PopupMenuButton(
-            onSelected: menuAction,
-            itemBuilder: (BuildContext itemBuilder) =>
-                StringConstants.menuDeleteDiscussion
-                    .map(
-                      (value) => PopupMenuItem(
-                        child: Text(value),
-                        value: value,
-                      ),
-                    )
-                    .toList(),
-          ),
-        ],
-      ),
-      body: StreamBuilder<types.Room>(
-        initialData: widget.room,
-        stream: FirebaseChatCore.instance.room(widget.room.id),
-        builder: (context, snapshot) {
-          return StreamBuilder<List<types.Message>>(
-            initialData: const [],
-            stream: FirebaseChatCore.instance.messages(snapshot.data!),
-            builder: (context, snapshot) {
-              return Discussions(
-                  roomId: widget.room.id,
-                  showUserAvatars: true,
-                  showUserNames: false,
-                  usePreviewData: true,
-                  theme: ChatUiManager(),
-                  bubbleBuilder: _bubbleBuilder,
-                  isAttachmentUploading: _isAttachmentUploading,
-                  messages: snapshot.data ?? [],
-                  onAttachmentPressed: _handleAttachmentPressed,
-                  onMessageTap: _handleMessageTap,
-                  onMessageLongPress: (value) async {
-                    if (FirebaseAuth.instance.currentUser!.uid ==
-                        value.author.id) {
-                      DialogsManager(context).showUnsendMessageDialog(value);
-                    }
+            body: StreamBuilder<types.Room>(
+              initialData: widget.room,
+              stream: FirebaseChatCore.instance.room(widget.room.id),
+              builder: (context, snapshot) {
+                return StreamBuilder<List<types.Message>>(
+                  initialData: const [],
+                  stream: FirebaseChatCore.instance.messages(snapshot.data!),
+                  builder: (context, snapshot) {
+                    return Discussions(
+                        roomId: widget.room.id,
+                        showUserAvatars: true,
+                        showUserNames: false,
+                        usePreviewData: true,
+                        theme: Theme.of(context).primaryColor == Colors.white
+                            ? DarkChatUi()
+                            : LightChatUi(),
+                        bubbleBuilder: _bubbleBuilder,
+                        isAttachmentUploading: _isAttachmentUploading,
+                        messages: snapshot.data ?? [],
+                        onAttachmentPressed: _handleAttachmentPressed,
+                        onMessageTap: _handleMessageTap,
+                        onMessageLongPress: (value) async {
+                          if (FirebaseAuth.instance.currentUser!.uid ==
+                              value.author.id) {
+                            DialogsManager(context)
+                                .showUnsendMessageDialog(value);
+                          }
+                        },
+                        onPreviewDataFetched: _handlePreviewDataFetched,
+                        onSendPressed: _handleSendPressed,
+                        user: types.User(
+                          id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                        ));
                   },
-                  onPreviewDataFetched: _handlePreviewDataFetched,
-                  onSendPressed: _handleSendPressed,
-                  user: types.User(
-                    id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                  ));
-            },
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
+        });
   }
 
   void menuAction(String value) {
@@ -346,8 +358,8 @@ class _ChatPageState extends State<ChatPage> {
       nipRadius: 3,
       color: _authService.currentUser()!.uid != message.author.id ||
               message.type == types.MessageType.image
-          ? ChatUiManager().secondaryColor
-          : ChatUiManager().primaryColor,
+          ? LightChatUi().secondaryColor
+          : LightChatUi().primaryColor,
       margin: nextMessageInGroup
           ? const BubbleEdges.symmetric(horizontal: 6)
           : null,

@@ -65,6 +65,7 @@ class PageViewIndicator extends StatefulWidget {
   final Axis orientation;
 
   const PageViewIndicator({
+    Key? key,
     required this.length,
     required this.currentIndex,
     this.currentColor = Colors.blue,
@@ -76,7 +77,7 @@ class PageViewIndicator extends StatefulWidget {
     this.alignment = MainAxisAlignment.center,
     this.animationDuration = const Duration(milliseconds: 500),
     this.orientation = Axis.horizontal,
-  });
+  }): super(key: key);
 
   @override
   _PageViewIndicatorState createState() => _PageViewIndicatorState();

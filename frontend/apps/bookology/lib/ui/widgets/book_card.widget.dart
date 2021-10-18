@@ -73,7 +73,7 @@ class _BookCardState extends State<BookCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   width: 1,
                 ),
                 color: Theme.of(context).cardTheme.color,
@@ -128,14 +128,16 @@ class _BookCardState extends State<BookCard> {
                                   padding: const EdgeInsets.all(3),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
-                                        .bottomNavigationBarTheme
-                                        .unselectedItemColor,
+                                        .buttonTheme
+                                        .colorScheme!
+                                        .background,
                                     borderRadius: BorderRadius.circular(
                                       ValuesConstant.secondaryBorderRadius,
                                     ),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.more_vert_outlined,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ),
@@ -162,9 +164,10 @@ class _BookCardState extends State<BookCard> {
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                              color: Colors.grey[600]),
+                            fontWeight: FontWeight.normal,
+                            fontSize: 13,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(
                           height: 15,
@@ -176,7 +179,9 @@ class _BookCardState extends State<BookCard> {
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                             const SizedBox(
                               width: 5,
@@ -186,9 +191,10 @@ class _BookCardState extends State<BookCard> {
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                             const SizedBox(
@@ -199,11 +205,12 @@ class _BookCardState extends State<BookCard> {
                               maxLines: 4,
                               softWrap: false,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 15,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.grey),
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 15,
+                                decoration: TextDecoration.lineThrough,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ],
                         ),
@@ -228,7 +235,7 @@ class _BookCardState extends State<BookCard> {
                           width: MediaQuery.of(context).size.width,
                           child: OutLinedButton(
                             text: widget.buttonText!,
-                            textColor: Colors.black,
+                            textColor: Theme.of(context).primaryColor,
                             onPressed: widget.onClicked,
                           ),
                         )

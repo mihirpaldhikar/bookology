@@ -73,8 +73,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
             if (notifications.hasData) {
               if (notifications.data!.length == 1 &&
                   notifications.data![0].metadata.senderId == 'null') {
-                return const Center(
-                  child: Text('No Notifications'),
+                return Center(
+                  child: Text(
+                    'No Notifications',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 );
               }
               return ListView.builder(
@@ -189,10 +194,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               height: 50,
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color:
-                                    notifications.data![index].notification.seen
-                                        ? Colors.green.shade50
-                                        : ColorsConstant.secondaryColor,
+                                color: Theme.of(context).primaryColor,
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Icon(
@@ -225,6 +227,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           ? FontWeight.normal
                                           : FontWeight.bold,
                                       fontSize: 17,
+                                      color: Theme.of(context).primaryColor,
                                     ),
                                   ),
                                   const SizedBox(
@@ -236,8 +239,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     maxLines: 2,
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ],
                               ),

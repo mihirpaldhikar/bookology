@@ -249,8 +249,7 @@ class ApiService {
     }
   }
 
-  Future<List<NotificationModel>?>
-      getUserNotifications() async {
+  Future<List<NotificationModel>?> getUserNotifications() async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/notifications');

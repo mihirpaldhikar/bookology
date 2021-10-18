@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Theme.of(context).textTheme.headline4!.fontWeight,
                           fontSize:
                               Theme.of(context).textTheme.headline4!.fontSize,
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -189,6 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       text: 'Login',
+                      textColor: Theme.of(context).primaryColor,
                     ),
                   ],
                 ),
@@ -203,5 +204,4 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
-
 }

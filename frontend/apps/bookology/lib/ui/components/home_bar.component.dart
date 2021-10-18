@@ -109,13 +109,15 @@ class _HomeBarState extends State<HomeBar> {
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: Theme.of(context)
-                                  .bottomNavigationBarTheme
-                                  .unselectedItemColor,
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background,
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.add,
                               size: 25,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -141,8 +143,9 @@ class _HomeBarState extends State<HomeBar> {
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: Theme.of(context)
-                                  .bottomNavigationBarTheme
-                                  .unselectedItemColor,
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background,
                               borderRadius: BorderRadius.circular(100),
                             ),
                             child: Badge(
@@ -158,9 +161,10 @@ class _HomeBarState extends State<HomeBar> {
                                   fontSize: 10,
                                 ),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.notifications_outlined,
                                 size: 25,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                           ),
@@ -218,14 +222,15 @@ class _HomeBarState extends State<HomeBar> {
                                   ValuesConstant.secondaryBorderRadius,
                                 ),
                                 color: Theme.of(context)
-                                    .bottomNavigationBarTheme
-                                    .unselectedItemColor,
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .background,
                               ),
                               child: Row(
                                 children: [
                                   Icon(
                                     Icons.place_outlined,
-                                    color: Colors.grey.shade900,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -233,7 +238,7 @@ class _HomeBarState extends State<HomeBar> {
                                   Text(
                                     widget.currentLocation,
                                     style: TextStyle(
-                                      color: Colors.grey.shade900,
+                                      color: Theme.of(context).primaryColor,
                                     ),
                                   ),
                                 ],
@@ -263,12 +268,14 @@ class _HomeBarState extends State<HomeBar> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
-                                        .bottomNavigationBarTheme
-                                        .unselectedItemColor,
+                                        .buttonTheme
+                                        .colorScheme!
+                                        .background,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.add,
                                     size: 25,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ),
@@ -296,8 +303,9 @@ class _HomeBarState extends State<HomeBar> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context)
-                                        .bottomNavigationBarTheme
-                                        .unselectedItemColor,
+                                        .buttonTheme
+                                        .colorScheme!
+                                        .background,
                                   ),
                                   child: Badge(
                                     showBadge: false,
@@ -312,9 +320,10 @@ class _HomeBarState extends State<HomeBar> {
                                         fontSize: 10,
                                       ),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.notifications_outlined,
                                       size: 25,
+                                      color: Theme.of(context).primaryColor,
                                     ),
                                   ),
                                 ),
@@ -328,7 +337,7 @@ class _HomeBarState extends State<HomeBar> {
                       ),
                       CircularImage(
                         outLineWidth: 2,
-                        outlineColor: Colors.black,
+                        outlineColor: Theme.of(context).primaryColor,
                         image: auth.currentUser()!.photoURL.toString(),
                         radius: 75,
                       ),
@@ -340,7 +349,7 @@ class _HomeBarState extends State<HomeBar> {
                           text: TextSpan(
                             text: 'Good ${greeting()},\n',
                             style: GoogleFonts.poppins(
-                              color: Colors.black,
+                              color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 17,
                             ),
@@ -348,7 +357,7 @@ class _HomeBarState extends State<HomeBar> {
                               TextSpan(
                                 text: '${auth.currentUser()!.displayName}!',
                                 style: GoogleFonts.poppins(
-                                  color: Colors.black,
+                                  color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 25,
                                 ),

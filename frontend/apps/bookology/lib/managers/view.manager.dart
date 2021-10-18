@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -36,11 +37,13 @@ import 'package:provider/provider.dart';
 class ViewManager extends StatefulWidget {
   final int screenIndex;
   final bool isUserProfileUpdated;
+  final AdaptiveThemeMode? themeMode;
 
   const ViewManager({
     Key? key,
     required this.screenIndex,
     this.isUserProfileUpdated = false,
+    this.themeMode = AdaptiveThemeMode.system,
   }) : super(key: key);
 
   @override
@@ -49,12 +52,6 @@ class ViewManager extends StatefulWidget {
 
 class _ViewManagerState extends State<ViewManager> {
   int screenIndex = 0;
-  List<Widget> screenList = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const DiscussionsScreen(),
-    const ProfileScreen(),
-  ];
   final cacheService = CacheService();
 
   @override
@@ -86,14 +83,14 @@ class _ViewManagerState extends State<ViewManager> {
               },
               items: [
                 BottomNavyBarItem(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.home_outlined,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  title: const Text(
+                  title: Text(
                     StringConstants.navigationHome,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   activeColor: Theme.of(context)
@@ -103,14 +100,14 @@ class _ViewManagerState extends State<ViewManager> {
                   textAlign: TextAlign.center,
                 ),
                 BottomNavyBarItem(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.search_outlined,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  title: const Text(
+                  title: Text(
                     StringConstants.navigationSearch,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   activeColor: Theme.of(context)
@@ -120,14 +117,14 @@ class _ViewManagerState extends State<ViewManager> {
                   textAlign: TextAlign.center,
                 ),
                 BottomNavyBarItem(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.question_answer_outlined,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  title: const Text(
+                  title: Text(
                     StringConstants.navigationDiscussions,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   activeColor: Theme.of(context)
@@ -141,10 +138,10 @@ class _ViewManagerState extends State<ViewManager> {
                     image: auth.currentUser()!.photoURL.toString(),
                     radius: 30,
                   ),
-                  title: const Text(
+                  title: Text(
                     StringConstants.navigationProfile,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   activeColor: Theme.of(context)
@@ -158,7 +155,14 @@ class _ViewManagerState extends State<ViewManager> {
             body: SafeArea(
               child: IndexedStack(
                 index: screenIndex,
-                children: screenList,
+                children: [
+                  HomeScreen(
+                    themeMode: widget.themeMode!,
+                  ),
+                  const SearchScreen(),
+                  DiscussionsScreen(themeMode: widget.themeMode!),
+                  ProfileScreen(themeMode: widget.themeMode!),
+                ],
               ),
             ),
           );

@@ -42,7 +42,7 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
       height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_borderRadius),
-        color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+        color: Theme.of(context).buttonTheme.colorScheme!.background,
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(_borderRadius),

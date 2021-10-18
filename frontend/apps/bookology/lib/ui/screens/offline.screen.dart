@@ -23,7 +23,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-Widget offlineScreen() {
+Widget offlineScreen({required BuildContext context}) {
   return Scaffold(
     body: Container(
       alignment: Alignment.center,
@@ -39,22 +39,23 @@ Widget offlineScreen() {
           const SizedBox(
             height: 40,
           ),
-          const Text(
+          Text(
             'No Network!',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
+              color: Theme.of(context).primaryColor,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
             height: 30,
           ),
-          const Text(
+          Text(
             'The content will automatically be loaded once network '
             'connection is available.',
             style: TextStyle(
-              color: Colors.grey,
+              color: Theme.of(context).primaryColor,
               fontSize: 15,
             ),
             textAlign: TextAlign.center,

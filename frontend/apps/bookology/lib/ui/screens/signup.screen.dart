@@ -52,12 +52,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           )
         : Scaffold(
-      appBar: AppBar(),
+            appBar: AppBar(),
             body: SafeArea(
               child: Form(
                 key: _formKey,
                 child: ListView(
-                 scrollDirection: Axis.vertical,
+                  scrollDirection: Axis.vertical,
                   padding: const EdgeInsets.only(
                     right: 30,
                     left: 30,
@@ -70,17 +70,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Text(
                         'Create Account',
                         style: TextStyle(
-                          fontStyle: Theme.of(context)
-                              .textTheme
-                              .headline4!
-                              .fontStyle,
-                          fontWeight: Theme.of(context)
-                              .textTheme
-                              .headline4!
-                              .fontWeight,
+                          fontStyle:
+                              Theme.of(context).textTheme.headline4!.fontStyle,
+                          fontWeight:
+                              Theme.of(context).textTheme.headline4!.fontWeight,
                           fontSize:
                               Theme.of(context).textTheme.headline4!.fontSize,
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -194,6 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           }
                         },
                         text: 'Sign Up',
+                        textColor: Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
