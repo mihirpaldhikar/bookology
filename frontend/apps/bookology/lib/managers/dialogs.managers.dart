@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/biomertics.service.dart';
@@ -480,13 +479,8 @@ class DialogsManager {
                 );
                 if (result) {
                   Navigator.of(context).pop();
-                  ToastManager(context).showToast(
-                    message: 'Check the Email for the reset link.',
-                    backGroundColor: Colors.green[100],
-                    icon: Icons.check_circle_outlined,
-                    iconColor: Colors.black,
-                    textColor: Colors.black,
-                  );
+                  ToastManager(context).showSuccessToast(
+                      message: 'Check the Email for the reset link.');
                 }
               }
             },
@@ -739,35 +733,17 @@ class DialogsManager {
                               if (isVerified) {
                                 CacheService().setIsBiometricEnabled(
                                     isEnabled: isVerified);
-                                ToastManager(this.context).showToast(
-                                  message: 'Biometric verified successfully.',
-                                  backGroundColor: Colors.green[100],
-                                  icon: Icons.check_circle_outlined,
-                                  iconColor: Colors.black,
-                                  textColor: Colors.black,
-                                );
+                                ToastManager(this.context).showSuccessToast(
+                                    message:
+                                        'Biometric verified successfully.');
                               } else {
-                                ToastManager(this.context).showToast(
-                                  message: 'Biometrics verification failed.',
-                                  backGroundColor:
-                                      ColorsConstant.dangerBackgroundColor,
-                                  textColor:
-                                      Theme.of(this.context).primaryColor,
-                                  iconColor:
-                                      Theme.of(this.context).primaryColor,
-                                  icon: Icons.error_outline_outlined,
-                                );
+                                ToastManager(this.context).showErrorToast(
+                                    message: 'Biometrics verification failed.');
                               }
                             },
                             onBioAuthError: (PlatformException error) {
-                              ToastManager(this.context).showToast(
-                                message: 'Biometrics verification failed.',
-                                backGroundColor:
-                                    ColorsConstant.dangerBackgroundColor,
-                                textColor: Theme.of(this.context).primaryColor,
-                                iconColor: Theme.of(this.context).primaryColor,
-                                icon: Icons.error_outline_outlined,
-                              );
+                              ToastManager(this.context).showErrorToast(
+                                  message: 'Biometrics verification failed.');
                             });
                   }
                 } else {

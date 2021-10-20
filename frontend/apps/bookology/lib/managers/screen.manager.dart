@@ -22,7 +22,6 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:after_layout/after_layout.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/biomertics.service.dart';
@@ -63,23 +62,13 @@ class _ScreenManagerState extends State<ScreenManager>
                   ),
                 );
               } else {
-                ToastManager(context).showToast(
-                  message: 'Biometrics verification failed.',
-                  backGroundColor: ColorsConstant.dangerBackgroundColor,
-                  textColor: Theme.of(context).primaryColor,
-                  iconColor: Theme.of(context).primaryColor,
-                  icon: Icons.error_outline_outlined,
-                );
+                ToastManager(context)
+                    .showErrorToast(message: 'Biometrics verification failed.');
               }
             },
             onBioAuthError: (PlatformException error) {
-              ToastManager(context).showToast(
-                message: 'An error occurred.',
-                backGroundColor: ColorsConstant.dangerBackgroundColor,
-                textColor: Theme.of(context).primaryColor,
-                iconColor: Theme.of(context).primaryColor,
-                icon: Icons.error_outline_outlined,
-              );
+              ToastManager(context)
+                  .showErrorToast(message: 'An error occurred.');
             });
       } else {
         Navigator.of(context).pushReplacement(

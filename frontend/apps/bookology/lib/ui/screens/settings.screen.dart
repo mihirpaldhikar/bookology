@@ -21,7 +21,6 @@
  */
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/app.manager.dart';
@@ -178,13 +177,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (await BiometricsService(context).isBiometricsAvailable()) {
                   DialogsManager(context).showBiometricsSelectionDialog();
                 } else {
-                  ToastManager(context).showToast(
-                    message: 'Biometrics are not supported.',
-                    backGroundColor: ColorsConstant.dangerBackgroundColor,
-                    textColor: Theme.of(context).primaryColor,
-                    iconColor: Theme.of(context).primaryColor,
-                    icon: Icons.error_outline_outlined,
-                  );
+                  ToastManager(context)
+                      .showErrorToast(message: 'Biometrics are not supported.');
                 }
               },
             ),
