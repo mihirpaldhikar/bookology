@@ -20,8 +20,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/biomertics.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -29,7 +32,9 @@ import 'package:bookology/utils/validator.utli.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:local_auth/local_auth.dart';
 
 class DialogsManager {
   final BuildContext context;
@@ -515,7 +520,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Send',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Colors.black,
             backgroundColor: Colors.green.shade100,
             onPressed: onSendClicked,
           ),
@@ -555,7 +560,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Confirm',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Colors.black,
             backgroundColor: Colors.green.shade100,
             onPressed: onLogoutClicked,
           ),
@@ -613,6 +618,178 @@ class DialogsManager {
           Icons.place_outlined,
         ),
       ),
+    );
+  }
+
+  void showBiometricsSelectionDialog() async {
+    bool _isBiometricsEnabled = CacheService().isBiometricsEnabled();
+    final List<BiometricType> availableBiometrics =
+        await BiometricsService(context).getAvailableBiometrics();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AnimatedDialog(
+          title: 'Use Biometrics',
+          content: [
+            StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  children: [
+                    Text(
+                      'Authenticate with the Biometrics which are available and supported by your device.',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Available Biometrics',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: availableBiometrics.isNotEmpty,
+                      child: SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            itemCount: availableBiometrics.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 5,
+                                ),
+                                child: Text(
+                                  availableBiometrics[index] ==
+                                          BiometricType.fingerprint
+                                      ? 'Fingerprint Biometric'
+                                      : availableBiometrics[index] ==
+                                              BiometricType.face
+                                          ? 'Face Biometric'
+                                          : 'Unknown Biometric',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Use Biometrics',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Switch(
+                          value: _isBiometricsEnabled,
+                          onChanged: (val) {
+                            setState(() {
+                              _isBiometricsEnabled = val;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              },
+            )
+          ],
+          actions: [
+            OutLinedButton(
+              text: 'Done',
+              textColor: Colors.black,
+              backgroundColor: Colors.green.shade100,
+              onPressed: () async {
+                if (_isBiometricsEnabled) {
+                  if (await BiometricsService(this.context)
+                          .isBiometricsAvailable() &&
+                      await BiometricsService(this.context)
+                          .canCheckBiometrics()) {
+                    await BiometricsService(this.context)
+                        .authenticateWithBiometrics(
+                            bioAuthReason:
+                                'Verify your Biometric in order to enable the security feature.',
+                            useOnlyBiometrics: true,
+                            onBioAuthStarted: () {
+                              Navigator.pop(this.context);
+                            },
+                            onBioAuthCompleted: (isVerified) {
+                              if (isVerified) {
+                                CacheService().setIsBiometricEnabled(
+                                    isEnabled: isVerified);
+                                ToastManager(this.context).showToast(
+                                  message: 'Biometric verified successfully.',
+                                  backGroundColor: Colors.green[100],
+                                  icon: Icons.check_circle_outlined,
+                                  iconColor: Colors.black,
+                                  textColor: Colors.black,
+                                );
+                              } else {
+                                ToastManager(this.context).showToast(
+                                  message: 'Biometrics verification failed.',
+                                  backGroundColor:
+                                      ColorsConstant.dangerBackgroundColor,
+                                  textColor:
+                                      Theme.of(this.context).primaryColor,
+                                  iconColor:
+                                      Theme.of(this.context).primaryColor,
+                                  icon: Icons.error_outline_outlined,
+                                );
+                              }
+                            },
+                            onBioAuthError: (PlatformException error) {
+                              ToastManager(this.context).showToast(
+                                message: 'Biometrics verification failed.',
+                                backGroundColor:
+                                    ColorsConstant.dangerBackgroundColor,
+                                textColor: Theme.of(this.context).primaryColor,
+                                iconColor: Theme.of(this.context).primaryColor,
+                                icon: Icons.error_outline_outlined,
+                              );
+                            });
+                  }
+                } else {
+                  CacheService().setIsBiometricEnabled(isEnabled: false);
+                  Navigator.of(this.context).pop();
+                }
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            OutLinedButton(
+              text: 'Cancel',
+              textColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          dialogIcon: const Icon(
+            Icons.fingerprint_outlined,
+          )),
     );
   }
 }
