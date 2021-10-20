@@ -20,7 +20,7 @@ router.get('/', verifyUser, async (request, response, next) => {
         return false;
       } else {
         const userID = authData.user_id;
-        await NotificationsCollection.find({'metadata.receiver_id': userID}).toArray(function(error, notifications) {
+        await NotificationsCollection.find({'metadata.receiver_id': userID}).sort({$natural: -1}).toArray(function(error, notifications) {
           if (notifications.length === 0) {
             response.status(200).json({
               result: {
