@@ -42,6 +42,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -202,27 +203,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         itemCount: StringConstants.listBookCategories.length,
         itemBuilder: (context, index) {
-          return Container(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              top: 5,
-              bottom: 5,
-            ),
-            margin: const EdgeInsets.only(
-              left: 10,
-              top: 25,
-            ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Theme.of(context).buttonTheme.colorScheme!.background,
-              borderRadius:
-                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-            ),
-            child: Text(
-              StringConstants.listBookCategories[index],
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
+          return GestureDetector(
+            onTap: () async {},
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 5,
+                bottom: 5,
+              ),
+              margin: const EdgeInsets.only(
+                left: 10,
+                top: 25,
+              ),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).buttonTheme.colorScheme!.background,
+                borderRadius:
+                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              ),
+              child: Text(
+                StringConstants.listBookCategories[index],
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
           );

@@ -21,10 +21,14 @@
  */
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/app.manager.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/models/settings.model.dart';
+import 'package:bookology/services/biomertics.service.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -166,6 +170,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
+            SettingsModel(
+              settingName: 'Biometrics',
+              settingIcon: Icons.fingerprint_outlined,
+              settingDescription: 'Authenticate with the biometrics',
+              onSettingClicked: () async {
+                if (await BiometricsService(context).isBiometricsAvailable()) {
+                  DialogsManager(context).showBiometricsSelectionDialog();
+                } else {
+                  ToastManager(context).showToast(
+                    message: 'Biometrics are not supported.',
+                    backGroundColor: ColorsConstant.dangerBackgroundColor,
+                    textColor: Theme.of(context).primaryColor,
+                    iconColor: Theme.of(context).primaryColor,
+                    icon: Icons.error_outline_outlined,
+                  );
+                }
+              },
+            ),
           ];
           return Scaffold(
             appBar: AppBar(
@@ -190,11 +212,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(
-                              ValuesConstant.borderRadius),
+                            ValuesConstant.borderRadius,
+                          ),
                         ),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(
-                              ValuesConstant.borderRadius),
+                            ValuesConstant.borderRadius,
+                          ),
                           onTap: appSettings[index].onSettingClicked,
                           child: Container(
                             padding: const EdgeInsets.only(
@@ -206,13 +230,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               crossAxisAlignment: WrapCrossAlignment.center,
                               alignment: WrapAlignment.start,
                               children: [
-                                Icon(
-                                  appSettings[index].settingIcon,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 30,
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .buttonTheme
+                                        .colorScheme!
+                                        .background,
+                                    borderRadius: BorderRadius.circular(
+                                      ValuesConstant.secondaryBorderRadius,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    appSettings[index].settingIcon,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 30,
+                                  ),
                                 ),
                                 const SizedBox(
-                                  width: 10,
+                                  width: 15,
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -230,7 +266,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       appSettings[index].settingDescription,
                                       style: TextStyle(
                                         color: Theme.of(context).primaryColor,
-                                        fontSize: 10,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
