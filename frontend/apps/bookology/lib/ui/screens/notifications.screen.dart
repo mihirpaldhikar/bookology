@@ -140,13 +140,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               );
                               if (result) {
                                 Navigator.pop(context);
-                                ToastManager(context).showToast(
-                                  message: 'Discussions Created',
-                                  backGroundColor: Colors.green[100],
-                                  icon: Icons.check_circle_outlined,
-                                  iconColor: Colors.black,
-                                  textColor: Colors.black,
-                                );
+                                ToastManager(context).showSuccessToast(
+                                    message: 'Discussions Created');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -155,14 +150,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   ),
                                 );
                               } else {
-                                ToastManager(context).showToast(
+                                ToastManager(context).showErrorToast(
                                   message:
-                                      'An Error Occurred while creating the Discussions',
-                                  backGroundColor:
-                                      ColorsConstant.dangerBackgroundColor,
-                                  icon: Icons.error_outlined,
-                                  iconColor: Colors.black,
-                                  textColor: Colors.black,
+                                      'An Error Occurred while creating the Discussions'
                                 );
                               }
                             },

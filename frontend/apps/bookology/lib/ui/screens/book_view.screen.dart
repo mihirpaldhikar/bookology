@@ -22,7 +22,6 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
@@ -229,13 +228,8 @@ class _BookViewerState extends State<BookViewer> {
                           );
                         }
                         if (result == false) {
-                          ToastManager(this.context).showToast(
-                            message: 'An Error Occurred!',
-                            icon: Icons.error_outline_outlined,
-                            iconColor: Colors.white,
-                            textColor: Colors.white,
-                            backGroundColor: Colors.redAccent,
-                          );
+                          ToastManager(this.context)
+                              .showErrorToast(message: 'An Error Occurred!');
                         }
                       });
                     },
@@ -488,29 +482,17 @@ class _BookViewerState extends State<BookViewer> {
                                             );
                                             if (isSuccess) {
                                               Navigator.pop(context);
-                                              ToastManager(context).showToast(
+                                              ToastManager(context)
+                                                  .showSuccessToast(
                                                 message:
                                                     'Discussions Request Sent',
-                                                backGroundColor:
-                                                    Colors.green[100],
-                                                icon:
-                                                    Icons.check_circle_outlined,
-                                                iconColor: Colors.black,
-                                                textColor: Colors.black,
                                               );
                                             } else {
                                               Navigator.pop(context);
-                                              ToastManager(context).showToast(
-                                                message: 'An error occured',
-                                                backGroundColor: ColorsConstant
-                                                    .dangerBackgroundColor,
-                                                textColor: Theme.of(context)
-                                                    .primaryColor,
-                                                iconColor: Theme.of(context)
-                                                    .primaryColor,
-                                                icon: Icons
-                                                    .error_outline_outlined,
-                                              );
+                                              ToastManager(context)
+                                                  .showErrorToast(
+                                                      message:
+                                                          'An error occurred');
                                             }
                                           });
                                         } else {

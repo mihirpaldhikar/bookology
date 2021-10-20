@@ -426,31 +426,15 @@ class _CreateScreenState extends State<CreateScreen> {
                                               },
                                             );
                                           } else {
-                                            ToastManager(context).showToast(
+                                            ToastManager(context).showWarningToast(
                                               message: StringConstants
-                                                  .errorFieldsCompulsory,
-                                              backGroundColor: ColorsConstant
-                                                  .dangerBackgroundColor,
-                                              textColor: Theme.of(context)
-                                                  .primaryColor,
-                                              iconColor: Theme.of(context)
-                                                  .primaryColor,
-                                              icon:
-                                                  Icons.error_outline_outlined,
+                                                  .errorFieldsCompulsory
                                             );
                                           }
                                         } else {
-                                          ToastManager(context).showToast(
-                                            message:
-                                                'Location Permission not granted.',
-                                            backGroundColor: ColorsConstant
-                                                .dangerBackgroundColor,
-                                            textColor:
-                                                Theme.of(context).primaryColor,
-                                            iconColor:
-                                                Theme.of(context).primaryColor,
-                                            icon: Icons.error_outline_outlined,
-                                          );
+                                          ToastManager(context).showErrorToast(
+                                              message:
+                                                  'Location Permission not granted.');
                                         }
                                       }
                                     },
