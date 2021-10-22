@@ -5,11 +5,6 @@ const {BooksCollection, UsersCollection} = require('../managers/collection.manag
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
 const {firebaseAdmin} = require('../configs/firebase.config');
-const algoliaSearch = require('algoliasearch');
-
-const algoliaClient = algoliaSearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_API_KEY);
-
-const bookIndex = algoliaClient.initIndex('books');
 
 router.get('/', verifyUser, async (request, response, next) => {
   try {
@@ -105,19 +100,6 @@ router.put('/:bookId', verifyUser, async (request, response, next) => {
           date: book.created_on.date,
           time: book.created_on.time,
         });
-        const algoliaSearchData = {
-          objectID: request.params.bookId,
-          isbn: bookletData.book_information.isbn,
-          name: bookletData.book_information.name,
-          coverImage: bookletData.additional_information.images[0],
-          location: bookletData.location,
-          categories: bookletData.additional_information.categories,
-          author: bookletData.book_information.author,
-          condition: bookletData.additional_information.condition,
-          selling_price: bookletData.pricing.selling_price,
-          original_price: bookletData.pricing.original_price,
-        };
-        await bookIndex.partialUpdateObject(algoliaSearchData);
 
         await BooksCollection.replaceOne({_id: book._id},
           bookletData,
@@ -179,20 +161,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
           images: request.body.images,
           location: request.body.location,
         });
-        const algoliaSearchBookData = {
-          objectID: bookletData._id,
-          isbn: bookletData.book_information.isbn,
-          name: bookletData.book_information.name,
-          coverImage: bookletData.additional_information.images[0],
-          location: bookletData.location,
-          categories: bookletData.additional_information.categories,
-          author: bookletData.book_information.author,
-          condition: bookletData.additional_information.condition,
-          selling_price: bookletData.pricing.selling_price,
-          original_price: bookletData.pricing.original_price,
-        };
-        const dat = await bookIndex.saveObject(algoliaSearchBookData);
-        console.log(dat);
+
         await BooksCollection.insertOne(bookletData, (error, result) => {
           if (error) {
             response.status(500).json({
