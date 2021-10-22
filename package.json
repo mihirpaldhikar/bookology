@@ -14,8 +14,8 @@
   "author": "Mihir Paldhikar",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "@sendgrid/mail": "^7.4.4",
-    "algoliasearch": "^4.10.5",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.0.0",
@@ -27,6 +27,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.9",
     "slugify": "^1.5.3",
+    "typesense": "^0.15.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
