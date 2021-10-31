@@ -124,6 +124,7 @@ router.put('/:userID', verifyUser, async (request, response, next) => {
           firstName: request.body.first_name,
           lastName: request.body.last_name,
           imageUrl: request.body.profile_picture_url,
+          'metadata.username': request.body.username,
         });
 
         await UsersCollection.replaceOne({_id: user._id},
