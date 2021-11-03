@@ -34,8 +34,8 @@ Widget profileShimmer({
         return ListView.builder(
           padding: const EdgeInsets.only(
             top: 20,
-            left: 10,
-            right: 10,
+            left: 0,
+            right: 0,
           ),
           scrollDirection: Axis.vertical,
           physics: const BouncingScrollPhysics(),
@@ -44,10 +44,10 @@ Widget profileShimmer({
             if (index == 0) {
               return Shimmer.fromColors(
                 enabled: true,
-                baseColor: Theme.of(context).primaryColor == Colors.white
+                baseColor: Theme.of(context).brightness == Brightness.dark
                     ? const Color(0xFF1D1C1C)
                     : const Color(0xFFE0E0E0),
-                highlightColor: Theme.of(context).primaryColor == Colors.white
+                highlightColor: Theme.of(context).brightness == Brightness.dark
                     ? const Color(0xFF4B4949)
                     : const Color(0xFFF5F5F5),
                 child: Column(
@@ -55,7 +55,7 @@ Widget profileShimmer({
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(
-                      width: 10,
+                      height: 40,
                     ),
                     Container(
                       width: 100,
@@ -107,39 +107,75 @@ Widget profileShimmer({
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Column(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 15,
-                              color: Colors.white,
+                        Card(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(
+                                ValuesConstant.borderRadius),
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Books',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: 60,
-                              height: 10,
-                              color: Colors.white,
-                            ),
-                          ],
+                          ),
                         ),
-                        Column(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 15,
-                              color: Colors.white,
+                        Card(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(
+                                ValuesConstant.borderRadius),
+                            onTap: () {},
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Points',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: 60,
-                              height: 10,
-                              color: Colors.white,
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -156,22 +192,25 @@ Widget profileShimmer({
                 padding: const EdgeInsets.all(8),
                 margin: const EdgeInsets.only(
                   bottom: 20,
+                  left: 17,
+                  right: 17,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(
                     color: Colors.grey,
-                    width: 1,
+                    width: 0.5,
                   ),
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius:
+                      BorderRadius.circular(ValuesConstant.borderRadius),
                 ),
                 child: Shimmer.fromColors(
                     enabled: true,
-                    baseColor: Theme.of(context).primaryColor == Colors.white
+                    baseColor: Theme.of(context).brightness == Brightness.dark
                         ? const Color(0xFF1D1C1C)
                         : const Color(0xFFE0E0E0),
                     highlightColor:
-                        Theme.of(context).primaryColor == Colors.white
+                        Theme.of(context).brightness == Brightness.dark
                             ? const Color(0xFF4B4949)
                             : const Color(0xFFF5F5F5),
                     child: Row(

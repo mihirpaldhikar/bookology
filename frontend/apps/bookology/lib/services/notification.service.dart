@@ -21,10 +21,26 @@
  */
 
 import 'package:bookology/managers/app.manager.dart';
+import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+const AndroidNotificationChannel bookRequestNotificationChannel =
+    AndroidNotificationChannel(
+  'book_enquiry_request',
+  'Book Enquiry Notifications',
+  importance: Importance.high,
+);
+const AndroidNotificationChannel firebaseNotificationChannel =
+    AndroidNotificationChannel(
+  'firebase_messaging_notification_channel',
+  'System Notifications',
+  importance: Importance.defaultImportance,
+);
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging;
@@ -44,26 +60,11 @@ class NotificationService {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@drawable/ic_notification');
     var initializationSettingsIOS = const IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    FirebaseMessaging.onMessage.listen(
-      (RemoteMessage message) {
-        flutterLocalNotificationsPlugin.show(
-          message.hashCode,
-          message.data['notification_title'],
-          message.data['notification_body'],
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              androidNotificationChannel.id,
-              androidNotificationChannel.name,
-            ),
-          ),
-        );
-      },
-    );
 
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
@@ -71,52 +72,44 @@ class NotificationService {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(androidNotificationChannel);
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
+        ?.createNotificationChannel(bookRequestNotificationChannel);
 
-    if (initialMessage != null) {
-      _handleNotification(initialMessage);
-    }
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(firebaseNotificationChannel);
+
+    _handleNotification(initialMessage!);
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
-    FirebaseMessaging.onMessage.listen(_handleNotification);
-  }
-
-  String notificationType() {
-    return '';
   }
 }
 
 void _handleNotification(RemoteMessage message) async {
   if (message.data['notification_type'] == 'book_enquiry_notification') {
-    // navigatorKey.currentState!.pushAndRemoveUntil(
-    //     MaterialPageRoute(builder: (context) => ScreenManager(currentIndex: 3)),
-    //     (route) => false);
-    showDialog(
-      context: navigatorKey.currentState!.context,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Text('LOL'),
+    Navigator.push(
+      navigatorKey.currentState!.context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const NotificationScreen(),
       ),
     );
   }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  flutterLocalNotificationsPlugin.show(
-    message.hashCode,
-    message.data['notification_title'],
-    message.data['notification_body'],
-    NotificationDetails(
-      android: AndroidNotificationDetails(
-        androidNotificationChannel.id,
-        androidNotificationChannel.name,
+  if (!message.data.containsKey('isFromFirebaseConsole')) {
+    flutterLocalNotificationsPlugin.show(
+      message.hashCode,
+      message.data['title'],
+      message.data['body'],
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          bookRequestNotificationChannel.id,
+          bookRequestNotificationChannel.name,
+          importance: Importance.high,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

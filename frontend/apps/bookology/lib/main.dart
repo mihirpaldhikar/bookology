@@ -24,6 +24,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/managers/app.manager.dart';
 import 'package:bookology/services/ads.service.dart';
 import 'package:bookology/services/startup.service.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -40,6 +41,7 @@ Future<void> main() async {
   final adsM = MobileAds.instance.initialize();
   await StartUpService().startService();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
   await GetStorage.init();
   await SentryFlutter.init(
     (options) {

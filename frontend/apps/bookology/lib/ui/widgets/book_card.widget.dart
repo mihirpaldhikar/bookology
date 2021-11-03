@@ -61,189 +61,209 @@ class _BookCardState extends State<BookCard> {
       tag: widget.id,
       child: Material(
         color: Colors.transparent,
-        child: GestureDetector(
-          onTap: widget.onClicked,
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Theme.of(context).primaryColor,
-                  width: 1,
-                ),
-                color: Theme.of(context).cardTheme.color,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.book.additionalInformation.images.first,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.grey,
-                          ),
-                          strokeWidth: 2,
+        child: Card(
+          margin: const EdgeInsets.only(
+            top: 10,
+            bottom: 10,
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
+            onTap: widget.onClicked,
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 0.5,
                         ),
                       ),
-                      fit: BoxFit.fill,
-                      height: MediaQuery.of(context).size.height * 0.26,
-                      width: 150,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Visibility(
-                              visible: widget.showMenu!,
-                              child: const Spacer(),
+                      padding: const EdgeInsets.all(0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              widget.book.additionalInformation.images.first,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.grey,
+                              ),
+                              strokeWidth: 2,
                             ),
-                            Visibility(
-                              visible: widget.showMenu!,
-                              child: GestureDetector(
-                                onTap: () {
-                                  BottomSheetManager(context)
-                                      .showBookSelectionBottomSheet(
-                                    book: widget.book,
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .buttonTheme
-                                        .colorScheme!
-                                        .background,
-                                    borderRadius: BorderRadius.circular(
-                                      ValuesConstant.secondaryBorderRadius,
+                          ),
+                          fit: BoxFit.fill,
+                          height: MediaQuery.of(context).size.height * 0.26,
+                          width: 150,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Visibility(
+                                visible: widget.showMenu!,
+                                child: const Spacer(),
+                              ),
+                              Visibility(
+                                visible: widget.showMenu!,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    BottomSheetManager(context)
+                                        .showBookSelectionBottomSheet(
+                                      book: widget.book,
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .buttonTheme
+                                          .colorScheme!
+                                          .background,
+                                      borderRadius: BorderRadius.circular(
+                                        ValuesConstant.secondaryBorderRadius,
+                                      ),
                                     ),
-                                  ),
-                                  child: Icon(
-                                    Icons.more_vert_outlined,
-                                    color: Theme.of(context).primaryColor,
+                                    child: Icon(
+                                      Icons.more_vert_outlined,
+                                      color: Theme.of(context)
+                                          .buttonTheme
+                                          .colorScheme!
+                                          .primary,
+                                    ),
                                   ),
                                 ),
                               ),
+                            ],
+                          ),
+                          AutoSizeText(
+                            widget.book.bookInformation.name,
+                            maxLines: 4,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
-                          ],
-                        ),
-                        AutoSizeText(
-                          widget.book.bookInformation.name,
-                          maxLines: 4,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        AutoSizeText(
-                          'By ${widget.book.bookInformation.author}',
-                          maxLines: 4,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13,
-                            color: Theme.of(context).primaryColor,
+                          const SizedBox(
+                            height: 5,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            AutoSizeText(
-                              'Price:',
-                              maxLines: 4,
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                          AutoSizeText(
+                            'By ${widget.book.bookInformation.author}',
+                            maxLines: 4,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13,
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              AutoSizeText(
+                                'Price:',
+                                maxLines: 4,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            AutoSizeText(
-                              '$currencySymbol ${widget.book.pricing.sellingPrice}',
-                              maxLines: 4,
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Theme.of(context).primaryColor,
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            AutoSizeText(
-                              widget.book.pricing.originalPrice,
-                              maxLines: 4,
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15,
-                                decoration: TextDecoration.lineThrough,
-                                color: Theme.of(context).primaryColor,
+                              AutoSizeText(
+                                '$currencySymbol ${widget.book.pricing.sellingPrice}',
+                                maxLines: 4,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
+                                ),
                               ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              AutoSizeText(
+                                widget.book.pricing.originalPrice,
+                                maxLines: 4,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 15,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          AutoSizeText(
+                            'You Save $currencySymbol ${saving.toString()}',
+                            maxLines: 4,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.green,
+                              fontSize: 15,
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        AutoSizeText(
-                          'You Save $currencySymbol ${saving.toString()}',
-                          maxLines: 4,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.green,
-                            fontSize: 15,
                           ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.04,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: OutLinedButton(
-                            text: widget.buttonText!,
-                            textColor: Theme.of(context).primaryColor,
-                            onPressed: widget.onClicked,
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.04,
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: OutLinedButton(
+                              text: widget.buttonText!,
+                              textColor: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .primary,
+                              outlineWidth: 0,
+                              onPressed: widget.onClicked,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+          ),
         ),
       ),
     );

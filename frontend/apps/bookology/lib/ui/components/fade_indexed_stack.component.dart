@@ -21,41 +21,57 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_l10n.dart';
 
-/// A class that represents send button widget
-class SendChatButton extends StatelessWidget {
-  /// Creates send button widget
-  const SendChatButton({
+class FadeIndexedStack extends StatefulWidget {
+  final int index;
+  final List<Widget> children;
+  final Duration duration;
+
+  const FadeIndexedStack({
     Key? key,
-    required this.onPressed,
+    required this.index,
+    required this.children,
+    this.duration = const Duration(
+      milliseconds: 800,
+    ),
   }) : super(key: key);
 
-  /// Callback for send button tap event
-  final void Function() onPressed;
+  @override
+  _FadeIndexedStackState createState() => _FadeIndexedStackState();
+}
+
+class _FadeIndexedStackState extends State<FadeIndexedStack>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void didUpdateWidget(FadeIndexedStack oldWidget) {
+    if (widget.index != oldWidget.index) {
+      _controller.forward(from: 0.0);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      width: 77,
-      padding: const EdgeInsets.all(2),
-      child: Padding(
-        padding: EdgeInsets.zero,
-        child: Tooltip(
-          message: InheritedL10n.of(context).l10n.sendButtonAccessibilityLabel,
-          child: TextButton(
-            child: Text(
-              'Send',
-              style: TextStyle(
-                color: Theme.of(context).inputDecorationTheme.fillColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
-            ),
-            onPressed: onPressed,
-          ),
-        ),
+    return FadeTransition(
+      opacity: _controller,
+      child: IndexedStack(
+        index: widget.index,
+        children: widget.children,
       ),
     );
   }

@@ -90,7 +90,7 @@ class ToastManager {
       textColor: Colors.black,
       iconColor: Colors.black,
       icon: Icons.error_outline_outlined,
-      backGroundColor: ColorsConstant.dangerBackgroundColor,
+      backGroundColor: ColorsConstant.lightDangerBackgroundColor,
       durationSeconds: 3,
     );
   }

@@ -40,6 +40,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -227,6 +228,7 @@ class _ChatPageState extends State<ChatPage> {
         builder: (_, mode, child) {
           return Scaffold(
             appBar: AppBar(
+              titleSpacing: 0,
               title: Row(
                 children: [
                   CircularImage(
@@ -286,7 +288,9 @@ class _ChatPageState extends State<ChatPage> {
                               child: Text(
                                 value,
                                 style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
                                 ),
                               ),
                               value: value,
@@ -305,13 +309,16 @@ class _ChatPageState extends State<ChatPage> {
                   stream: FirebaseChatCore.instance.messages(snapshot.data!),
                   builder: (context, snapshot) {
                     return Discussions(
+                        emojiEnlargementBehavior:
+                            EmojiEnlargementBehavior.multi,
+                        hideBackgroundOnEmojiMessages: true,
                         roomId: widget.room.id,
                         showUserAvatars: true,
                         showUserNames: false,
                         usePreviewData: true,
-                        theme: Theme.of(context).primaryColor == Colors.white
-                            ? DarkChatUi()
-                            : LightChatUi(),
+                        theme: Theme.of(context).brightness == Brightness.dark
+                            ? DarkChatUi(context: context)
+                            : LightChatUi(context: context),
                         bubbleBuilder: _bubbleBuilder,
                         isAttachmentUploading: _isAttachmentUploading,
                         messages: snapshot.data ?? [],
@@ -358,8 +365,12 @@ class _ChatPageState extends State<ChatPage> {
       nipRadius: 3,
       color: _authService.currentUser()!.uid != message.author.id ||
               message.type == types.MessageType.image
-          ? LightChatUi().secondaryColor
-          : LightChatUi().primaryColor,
+          ? Theme.of(context).brightness == Brightness.light
+              ? LightChatUi(context: context).secondaryColor
+              : DarkChatUi(context: context).secondaryColor
+          : Theme.of(context).brightness == Brightness.light
+              ? LightChatUi(context: context).primaryColor
+              : DarkChatUi(context: context).primaryColor,
       margin: nextMessageInGroup
           ? const BubbleEdges.symmetric(horizontal: 6)
           : null,

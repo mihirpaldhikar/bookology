@@ -26,23 +26,17 @@ import 'package:bookology/managers/dicsussions_input.manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_chat_ui/src/chat_l10n.dart';
-import 'package:flutter_chat_ui/src/chat_theme.dart';
 import 'package:flutter_chat_ui/src/conditional/conditional.dart';
 import 'package:flutter_chat_ui/src/models/date_header.dart';
 import 'package:flutter_chat_ui/src/models/message_spacer.dart';
 import 'package:flutter_chat_ui/src/models/preview_image.dart';
 import 'package:flutter_chat_ui/src/util.dart';
-import 'package:flutter_chat_ui/src/widgets/chat_list.dart';
 import 'package:flutter_chat_ui/src/widgets/inherited_chat_theme.dart';
 import 'package:flutter_chat_ui/src/widgets/inherited_l10n.dart';
 import 'package:flutter_chat_ui/src/widgets/inherited_user.dart';
-import 'package:flutter_chat_ui/src/widgets/input.dart';
-import 'package:flutter_chat_ui/src/widgets/message.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-/// Entry widget, represents the complete chat
 class Discussions extends StatefulWidget {
   /// Creates a chat widget
   const Discussions({
@@ -55,15 +49,18 @@ class Discussions extends StatefulWidget {
     this.dateHeaderThreshold = 900000,
     this.dateLocale,
     this.disableImageGallery,
+    this.emojiEnlargementBehavior = EmojiEnlargementBehavior.multi,
     this.emptyState,
     this.fileMessageBuilder,
     this.groupMessagesThreshold = 60000,
+    this.hideBackgroundOnEmojiMessages = true,
     this.imageMessageBuilder,
     this.isAttachmentUploading,
     this.isLastPage,
     this.l10n = const ChatL10nEn(),
     required this.messages,
     this.onAttachmentPressed,
+    this.onBackgroundTap,
     this.onEndReached,
     this.onEndReachedThreshold,
     this.onMessageLongPress,
@@ -72,6 +69,7 @@ class Discussions extends StatefulWidget {
     required this.onSendPressed,
     this.onTextChanged,
     this.onTextFieldTap,
+    this.scrollPhysics,
     this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
     this.showUserAvatars = false,
     this.showUserNames = false,
@@ -128,6 +126,9 @@ class Discussions extends StatefulWidget {
   /// Disable automatic image preview on tap.
   final bool? disableImageGallery;
 
+  /// See [Message.emojiEnlargementBehavior]
+  final EmojiEnlargementBehavior emojiEnlargementBehavior;
+
   /// Allows you to change what the user sees when there are no messages.
   /// `emptyChatPlaceholder` and `emptyChatPlaceholderTextStyle` are ignored
   /// in this case.
@@ -141,6 +142,9 @@ class Discussions extends StatefulWidget {
   /// Default value is 1 minute, 60000 ms. When time between two messages
   /// is lower than this threshold, they will be visually grouped.
   final int groupMessagesThreshold;
+
+  /// See [Message.hideBackgroundOnEmojiMessages]
+  final bool hideBackgroundOnEmojiMessages;
 
   /// See [Message.imageMessageBuilder]
   final Widget Function(types.ImageMessage, {required int messageWidth})?
@@ -162,6 +166,9 @@ class Discussions extends StatefulWidget {
 
   /// See [Input.onAttachmentPressed]
   final void Function()? onAttachmentPressed;
+
+  /// Called when user taps on background
+  final void Function()? onBackgroundTap;
 
   /// See [ChatList.onEndReached]
   final Future<void> Function()? onEndReached;
@@ -188,6 +195,9 @@ class Discussions extends StatefulWidget {
   /// See [Input.onTextFieldTap]
   final void Function()? onTextFieldTap;
 
+  /// See [ChatList.scrollPhysics]
+  final ScrollPhysics? scrollPhysics;
+
   /// See [Input.sendButtonVisibilityMode]
   final SendButtonVisibilityMode sendButtonVisibilityMode;
 
@@ -197,6 +207,8 @@ class Discussions extends StatefulWidget {
   /// Show user names for received messages. Useful for a group chat. Will be
   /// shown only on text messages.
   final bool showUserNames;
+
+  final String roomId;
 
   /// See [Message.textMessageBuilder]
   final Widget Function(
@@ -222,7 +234,6 @@ class Discussions extends StatefulWidget {
 
   /// See [InheritedUser.user]
   final types.User user;
-  final String roomId;
 
   @override
   _DiscussionsState createState() => _DiscussionsState();
@@ -332,10 +343,7 @@ class _DiscussionsState extends State<Discussions> {
     if (object is DateHeader) {
       return Container(
         alignment: Alignment.center,
-        margin: const EdgeInsets.only(
-          bottom: 32,
-          top: 16,
-        ),
+        margin: widget.theme.dateDividerMargin,
         child: Text(
           object.text,
           style: widget.theme.dateDividerTextStyle,
@@ -357,7 +365,9 @@ class _DiscussionsState extends State<Discussions> {
         key: ValueKey(message.id),
         bubbleBuilder: widget.bubbleBuilder,
         customMessageBuilder: widget.customMessageBuilder,
+        emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
         fileMessageBuilder: widget.fileMessageBuilder,
+        hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
         imageMessageBuilder: widget.imageMessageBuilder,
         message: message,
         messageWidth: _messageWidth,
@@ -430,8 +440,10 @@ class _DiscussionsState extends State<Discussions> {
                               child: _emptyStateBuilder(),
                             )
                           : GestureDetector(
-                              onTap: () =>
-                                  FocusManager.instance.primaryFocus?.unfocus(),
+                              onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                widget.onBackgroundTap?.call();
+                              },
                               child: LayoutBuilder(
                                 builder: (BuildContext context,
                                         BoxConstraints constraints) =>
@@ -443,6 +455,7 @@ class _DiscussionsState extends State<Discussions> {
                                   onEndReached: widget.onEndReached,
                                   onEndReachedThreshold:
                                       widget.onEndReachedThreshold,
+                                  scrollPhysics: widget.scrollPhysics,
                                 ),
                               ),
                             ),

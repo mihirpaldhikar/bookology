@@ -155,6 +155,9 @@ class StringConstants {
     'Kids',
     'Mysteries',
   ];
+
+  static const List<String> listProfileTabs = ['Books', 'Saved'];
+
   static const List<String> listSelectBookCategories = [
     'Education & References',
     'Comics',

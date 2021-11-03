@@ -22,11 +22,24 @@
 
 package com.imihirpaldhikar.bookology
 
+import android.os.Bundle
+import android.os.PersistableBundle
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.FirebaseAppCheck.getInstance
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
+
 class MainActivity : FlutterFragmentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        FirebaseApp.initializeApp(this)
+        val firebaseAppCheck: FirebaseAppCheck = getInstance()
+        firebaseAppCheck.setTokenAutoRefreshEnabled(true)
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

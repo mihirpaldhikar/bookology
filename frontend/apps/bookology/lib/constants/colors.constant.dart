@@ -47,7 +47,8 @@ class ColorsConstant {
 
   static const Color dangerBorderColor = Colors.redAccent;
 
-  static const Color dangerBackgroundColor = Color(0xFFFFCDD2);
+  static const Color lightDangerBackgroundColor = Color(0xFFFFCDD2);
+  static const Color darkDangerBackgroundColor = Color(0xFF921C23);
 
   static const Color lightBackgroundColor = Color(0xFFFFFFFF);
   static const Color darkBackgroundColor = Color(0xFF000000);

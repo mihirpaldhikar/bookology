@@ -20,11 +20,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:blobs/blobs.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:bookology/utils/validator.utli.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,146 +51,235 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(),
-            body: SafeArea(
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.only(
-                    right: 30,
-                    left: 30,
-                  ),
+        : GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Scaffold(
+              appBar: AppBar(),
+              body: SafeArea(
+                child: Stack(
                   children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Center(
-                      child: Text(
-                        'Create Account',
-                        style: TextStyle(
-                          fontStyle:
-                              Theme.of(context).textTheme.headline4!.fontStyle,
-                          fontWeight:
-                              Theme.of(context).textTheme.headline4!.fontWeight,
-                          fontSize:
-                              Theme.of(context).textTheme.headline4!.fontSize,
-                          color: Theme.of(context).primaryColor,
+                    Positioned(
+                      top: -90,
+                      right: -200,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Blob.fromID(
+                          styles: BlobStyles(
+                              color: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background),
+                          id: const ['6-6-1481'],
+                          size: 500,
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 150,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Email",
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(),
-                          ),
-                          prefixIcon: const Icon(Icons.mail_outline_rounded)
-                          //fillColor: Colors.green
-                          ),
-                      controller: _emailController,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "Email cannot be empty.";
-                        } else {
-                          if (!Validator().validateEmail(val)) {
-                            return "Email is not valid.";
-                          } else {
-                            return null;
-                          }
-                        }
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      textCapitalization: TextCapitalization.none,
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Password",
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(),
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.lock_outlined,
-                          )
-                          //fillColor: Colors.green
-                          ),
-                      controller: _passwordController,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "Password cannot be empty.";
-                        } else {
-                          if (!Validator().validatePassword(val)) {
-                            return "Enter a valid password.";
-                          }
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: true,
-                      textCapitalization: TextCapitalization.none,
-                      textInputAction: TextInputAction.done,
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 50,
-                        left: 50,
+                    Positioned(
+                      top: -10,
+                      left: -30,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Blob.fromID(
+                          styles: BlobStyles(
+                              color: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background),
+                          id: const ['6-6-47'],
+                          size: 100,
+                        ),
                       ),
-                      child: OutLinedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              await _auth
-                                  .signUpWithEmailAndPassword(
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
-                                      firstName: '',
-                                      lastName: '',
-                                      profilePictureURL:
-                                          'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/SystemFiles%2Fdefault_profile_pictire.png?alt=media&token=1c37b178-a644-453b-ad8a-8023c2792567')
-                                  .then(
-                                (value) {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  if (value != true) {
-                                    _authHandler.firebaseError(
-                                        value: value, context: context);
-                                  } else {
+                    ),
+                    Positioned(
+                      bottom: -100,
+                      left: -120,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Blob.fromID(
+                          styles: BlobStyles(
+                              color: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background),
+                          id: const ['6-6-47'],
+                          size: 350,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -200,
+                      right: -120,
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Blob.fromID(
+                          styles: BlobStyles(
+                              color: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .background),
+                          id: const ['6-6-49'],
+                          size: 350,
+                        ),
+                      ),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        padding: const EdgeInsets.only(
+                          right: 30,
+                          left: 30,
+                        ),
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Center(
+                            child: Text(
+                              'Create Account',
+                              style: TextStyle(
+                                fontStyle: Theme.of(context)
+                                    .textTheme
+                                    .headline4!
+                                    .fontStyle,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .headline4!
+                                    .fontSize,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 150,
+                          ),
+                          TextFormField(
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
+                            ),
+                            decoration: InputDecoration(
+                                labelText: "Email",
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(),
+                                ),
+                                prefixIcon:
+                                    const Icon(Icons.mail_outline_rounded)
+                                //fillColor: Colors.green
+                                ),
+                            controller: _emailController,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Email cannot be empty.";
+                              } else {
+                                if (!Validator().validateEmail(val)) {
+                                  return "Email is not valid.";
+                                } else {
+                                  return null;
+                                }
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            textCapitalization: TextCapitalization.none,
+                            textInputAction: TextInputAction.next,
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          TextFormField(
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
+                            ),
+                            decoration: InputDecoration(
+                                labelText: "Password",
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(),
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outlined,
+                                )
+                                //fillColor: Colors.green
+                                ),
+                            controller: _passwordController,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Password cannot be empty.";
+                              } else {
+                                if (!Validator().validatePassword(val)) {
+                                  return "Enter a valid password.";
+                                }
+                                return null;
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            obscureText: true,
+                            textCapitalization: TextCapitalization.none,
+                            textInputAction: TextInputAction.done,
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: 50,
+                              left: 50,
+                            ),
+                            child: OutLinedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
                                     setState(() {
-                                      _isLoading = false;
+                                      _isLoading = true;
                                     });
-                                    if (value == true) {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/verify');
-                                    }
+                                    await _auth
+                                        .signUpWithEmailAndPassword(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                            firstName: '',
+                                            lastName: '',
+                                            profilePictureURL:
+                                                'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/SystemFiles%2Fdefault_profile_pictire.png?alt=media&token=1c37b178-a644-453b-ad8a-8023c2792567')
+                                        .then(
+                                      (value) {
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                        if (value != true) {
+                                          _authHandler.firebaseError(
+                                              value: value, context: context);
+                                        } else {
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
+                                          if (value == true) {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/verify');
+                                          }
+                                        }
+                                      },
+                                    );
+                                  } catch (e) {
+                                    rethrow;
                                   }
-                                },
-                              );
-                            } catch (e) {
-                              rethrow;
-                            }
-                          }
-                        },
-                        text: 'Sign Up',
-                        textColor: Theme.of(context).primaryColor,
+                                }
+                              },
+                              text: 'Sign Up',
+                              textColor: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
