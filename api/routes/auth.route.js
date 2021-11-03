@@ -88,6 +88,9 @@ router.post('/signup', authorizeKey, async (request, response, next) => {
               secrets: {
                 authorizeToken: token,
               },
+              metadata: {
+                isNewUser: true
+              }
             });
           }
           response.status(201).json({
@@ -185,6 +188,9 @@ router.get('/verification/:token', async (request, response, next) => {
           secrets: {
             authorizeToken: token,
           },
+          metadata: {
+            isNewUser: true
+          }
         });
         response.status(201).json({
           result: {

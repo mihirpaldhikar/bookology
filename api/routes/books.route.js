@@ -161,6 +161,7 @@ router.post('/publish', verifyUser, async (request, response, next) => {
           images: request.body.images,
           location: request.body.location,
         });
+
         await BooksCollection.insertOne(bookletData, (error, result) => {
           if (error) {
             response.status(500).json({
