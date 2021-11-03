@@ -21,7 +21,6 @@
  */
 
 import 'package:bookology/constants/values.constants.dart';
-import 'package:bookology/services/search.service.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -32,8 +31,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final SearchService _searchService = SearchService();
-
   final TextEditingController _textFieldController = TextEditingController();
 
   @override
@@ -50,8 +47,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-
-    await _searchService.indexBook();
   }
 
   @override
