@@ -173,7 +173,7 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.grey,
-                  width: 1,
+                  width: 0.5,
                 ),
                 borderRadius:
                     InheritedChatTheme.of(context).theme.inputBorderRadius,
@@ -195,7 +195,6 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration.collapsed(
-                          fillColor: Colors.red,
                           hintStyle: InheritedChatTheme.of(context)
                               .theme
                               .inputTextStyle
@@ -212,14 +211,10 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                         maxLines: 5,
                         minLines: 1,
                         onChanged: widget.onTextChanged,
-                        style: InheritedChatTheme.of(context)
-                            .theme
-                            .inputTextStyle
-                            .copyWith(
-                              color: InheritedChatTheme.of(context)
-                                  .theme
-                                  .inputTextColor,
-                            ),
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                        ),
                         textCapitalization: TextCapitalization.sentences,
                       ),
                     ),

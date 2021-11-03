@@ -21,7 +21,6 @@
  */
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/screen.manager.dart';
 import 'package:bookology/managers/theme.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
@@ -40,21 +39,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-
-const AndroidNotificationChannel androidNotificationChannel =
-    AndroidNotificationChannel(
-  'high_importance_channel',
-  'Book Enquiry Notification',
-  importance: Importance.max,
-);
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 class AppManager extends StatefulWidget {
   final AdaptiveThemeMode saveThemeMode;
@@ -140,12 +128,12 @@ class _AppState extends State<App> {
                   ? Brightness.light
                   : Brightness.dark,
           statusBarColor: widget.savedThemeMode == AdaptiveThemeMode.dark
-              ? ColorsConstant.darkSecondaryColor
-              : ColorsConstant.lightStatusBarColor,
+              ? const Color(0xff1A1C1E)
+              : const Color(0xffFDFCFF),
           systemNavigationBarColor:
               widget.savedThemeMode == AdaptiveThemeMode.dark
-                  ? ColorsConstant.darkThemeBottomNavigationBarBackgroundColor
-                  : ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+                  ? const Color(0xff1A1C1E)
+                  : const Color(0xffFDFCFF),
         ),
       );
     } else {
@@ -153,12 +141,10 @@ class _AppState extends State<App> {
         SystemUiOverlayStyle(
           statusBarIconBrightness:
               isDarkMode ? Brightness.light : Brightness.dark,
-          statusBarColor: isDarkMode
-              ? ColorsConstant.darkSecondaryColor
-              : ColorsConstant.lightStatusBarColor,
-          systemNavigationBarColor: isDarkMode
-              ? ColorsConstant.darkThemeBottomNavigationBarBackgroundColor
-              : ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+          statusBarColor:
+              isDarkMode ? const Color(0xff1A1C1E) : const Color(0xffFDFCFF),
+          systemNavigationBarColor:
+              isDarkMode ? const Color(0xff1A1C1E) : const Color(0xffFDFCFF),
         ),
       );
     }

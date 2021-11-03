@@ -90,6 +90,7 @@ class AuthService {
             _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
         authProvider: 'google',
       );
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_firebaseAuth.currentUser?.uid)
@@ -100,13 +101,9 @@ class AuthService {
           'imageUrl': _firebaseAuth.currentUser?.photoURL.toString(),
           'lastName':
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
-          'lastSeen': null,
+          'lastSeen': FieldValue.serverTimestamp(),
           'role': 'user',
-          'metadata': {
-            'userName':
-                _firebaseAuth.currentUser?.email.toString().split('@')[0],
-            'isVerified': false,
-          },
+          'metadata': {'isNewUser': false},
           'secrets': {
             'fcmToken': await NotificationService(FirebaseMessaging.instance)
                 .getMessagingToken(),
@@ -116,6 +113,7 @@ class AuthService {
           merge: true,
         ),
       );
+
       return result;
     } on FirebaseAuthException {
       rethrow;
@@ -198,6 +196,7 @@ class AuthService {
               'userName':
                   _firebaseAuth.currentUser?.email.toString().split('@')[0],
               'isVerified': false,
+              'isNewUser': true,
             },
             'secrets': {
               'fcmToken': FirebaseMessaging.instance.getToken(),

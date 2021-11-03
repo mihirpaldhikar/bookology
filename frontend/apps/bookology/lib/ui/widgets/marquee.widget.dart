@@ -34,7 +34,7 @@ class Marquee extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 3000),
     this.backDuration = const Duration(milliseconds: 800),
     this.pauseDuration = const Duration(milliseconds: 800),
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   _MarqueeState createState() => _MarqueeState();

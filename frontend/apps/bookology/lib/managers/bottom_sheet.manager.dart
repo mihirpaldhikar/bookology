@@ -33,7 +33,6 @@ import 'package:bookology/ui/screens/settings.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -49,8 +48,8 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'Share this book',
           icon: Icons.share_outlined,
-          iconColor: Theme.of(context).primaryColor,
-          textColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -75,7 +74,7 @@ class BottomSheetManager {
             icon: Icons.report_outlined,
             iconColor: Colors.redAccent,
             textColor: Colors.redAccent,
-            backgroundColor: ColorsConstant.dangerBackgroundColor,
+            backgroundColor: ColorsConstant.lightDangerBackgroundColor,
             onPressed: () {},
           ),
         ),
@@ -92,8 +91,8 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'Settings',
           icon: Icons.settings_outlined,
-          iconColor: Theme.of(context).primaryColor,
-          textColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -113,8 +112,8 @@ class BottomSheetManager {
         OutLinedButton(
           text: 'About',
           icon: Icons.info_outlined,
-          iconColor: Theme.of(context).primaryColor,
-          textColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -144,7 +143,7 @@ class BottomSheetManager {
           text: StringConstants.wordLogout,
           icon: Icons.logout_outlined,
           iconColor: Colors.black,
-          backgroundColor: ColorsConstant.dangerBackgroundColor,
+          backgroundColor: ColorsConstant.lightDangerBackgroundColor,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -184,7 +183,7 @@ class BottomSheetManager {
           'A new version of the app is available please update to enjoy latest features! ',
           style: TextStyle(
             fontSize: 15,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           textAlign: TextAlign.center,
         ),
@@ -198,7 +197,7 @@ class BottomSheetManager {
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -214,7 +213,7 @@ class BottomSheetManager {
               Text(
                 changeLog,
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                 ),
               ),
             ],
@@ -222,7 +221,7 @@ class BottomSheetManager {
         ),
         OutLinedButton(
           text: 'Update',
-          textColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           align: Alignment.center,
           alignContent: MainAxisAlignment.center,
           onPressed: onUpdateClicked,
@@ -235,7 +234,9 @@ class BottomSheetManager {
           align: Alignment.center,
           textColor: Colors.black,
           alignContent: MainAxisAlignment.center,
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.grey.shade300
+              : Colors.grey.shade600,
           onPressed: onCancelClicked,
         ),
       ],
@@ -253,8 +254,8 @@ class BottomSheetManager {
           onPressed: onCameraPressed,
           text: 'Camera',
           icon: Icons.photo_camera_outlined,
-          textColor: Theme.of(context).primaryColor,
-          iconColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -264,8 +265,8 @@ class BottomSheetManager {
           onPressed: onGalleryPressed,
           text: 'Gallery',
           icon: Icons.collections_outlined,
-          textColor: Theme.of(context).primaryColor,
-          iconColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -282,9 +283,9 @@ class BottomSheetManager {
         OutLinedButton(
           onPressed: onImagePressed,
           text: StringConstants.wordImage,
-          textColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           icon: Icons.image_outlined,
-          iconColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -293,9 +294,9 @@ class BottomSheetManager {
         OutLinedButton(
           onPressed: onFilePressed,
           text: StringConstants.wordFile,
-          textColor: Theme.of(context).primaryColor,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           icon: Icons.note_add_outlined,
-          iconColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -326,7 +327,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordIsbn}:  ',
             style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -347,7 +348,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordBookName}:  ',
             style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -368,7 +369,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordAuthor}:  ',
             style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -389,7 +390,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordPublisher}:  ',
             style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -412,7 +413,7 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordDescription}:  ',
             style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -435,7 +436,7 @@ class BottomSheetManager {
               text: TextSpan(
                 text: '${StringConstants.wordOriginalPrice}:  ',
                 style: GoogleFonts.poppins(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
@@ -456,7 +457,7 @@ class BottomSheetManager {
               text: TextSpan(
                 text: '${StringConstants.wordSellingPrice}:  ',
                 style: GoogleFonts.poppins(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
@@ -479,12 +480,12 @@ class BottomSheetManager {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Book Images:',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17,
-              ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  color: Theme.of(context).inputDecorationTheme.fillColor),
             ),
             const SizedBox(
               height: 20,
@@ -539,7 +540,8 @@ class BottomSheetManager {
           text: StringConstants.wordUpload,
           onPressed: onUploadClicked,
           icon: Icons.cloud_upload_outlined,
-          iconColor: Theme.of(context).primaryColor,
+          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
         ),
         const SizedBox(
           height: 20,

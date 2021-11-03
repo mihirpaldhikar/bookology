@@ -56,7 +56,7 @@ class DialogsManager {
             'the uploader to start discussion '
             'again.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -75,7 +75,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -99,7 +99,7 @@ class DialogsManager {
             'You will be able to unsend the message '
             'you have sent.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -122,7 +122,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -147,7 +147,7 @@ class DialogsManager {
             'No one even Bookology can read the ongoing '
             'discussions.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -180,14 +180,14 @@ class DialogsManager {
             'This ADs are sourced from Google ADs Network. We '
             'don\'t collect the information to show you ADs.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'OK',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -212,14 +212,14 @@ class DialogsManager {
             'edition and variation (except '
             'reprintings) of a publication.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'OK',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -245,14 +245,14 @@ class DialogsManager {
             'country. You can disable the location permission if you want but you will not get '
             'relevant book recommendations.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'Next',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: onPressed,
           )
         ],
@@ -273,7 +273,7 @@ class DialogsManager {
             'This book will be deleted. This action '
             'is not irreversible.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -288,7 +288,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -303,15 +303,13 @@ class DialogsManager {
   }
 
   void showProgressDialog(
-      {required String content,
-      required Color contentColor,
-      required Color progressColor}) {
+      {required String content, Color? contentColor, Color? progressColor}) {
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-              progressColor,
+              progressColor ?? Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(
@@ -323,7 +321,10 @@ class DialogsManager {
             ),
             child: Text(
               content,
-              style: TextStyle(color: contentColor),
+              style: TextStyle(
+                color: contentColor ??
+                    Theme.of(context).inputDecorationTheme.fillColor,
+              ),
             ),
           ),
         ],
@@ -350,7 +351,7 @@ class DialogsManager {
           Text(
             '$requestText.\nThis will create a Discussions Between you and the requesting user.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -389,7 +390,7 @@ class DialogsManager {
           Text(
             'This will create a request to the uploader. You will only be able to discuss if the uploader accepts your request.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -430,14 +431,16 @@ class DialogsManager {
               Text(
                 'Please enter the Email from which you have created the Bookology Account.',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
               TextFormField(
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
+                ),
                 decoration: InputDecoration(
                     labelText: "Email",
                     fillColor: Colors.white,
@@ -490,6 +493,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -523,7 +527,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -533,7 +537,7 @@ class DialogsManager {
           Text(
             'Send "$attachmentName" to $receiverName?',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -563,7 +567,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -573,7 +577,7 @@ class DialogsManager {
           Text(
             'Are you sure you want to logout?',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -595,7 +599,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Allow',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             backgroundColor: Colors.green.shade100,
             onPressed: onOpenSettingsClicked,
           ),
@@ -604,7 +608,7 @@ class DialogsManager {
           Text(
             'The location permission is either not granted or currently not available. Please Allow the location permission in order to continue.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -631,7 +635,7 @@ class DialogsManager {
                     Text(
                       'Authenticate with the Biometrics which are available and supported by your device.',
                       style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
                       ),
                     ),
                     const SizedBox(
@@ -642,7 +646,8 @@ class DialogsManager {
                       child: Text(
                         'Available Biometrics',
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -673,7 +678,9 @@ class DialogsManager {
                                           ? 'Face Biometric'
                                           : 'Unknown Biometric',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                 ),
                               );
@@ -687,7 +694,9 @@ class DialogsManager {
                         Text(
                           'Use Biometrics',
                           style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
@@ -757,7 +766,7 @@ class DialogsManager {
             ),
             OutLinedButton(
               text: 'Cancel',
-              textColor: Theme.of(context).primaryColor,
+              textColor: Theme.of(context).inputDecorationTheme.fillColor,
               onPressed: () {
                 Navigator.of(context).pop();
               },

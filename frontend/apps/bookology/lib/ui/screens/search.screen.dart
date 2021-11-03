@@ -20,43 +20,176 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/services/search.service.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({
-    Key? key,
-  }) : super(key: key);
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final SearchService _searchService = SearchService();
+
+  final TextEditingController _textFieldController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    await _searchService.indexBook();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            StringConstants.navigationSearch,
-            style: Theme.of(context).appBarTheme.titleTextStyle,
+          automaticallyImplyLeading: false,
+          titleSpacing: 6,
+          title: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade200
+                  : Colors.grey.shade800,
+              borderRadius: BorderRadius.circular(
+                ValuesConstant.borderRadius,
+              ),
+            ),
+            margin: const EdgeInsets.only(
+              bottom: 5,
+            ),
+            child: TextField(
+              style: TextStyle(
+                color: Theme.of(context).inputDecorationTheme.fillColor,
+              ),
+              controller: _textFieldController,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search..',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: 1 == 2
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _textFieldController.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.clear),
+                      )
+                    : null,
+              ),
+            ),
           ),
-          automaticallyImplyLeading: true,
         ),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          alignment: Alignment.center,
-          child: Text(
-            'Work in Progress!',
-            style:
-                TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 20,
+              bottom: 0,
+            ),
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: const [
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.3,
+                //   child: _hitsList.isEmpty
+                //       ? Center(
+                //           child: Text(
+                //           'No results',
+                //           style: TextStyle(
+                //             color: Theme.of(context).primaryColor,
+                //           ),
+                //         ))
+                //       : ListView.builder(
+                //           padding: const EdgeInsets.all(4),
+                //           itemCount: _hitsList.length,
+                //           physics: const BouncingScrollPhysics(),
+                //           itemBuilder: (BuildContext context, int index) {
+                //             return GestureDetector(
+                //               onTap: () {
+                //                 DialogsManager(context).showResetPasswordDialog();
+                //               },
+                //               child: Container(
+                //                 margin: const EdgeInsets.only(
+                //                   top: 20,
+                //                 ),
+                //                 padding: const EdgeInsets.all(8),
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.circular(
+                //                     ValuesConstant.borderRadius,
+                //                   ),
+                //                   border: Border.all(
+                //                     color: Theme.of(context).primaryColor,
+                //                     width: 1,
+                //                   ),
+                //                 ),
+                //                 child: Row(
+                //                   children: <Widget>[
+                //                     ClipRRect(
+                //                       borderRadius: BorderRadius.circular(10),
+                //                       child: CachedNetworkImage(
+                //                         imageUrl:
+                //                             _hitsList[index].bookInformation.name,
+                //                         placeholder: (context, url) =>
+                //                             const Center(
+                //                           child: CircularProgressIndicator(
+                //                             valueColor:
+                //                                 AlwaysStoppedAnimation<Color>(
+                //                               Colors.grey,
+                //                             ),
+                //                             strokeWidth: 2,
+                //                           ),
+                //                         ),
+                //                         fit: BoxFit.fill,
+                //                         height: 70,
+                //                         width: 50,
+                //                       ),
+                //                     ),
+                //                     const SizedBox(
+                //                       width: 10,
+                //                     ),
+                //                     Expanded(
+                //                       child: Text(
+                //                         _hitsList[index]
+                //                             .additionalInformation
+                //                             .images[0],
+                //                         style: TextStyle(
+                //                           color: Theme.of(context).primaryColor,
+                //                         ),
+                //                       ),
+                //                     )
+                //                   ],
+                //                 ),
+                //               ),
+                //             );
+                //           },
+                //         ),
+                // )
+              ],
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

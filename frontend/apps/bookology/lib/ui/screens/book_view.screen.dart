@@ -40,7 +40,6 @@ import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -174,25 +173,31 @@ class _BookViewerState extends State<BookViewer> {
             actions: [
               Tooltip(
                 message: StringConstants.hintShareBook,
-                child: IconButton(
-                  onPressed: () {
-                    ShareService().shareBook(
-                      book: widget.book,
-                    );
-                  },
-                  icon: const Icon(Icons.share_outlined),
-                ),
-              ),
-              Visibility(
-                visible:
-                    widget.book.uploaderId == _authService.currentUser()!.uid
-                        ? true
-                        : false,
-                child: Tooltip(
-                  message: StringConstants.hintEditBook,
+                child: SizedBox(
+                  width: 60,
                   child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: () {
+                      ShareService().shareBook(
+                        book: widget.book,
+                      );
+                    },
+                    icon: Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .buttonTheme
+                            .colorScheme!
+                            .background,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Icon(
+                        Icons.share_outlined,
+                        color:
+                            Theme.of(context).buttonTheme.colorScheme!.primary,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -202,40 +207,100 @@ class _BookViewerState extends State<BookViewer> {
                         ? true
                         : false,
                 child: Tooltip(
-                  message: StringConstants.hintDeleteBook,
-                  child: IconButton(
-                    onPressed: () async {
-                      DialogsManager(context).showDeleteBookDialog(() async {
-                        Navigator.of(context).pop();
-                        DialogsManager(context).showProgressDialog(
-                          content: 'Deleting',
-                          contentColor: Colors.redAccent,
-                          progressColor: Colors.redAccent,
+                  message: StringConstants.hintEditBook,
+                  child: SizedBox(
+                    width: 60,
+                    child: IconButton(
+                      onPressed: () {
+                        ShareService().shareBook(
+                          book: widget.book,
                         );
-                        final result = await _apiService.deleteBook(
-                          bookID: widget.id.contains('@')
-                              ? widget.id.split('@')[0]
-                              : widget.id,
-                        );
-                        if (result == true) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewManager(screenIndex: 3),
-                            ),
-                            (_) => false,
+                      },
+                      icon: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .background,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible:
+                    widget.book.uploaderId == _authService.currentUser()!.uid
+                        ? true
+                        : false,
+                child: Tooltip(
+                  message: StringConstants.hintShareBook,
+                  child: SizedBox(
+                    width: 60,
+                    child: IconButton(
+                      onPressed: () async {
+                        DialogsManager(context).showDeleteBookDialog(() async {
+                          Navigator.of(context).pop();
+                          DialogsManager(context).showProgressDialog(
+                            content: 'Deleting',
+                            contentColor: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .error,
+                            progressColor: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .error,
                           );
-                        }
-                        if (result == false) {
-                          ToastManager(this.context)
-                              .showErrorToast(message: 'An Error Occurred!');
-                        }
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.delete_forever_outlined,
-                      color: Colors.redAccent,
+                          final result = await _apiService.deleteBook(
+                            bookID: widget.id.contains('@')
+                                ? widget.id.split('@')[0]
+                                : widget.id,
+                          );
+                          if (result == true) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ViewManager(screenIndex: 3),
+                              ),
+                              (_) => false,
+                            );
+                          }
+                          if (result == false) {
+                            ToastManager(this.context)
+                                .showErrorToast(message: 'An Error Occurred!');
+                          }
+                        });
+                      },
+                      icon: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .background,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Icon(
+                          Icons.delete_forever_outlined,
+                          color:
+                              Theme.of(context).buttonTheme.colorScheme!.error,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -249,9 +314,9 @@ class _BookViewerState extends State<BookViewer> {
                   message: StringConstants.hintReportBook,
                   child: IconButton(
                     onPressed: () async {},
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.report_outlined,
-                      color: Colors.redAccent,
+                      color: Theme.of(context).buttonTheme.colorScheme!.error,
                     ),
                   ),
                 ),
@@ -291,8 +356,7 @@ class _BookViewerState extends State<BookViewer> {
                             length:
                                 widget.book.additionalInformation.images.length,
                             currentIndex: _currentPage,
-                            currentColor:
-                                Theme.of(context).colorScheme.secondary,
+                            currentColor: Theme.of(context).colorScheme.primary,
                             currentSize: 10,
                             otherSize: 5,
                           ),
@@ -315,7 +379,9 @@ class _BookViewerState extends State<BookViewer> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 30,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
                                 ),
                                 textAlign: TextAlign.start,
                               ),
@@ -330,7 +396,9 @@ class _BookViewerState extends State<BookViewer> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 20,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
                                 ),
                                 textAlign: TextAlign.start,
                               ),
@@ -347,7 +415,9 @@ class _BookViewerState extends State<BookViewer> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                   ),
                                   const SizedBox(
@@ -361,7 +431,9 @@ class _BookViewerState extends State<BookViewer> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 28,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                   ),
                                   const SizedBox(
@@ -376,7 +448,9 @@ class _BookViewerState extends State<BookViewer> {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 23,
                                       decoration: TextDecoration.lineThrough,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                   ),
                                 ],
@@ -402,7 +476,9 @@ class _BookViewerState extends State<BookViewer> {
                                 children: [
                                   Icon(
                                     Icons.place_outlined,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                     size: 30,
                                   ),
                                   const SizedBox(
@@ -411,7 +487,9 @@ class _BookViewerState extends State<BookViewer> {
                                   Text(
                                     _location,
                                     style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     ),
@@ -569,7 +647,9 @@ class _BookViewerState extends State<BookViewer> {
                                   Icon(
                                     Icons.description_outlined,
                                     size: 30,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                   const SizedBox(
                                     width: 15,
@@ -582,7 +662,9 @@ class _BookViewerState extends State<BookViewer> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 25,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -603,7 +685,9 @@ class _BookViewerState extends State<BookViewer> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
@@ -619,7 +703,9 @@ class _BookViewerState extends State<BookViewer> {
                                   Icon(
                                     Icons.auto_stories_outlined,
                                     size: 30,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                   const SizedBox(
                                     width: 15,
@@ -632,7 +718,9 @@ class _BookViewerState extends State<BookViewer> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 25,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -650,7 +738,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -661,7 +751,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: GoogleFonts.ibmPlexMono(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -679,7 +771,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -690,7 +784,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -710,7 +806,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -721,7 +819,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -741,7 +841,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -752,7 +854,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -772,7 +876,9 @@ class _BookViewerState extends State<BookViewer> {
                                   Icon(
                                     Icons.account_circle_outlined,
                                     size: 30,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                   const SizedBox(
                                     width: 15,
@@ -785,7 +891,9 @@ class _BookViewerState extends State<BookViewer> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 25,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -803,7 +911,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -814,7 +924,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -832,7 +944,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -876,7 +990,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                     const SizedBox(
@@ -890,7 +1006,9 @@ class _BookViewerState extends State<BookViewer> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context)
+                                            .inputDecorationTheme
+                                            .fillColor,
                                       ),
                                     ),
                                   ],
@@ -933,10 +1051,10 @@ class _BookViewerState extends State<BookViewer> {
       margin: EdgeInsets.only(top: top, bottom: 50, right: 30),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color,
         boxShadow: [
           BoxShadow(
-              color: Theme.of(context).primaryColor == Colors.white
+              color: Theme.of(context).brightness == Brightness.dark
                   ? const Color(0xFF1A1919)
                   : const Color(0xFFEEEEEE),
               blurRadius: blur,

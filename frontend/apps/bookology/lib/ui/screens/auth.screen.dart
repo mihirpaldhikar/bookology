@@ -20,7 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
+import 'package:blobs/blobs.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
@@ -55,138 +55,220 @@ class _AuthScreenState extends State<AuthScreen> {
           )
         : Scaffold(
             body: SafeArea(
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 20,
-                  bottom: 10,
-                ),
+              child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 130,
+                  Positioned(
+                    top: -90,
+                    right: -200,
+                    child: Opacity(
+                      opacity: 0.3,
+                      child: Blob.fromID(
+                        styles: BlobStyles(
+                            color: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .background),
+                        id: const ['6-6-1481'],
+                        size: 500,
+                      ),
                     ),
-                    child: _logo(context),
                   ),
-                  const SizedBox(
-                    height: 180,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
+                  Positioned(
+                    top: -10,
+                    left: -30,
+                    child: Opacity(
+                      opacity: 0.3,
+                      child: Blob.fromID(
+                        styles: BlobStyles(
+                            color: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .background),
+                        id: const ['6-6-47'],
+                        size: 100,
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                              right: 8,
-                              left: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).primaryColor == Colors.white
-                                      ? ColorsConstant.darkThemeButtonColor
-                                      : ColorsConstant.lightThemeButtonColor,
-                              borderRadius: BorderRadius.circular(
-                                ValuesConstant.secondaryBorderRadius,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(
-                                  width: 10,
+                  ),
+                  Positioned(
+                    top: -10,
+                    left: -120,
+                    child: Opacity(
+                      opacity: 0.3,
+                      child: Blob.fromID(
+                        styles: BlobStyles(
+                            color: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .background),
+                        id: const ['6-6-47'],
+                        size: 350,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 200,
+                    right: -120,
+                    child: Opacity(
+                      opacity: 0.3,
+                      child: Blob.fromID(
+                        styles: BlobStyles(
+                            color: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .background),
+                        id: const ['6-6-49'],
+                        size: 350,
+                      ),
+                    ),
+                  ),
+                  ListView(
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                      top: 20,
+                      bottom: 10,
+                    ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 130,
+                        ),
+                        child: _logo(context),
+                      ),
+                      const SizedBox(
+                        height: 180,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                        ),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 10,
+                                  right: 8,
+                                  left: 8,
                                 ),
-                                SvgPicture.asset('assets/svg/google_logo.svg'),
-                                const SizedBox(
-                                  width: 50,
-                                ),
-                                Text(
-                                  StringConstants.hintContinueWithGoogle,
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme!
+                                      .background,
+                                  borderRadius: BorderRadius.circular(
+                                    ValuesConstant.secondaryBorderRadius,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          onTap: () async {
-                            _cacheService.setIntroScreenView(seen: false);
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            await auth.signInWithGoogle().then(
-                              (value) async {
-                                if (value == true) {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  await Navigator.pushReplacementNamed(
-                                      context, '/home');
-                                } else {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    SvgPicture.asset(
+                                        'assets/svg/google_logo.svg'),
+                                    const SizedBox(
+                                      width: 50,
+                                    ),
+                                    Text(
+                                      StringConstants.hintContinueWithGoogle,
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                _cacheService.setIntroScreenView(seen: false);
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await auth.signInWithGoogle().then(
+                                  (value) async {
+                                    if (value == true) {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      await Navigator.pushReplacementNamed(
+                                          context, '/home');
+                                    } else {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
 
-                                  _authHandler.firebaseError(
-                                    value: value,
-                                    context: context,
-                                  );
-                                }
+                                      _authHandler.firebaseError(
+                                        value: value,
+                                        context: context,
+                                      );
+                                    }
+                                  },
+                                );
                               },
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        OutLinedButton(
-                          text: StringConstants.wordLogin,
-                          icon: Icons.mail_outline_rounded,
-                          iconColor: Theme.of(context).primaryColor,
-                          textColor: Theme.of(context).primaryColor,
-                          alignContent: MainAxisAlignment.start,
-                          spaceBetween: 115,
-                          onPressed: () {
-                            _cacheService.setIntroScreenView(seen: false);
-                            Navigator.pushNamed(context, '/login');
-                          },
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(5),
-                          onTap: () {
-                            _cacheService.setIntroScreenView(seen: false);
-                            Navigator.pushNamed(context, '/signup');
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: StringConstants.hintCreateNewAccount,
-                              style: GoogleFonts.poppins(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: ' ${StringConstants.wordSignUp}',
-                                  style: GoogleFonts.poppins(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                              ],
                             ),
-                          ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            OutLinedButton(
+                              text: StringConstants.wordLogin,
+                              icon: Icons.mail_outline_rounded,
+                              iconColor: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .primary,
+                              textColor: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .primary,
+                              alignContent: MainAxisAlignment.start,
+                              spaceBetween: 115,
+                              onPressed: () {
+                                _cacheService.setIntroScreenView(seen: false);
+                                Navigator.pushNamed(context, '/login');
+                              },
+                            ),
+                            const SizedBox(
+                              height: 100,
+                            ),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(5),
+                              onTap: () {
+                                _cacheService.setIntroScreenView(seen: false);
+                                Navigator.pushNamed(context, '/signup');
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  text: StringConstants.hintCreateNewAccount,
+                                  style: GoogleFonts.poppins(
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: ' ${StringConstants.wordSignUp}',
+                                      style: GoogleFonts.poppins(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -208,7 +290,7 @@ Widget _logo(BuildContext context) {
       Text(
         StringConstants.appSlogan,
         style: TextStyle(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).inputDecorationTheme.fillColor,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),

@@ -26,7 +26,6 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/services/app.service.dart';
 import 'package:bookology/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UpdateService {

@@ -20,12 +20,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/permission.manager.dart';
+import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -44,6 +46,7 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   final _introKey = GlobalKey<IntroductionScreenState>();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
+  final CacheService _cacheService = CacheService();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class _IntroScreenState extends State<IntroScreen> {
       titleTextStyle: TextStyle(
         fontSize: 28.0,
         fontWeight: FontWeight.w700,
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).inputDecorationTheme.fillColor,
       ),
       bodyTextStyle: TextStyle(
         fontSize: 19.0,
@@ -68,14 +71,14 @@ class _IntroScreenState extends State<IntroScreen> {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         bodyWidget: Text(
           'Find the books you want nearby.',
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -93,7 +96,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'Upload the books you don\'t want anymore and give it to some one in need.',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -111,7 +114,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'Bookology uses your approximate location to show you books listed near you.',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -129,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
           'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -170,14 +173,12 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor == Colors.white
-                  ? ColorsConstant.darkSecondaryColor
-                  : ColorsConstant.lightSecondaryColor,
+              color: Theme.of(context).buttonTheme.colorScheme!.background,
               border: Border.all(
-                color: Theme.of(context).primaryColor == Colors.black
+                color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black,
-                width: 1,
+                width: 0.5,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
@@ -185,7 +186,8 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Text(
               'Next',
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -199,12 +201,12 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor == Colors.white
-                  ? ColorsConstant.darkSecondaryColor
-                  : ColorsConstant.lightSecondaryColor,
+              color: Theme.of(context).buttonTheme.colorScheme!.background,
               border: Border.all(
-                color: Theme.of(context).primaryColor,
-                width: 1,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                width: 0.5,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
@@ -212,34 +214,53 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Text(
               'Next',
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
           pages: introPages,
           dotsDecorator: DotsDecorator(
             color: Colors.grey.shade400,
-            activeColor: Theme.of(context).colorScheme.secondary,
+            activeColor: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),
     );
   }
 
-  void _onIntroEnd(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProfileScreen(
-          userID: _authService.currentUser()!.uid,
-          profilePicture: _authService.currentUser()!.photoURL.toString(),
-          userName: _authService.currentUser()!.email!.split('@')[0],
-          bio: '',
-          firstName: '',
-          lastName: '',
-          isInitialUpdate: true,
+  void _onIntroEnd(context) async {
+    final currentUserData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid.toString())
+        .get();
+
+    final isNewUser = await currentUserData.data()!['isNewUser'] ?? true;
+    if (isNewUser) {
+      _cacheService.setIntroScreenView(
+        seen: true,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const ViewManager(screenIndex: 0),
         ),
-      ),
-    );
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProfileScreen(
+            userID: _authService.currentUser()!.uid,
+            profilePicture: _authService.currentUser()!.photoURL.toString(),
+            userName: _authService.currentUser()!.email!.split('@')[0],
+            bio: '',
+            firstName: '',
+            lastName: '',
+            isInitialUpdate: true,
+          ),
+        ),
+      );
+    }
   }
 }

@@ -24,7 +24,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class OutLinedButton extends StatefulWidget {
   final double? outlineWidth;
@@ -34,14 +33,14 @@ class OutLinedButton extends StatefulWidget {
   final Color? iconColor;
   final Alignment? align;
   final bool? inverted;
-  final Function onPressed;
+  final VoidCallback onPressed;
   final Color? backgroundColor;
   final MainAxisAlignment? alignContent;
   final double? spaceBetween;
 
   const OutLinedButton({
     Key? key,
-    this.outlineWidth = 1.0,
+    this.outlineWidth = 0.0,
     required this.onPressed,
     this.backgroundColor = ColorsConstant.lightThemeButtonColor,
     required this.text,
@@ -64,7 +63,7 @@ class _OutLinedButtonState extends State<OutLinedButton> {
 
   @override
   Widget build(BuildContext context) {
-    const double borderRadius = ValuesConstant.secondaryBorderRadius;
+    const double borderRadius = ValuesConstant.borderRadius;
     return ValueListenableBuilder(
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, mode, child) {
@@ -81,9 +80,7 @@ class _OutLinedButtonState extends State<OutLinedButton> {
             alignment: widget.align,
             child: InkWell(
               borderRadius: BorderRadius.circular(borderRadius),
-              onTap: () {
-                widget.onPressed();
-              },
+              onTap: widget.onPressed,
               child: Container(
                 alignment: widget.align,
                 padding: EdgeInsets.only(
@@ -93,9 +90,14 @@ class _OutLinedButtonState extends State<OutLinedButton> {
                   left: widget.icon.hashCode != 2011 ? 20 : 8,
                 ),
                 decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(borderRadius),
-                ),
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    border: Border.all(
+                      color: widget.outlineWidth == 0.0
+                          ? Colors.transparent
+                          : Colors.grey,
+                      width: widget.outlineWidth!,
+                    )),
                 child: widget.inverted!
                     ? Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,10 +112,7 @@ class _OutLinedButtonState extends State<OutLinedButton> {
                               child: Text(
                                 widget.text,
                                 style: TextStyle(
-                                  fontWeight: Theme.of(context)
-                                      .textTheme
-                                      .button!
-                                      .fontWeight,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: Theme.of(context)
                                       .textTheme
                                       .button!
@@ -170,10 +169,7 @@ class _OutLinedButtonState extends State<OutLinedButton> {
                               child: Text(
                                 widget.text,
                                 style: TextStyle(
-                                  fontWeight: Theme.of(context)
-                                      .textTheme
-                                      .button!
-                                      .fontWeight,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: Theme.of(context)
                                       .textTheme
                                       .button!

@@ -23,7 +23,6 @@
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -78,78 +77,77 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     super.build(context);
     if (_isAdLoaded) {
       return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                    top: 3,
-                    bottom: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow.shade100,
-                    borderRadius: BorderRadius.circular(
-                      ValuesConstant.secondaryBorderRadius,
-                    ),
-                  ),
-                  child: const Text(StringConstants.wordAdvertisement),
-                ),
-                InkWell(
-                  onTap: () {
-                    DialogsManager(context).showAboutSponsoredDialog();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color:
-                          Theme.of(context).buttonTheme.colorScheme!.background,
-                      borderRadius: BorderRadius.circular(
-                        ValuesConstant.secondaryBorderRadius,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.help_outline_outlined,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(height: 200, child: AdWidget(ad: _ad)),
-          ],
-        ),
         height: 270,
         margin: const EdgeInsets.only(
-          left: 10,
-          right: 10,
+          left: 15,
+          right: 15,
           top: 5,
         ),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            ValuesConstant.borderRadius,
-          ),
-          border: Border.all(
-            width: 1,
-            color: Colors.black,
-          ),
-          color: Theme.of(context).cardTheme.color,
-        ),
         alignment: Alignment.center,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 3,
+                        bottom: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow.shade100,
+                        borderRadius: BorderRadius.circular(
+                          ValuesConstant.secondaryBorderRadius,
+                        ),
+                      ),
+                      child: const Text(StringConstants.wordAdvertisement),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        DialogsManager(context).showAboutSponsoredDialog();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .background,
+                          borderRadius: BorderRadius.circular(
+                            ValuesConstant.secondaryBorderRadius,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.help_outline_outlined,
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(height: 200, child: AdWidget(ad: _ad)),
+              ],
+            ),
+          ),
+        ),
       );
     }
     return const SizedBox(
-      height: 72.0,
+      height: 0.0,
       child: Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(

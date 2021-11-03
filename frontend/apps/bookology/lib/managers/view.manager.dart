@@ -24,13 +24,13 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/ui/components/fade_indexed_stack.component.dart';
 import 'package:bookology/ui/screens/discussions.screen.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
 import 'package:bookology/ui/screens/profile.screen.dart';
 import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,89 +71,51 @@ class _ViewManagerState extends State<ViewManager> {
     return auth.currentUser()!.emailVerified != true
         ? const VerifyEmailScreen()
         : Scaffold(
-            bottomNavigationBar: BottomNavyBar(
-              backgroundColor:
-                  Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              showElevation: false,
+            bottomNavigationBar: NavigationBar(
+              animationDuration: const Duration(
+                milliseconds: 400,
+              ),
               selectedIndex: screenIndex,
-              onItemSelected: (value) {
-                setState(() {
-                  screenIndex = value;
-                });
-              },
-              items: [
-                BottomNavyBarItem(
-                  icon: Icon(
-                    Icons.home_outlined,
-                    color: Theme.of(context).primaryColor,
+              onDestinationSelected: (index) => setState(() {
+                screenIndex = index;
+              }),
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: Icon(
+                    Icons.home,
+                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
-                  title: Text(
-                    StringConstants.navigationHome,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  activeColor: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .selectedItemColor!,
-                  inactiveColor: Colors.grey,
-                  textAlign: TextAlign.center,
+                  label: StringConstants.navigationHome,
                 ),
-                BottomNavyBarItem(
-                  icon: Icon(
-                    Icons.search_outlined,
-                    color: Theme.of(context).primaryColor,
+                NavigationDestination(
+                  icon: const Icon(Icons.search_outlined),
+                  selectedIcon: Icon(
+                    Icons.search,
+                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
-                  title: Text(
-                    StringConstants.navigationSearch,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  activeColor: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .selectedItemColor!,
-                  inactiveColor: Colors.grey,
-                  textAlign: TextAlign.center,
+                  label: StringConstants.navigationSearch,
                 ),
-                BottomNavyBarItem(
-                  icon: Icon(
-                    Icons.question_answer_outlined,
-                    color: Theme.of(context).primaryColor,
+                NavigationDestination(
+                  icon: const Icon(Icons.question_answer_outlined),
+                  selectedIcon: Icon(
+                    Icons.question_answer,
+                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
-                  title: Text(
-                    StringConstants.navigationDiscussions,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  activeColor: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .selectedItemColor!,
-                  inactiveColor: Colors.grey,
-                  textAlign: TextAlign.center,
+                  label: StringConstants.navigationDiscussions,
                 ),
-                BottomNavyBarItem(
+                NavigationDestination(
                   icon: CircularImage(
                     image: auth.currentUser()!.photoURL.toString(),
                     radius: 30,
                   ),
-                  title: Text(
-                    StringConstants.navigationProfile,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  activeColor: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .selectedItemColor!,
-                  inactiveColor: Colors.grey,
-                  textAlign: TextAlign.center,
+                  label: StringConstants.navigationProfile,
                 ),
               ],
             ),
             body: SafeArea(
-              child: IndexedStack(
+              child: FadeIndexedStack(
+                duration: const Duration(milliseconds: 300),
                 index: screenIndex,
                 children: [
                   HomeScreen(
