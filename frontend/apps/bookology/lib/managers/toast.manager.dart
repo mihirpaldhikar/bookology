@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -69,6 +70,39 @@ class ToastManager {
           ],
         ),
       ),
+    );
+  }
+
+  void showSuccessToast({required String message}) {
+    showToast(
+      message: message,
+      textColor: Colors.black,
+      iconColor: Colors.black,
+      icon: Icons.check_circle_outline_outlined,
+      backGroundColor: Colors.green[100],
+      durationSeconds: 3,
+    );
+  }
+
+  void showErrorToast({required String message}) {
+    showToast(
+      message: message,
+      textColor: Colors.black,
+      iconColor: Colors.black,
+      icon: Icons.error_outline_outlined,
+      backGroundColor: ColorsConstant.lightDangerBackgroundColor,
+      durationSeconds: 3,
+    );
+  }
+
+  void showWarningToast({required String message}) {
+    showToast(
+      message: message,
+      textColor: Colors.black,
+      iconColor: Colors.black,
+      icon: Icons.error_outline_outlined,
+      backGroundColor: Colors.yellow.shade100,
+      durationSeconds: 3,
     );
   }
 }

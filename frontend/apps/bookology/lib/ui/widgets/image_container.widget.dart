@@ -42,15 +42,19 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
       height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(_borderRadius),
-        color: Theme.of(context).buttonTheme.colorScheme!.background,
+        color: Theme.of(context).cardTheme.color,
+        border: Border.all(
+          color: Colors.grey,
+          width: 0.5,
+        ),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(_borderRadius),
         onTap: widget.onPressed,
-        child: const Center(
+        child: Center(
           child: Icon(
             Icons.add,
-            color: Colors.black,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
       ),
@@ -129,6 +133,7 @@ class _ImageHolderState extends State<ImageHolder> {
                   child: const Icon(
                     Icons.close,
                     size: 15,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -149,6 +154,7 @@ class _ImageHolderState extends State<ImageHolder> {
                 child: const Icon(
                   Icons.fullscreen_outlined,
                   size: 15,
+                  color: Colors.black,
                 ),
               ),
             ),

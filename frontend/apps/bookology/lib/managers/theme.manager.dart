@@ -30,14 +30,15 @@ class ThemeManager {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: ColorsConstant.lightThemeContentColor,
-    backgroundColor: ColorsConstant.lightBackgroundColor,
+    backgroundColor: const Color(0xffFDFCFF),
     cardTheme: CardTheme(
-      color: ColorsConstant.lightCardColor,
       elevation: 0,
+      color: Colors.white,
+      //shadowColor: Colors.red,
       shape: RoundedRectangleBorder(
         side: const BorderSide(
           color: Colors.grey,
-          width: 1,
+          width: 0.5,
         ),
         borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
       ),
@@ -72,6 +73,7 @@ class ThemeManager {
       contentTextStyle: GoogleFonts.poppins(
         color: Colors.white,
       ),
+      actionTextColor: Colors.white,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -79,15 +81,14 @@ class ThemeManager {
         ),
       ),
     ),
-    scaffoldBackgroundColor: ColorsConstant.lightBackgroundColor,
+    scaffoldBackgroundColor: const Color(0xffFDFCFF),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
-        statusBarColor: ColorsConstant.lightSecondaryColor,
-        systemNavigationBarColor:
-            ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+        statusBarColor: Color(0xffffffff),
+        systemNavigationBarColor: Color(0xffffffff),
       ),
-      backgroundColor: ColorsConstant.lightAppBarColor,
+      backgroundColor: const Color(0xffFDFCFF),
       elevation: 0,
       toolbarTextStyle: GoogleFonts.poppins(
         color: Colors.black,
@@ -105,8 +106,11 @@ class ThemeManager {
         color: Colors.black,
       ),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      fillColor: Colors.black,
+    ),
     popupMenuTheme: PopupMenuThemeData(
-      color: ColorsConstant.lightSecondaryColor,
+      color: const Color(0xffF1F5FB),
       enableFeedback: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -115,7 +119,7 @@ class ThemeManager {
       ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
-      modalBackgroundColor: ColorsConstant.lightSecondaryColor,
+      modalBackgroundColor: Color(0xffFDFCFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
@@ -127,14 +131,21 @@ class ThemeManager {
         ),
       ),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor:
-          ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
-      selectedItemColor: Color(0xff039BE5),
-      unselectedItemColor: Colors.red,
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: const Color(0xffFDFCFF),
+      indicatorColor: const Color(0x2d00629e),
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      labelTextStyle: MaterialStateProperty.all(
+        const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      height: 80,
     ),
     dialogTheme: const DialogTheme(
-      backgroundColor: ColorsConstant.lightSecondaryColor,
+      backgroundColor: Color(0xffF1F5FB),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(ValuesConstant.borderRadius),
@@ -142,31 +153,44 @@ class ThemeManager {
       ),
     ),
     buttonTheme: const ButtonThemeData(
+      textTheme: ButtonTextTheme.primary,
       colorScheme: ColorScheme.light(
-        background: ColorsConstant.lightThemeButtonColor,
+        background: Color(0x2d00629e),
         primary: Colors.black,
       ),
     ),
-    colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: ColorsConstant.primarySwatch,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Color(0xff00629E),
+    ),
+    colorScheme: const ColorScheme.light(
+      primary: Color(0xff00629E),
+      onPrimary: Color(0xffFFFFFF),
+      background: Color(0xffFDFCFF),
+      onBackground: Color(0xff1A1C1E),
+      surface: Color(0xffFDFCFF),
+      onSurface: Color(0xff1A1C1E),
+      secondary: Color(0xff526070),
+      onSecondary: Color(0xffFFFFFF),
+      error: Color(0xffBA1B1B),
+      onError: Color(0xffFFFFFF),
+      primaryVariant: Color(0xffCEE5FF),
       brightness: Brightness.light,
-    ).copyWith(
-      secondary: ColorsConstant.lightAccentColor,
-      background: ColorsConstant.lightSecondaryColor,
+      secondaryVariant: Color(0xffD5E4F7),
     ),
   );
 
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: ColorsConstant.darkThemeContentColor,
-    backgroundColor: ColorsConstant.lightBackgroundColor,
+    primaryColor: ColorsConstant.lightThemeContentColor,
+    backgroundColor: const Color(0xff1A1C1E),
     cardTheme: CardTheme(
-      color: ColorsConstant.darkCardColor,
       elevation: 0,
+      color: Colors.black,
+      //shadowColor: Colors.red,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(
-          color: Colors.white,
-          width: 1,
+        side: BorderSide(
+          color: Colors.grey.shade700,
+          width: 0.5,
         ),
         borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
       ),
@@ -178,8 +202,8 @@ class ThemeManager {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: ColorsConstant.lightSecondaryColor,
-      brightness: Brightness.light,
-      disabledColor: Colors.white,
+      brightness: Brightness.dark,
+      disabledColor: Colors.grey,
       labelStyle: GoogleFonts.poppins(),
       shape: RoundedRectangleBorder(
         side: const BorderSide(
@@ -201,6 +225,7 @@ class ThemeManager {
       contentTextStyle: GoogleFonts.poppins(
         color: Colors.black,
       ),
+      actionTextColor: Colors.black,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -208,15 +233,14 @@ class ThemeManager {
         ),
       ),
     ),
-    scaffoldBackgroundColor: ColorsConstant.darkBackgroundColor,
+    scaffoldBackgroundColor: const Color(0xff1A1C1E),
     appBarTheme: AppBarTheme(
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
-        statusBarColor: ColorsConstant.darkSecondaryColor,
-        systemNavigationBarColor:
-            ColorsConstant.darkThemeBottomNavigationBarBackgroundColor,
+        statusBarColor: Color(0xff1A1C1E),
+        systemNavigationBarColor: Color(0xff1A1C1E),
       ),
-      backgroundColor: ColorsConstant.darkAppBarColor,
+      backgroundColor: const Color(0xff1A1C1E),
       elevation: 0,
       toolbarTextStyle: GoogleFonts.poppins(
         color: Colors.white,
@@ -234,8 +258,11 @@ class ThemeManager {
         color: Colors.white,
       ),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      fillColor: Colors.white,
+    ),
     popupMenuTheme: PopupMenuThemeData(
-      color: ColorsConstant.darkSecondaryColor,
+      color: const Color(0xff27292b),
       enableFeedback: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
@@ -243,8 +270,19 @@ class ThemeManager {
         ),
       ),
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all(const Color(0xff96CBFF)),
+    ),
+    toggleButtonsTheme: const ToggleButtonsThemeData(
+      fillColor: Color(0xff96CBFF),
+    ),
+    checkboxTheme: CheckboxThemeData(
+        checkColor: MaterialStateProperty.all(Colors.black),
+        fillColor: MaterialStateProperty.all(const Color(0xff96CBFF))),
+    radioTheme: RadioThemeData(
+        fillColor: MaterialStateProperty.all(const Color(0xff96CBFF))),
     bottomSheetTheme: const BottomSheetThemeData(
-      modalBackgroundColor: ColorsConstant.darkSecondaryColor,
+      modalBackgroundColor: Color(0xff1A1C1E),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(
@@ -256,14 +294,21 @@ class ThemeManager {
         ),
       ),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor:
-          ColorsConstant.darkThemeBottomNavigationBarBackgroundColor,
-      selectedItemColor: Color(0xff03a8fc),
-      unselectedItemColor: ColorsConstant.darkThemeButtonColor,
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: const Color(0xff1A1C1E),
+      indicatorColor: const Color(0xff243240),
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      labelTextStyle: MaterialStateProperty.all(
+        const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      height: 80,
     ),
     dialogTheme: const DialogTheme(
-      backgroundColor: ColorsConstant.darkSecondaryColor,
+      backgroundColor: Color(0xff27292b),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(ValuesConstant.borderRadius),
@@ -271,17 +316,29 @@ class ThemeManager {
       ),
     ),
     buttonTheme: const ButtonThemeData(
+      textTheme: ButtonTextTheme.primary,
       colorScheme: ColorScheme.dark(
-        background: ColorsConstant.darkThemeButtonColor,
+        background: Color(0xff243240),
         primary: Colors.white,
       ),
     ),
-    colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: ColorsConstant.primarySwatch,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Color(0xff96CBFF),
+    ),
+    colorScheme: const ColorScheme.light(
+      primary: Color(0xff96CBFF),
+      onPrimary: Color(0xff003355),
+      background: Color(0xff1A1C1E),
+      onBackground: Color(0xffE2E2E6),
+      surface: Color(0xff1A1C1E),
+      onSurface: Color(0xffE2E2E6),
+      secondary: Color(0xffB9C8DA),
+      onSecondary: Color(0xff243240),
+      error: Color(0xffFFB4A9),
+      onError: Color(0xff680003),
+      primaryVariant: Color(0xff004A79),
       brightness: Brightness.dark,
-    ).copyWith(
-      secondary: ColorsConstant.darkAccentColor,
-      background: ColorsConstant.darkSecondaryColor,
+      secondaryVariant: Color(0xff3A4857),
     ),
   );
 }

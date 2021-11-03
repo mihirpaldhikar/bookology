@@ -23,6 +23,7 @@
 import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -32,6 +33,7 @@ import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/location.service.dart';
+import 'package:bookology/services/share.service.dart';
 import 'package:bookology/services/update.service.dart';
 import 'package:bookology/ui/components/home_bar.component.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
@@ -39,9 +41,9 @@ import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -202,27 +204,41 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         itemCount: StringConstants.listBookCategories.length,
         itemBuilder: (context, index) {
-          return Container(
+          return Padding(
             padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              top: 5,
-              bottom: 5,
-            ),
-            margin: const EdgeInsets.only(
               left: 10,
               top: 25,
             ),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Theme.of(context).buttonTheme.colorScheme!.background,
-              borderRadius:
-                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-            ),
-            child: Text(
-              StringConstants.listBookCategories[index],
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 5,
+                  bottom: 5,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: index == 0
+                      ? Theme.of(context).buttonTheme.colorScheme!.background
+                      : Theme.of(context).cardTheme.color,
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 0.5,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(ValuesConstant.borderRadius),
+                ),
+                child: Text(
+                  StringConstants.listBookCategories[index],
+                  style: TextStyle(
+                    color: index == 0
+                        ? Theme.of(context).buttonTheme.colorScheme!.primary
+                        : Theme.of(context).inputDecorationTheme.fillColor,
+                  ),
+                ),
               ),
             ),
           );
@@ -234,28 +250,116 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget bookList({required BookModel book}) {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
+        left: 17,
+        right: 17,
         top: 5,
       ),
-      child: BookCard(
-        buttonText: _authService.currentUser()!.uid == book.uploaderId
-            ? 'Edit'
-            : 'View',
-        id: book.bookId,
-        book: book,
-        onClicked: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => BookViewer(
-                themeMode: widget.themeMode,
-                id: book.bookId,
-                book: book,
+      child: Slidable(
+        actions: [
+          IconSlideAction(
+            color: Colors.transparent,
+            iconWidget: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: book.uploaderId != _authService.currentUser()!.uid
+                    ? ColorsConstant.lightDangerBackgroundColor
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey.shade200
+                        : Colors.grey.shade400,
+                borderRadius:
+                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              ),
+              child: Icon(
+                Icons.report_gmailerrorred,
+                color: book.uploaderId != _authService.currentUser()!.uid
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey
+                        : Colors.grey.shade900,
               ),
             ),
-          );
-        },
+            onTap: () {
+              if (book.uploaderId != _authService.currentUser()!.uid) {
+                ShareService().shareBook(
+                  book: book,
+                );
+              }
+            },
+          ),
+        ],
+        secondaryActions: [
+          IconSlideAction(
+            color: Colors.transparent,
+            iconWidget: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).buttonTheme.colorScheme!.background,
+                borderRadius:
+                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              ),
+              child: Icon(
+                Icons.share,
+                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+              ),
+            ),
+            onTap: () {
+              ShareService().shareBook(
+                book: book,
+              );
+            },
+          ),
+          IconSlideAction(
+            color: Colors.transparent,
+            iconWidget: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: book.uploaderId != _authService.currentUser()!.uid
+                    ? Theme.of(context).buttonTheme.colorScheme!.background
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey.shade200
+                        : Colors.grey.shade400,
+                borderRadius:
+                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              ),
+              child: Icon(
+                Icons.bookmark_border,
+                color: book.uploaderId != _authService.currentUser()!.uid
+                    ? Theme.of(context).buttonTheme.colorScheme!.primary
+                    : Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey
+                        : Colors.grey.shade900,
+              ),
+            ),
+            onTap: () {
+              if (book.uploaderId != _authService.currentUser()!.uid) {
+                ShareService().shareBook(
+                  book: book,
+                );
+              }
+            },
+          ),
+        ],
+        actionPane: const SlidableBehindActionPane(),
+        child: BookCard(
+          showMenu: false,
+          buttonText: _authService.currentUser()!.uid == book.uploaderId
+              ? 'Edit'
+              : 'View',
+          id: book.bookId,
+          book: book,
+          onClicked: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => BookViewer(
+                  themeMode: widget.themeMode,
+                  id: book.bookId,
+                  book: book,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

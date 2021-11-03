@@ -22,14 +22,19 @@
 
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/app.service.dart';
+import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
+import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:bookology/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_app_feedback/flutter_app_feedback.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -88,7 +93,7 @@ class _AboutScreenState extends State<AboutScreen> {
               paragraph.text,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
               ),
             ),
           ));
@@ -98,7 +103,7 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Text(
               paragraph.text,
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
               ),
             ),
           ));
@@ -120,13 +125,13 @@ class _AboutScreenState extends State<AboutScreen> {
         title: Text(
           key,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         subtitle: Text(
           '$count licenses',
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         children: <Widget>[...value],
@@ -141,378 +146,469 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 200),
-          child: Text(
-            'About',
-            style: Theme.of(context).appBarTheme.titleTextStyle,
-          ),
-        ),
-      ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.only(
-            left: 10,
-            right: 10,
-            top: 20,
-          ),
-          child: !_loaded
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _licenses.length + 1,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Image.asset(
-                            'assets/icons/splash.icon.png',
-                            width: 150,
-                            height: 150,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            'Version: $_appVersion',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 17,
+        child: CollapsableAppBar(
+          title: 'About',
+          body: Container(
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 20,
+            ),
+            child: !_loaded
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: _licenses.length + 1,
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Build Number: $_appBuildNumber',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 17,
+                            Image.asset(
+                              'assets/icons/splash.icon.png',
+                              width: 150,
+                              height: 150,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: OutLinedButton(
-                              onPressed: () async {
-                                launchURL(
-                                  url: StringConstants.urlPrivacyPolicy,
-                                );
-                              },
-                              text: StringConstants.wordPrivacyPolicy,
-                              icon: Icons.security_outlined,
-                              iconColor: Colors.green,
-                              textColor: Colors.green,
-                              backgroundColor: Colors.green.shade50,
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: OutLinedButton(
-                              onPressed: () async {
-                                launchURL(
-                                  url: _googlePlayStoreUrl,
-                                );
-                              },
-                              text: StringConstants.wordCheckForUpdates,
-                              icon: FontAwesomeIcons.googlePlay,
-                              iconColor: Theme.of(context).primaryColor,
-                              textColor: Theme.of(context).primaryColor,
+                            Text(
+                              'Version: $_appVersion',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                                fontSize: 17,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: OutLinedButton(
-                              onPressed: () async {
-                                launchURL(
-                                  url: _googlePlayStoreUrl,
-                                );
-                              },
-                              text: StringConstants.wordSendFeedback,
-                              icon: Icons.feedback_outlined,
-                              iconColor: Theme.of(context).primaryColor,
-                              textColor: Theme.of(context).primaryColor,
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            'Meet The Team Behind Bookology',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
+                            Text(
+                              'Build Number: $_appBuildNumber',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                                fontSize: 17,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              top: 20,
-                              bottom: 20,
+                            const SizedBox(
+                              height: 30,
                             ),
-                            margin: const EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              top: 10,
+                            SizedBox(
+                              width: 250,
+                              child: OutLinedButton(
+                                onPressed: () async {
+                                  launchURL(
+                                    url: StringConstants.urlPrivacyPolicy,
+                                  );
+                                },
+                                text: StringConstants.wordPrivacyPolicy,
+                                icon: Icons.security_outlined,
+                                iconColor: Colors.green,
+                                textColor: Colors.green,
+                                backgroundColor: Colors.green.shade50,
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 250,
+                              child: OutLinedButton(
+                                onPressed: () async {
+                                  launchURL(
+                                    url: _googlePlayStoreUrl,
+                                  );
+                                },
+                                text: StringConstants.wordCheckForUpdates,
+                                icon: FontAwesomeIcons.googlePlay,
+                                iconColor: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                textColor: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 250,
+                              child: OutLinedButton(
+                                onPressed: () async {
+                                  final screenshot =
+                                      await FeedbackScreenshot(context)
+                                          .captureScreen(
+                                    screen: MediaQuery(
+                                      data: const MediaQueryData(),
+                                      child: MaterialApp(
+                                        debugShowCheckedModeBanner: false,
+                                        theme: Theme.of(context),
+                                        home: const SearchScreen(),
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          FeedbackScreen(
+                                        reportType: 'User initiated report',
+                                        isEmailEditable: true,
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                        fromEmail: FirebaseAuth
+                                            .instance.currentUser!.email,
+                                        screenShotPath: screenshot,
+                                        feedbackFooterText:
+                                            'In order to improve the app, along with your feedback, Some System Logs will be sent to Developer.',
+                                        onFeedbackSubmissionStarted: () {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                          DialogsManager(context)
+                                              .showProgressDialog(
+                                                  content: 'Submitting');
+                                        },
+                                        onFeedbackSubmitted: (bool result) {
+                                          if (result) {
+                                            Navigator.pop(context);
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            ToastManager(context)
+                                                .showSuccessToast(
+                                                    message:
+                                                        'Feedback submitted');
+                                            Navigator.of(context).pop();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          } else {
+                                            Navigator.pop(context);
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            ToastManager(context).showErrorToast(
+                                                message:
+                                                    'Failed to submit feedback');
+                                            Navigator.of(context).pop();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                text: StringConstants.wordSendFeedback,
+                                icon: Icons.feedback_outlined,
+                                iconColor: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                                textColor: Theme.of(context)
+                                    .buttonTheme
+                                    .colorScheme!
+                                    .primary,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Text(
+                              'Meet The Team Behind Bookology',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                                top: 20,
+                                bottom: 20,
+                              ),
+                              margin: const EdgeInsets.only(
+                                left: 17,
+                                right: 17,
+                                top: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardTheme.color,
+                                borderRadius: BorderRadius.circular(
+                                  ValuesConstant.borderRadius,
+                                ),
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  CircularImage(
+                                    image:
+                                        'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/System%2FTeams%2FMihir%20Paldhikar.jpg?alt=media&token=80456c7c-b880-4420-8971-640bb05ea275',
+                                    radius: 100,
+                                    outlineColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    outLineWidth: 2,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Mihir Paldhikar',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Founder, Project Leader, Sr. Developer,\nInfrastructure Manager',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    '🙋‍♂️  Hey there! I am Mihir Paldhikar. \n You can connect with me on all social platforms with the user id @imihirpaldhikar',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          launchURL(
+                                              url:
+                                                  'https://instagram.com/imihirpaldhikar');
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.instagram,
+                                          color: Colors.red,
+                                          size: 35,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          launchURL(
+                                              url:
+                                                  'https://twitter.com/imihirpaldhikar');
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.twitter,
+                                          color: Colors.blue,
+                                          size: 35,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          launchURL(
+                                              url:
+                                                  'https://github.com/imihirpaldhikar');
+                                        },
+                                        icon: Icon(
+                                          FontAwesomeIcons.github,
+                                          color: Theme.of(context)
+                                                      .inputDecorationTheme
+                                                      .fillColor ==
+                                                  Colors.white
+                                              ? Colors.white
+                                              : Colors.black,
+                                          size: 35,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          launchURL(
+                                              url:
+                                                  'https://linkedin.com/in/imihirpaldhikar');
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.linkedin,
+                                          color: Colors.blue,
+                                          size: 35,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                                top: 20,
+                                bottom: 20,
+                              ),
+                              margin: const EdgeInsets.only(
+                                left: 17,
+                                right: 17,
+                                top: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardTheme.color,
+                                borderRadius: BorderRadius.circular(
+                                  ValuesConstant.borderRadius,
+                                ),
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.person_outline_outlined,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
+                                    size: 60,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Nandini Gusani',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Designer',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          launchURL(
+                                              url:
+                                                  'https://instagram.com/imihirpaldhikar');
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.instagram,
+                                          color: Colors.red,
+                                          size: 35,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Text(
+                              StringConstants.appCopyright,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            const Text(
+                              StringConstants.sentenceAppNotice,
+                              style: TextStyle(
                                 color: Colors.grey,
-                                width: 1,
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
                               ),
-                              borderRadius: BorderRadius.circular(
-                                ValuesConstant.borderRadius,
-                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            child: Column(
-                              children: [
-                                CircularImage(
-                                  image:
-                                      'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/System%2FTeams%2FMihir%20Paldhikar.jpg?alt=media&token=80456c7c-b880-4420-8971-640bb05ea275',
-                                  radius: 100,
-                                  outlineColor: Theme.of(context).primaryColor,
-                                  outLineWidth: 2,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Mihir Paldhikar',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Founder, Project Leader, Sr. Developer,\nInfrastructure Manager',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  '🙋‍♂️  Hey there! I am Mihir Paldhikar. \n You can connect with me on all social platforms with the user id @imihirpaldhikar',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () async {
-                                        launchURL(
-                                            url:
-                                                'https://instagram.com/imihirpaldhikar');
-                                      },
-                                      icon: const Icon(
-                                        FontAwesomeIcons.instagram,
-                                        color: Colors.red,
-                                        size: 35,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        launchURL(
-                                            url:
-                                                'https://twitter.com/imihirpaldhikar');
-                                      },
-                                      icon: const Icon(
-                                        FontAwesomeIcons.twitter,
-                                        color: Colors.blue,
-                                        size: 35,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        launchURL(
-                                            url:
-                                                'https://github.com/imihirpaldhikar');
-                                      },
-                                      icon: Icon(
-                                        FontAwesomeIcons.github,
-                                        color: Theme.of(context).primaryColor ==
-                                                Colors.white
-                                            ? Colors.white
-                                            : Colors.black,
-                                        size: 35,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        launchURL(
-                                            url:
-                                                'https://linkedin.com/in/imihirpaldhikar');
-                                      },
-                                      icon: const Icon(
-                                        FontAwesomeIcons.linkedin,
-                                        color: Colors.blue,
-                                        size: 35,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            const SizedBox(
+                              height: 30,
                             ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              top: 20,
-                              bottom: 20,
-                            ),
-                            margin: const EdgeInsets.only(
-                              left: 10,
-                              right: 10,
-                              top: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).primaryColor,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                ValuesConstant.borderRadius,
+                            Text(
+                              'Licenses',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
                               ),
                             ),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.person_outline_outlined,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 60,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Nandini Gusani',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Designer',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () async {
-                                        launchURL(
-                                            url:
-                                                'https://instagram.com/imihirpaldhikar');
-                                      },
-                                      icon: const Icon(
-                                        FontAwesomeIcons.instagram,
-                                        color: Colors.red,
-                                        size: 35,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Text(
-                            StringConstants.appCopyright,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          const Text(
-                            StringConstants.sentenceAppNotice,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            'Licenses',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    return _licenses.elementAt(index - 1);
-                  },
-                ),
+                          ],
+                        );
+                      }
+                      return _licenses.elementAt(index - 1);
+                    },
+                  ),
+          ),
         ),
       ),
     );

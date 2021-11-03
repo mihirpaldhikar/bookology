@@ -55,11 +55,19 @@ class CacheService {
   }
 
   bool isIntroScreenSeen() {
-    return _cacheStorage.read('seenIntroScreen');
+    return _cacheStorage.read('seenIntroScreen') ?? false;
   }
 
   bool getCurrentIsVerifiedCache() {
-    return _cacheStorage.read('isVerified');
+    return _cacheStorage.read('isVerified') ?? false;
+  }
+
+  void setIsBiometricEnabled({required bool isEnabled}) {
+    _cacheStorage.write('biometrics_enabled', isEnabled);
+  }
+
+  bool isBiometricsEnabled() {
+    return _cacheStorage.read('biometrics_enabled') ?? false;
   }
 
   Future<void> clearCacheStorage() async {

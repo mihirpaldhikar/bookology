@@ -70,7 +70,7 @@ class _BottomSheetViewState extends State<BottomSheetView> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).inputDecorationTheme.fillColor,
                     ),
                   ),
                 ),

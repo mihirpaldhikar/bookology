@@ -39,7 +39,7 @@ class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
   final _cacheService = CacheService();
   final SecretsManager _secretsManager = SecretsManager();
-  final _client = http.Client();
+  final client = http.Client();
 
   Future<dynamic> createUser({
     required String? uuid,
@@ -55,7 +55,7 @@ class ApiService {
       final requestURL =
           Uri.parse('$apiURL/auth/signup?auth_provider=$authProvider');
 
-      final response = await _client.post(
+      final response = await client.post(
         requestURL,
         headers: {
           "access-key": apiKey.toString(),
@@ -89,7 +89,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/users/$userID?with_books=true');
-      final request = await _client.get(
+      final request = await client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -115,7 +115,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/');
-      final request = await _client.get(
+      final request = await client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -123,15 +123,19 @@ class ApiService {
       );
       final Iterable response = jsonDecode(request.body);
 
-      final books = List<BookModel>.from(
-        response
-            .map(
-              (book) => BookModel.fromJson(book),
-            )
-            .toList(),
-      );
-      return books;
+      if (request.statusCode == 200) {
+        final books = List<BookModel>.from(
+          response
+              .map(
+                (book) => BookModel.fromJson(book),
+              )
+              .toList(),
+        );
+
+        return books;
+      }
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -144,7 +148,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/$bookID');
-      final response = await _client.get(
+      final response = await client.get(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken()
@@ -152,6 +156,7 @@ class ApiService {
       );
       return jsonDecode(response.body);
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -164,7 +169,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/delete/$bookID');
-      final response = await _client.delete(
+      final response = await client.delete(
         requestURL,
         headers: <String, String>{
           'Content-type': 'application/json',
@@ -178,6 +183,7 @@ class ApiService {
       }
       return false;
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -241,6 +247,7 @@ class ApiService {
       }
       return false;
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -296,6 +303,7 @@ class ApiService {
         return notifications;
       }
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -337,6 +345,7 @@ class ApiService {
       }
       return false;
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -357,7 +366,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/users/$userID');
-      final response = await _client.put(
+      final response = await client.put(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken(),
@@ -384,6 +393,7 @@ class ApiService {
       }
       return false;
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,
@@ -396,7 +406,7 @@ class ApiService {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/rooms/create/');
-      final response = await _client.post(
+      final response = await client.post(
         requestURL,
         headers: <String, String>{
           'user-identifier-key': await _firestoreService.getAccessToken(),
@@ -417,6 +427,7 @@ class ApiService {
       }
       return false;
     } catch (error, stackTrace) {
+      client.close();
       await Sentry.captureException(
         error,
         stackTrace: stackTrace,

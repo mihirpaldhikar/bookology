@@ -22,10 +22,13 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:after_layout/after_layout.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
+import 'package:bookology/services/biomertics.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/intro.screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ScreenManager extends StatefulWidget {
   final AdaptiveThemeMode themeMode;
@@ -46,11 +49,34 @@ class _ScreenManagerState extends State<ScreenManager>
     bool _seen = (cacheService.isIntroScreenSeen());
 
     if (_seen) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const ViewManager(screenIndex: 0),
-        ),
-      );
+      if (CacheService().isBiometricsEnabled()) {
+        await BiometricsService(context).authenticateWithBiometrics(
+            bioAuthReason: 'Please authenticate in order to continue.',
+            useOnlyBiometrics: true,
+            onBioAuthStarted: () {},
+            onBioAuthCompleted: (isVerified) {
+              if (isVerified) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const ViewManager(screenIndex: 0),
+                  ),
+                );
+              } else {
+                ToastManager(context)
+                    .showErrorToast(message: 'Biometrics verification failed.');
+              }
+            },
+            onBioAuthError: (PlatformException error) {
+              ToastManager(context)
+                  .showErrorToast(message: 'An error occurred.');
+            });
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const ViewManager(screenIndex: 0),
+          ),
+        );
+      }
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

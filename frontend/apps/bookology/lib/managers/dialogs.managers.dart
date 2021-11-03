@@ -22,6 +22,8 @@
 
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/biomertics.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
@@ -29,7 +31,9 @@ import 'package:bookology/utils/validator.utli.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:local_auth/local_auth.dart';
 
 class DialogsManager {
   final BuildContext context;
@@ -52,7 +56,7 @@ class DialogsManager {
             'the uploader to start discussion '
             'again.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -71,7 +75,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -95,7 +99,7 @@ class DialogsManager {
             'You will be able to unsend the message '
             'you have sent.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -118,7 +122,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -143,7 +147,7 @@ class DialogsManager {
             'No one even Bookology can read the ongoing '
             'discussions.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -176,14 +180,14 @@ class DialogsManager {
             'This ADs are sourced from Google ADs Network. We '
             'don\'t collect the information to show you ADs.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'OK',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -208,14 +212,14 @@ class DialogsManager {
             'edition and variation (except '
             'reprintings) of a publication.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'OK',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -241,14 +245,14 @@ class DialogsManager {
             'country. You can disable the location permission if you want but you will not get '
             'relevant book recommendations.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
         actions: [
           OutLinedButton(
             text: 'Next',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: onPressed,
           )
         ],
@@ -269,7 +273,7 @@ class DialogsManager {
             'This book will be deleted. This action '
             'is not irreversible.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -284,7 +288,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -299,15 +303,13 @@ class DialogsManager {
   }
 
   void showProgressDialog(
-      {required String content,
-      required Color contentColor,
-      required Color progressColor}) {
+      {required String content, Color? contentColor, Color? progressColor}) {
     AlertDialog alert = AlertDialog(
       content: Row(
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-              progressColor,
+              progressColor ?? Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(
@@ -319,7 +321,10 @@ class DialogsManager {
             ),
             child: Text(
               content,
-              style: TextStyle(color: contentColor),
+              style: TextStyle(
+                color: contentColor ??
+                    Theme.of(context).inputDecorationTheme.fillColor,
+              ),
             ),
           ),
         ],
@@ -346,7 +351,7 @@ class DialogsManager {
           Text(
             '$requestText.\nThis will create a Discussions Between you and the requesting user.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -385,7 +390,7 @@ class DialogsManager {
           Text(
             'This will create a request to the uploader. You will only be able to discuss if the uploader accepts your request.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -426,14 +431,16 @@ class DialogsManager {
               Text(
                 'Please enter the Email from which you have created the Bookology Account.',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
               TextFormField(
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                  color: Theme.of(context).inputDecorationTheme.fillColor,
+                ),
                 decoration: InputDecoration(
                     labelText: "Email",
                     fillColor: Colors.white,
@@ -475,13 +482,8 @@ class DialogsManager {
                 );
                 if (result) {
                   Navigator.of(context).pop();
-                  ToastManager(context).showToast(
-                    message: 'Check the Email for the reset link.',
-                    backGroundColor: Colors.green[100],
-                    icon: Icons.check_circle_outlined,
-                    iconColor: Colors.black,
-                    textColor: Colors.black,
-                  );
+                  ToastManager(context).showSuccessToast(
+                      message: 'Check the Email for the reset link.');
                 }
               }
             },
@@ -491,6 +493,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -515,7 +518,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Send',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Colors.black,
             backgroundColor: Colors.green.shade100,
             onPressed: onSendClicked,
           ),
@@ -524,7 +527,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -534,7 +537,7 @@ class DialogsManager {
           Text(
             'Send "$attachmentName" to $receiverName?',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -555,7 +558,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Confirm',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Colors.black,
             backgroundColor: Colors.green.shade100,
             onPressed: onLogoutClicked,
           ),
@@ -564,7 +567,7 @@ class DialogsManager {
           ),
           OutLinedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -574,7 +577,7 @@ class DialogsManager {
           Text(
             'Are you sure you want to logout?',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -596,7 +599,7 @@ class DialogsManager {
         actions: [
           OutLinedButton(
             text: 'Allow',
-            textColor: Theme.of(context).primaryColor,
+            textColor: Theme.of(context).inputDecorationTheme.fillColor,
             backgroundColor: Colors.green.shade100,
             onPressed: onOpenSettingsClicked,
           ),
@@ -605,7 +608,7 @@ class DialogsManager {
           Text(
             'The location permission is either not granted or currently not available. Please Allow the location permission in order to continue.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
           ),
         ],
@@ -613,6 +616,165 @@ class DialogsManager {
           Icons.place_outlined,
         ),
       ),
+    );
+  }
+
+  void showBiometricsSelectionDialog() async {
+    bool _isBiometricsEnabled = CacheService().isBiometricsEnabled();
+    final List<BiometricType> availableBiometrics =
+        await BiometricsService(context).getAvailableBiometrics();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AnimatedDialog(
+          title: 'Use Biometrics',
+          content: [
+            StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  children: [
+                    Text(
+                      'Authenticate with the Biometrics which are available and supported by your device.',
+                      style: TextStyle(
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Available Biometrics',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: availableBiometrics.isNotEmpty,
+                      child: SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            itemCount: availableBiometrics.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 5,
+                                ),
+                                child: Text(
+                                  availableBiometrics[index] ==
+                                          BiometricType.fingerprint
+                                      ? 'Fingerprint Biometric'
+                                      : availableBiometrics[index] ==
+                                              BiometricType.face
+                                          ? 'Face Biometric'
+                                          : 'Unknown Biometric',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Use Biometrics',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Switch(
+                          value: _isBiometricsEnabled,
+                          onChanged: (val) {
+                            setState(() {
+                              _isBiometricsEnabled = val;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              },
+            )
+          ],
+          actions: [
+            OutLinedButton(
+              text: 'Done',
+              textColor: Colors.black,
+              backgroundColor: Colors.green.shade100,
+              onPressed: () async {
+                if (_isBiometricsEnabled) {
+                  if (await BiometricsService(this.context)
+                          .isBiometricsAvailable() &&
+                      await BiometricsService(this.context)
+                          .canCheckBiometrics()) {
+                    await BiometricsService(this.context)
+                        .authenticateWithBiometrics(
+                            bioAuthReason:
+                                'Verify your Biometric in order to enable the security feature.',
+                            useOnlyBiometrics: true,
+                            onBioAuthStarted: () {
+                              Navigator.pop(this.context);
+                            },
+                            onBioAuthCompleted: (isVerified) {
+                              if (isVerified) {
+                                CacheService().setIsBiometricEnabled(
+                                    isEnabled: isVerified);
+                                ToastManager(this.context).showSuccessToast(
+                                    message:
+                                        'Biometric verified successfully.');
+                              } else {
+                                ToastManager(this.context).showErrorToast(
+                                    message: 'Biometrics verification failed.');
+                              }
+                            },
+                            onBioAuthError: (PlatformException error) {
+                              ToastManager(this.context).showErrorToast(
+                                  message: 'Biometrics verification failed.');
+                            });
+                  }
+                } else {
+                  CacheService().setIsBiometricEnabled(isEnabled: false);
+                  Navigator.of(this.context).pop();
+                }
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            OutLinedButton(
+              text: 'Cancel',
+              textColor: Theme.of(context).inputDecorationTheme.fillColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          dialogIcon: const Icon(
+            Icons.fingerprint_outlined,
+          )),
     );
   }
 }

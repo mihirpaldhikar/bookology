@@ -20,8 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/handlers/image.handler.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
@@ -32,14 +30,12 @@ import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/services/location.service.dart';
+import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:bookology/utils/random_string_generator.util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,7 +52,6 @@ class CreateScreen extends StatefulWidget {
 class _CreateScreenState extends State<CreateScreen> {
   bool _hasISBN = true;
   bool _isLoading = false;
-  bool _showSearchButton = false;
   bool _showBookImage1 = false;
   bool _showBookImage2 = false;
   bool _showBookImage3 = false;
@@ -82,11 +77,6 @@ class _CreateScreenState extends State<CreateScreen> {
   String _imageDownloadURL4 = '';
   String _imagesCollectionsID = '';
 
-  final _aspectTolerance = 0.00;
-  final _selectedCamera = -1;
-  final _useAutoFocus = true;
-  final _autoEnableFlash = false;
-
   final _formKey = GlobalKey<FormState>();
 
   final _isbnController = TextEditingController();
@@ -98,10 +88,6 @@ class _CreateScreenState extends State<CreateScreen> {
   final _bookSellingPriceController = TextEditingController();
 
   final _isbnService = IsbnService();
-  static final _possibleFormats = BarcodeFormat.values.toList()
-    ..removeWhere((e) => e == BarcodeFormat.unknown);
-
-  final List<BarcodeFormat> _selectedFormats = [..._possibleFormats];
 
   final _apiService = ApiService();
 
@@ -143,239 +129,120 @@ class _CreateScreenState extends State<CreateScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Upload New Book',
-          style: Theme.of(context).appBarTheme.titleTextStyle,
-        ),
-      ),
-      body: SafeArea(
-        child: Container(
-          child: _isLoading
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      CircularProgressIndicator(),
-                      SizedBox(
-                        height: 30,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: SafeArea(
+          child: CollapsableAppBar(
+            automaticallyImplyLeading: true,
+            title: 'Upload New Book',
+            body: Container(
+              child: _isLoading
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Text('Loading Book..')
+                        ],
                       ),
-                      Text('Loading Book..')
-                    ],
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(
-                    top: 30,
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Stepper(
-                      type: StepperType.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      currentStep: _currentStep,
-                      onStepTapped: (step) => tapped(step),
-                      controlsBuilder: (
-                        BuildContext context, {
-                        VoidCallback? onStepContinue,
-                        VoidCallback? onStepCancel,
-                      }) {
-                        return Column(
-                          children: [
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            Row(
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Stepper(
+                          type: StepperType.vertical,
+                          currentStep: _currentStep,
+                          onStepTapped: (step) => tapped(step),
+                          controlsBuilder: (
+                            BuildContext context,
+                            ControlsDetails controlsDetails,
+                          ) {
+                            return Column(
                               children: [
-                                TextButton(
-                                  child: Visibility(
-                                    visible: _currentStep != 0,
-                                    child: Text(
-                                      'Previous',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: cancel,
-                                ),
                                 const SizedBox(
-                                  width: 30,
+                                  height: 40,
                                 ),
-                                SizedBox(
-                                  width: 100,
-                                  child: OutLinedButton(
-                                    text: _nextStep,
-                                    textColor: Theme.of(context).primaryColor,
-                                    onPressed: () async {
-                                      continued();
-                                      if (_currentStep == 4) {
-                                        setState(() {
-                                          _nextStep = 'Continue';
-                                        });
-                                        if (await Permission
-                                            .locationWhenInUse.isGranted) {
-                                          if (_isImage1Selected &&
-                                              _isImage2Selected &&
-                                              _isImage3Selected &&
-                                              _isImage4Selected) {
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      child: Visibility(
+                                        visible: _currentStep != 0,
+                                        child: Text(
+                                          'Previous',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: cancel,
+                                    ),
+                                    const SizedBox(
+                                      width: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 100,
+                                      child: OutLinedButton(
+                                        text: _nextStep,
+                                        textColor: Theme.of(context)
+                                            .buttonTheme
+                                            .colorScheme!
+                                            .primary,
+                                        onPressed: () async {
+                                          continued();
+                                          if (_currentStep == 4) {
                                             setState(() {
-                                              _isImagesSelected = true;
+                                              _nextStep = 'Continue';
                                             });
-                                          } else {
-                                            setState(() {
-                                              _isImagesSelected = false;
-                                            });
-                                          }
-                                          if (_bookSellingPriceController
-                                                  .text.isNotEmpty &&
-                                              _bookSellingPriceController
-                                                  .text.isNotEmpty) {
-                                            if (int.parse(
-                                                    _bookOriginalPriceController
-                                                        .text) <
-                                                int.parse(
-                                                    _bookSellingPriceController
-                                                        .text)) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Selling price cannot be '
-                                                      'more than Original Price.'),
-                                                ),
-                                              );
-                                              return false;
-                                            }
-                                          }
-                                          if (_formKey.currentState!
-                                                  .validate() &&
-                                              _isBookConditionSelected &&
-                                              _isImagesSelected) {
-                                            BottomSheetManager(context)
-                                                .showUploadBookConfirmationBottomSheet(
-                                              isbn: _isbnController.text
-                                                      .trim()
-                                                      .isEmpty
-                                                  ? 'No ISBN'
-                                                  : _isbnController.text,
-                                              bookName:
-                                                  _bookNameController.text,
-                                              bookAuthor:
-                                                  _bookAuthorController.text,
-                                              bookPublisher:
-                                                  _bookPublisherController.text,
-                                              bookDescription:
-                                                  _bookDescriptionController
-                                                      .text,
-                                              bookOriginalPrice:
-                                                  _bookOriginalPriceController
-                                                      .text,
-                                              bookSellingPrice:
+                                            if (await Permission
+                                                .locationWhenInUse.isGranted) {
+                                              if (_isImage1Selected &&
+                                                  _isImage2Selected &&
+                                                  _isImage3Selected &&
+                                                  _isImage4Selected) {
+                                                setState(() {
+                                                  _isImagesSelected = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _isImagesSelected = false;
+                                                });
+                                              }
+                                              if (_bookSellingPriceController
+                                                      .text.isNotEmpty &&
                                                   _bookSellingPriceController
-                                                      .text,
-                                              bookCondition: _bookCondition,
-                                              bookImage1: _imageUrl1,
-                                              bookImage2: _imageUrl2,
-                                              bookImage3: _imageUrl3,
-                                              bookImage4: _imageUrl4,
-                                              onUploadClicked: () async {
-                                                DialogsManager(context)
-                                                    .showProgressDialog(
-                                                  content: 'Uploading...',
-                                                  contentColor:
-                                                      Theme.of(context)
-                                                          .primaryColor,
-                                                  progressColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                );
-                                                final name =
-                                                    '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
-                                                await ImageHandler(context)
-                                                    .uploadImage(
-                                                  filePath: _imageUrl1,
-                                                  imagePath:
-                                                      'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
-                                                  imageName: name,
-                                                )
-                                                    .then((value) {
-                                                  setState(
-                                                    () {
-                                                      _imageDownloadURL1 =
-                                                          value;
-                                                    },
+                                                      .text.isNotEmpty) {
+                                                if (int.parse(
+                                                        _bookOriginalPriceController
+                                                            .text) <
+                                                    int.parse(
+                                                        _bookSellingPriceController
+                                                            .text)) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Selling price cannot be '
+                                                          'more than Original Price.'),
+                                                    ),
                                                   );
-                                                }).then(
-                                                  (value) async {
-                                                    final name =
-                                                        '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
-                                                    await ImageHandler(context)
-                                                        .uploadImage(
-                                                      filePath: _imageUrl2,
-                                                      imagePath:
-                                                          'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
-                                                      imageName: name,
-                                                    )
-                                                        .then(
-                                                      (value) {
-                                                        setState(() {
-                                                          _imageDownloadURL2 =
-                                                              value;
-                                                        });
-                                                      },
-                                                    ).then(
-                                                      (value) async {
-                                                        final name =
-                                                            '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
-                                                        await ImageHandler(
-                                                                context)
-                                                            .uploadImage(
-                                                          filePath: _imageUrl3,
-                                                          imagePath:
-                                                              'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
-                                                          imageName: name,
-                                                        )
-                                                            .then((value) {
-                                                          setState(() {
-                                                            _imageDownloadURL3 =
-                                                                value;
-                                                          });
-                                                        }).then(
-                                                          (value) async {
-                                                            final name =
-                                                                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
-                                                            await ImageHandler(
-                                                                    context)
-                                                                .uploadImage(
-                                                              filePath:
-                                                                  _imageUrl4,
-                                                              imagePath:
-                                                                  'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
-                                                              imageName: name,
-                                                            )
-                                                                .then(
-                                                              (value) {
-                                                                setState(() {
-                                                                  _imageDownloadURL4 =
-                                                                      value;
-                                                                });
-                                                              },
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                );
-
-                                                final result = await _apiService
-                                                    .postBookData(
+                                                }
+                                              }
+                                              if (_formKey.currentState!
+                                                      .validate() &&
+                                                  _isBookConditionSelected &&
+                                                  _isImagesSelected) {
+                                                BottomSheetManager(context)
+                                                    .showUploadBookConfirmationBottomSheet(
                                                   isbn: _isbnController.text
                                                           .trim()
                                                           .isEmpty
@@ -399,271 +266,414 @@ class _CreateScreenState extends State<CreateScreen> {
                                                       _bookSellingPriceController
                                                           .text,
                                                   bookCondition: _bookCondition,
-                                                  bookImage1:
-                                                      _imageDownloadURL1,
-                                                  bookImage2:
-                                                      _imageDownloadURL2,
-                                                  bookImage3:
-                                                      _imageDownloadURL3,
-                                                  bookImage4:
-                                                      _imageDownloadURL4,
-                                                  bookCurrency:
-                                                      CurrencyManager()
-                                                          .setCurrency(
-                                                    location: _currentLocation,
-                                                  ),
-                                                  bookImagesCollectionId:
-                                                      _imagesCollectionsID,
-                                                  bookLocation:
-                                                      _currentLocation,
+                                                  bookImage1: _imageUrl1,
+                                                  bookImage2: _imageUrl2,
+                                                  bookImage3: _imageUrl3,
+                                                  bookImage4: _imageUrl4,
+                                                  onUploadClicked: () async {
+                                                    DialogsManager(context)
+                                                        .showProgressDialog(
+                                                      content: 'Uploading...',
+                                                    );
+                                                    final name =
+                                                        '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                    await ImageHandler(context)
+                                                        .uploadImage(
+                                                      filePath: _imageUrl1,
+                                                      imagePath:
+                                                          'Users/${user.user?.uid}/BooksImages/$_imagesCollectionsID',
+                                                      imageName: name,
+                                                    )
+                                                        .then((value) {
+                                                      setState(
+                                                        () {
+                                                          _imageDownloadURL1 =
+                                                              value;
+                                                        },
+                                                      );
+                                                    }).then(
+                                                      (value) async {
+                                                        final name =
+                                                            '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                        await ImageHandler(
+                                                                context)
+                                                            .uploadImage(
+                                                          filePath: _imageUrl2,
+                                                          imagePath:
+                                                              'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
+                                                          imageName: name,
+                                                        )
+                                                            .then(
+                                                          (value) {
+                                                            setState(() {
+                                                              _imageDownloadURL2 =
+                                                                  value;
+                                                            });
+                                                          },
+                                                        ).then(
+                                                          (value) async {
+                                                            final name =
+                                                                '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                            await ImageHandler(
+                                                                    context)
+                                                                .uploadImage(
+                                                              filePath:
+                                                                  _imageUrl3,
+                                                              imagePath:
+                                                                  'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
+                                                              imageName: name,
+                                                            )
+                                                                .then((value) {
+                                                              setState(() {
+                                                                _imageDownloadURL3 =
+                                                                    value;
+                                                              });
+                                                            }).then(
+                                                              (value) async {
+                                                                final name =
+                                                                    '${DateTime.now().minute}${DateTime.now().microsecond}${DateTime.now().hashCode}';
+                                                                await ImageHandler(
+                                                                        context)
+                                                                    .uploadImage(
+                                                                  filePath:
+                                                                      _imageUrl4,
+                                                                  imagePath:
+                                                                      'Users/${user.user?.uid}/BookImages/$_imagesCollectionsID',
+                                                                  imageName:
+                                                                      name,
+                                                                )
+                                                                    .then(
+                                                                  (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      _imageDownloadURL4 =
+                                                                          value;
+                                                                    });
+                                                                  },
+                                                                );
+                                                              },
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                    );
+
+                                                    final result =
+                                                        await _apiService
+                                                            .postBookData(
+                                                      isbn: _isbnController.text
+                                                              .trim()
+                                                              .isEmpty
+                                                          ? 'No ISBN'
+                                                          : _isbnController
+                                                              .text,
+                                                      bookName:
+                                                          _bookNameController
+                                                              .text,
+                                                      bookAuthor:
+                                                          _bookAuthorController
+                                                              .text,
+                                                      bookPublisher:
+                                                          _bookPublisherController
+                                                              .text,
+                                                      bookDescription:
+                                                          _bookDescriptionController
+                                                              .text,
+                                                      bookOriginalPrice:
+                                                          _bookOriginalPriceController
+                                                              .text,
+                                                      bookSellingPrice:
+                                                          _bookSellingPriceController
+                                                              .text,
+                                                      bookCondition:
+                                                          _bookCondition,
+                                                      bookImage1:
+                                                          _imageDownloadURL1,
+                                                      bookImage2:
+                                                          _imageDownloadURL2,
+                                                      bookImage3:
+                                                          _imageDownloadURL3,
+                                                      bookImage4:
+                                                          _imageDownloadURL4,
+                                                      bookCurrency:
+                                                          CurrencyManager()
+                                                              .setCurrency(
+                                                        location:
+                                                            _currentLocation,
+                                                      ),
+                                                      bookImagesCollectionId:
+                                                          _imagesCollectionsID,
+                                                      bookLocation:
+                                                          _currentLocation,
+                                                    );
+                                                    if (result == true) {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                              context,
+                                                              '/profile');
+                                                    }
+                                                  },
                                                 );
-                                                if (result == true) {
-                                                  Navigator.pop(context);
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                          context, '/profile');
-                                                }
-                                              },
-                                            );
-                                          } else {
-                                            ToastManager(context).showToast(
-                                              message: StringConstants
-                                                  .errorFieldsCompulsory,
-                                              backGroundColor: ColorsConstant
-                                                  .dangerBackgroundColor,
-                                              textColor: Theme.of(context)
-                                                  .primaryColor,
-                                              iconColor: Theme.of(context)
-                                                  .primaryColor,
-                                              icon:
-                                                  Icons.error_outline_outlined,
-                                            );
+                                              } else {
+                                                ToastManager(context)
+                                                    .showWarningToast(
+                                                        message: StringConstants
+                                                            .errorFieldsCompulsory);
+                                              }
+                                            } else {
+                                              ToastManager(context).showErrorToast(
+                                                  message:
+                                                      'Location Permission not granted.');
+                                            }
                                           }
-                                        } else {
-                                          ToastManager(context).showToast(
-                                            message:
-                                                'Location Permission not granted.',
-                                            backGroundColor: ColorsConstant
-                                                .dangerBackgroundColor,
-                                            textColor:
-                                                Theme.of(context).primaryColor,
-                                            iconColor:
-                                                Theme.of(context).primaryColor,
-                                            icon: Icons.error_outline_outlined,
-                                          );
-                                        }
-                                      }
-                                    },
-                                  ),
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
+                            );
+                          },
+                          steps: [
+                            Step(
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outlined,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Book Info',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Fill the basic book info',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              content: bookInfo(),
+                              isActive: _currentStep >= 0,
+                              state: _currentStep >= 0
+                                  ? StepState.complete
+                                  : StepState.disabled,
+                            ),
+                            Step(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.description_outlined,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Description',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Write the description of book',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              content: bookDescription(),
+                              isActive: _currentStep >= 0,
+                              state: _currentStep >= 1
+                                  ? StepState.complete
+                                  : StepState.disabled,
+                            ),
+                            Step(
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.sell_outlined,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Pricing',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Write the price you want to sell the book at',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              content: bookPricing(),
+                              isActive: _currentStep >= 0,
+                              state: _currentStep >= 2
+                                  ? StepState.complete
+                                  : StepState.disabled,
+                            ),
+                            Step(
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.rule_outlined,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Book Condition',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Select the condition of the book',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              content: bookCondition(),
+                              isActive: _currentStep >= 0,
+                              state: _currentStep >= 3
+                                  ? StepState.complete
+                                  : StepState.disabled,
+                            ),
+                            Step(
+                              title: Row(
+                                children: [
+                                  Icon(
+                                    Icons.image_outlined,
+                                    size: 25,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Book Images',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Upload the images of the book',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              content: bookImagesContainer(context: context),
+                              isActive: _currentStep >= 0,
+                              state: _currentStep >= 4
+                                  ? StepState.complete
+                                  : StepState.disabled,
                             ),
                           ],
-                        );
-                      },
-                      steps: [
-                        Step(
-                          title: Row(
-                            children: [
-                              const Icon(
-                                Icons.info_outlined,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Book Info',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Fill the basic book info',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          content: bookInfo(),
-                          isActive: _currentStep >= 0,
-                          state: _currentStep >= 0
-                              ? StepState.complete
-                              : StepState.disabled,
                         ),
-                        Step(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.description_outlined,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Description',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Write the description of book',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          content: bookDescription(),
-                          isActive: _currentStep >= 0,
-                          state: _currentStep >= 1
-                              ? StepState.complete
-                              : StepState.disabled,
-                        ),
-                        Step(
-                          title: Row(
-                            children: [
-                              const Icon(
-                                Icons.sell_outlined,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Pricing',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Write the price you want to sell the book at',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          content: bookPricing(),
-                          isActive: _currentStep >= 0,
-                          state: _currentStep >= 2
-                              ? StepState.complete
-                              : StepState.disabled,
-                        ),
-                        Step(
-                          title: Row(
-                            children: [
-                              const Icon(
-                                Icons.rule_outlined,
-                                size: 25,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Book Condition',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Select the condition of the book',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          content: bookCondition(),
-                          isActive: _currentStep >= 0,
-                          state: _currentStep >= 3
-                              ? StepState.complete
-                              : StepState.disabled,
-                        ),
-                        Step(
-                          title: Row(
-                            children: [
-                              Icon(
-                                Icons.image_outlined,
-                                size: 25,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Book Images',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Upload the images of the book',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          content: bookImagesContainer(context: context),
-                          isActive: _currentStep >= 0,
-                          state: _currentStep >= 4
-                              ? StepState.complete
-                              : StepState.disabled,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+            ),
+          ),
         ),
       ),
     );
@@ -703,7 +713,7 @@ class _CreateScreenState extends State<CreateScreen> {
             Text(
               switchText,
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
               ),
             ),
             Checkbox(
@@ -737,7 +747,7 @@ class _CreateScreenState extends State<CreateScreen> {
               'What is ISBN number?',
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -749,22 +759,22 @@ class _CreateScreenState extends State<CreateScreen> {
           visible: _hasISBN,
           child: Column(
             children: [
-              SizedBox(
-                width: 150,
-                child: OutLinedButton(
-                  onPressed: () {
-                    _scan();
-                  },
-                  text: 'Scan',
-                  textColor: Theme.of(context).primaryColor,
-                  iconColor: Theme.of(context).primaryColor,
-                  icon: Icons.qr_code_scanner,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text('OR'),
+              // SizedBox(
+              //   width: 150,
+              //   child: OutLinedButton(
+              //     onPressed: () {
+              //       _scan();
+              //     },
+              //     text: 'Scan',
+              //     textColor: Theme.of(context).primaryColor,
+              //     iconColor: Theme.of(context).primaryColor,
+              //     icon: Icons.qr_code_scanner,
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // const Text('OR'),
               const SizedBox(
                 height: 20,
               ),
@@ -775,7 +785,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       style: GoogleFonts.ibmPlexMono(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
                       ),
                       decoration: InputDecoration(
                           labelStyle: GoogleFonts.ibmPlexMono(
@@ -806,13 +816,9 @@ class _CreateScreenState extends State<CreateScreen> {
                       },
                       onChanged: (value) async {
                         if (value.length == 10) {
-                          setState(() {
-                            _showSearchButton = true;
-                          });
+                          setState(() {});
                         } else {
-                          setState(() {
-                            _showSearchButton = false;
-                          });
+                          setState(() {});
 
                           if (value.length == 13) {
                             fetchBookData(value);
@@ -822,19 +828,19 @@ class _CreateScreenState extends State<CreateScreen> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Visibility(
-                    visible: _showSearchButton,
-                    child: OutLinedButton(
-                      text: 'Search',
-                      icon: Icons.search,
-                      onPressed: () {
-                        fetchBookData(_isbnController.text);
-                      },
-                    ),
-                  ),
+                  // const SizedBox(
+                  //   width: 30,
+                  // ),
+                  // Visibility(
+                  //   visible: _showSearchButton,
+                  //   child: OutLinedButton(
+                  //     text: 'Search',
+                  //     icon: Icons.search,
+                  //     onPressed: () {
+                  //       fetchBookData(_isbnController.text);
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -845,7 +851,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Book Name",
@@ -876,7 +882,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Author",
@@ -907,7 +913,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Publisher",
@@ -940,7 +946,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget bookDescription() {
     return TextFormField(
       style: TextStyle(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).inputDecorationTheme.fillColor,
       ),
       decoration: InputDecoration(
         labelText: "Description",
@@ -1008,49 +1014,6 @@ class _CreateScreenState extends State<CreateScreen> {
     }
   }
 
-  Future<void> _scan() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      final result = await BarcodeScanner.scan(
-        options: ScanOptions(
-          restrictFormat: _selectedFormats,
-          useCamera: _selectedCamera,
-          autoEnableFlash: _autoEnableFlash,
-          android: AndroidOptions(
-            aspectTolerance: _aspectTolerance,
-            useAutoFocus: _useAutoFocus,
-          ),
-        ),
-      );
-      fetchBookData(result.rawContent);
-    } on PlatformException catch (e) {
-      setState(() {
-        if (e.code == BarcodeScanner.cameraAccessDenied) {
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Camera Permission not granted. Allow '
-                  'Permission in settings.'),
-            ),
-          );
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Unknown Error Occurred.'),
-            ),
-          );
-        }
-      });
-    }
-  }
-
   Widget bookPricing() {
     return Container(
       height: 200,
@@ -1066,7 +1029,7 @@ class _CreateScreenState extends State<CreateScreen> {
           Expanded(
             child: TextFormField(
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
               ),
               decoration: InputDecoration(
                   labelText: "Original Price",
@@ -1099,7 +1062,7 @@ class _CreateScreenState extends State<CreateScreen> {
           Expanded(
             child: TextFormField(
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).inputDecorationTheme.fillColor,
               ),
               decoration: InputDecoration(
                   labelText: "Selling Price",
@@ -1139,7 +1102,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Book Name",
@@ -1170,7 +1133,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Author",
@@ -1201,7 +1164,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
               labelText: "Publisher",
@@ -1232,7 +1195,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         TextFormField(
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
           decoration: InputDecoration(
             labelText: "Description",
@@ -1291,7 +1254,7 @@ class _CreateScreenState extends State<CreateScreen> {
                 Text(
                   'The Condition of book is',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).inputDecorationTheme.fillColor,
                   ),
                 ),
                 const SizedBox(
@@ -1310,7 +1273,8 @@ class _CreateScreenState extends State<CreateScreen> {
                         value,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).primaryColor,
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                         ),
                       ),
                     );

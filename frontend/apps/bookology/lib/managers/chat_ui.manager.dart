@@ -21,19 +21,20 @@
  */
 
 import 'package:bookology/constants/colors.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LightChatUi extends ChatTheme {
-  LightChatUi()
+  LightChatUi({required BuildContext context})
       : super(
-            primaryColor: const Color(0xffEEEEEE),
-            secondaryColor: const Color(0xff2E79F3),
-            backgroundColor: Colors.white,
+            primaryColor: Theme.of(context).colorScheme.secondaryVariant,
+            secondaryColor: Theme.of(context).colorScheme.primaryVariant,
+            backgroundColor: Theme.of(context).colorScheme.background,
             messageBorderRadius: 35,
             receivedMessageBodyTextStyle: GoogleFonts.poppins(
-              color: Colors.white,
+              color: Colors.black,
             ),
             sentMessageBodyTextStyle: GoogleFonts.poppins(
               color: Colors.black,
@@ -55,14 +56,14 @@ class LightChatUi extends ChatTheme {
               Icons.send_outlined,
               size: 28,
             ),
-            inputBackgroundColor:
-                ColorsConstant.lightThemeBottomNavigationBarBackgroundColor,
+            inputBackgroundColor: Colors.white,
             documentIcon: const Icon(
               Icons.description_outlined,
             ),
             inputPadding: const EdgeInsets.all(0),
             inputTextDecoration: const InputDecoration(),
-            inputBorderRadius: BorderRadius.circular(100),
+            inputBorderRadius:
+                BorderRadius.circular(ValuesConstant.borderRadius),
             dateDividerTextStyle: GoogleFonts.poppins(
               color: Colors.black,
             ),
@@ -73,7 +74,9 @@ class LightChatUi extends ChatTheme {
             inputTextColor: Colors.black,
             inputTextStyle: GoogleFonts.poppins(),
             sentMessageDocumentIconColor: Colors.white,
-            emptyChatPlaceholderTextStyle: GoogleFonts.poppins(),
+            emptyChatPlaceholderTextStyle: GoogleFonts.poppins(
+              color: Colors.black,
+            ),
             userNameTextStyle: GoogleFonts.poppins(),
             receivedMessageCaptionTextStyle: GoogleFonts.poppins(
               color: Colors.grey.shade300,
@@ -95,6 +98,14 @@ class LightChatUi extends ChatTheme {
             errorIcon: const Icon(
               Icons.error_outlined,
             ),
+            inputTextCursorColor: Colors.black,
+            dateDividerMargin: const EdgeInsets.only(
+              top: 5,
+              bottom: 20,
+            ),
+            receivedEmojiMessageTextStyle: const TextStyle(),
+            sentEmojiMessageTextStyle: const TextStyle(),
+            statusIconPadding: const EdgeInsets.all(8),
             userAvatarImageBackgroundColor: ColorsConstant.lightAccentColor,
             receivedMessageDocumentIconColor: Colors.white,
             userAvatarNameColors: [
@@ -112,17 +123,17 @@ class LightChatUi extends ChatTheme {
 }
 
 class DarkChatUi extends ChatTheme {
-  DarkChatUi()
+  DarkChatUi({required BuildContext context})
       : super(
-            primaryColor: const Color(0xffEEEEEE),
-            secondaryColor: const Color(0xff2E79F3),
-            backgroundColor: Colors.black,
+            primaryColor: Theme.of(context).colorScheme.secondaryVariant,
+            secondaryColor: Theme.of(context).colorScheme.primaryVariant,
+            backgroundColor: Theme.of(context).colorScheme.background,
             messageBorderRadius: 35,
             receivedMessageBodyTextStyle: GoogleFonts.poppins(
               color: Colors.white,
             ),
             sentMessageBodyTextStyle: GoogleFonts.poppins(
-              color: Colors.black,
+              color: Colors.white,
             ),
             sendButtonIcon: const Icon(
               Icons.send_outlined,
@@ -141,14 +152,15 @@ class DarkChatUi extends ChatTheme {
               Icons.send_outlined,
               size: 28,
             ),
-            inputBackgroundColor:
-                ColorsConstant.darkThemeBottomNavigationBarBackgroundColor,
+            inputBackgroundColor: Colors.black,
             documentIcon: const Icon(
               Icons.description_outlined,
             ),
             inputPadding: const EdgeInsets.all(0),
-            inputTextDecoration: const InputDecoration(),
-            inputBorderRadius: BorderRadius.circular(100),
+            inputTextDecoration:
+                const InputDecoration(focusColor: Colors.black),
+            inputBorderRadius:
+                BorderRadius.circular(ValuesConstant.borderRadius),
             dateDividerTextStyle: GoogleFonts.poppins(
               color: Colors.white,
             ),
@@ -159,7 +171,9 @@ class DarkChatUi extends ChatTheme {
             inputTextColor: Colors.white,
             inputTextStyle: GoogleFonts.poppins(),
             sentMessageDocumentIconColor: Colors.white,
-            emptyChatPlaceholderTextStyle: GoogleFonts.poppins(),
+            emptyChatPlaceholderTextStyle: GoogleFonts.poppins(
+              color: Colors.white,
+            ),
             userNameTextStyle: GoogleFonts.poppins(),
             receivedMessageCaptionTextStyle: GoogleFonts.poppins(
               color: Colors.grey.shade300,
@@ -181,6 +195,14 @@ class DarkChatUi extends ChatTheme {
             errorIcon: const Icon(
               Icons.error_outlined,
             ),
+            inputTextCursorColor: Colors.white,
+            dateDividerMargin: const EdgeInsets.only(
+              top: 5,
+              bottom: 20,
+            ),
+            receivedEmojiMessageTextStyle: const TextStyle(),
+            sentEmojiMessageTextStyle: const TextStyle(),
+            statusIconPadding: const EdgeInsets.all(8),
             userAvatarImageBackgroundColor: ColorsConstant.lightAccentColor,
             receivedMessageDocumentIconColor: Colors.white,
             userAvatarNameColors: [

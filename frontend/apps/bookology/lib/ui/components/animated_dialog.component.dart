@@ -123,7 +123,8 @@ class AnimatedDialogState extends State<AnimatedDialog>
                       Text(
                         widget.title,
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                         ),

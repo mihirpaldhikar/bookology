@@ -24,10 +24,13 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/app.manager.dart';
+import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/models/settings.model.dart';
+import 'package:bookology/services/biomertics.service.dart';
+import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -72,7 +75,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 title: Text(
                                   'Always in light theme',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                 ),
                                 leading: Radio<AdaptiveThemeMode>(
@@ -89,7 +94,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 title: Text(
                                   'Always in dark theme',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                 ),
                                 leading: Radio<AdaptiveThemeMode>(
@@ -106,7 +113,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 title: Text(
                                   'Same as device theme',
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context)
+                                        .inputDecorationTheme
+                                        .fillColor,
                                   ),
                                 ),
                                 leading: Radio<AdaptiveThemeMode>(
@@ -153,7 +162,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                       OutLinedButton(
                         text: 'Cancel',
-                        textColor: Theme.of(context).primaryColor,
+                        textColor:
+                            Theme.of(context).inputDecorationTheme.fillColor,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -166,82 +176,115 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
+            SettingsModel(
+              settingName: 'Biometrics',
+              settingIcon: Icons.fingerprint_outlined,
+              settingDescription: 'Authenticate with the biometrics',
+              onSettingClicked: () async {
+                if (await BiometricsService(context).isBiometricsAvailable()) {
+                  DialogsManager(context).showBiometricsSelectionDialog();
+                } else {
+                  ToastManager(context)
+                      .showErrorToast(message: 'Biometrics are not supported.');
+                }
+              },
+            ),
           ];
           return Scaffold(
-            appBar: AppBar(
-              title: const Text(StringConstants.navigationSettings),
-            ),
             body: SafeArea(
-              child: SizedBox(
-                child: ListView.builder(
-                    padding: const EdgeInsets.only(top: 30),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: appSettings.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          bottom: 30,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1,
+              child: CollapsableAppBar(
+                title: StringConstants.navigationSettings,
+                body: SizedBox(
+                  child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 60),
+                      itemCount: appSettings.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          margin: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                            bottom: 30,
                           ),
-                          borderRadius: BorderRadius.circular(
-                              ValuesConstant.borderRadius),
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(
-                              ValuesConstant.borderRadius),
-                          onTap: appSettings[index].onSettingClicked,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                              bottom: 10,
-                              top: 10,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 0.5,
                             ),
-                            child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              alignment: WrapAlignment.start,
-                              children: [
-                                Icon(
-                                  appSettings[index].settingIcon,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 30,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appSettings[index].settingName,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      appSettings[index].settingDescription,
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            color: Theme.of(context).cardTheme.color,
+                            borderRadius: BorderRadius.circular(
+                              ValuesConstant.borderRadius,
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(
+                              ValuesConstant.borderRadius,
+                            ),
+                            onTap: appSettings[index].onSettingClicked,
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                bottom: 10,
+                                top: 10,
+                              ),
+                              child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                alignment: WrapAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryVariant,
+                                      borderRadius: BorderRadius.circular(
+                                        ValuesConstant.secondaryBorderRadius,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      appSettings[index].settingIcon,
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        appSettings[index].settingName,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        appSettings[index].settingDescription,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .inputDecorationTheme
+                                              .fillColor,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
               ),
             ),
           );

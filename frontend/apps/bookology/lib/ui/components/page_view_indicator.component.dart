@@ -77,7 +77,7 @@ class PageViewIndicator extends StatefulWidget {
     this.alignment = MainAxisAlignment.center,
     this.animationDuration = const Duration(milliseconds: 500),
     this.orientation = Axis.horizontal,
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   _PageViewIndicatorState createState() => _PageViewIndicatorState();
