@@ -7,11 +7,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: [ '3.0' ]
+        ruby-version: ["3.0"]
 
     steps:
       - uses: actions/checkout@v2
@@ -21,35 +20,37 @@ jobs:
           java-version: 1.8
       - name: Install & Setup Flutter SDK
         uses: subosito/flutter-action@master
+        with:
+          channel: "master"
       - name: Install & Setup Ruby
         uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
         with:
-          ruby-version: '3.0'
+          ruby-version: "3.0"
           bundler-cache: true
-      - name: 'Create Google Services File'
+      - name: "Create Google Services File"
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: /home/runner/work/bookology/bookology/frontend/apps/bookology/android/app/src/google-services.json
           FILE_BASE64: ${{ secrets.BOOKOLOGY_PRODUCATION_APP_GOOGLE_SERVICES }}
-      - name: 'Create App Configurations File'
+      - name: "Create App Configurations File"
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: ${{ github.workspace }}/frontend/apps/bookology/app.config.env
           FILE_BASE64: ${{ secrets.BOOKOLOGY_PRODUCATION_APP_CONFIGURATIONS }}
-      - name: 'Create Key Properties File'
+      - name: "Create Key Properties File"
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: ${{ github.workspace }}/frontend/apps/bookology/android/key.properties
           FILE_BASE64: ${{ secrets.BOOKOLOGY_PRODUCTION_APP_KEY_PROPERTIES }}
-      - name: 'Create Android Signing KeyStore'
+      - name: "Create Android Signing KeyStore"
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: ${{ github.workspace }}/frontend/apps/bookology/android/app/release.jks
           FILE_BASE64: ${{ secrets.BOOKOLOGY_PRODUCTION_APP_KEY_STORE }}
       - uses: maierj/fastlane-action@v2.0.1
         with:
-          lane: 'build'
-          subdirectory: './frontend/apps/bookology/android/'
+          lane: "build"
+          subdirectory: "./frontend/apps/bookology/android/"
       - name: Create the Atrifact from the Compiled Source
         uses: actions/upload-artifact@v2
         with:
@@ -63,4 +64,3 @@ jobs:
           body_path: ${{ github.workspace }}/frontend/apps/bookology/CHANGELOG.md
           tag_name: production-release
           files: ${{ github.workspace }}/frontend/apps/bookology/build/app/outputs/bundle/release/app-release.aab
-

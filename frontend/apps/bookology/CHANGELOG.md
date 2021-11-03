@@ -1,13 +1,21 @@
-# Bookology Changelog
+# Bookology Changelogs
 
 ## What's new?
 
-* Added Dark Mode
-* Added ability to change app theme based on the current system theme.
-* Added Theme settings to choose between Light Theme, Dark Theme & System Theme.
-* Improved the discussion experience.
-* Now the user requesting for discussion will get a confirmation dialog before sending the request of the discussion.
-* Added a confirmation dialog before sending the file/attachment to the other user in the discussions.
-* Added Safeguard in the Book Upload section that prevents the submission of the book if the location is not granted.
-* Fixed the issue where the text in the dialog box where overflowing outside the box.
-* Fixed the issue where the date and time were constantly showing after every chat in the discussion.
+* New App UI.
+* Added SafetyNet in the Infrastructure.
+* Upgraded app to Android 12 (Snow Cone).
+* Added initial support for Material You.
+* Added Biometric Authentication in the app to improve on device security.
+* Migrated the App Codebase from SDK 30 i.e Android 11 (Red Velvet Cake) to SDK 31 i.e Android 12 (
+  Snow Cone).
+* Added Animations while switching the tabs.
+* Improved the existing animations and removed the jank and stutters.
+* Fixed the Notifications bugs.
+* Update the App Logo.
+* Improved the Dark Mode and fixed some color. released issues in Dark Mode.
+* Added One Handed Mode support for the app.
+* Security of the App has been improved.
+* Added the support for the new Google Play Services.
+* Updated the Android Dependencies
+* Fixed some internal bugs.
