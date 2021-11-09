@@ -16,9 +16,9 @@ before_script:
   - git clone https://github.com/flutter/flutter.git -b master
 script:
   - cd ./frontend/apps/bookology/
-  - ./flutter/bin/flutter pub get
-  - ./flutter/bin/flutter analyze
-  - ./flutter/bin/flutter test
+  - $HOME/flutter/bin/flutter pub get
+  - $HOME/flutter/bin/flutter analyze
+  - $HOME/flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
