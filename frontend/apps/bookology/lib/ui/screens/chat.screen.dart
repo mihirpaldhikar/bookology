@@ -28,7 +28,7 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
-import 'package:bookology/managers/discussions.manager.dart';
+import 'package:bookology/managers/dicsussions_input.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
@@ -308,11 +308,16 @@ class _ChatPageState extends State<ChatPage> {
                   initialData: const [],
                   stream: FirebaseChatCore.instance.messages(snapshot.data!),
                   builder: (context, snapshot) {
-                    return Discussions(
+                    return Chat(
                         emojiEnlargementBehavior:
                             EmojiEnlargementBehavior.multi,
                         hideBackgroundOnEmojiMessages: true,
-                        roomId: widget.room.id,
+                        customBottomWidget: DiscussionsInput(
+                          roomId: widget.room.id,
+                          onSendPressed: _handleSendPressed,
+                          onAttachmentPressed: _handleAttachmentPressed,
+                          isAttachmentUploading: _isAttachmentUploading,
+                        ),
                         showUserAvatars: true,
                         showUserNames: false,
                         usePreviewData: true,

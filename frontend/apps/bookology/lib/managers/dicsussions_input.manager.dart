@@ -20,6 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/file_attachment_button.component.dart';
 import 'package:bookology/ui/components/send_chat_button.component.dart';
@@ -27,9 +28,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/src/widgets/attachment_button.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_chat_theme.dart';
-import 'package:flutter_chat_ui/src/widgets/send_button.dart';
 
 class NewLineIntent extends Intent {
   const NewLineIntent();
@@ -119,7 +117,9 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
           backgroundColor: Colors.transparent,
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation<Color>(
-            InheritedChatTheme.of(context).theme.inputTextColor,
+            Theme.of(context).brightness == Brightness.light
+                ? LightChatUi(context: context).inputTextColor
+                : DarkChatUi(context: context).inputTextColor,
           ),
         ),
       );
@@ -175,16 +175,20 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                   color: Colors.grey,
                   width: 0.5,
                 ),
-                borderRadius:
-                    InheritedChatTheme.of(context).theme.inputBorderRadius,
-                color:
-                    InheritedChatTheme.of(context).theme.inputBackgroundColor,
+                borderRadius: Theme.of(context).brightness == Brightness.light
+                    ? LightChatUi(context: context).inputBorderRadius
+                    : DarkChatUi(context: context).inputBorderRadius,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? LightChatUi(context: context).inputBackgroundColor
+                    : DarkChatUi(context: context).inputBackgroundColor,
               ),
               child: Material(
-                borderRadius:
-                    InheritedChatTheme.of(context).theme.inputBorderRadius,
-                color:
-                    InheritedChatTheme.of(context).theme.inputBackgroundColor,
+                borderRadius: Theme.of(context).brightness == Brightness.light
+                    ? LightChatUi(context: context).inputBorderRadius
+                    : DarkChatUi(context: context).inputBorderRadius,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? LightChatUi(context: context).inputBackgroundColor
+                    : DarkChatUi(context: context).inputBackgroundColor,
                 child: Row(
                   children: [
                     if (widget.onAttachmentPressed != null) _leftWidget(),
@@ -195,15 +199,22 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration.collapsed(
-                          hintStyle: InheritedChatTheme.of(context)
-                              .theme
-                              .inputTextStyle
-                              .copyWith(
-                                color: InheritedChatTheme.of(context)
-                                    .theme
-                                    .inputTextColor
-                                    .withOpacity(0.5),
-                              ),
+                          hintStyle:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? LightChatUi(context: context)
+                                      .inputTextStyle
+                                      .copyWith(
+                                        color: LightChatUi(context: context)
+                                            .inputTextColor
+                                            .withOpacity(0.5),
+                                      )
+                                  : DarkChatUi(context: context)
+                                      .inputTextStyle
+                                      .copyWith(
+                                        color: DarkChatUi(context: context)
+                                            .inputTextColor
+                                            .withOpacity(0.5),
+                                      ),
                           hintText: 'Message...',
                         ),
                         focusNode: _inputFocusNode,

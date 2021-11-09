@@ -8,11 +8,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.3
-  google_mobile_ads: ^0.13.5
+  cupertino_icons: ^1.0.4
+  google_mobile_ads: ^0.13.6
   http: ^0.13.4
-  firebase_core: ^1.8.0
-  firebase_auth: ^3.1.4
+  firebase_core: ^1.10.0
+  firebase_auth: ^3.2.0
   cloud_firestore: ^2.5.4
   provider: ^6.0.1
   google_fonts: ^2.1.0
@@ -20,7 +20,7 @@ dependencies:
   google_sign_in: ^5.2.1
   flutter_svg: ^0.23.0+1
   barcode_scan2: ^4.1.4
-  cached_network_image: ^3.1.0
+  cached_network_image: ^3.1.0+1
   image_picker: ^0.8.4+4
   photo_view: ^0.13.0
   pull_to_refresh: ^2.0.0
@@ -28,12 +28,12 @@ dependencies:
   auto_size_text: ^3.0.0
   geolocator: ^7.7.1
   geocoding: ^2.0.1
-  firebase_messaging: ^10.0.9
-  flutter_local_notifications: ^9.0.2
+  firebase_messaging: ^11.1.0
+  flutter_local_notifications: ^9.0.3
   flutter_typeahead: ^3.2.1
   image_cropper: ^1.4.1
   cross_file: ^0.3.2
-  firebase_storage: ^10.0.6
+  firebase_storage: ^10.1.0
   shimmer: ^2.0.0
   get_storage: ^2.0.3
   flutter_firebase_chat_core: ^1.5.0
@@ -41,27 +41,27 @@ dependencies:
   path_provider: ^2.0.6
   open_file: ^3.2.1
   mime: ^1.0.1
-  file_picker: ^4.2.0
+  file_picker: ^4.2.1
   connectivity_plus: ^2.0.2
   introduction_screen: ^2.1.0
   after_layout: ^1.1.0
   badges: ^2.0.1
   bottom_navy_bar: ^6.0.0
   package_info: ^2.0.2
-  permission_handler: ^8.2.5
+  permission_handler: ^8.2.6
   dio: ^4.0.1
   fluttertoast: ^8.0.8
   share_plus: ^3.0.4
   flutter_secure_storage: ^4.2.1
   flutter_dotenv: ^5.0.2
-  sentry_flutter: ^6.0.1
+  sentry_flutter: ^6.1.0
   intl: ^0.17.0
   bubble: ^1.2.1
   adaptive_theme: ^2.3.0
   local_auth: ^1.1.8
   flutter_slidable: ^0.6.0
   blobs: ^2.0.0
-  firebase_app_check: ^0.0.2+3
+  firebase_app_check: ^0.0.3
   flutter_app_feedback: ^0.0.3
 
 dev_dependencies:

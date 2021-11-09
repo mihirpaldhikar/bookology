@@ -20,9 +20,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/managers/chat_ui.manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_chat_theme.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_l10n.dart';
 
 /// A class that represents attachment button widget
 class FileAttachmentButton extends StatelessWidget {
@@ -51,18 +50,12 @@ class FileAttachmentButton extends StatelessWidget {
       ),
       child: Center(
         child: IconButton(
-          icon: InheritedChatTheme.of(context).theme.attachmentButtonIcon !=
-                  null
-              ? InheritedChatTheme.of(context).theme.attachmentButtonIcon!
-              : Image.asset(
-                  'assets/icon-attachment.png',
-                  color: InheritedChatTheme.of(context).theme.inputTextColor,
-                  package: 'flutter_chat_ui',
-                ),
+          icon: Theme.of(context).brightness == Brightness.light
+              ? LightChatUi(context: context).attachmentButtonIcon!
+              : DarkChatUi(context: context).attachmentButtonIcon!,
           onPressed: onPressed,
           padding: EdgeInsets.zero,
-          tooltip:
-              InheritedL10n.of(context).l10n.attachmentButtonAccessibilityLabel,
+          tooltip: 'Send Media',
         ),
       ),
     );

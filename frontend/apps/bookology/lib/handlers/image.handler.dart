@@ -41,7 +41,7 @@ class ImageHandler {
     CropStyle? cropStyle = CropStyle.circle,
   }) async {
     final ImagePicker _picker = ImagePicker();
-    final PickedFile? photo = (await _picker.getImage(source: source));
+    final XFile? photo = (await _picker.pickImage(source: source));
 
     final croppedImage = await _cropImage(
       pickedImage: photo,
@@ -54,7 +54,7 @@ class ImageHandler {
   }
 
   Future<dynamic> _cropImage({
-    required PickedFile? pickedImage,
+    required XFile? pickedImage,
     required String imageURI,
     double? aspectRatioX,
     double? aspectRatioY,
