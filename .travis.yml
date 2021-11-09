@@ -14,6 +14,7 @@ addons:
       - fonts-droid-fallback
 before_script:
   - mkdir flutter && cd flutter && git clone https://github.com/flutter/flutter.git -b master
+  - pwd && ls -al
 script:
   - ls
   - pwd
