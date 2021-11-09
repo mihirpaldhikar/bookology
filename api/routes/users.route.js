@@ -5,8 +5,13 @@ const {UsersCollection, BooksCollection} = require('../managers/collection.manag
 const {verifyUser} = require('../middlewares/verify.middleware');
 const jwt = require('jsonwebtoken');
 const {firebaseAdmin} = require('../configs/firebase.config');
+const Book = require('../models/book.model');
+const apiCache = require('apicache');
 
-router.get('/:userID', verifyUser, async (request, response, next) => {
+const cache = apiCache.middleware;
+
+
+router.get('/uuid/:userID', cache('2 minutes'), verifyUser, async (request, response, next) => {
   try {
     if (request.query.with_books === 'true') {
       const user = await UsersCollection.findOne({_id: request.params.userID});
@@ -121,9 +126,9 @@ router.put('/:userID', verifyUser, async (request, response, next) => {
         });
 
         await firebaseAdmin.firestore().collection('users').doc(authData.user_id).update({
-          firstName: request.body.first_name,
-          lastName: request.body.last_name,
-          imageUrl: request.body.profile_picture_url,
+          'firstName': request.body.first_name,
+          'lastName': request.body.last_name,
+          'imageUrl': request.body.profile_picture_url,
           'metadata.userName': request.body.username,
         });
 
@@ -159,5 +164,64 @@ router.put('/:userID', verifyUser, async (request, response, next) => {
   }
 });
 
+
+router.get('/saved', verifyUser, async (request, response, next) => {
+  try {
+    jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (err, authData) => {
+      if (err) {
+        response.status(403).json({
+          result: {
+            message: 'Error in verifying user key. Key Invalid or not provided.',
+            status_code: 403,
+          },
+        });
+        return false;
+      } else {
+        const user = await UsersCollection.findOne({_id: authData.user_id});
+        if (user == null) {
+          response.status(404).json({
+            result: {
+              message: 'No User with the give ID.',
+              status_code: 404,
+            },
+          });
+          return false;
+        }
+
+
+        const savedBooks = (await firebaseAdmin.firestore().collection('users')
+          .doc(authData.user_id).collection('saved').get()).docs;
+
+        if (savedBooks == null || savedBooks.length === 0) {
+          response.status(404).json({
+            result: {
+              message: 'No saved books found.',
+              status_code: 404,
+            },
+          });
+          return false;
+        }
+
+        const savedBookData = [];
+
+        for (let i = 0; i < savedBooks.length; i++) {
+          const bookId = savedBooks[i].data()['bookId'];
+          const bookData = await BooksCollection.findOne({_id: bookId});
+          savedBookData.push(Book.getBooklet(bookData));
+        }
+
+        response.status(200).json(savedBookData);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({
+      result: {
+        message: 'An error internal error occurred',
+        status_code: 500,
+      },
+    });
+  }
+});
 
 module.exports = router;
