@@ -1,0 +1,25 @@
+branches:
+  only:
+    - main
+
+os:
+  - linux
+sudo: false
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++6
+      - fonts-droid-fallback
+before_script:
+  - mkdir flutter && cd flutter && git clone https://github.com/flutter/flutter.git -b master
+script:
+  - cd ../ && cd ./frontend/apps/bookology/
+  - touch app.config.env
+  - $HOME/build/imihirpaldhikar/bookology/flutter/flutter/bin/flutter pub get
+  - $HOME/build/imihirpaldhikar/bookology/flutter/flutter/bin/flutter analyze
+  - $HOME/build/imihirpaldhikar/bookology/flutter/flutter/bin/flutter test
+cache:
+  directories:
+    - $HOME/.pub-cache
