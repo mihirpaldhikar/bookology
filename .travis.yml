@@ -13,14 +13,14 @@ addons:
       - libstdc++6
       - fonts-droid-fallback
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b master
+  - mkdir flutter && cd flutter && git clone https://github.com/flutter/flutter.git -b master
 script:
   - ls
   - pwd
   - cd ./frontend/apps/bookology/
-  - $HOME/flutter/bin/flutter pub get
-  - $HOME/flutter/bin/flutter analyze
-  - $HOME/flutter/bin/flutter test
+  - $HOME/flutter/flutter/bin/flutter pub get
+  - $HOME/flutter/flutter/bin/flutter analyze
+  - $HOME/flutter/flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
