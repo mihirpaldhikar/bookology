@@ -17,7 +17,7 @@ before_script:
 script:
   - ls
   - pwd
-  - cd ./frontend/apps/bookology/
+  - cd ../ && cd ./frontend/apps/bookology/
   - $HOME/flutter/flutter/bin/flutter pub get
   - $HOME/flutter/flutter/bin/flutter analyze
   - $HOME/flutter/flutter/bin/flutter test
