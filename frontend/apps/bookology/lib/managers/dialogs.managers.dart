@@ -27,7 +27,7 @@ import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
-import 'package:bookology/utils/validator.utli.dart';
+import 'package:bookology/utils/validator.util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

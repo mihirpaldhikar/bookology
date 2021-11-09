@@ -24,7 +24,7 @@ import 'package:blobs/blobs.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
-import 'package:bookology/utils/validator.utli.dart';
+import 'package:bookology/utils/validator.util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
