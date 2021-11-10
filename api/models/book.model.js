@@ -129,6 +129,7 @@ const getBookletWithUploader = (book, user) => {
     pricing: {
       original_price: book.pricing.original_price,
       selling_price: book.pricing.selling_price,
+      currency: book.pricing.currency,
     },
     created_on: {
       date: book.created_on.date,
