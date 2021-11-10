@@ -55,7 +55,7 @@ router.get('/uuid/:userID', cache('2 minutes'), verifyUser, async (request, resp
   }
 });
 
-router.put('/:userID', verifyUser, async (request, response, next) => {
+router.put('/uuid/:userID', verifyUser, async (request, response, next) => {
   try {
     jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (err, authData) => {
       if (err) {
@@ -207,7 +207,8 @@ router.get('/saved', verifyUser, async (request, response, next) => {
         for (let i = 0; i < savedBooks.length; i++) {
           const bookId = savedBooks[i].data()['bookId'];
           const bookData = await BooksCollection.findOne({_id: bookId});
-          savedBookData.push(Book.getBooklet(bookData));
+          const user = await UsersCollection.findOne({_id: bookData.uploader_id})
+          savedBookData.push(Book.getBookletWithUploader(bookData, user));
         }
 
         response.status(200).json(savedBookData);
