@@ -63,7 +63,7 @@ const getUserWithBooks = (user, books) => {
       last_name: user.slugs.last_name,
     },
     books: books.map((book) => {
-      return Books.getBooklet(book);
+      return Books.getBookletWithUploader(book, user);
     }),
   };
 };
