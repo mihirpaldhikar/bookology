@@ -90,6 +90,7 @@ router.post('/create', verifyUser, async (request, response, next) => {
 router.delete('/delete/:roomID', verifyUser, async (request, response, next) => {
   try {
     const roomID = request.params.roomID;
+    const roomData = await RoomsCollection.findOne({_id: roomID});
     jwt.verify(request.token, process.env.JWT_SECRET_TOKEN, async (err, authData) => {
       if (err) {
         response.status(403).json({
@@ -105,6 +106,8 @@ router.delete('/delete/:roomID', verifyUser, async (request, response, next) => 
           prefix: `rooms/${roomID}/`,
           force: true,
         });
+        await firebaseAdmin.firestore().collection('users').doc(roomData.users[1])
+          .collection('requests').doc(roomData.book_id).delete();
         await firebaseAdmin.firestore().collection('rooms').doc(roomID).delete();
 
         response.status(200).json({

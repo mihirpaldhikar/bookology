@@ -251,6 +251,8 @@ router.delete('/delete/:bookID', verifyUser, async (request, response, next) => 
               const room = rooms[i];
               await firebaseAdmin.firestore().collection('users').doc(room.users[1])
                 .collection('requests').doc(request.params.bookID).delete();
+              await firebaseAdmin.firestore().collection('users').doc()
+                .collection('saved').doc(request.params.bookID).delete();
 
               await RoomsCollection.findOneAndDelete({_id: room.room_id});
 
