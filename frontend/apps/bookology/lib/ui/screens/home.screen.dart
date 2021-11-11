@@ -29,9 +29,11 @@ import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/book.model.dart';
+import 'package:bookology/models/saved_book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/share.service.dart';
 import 'package:bookology/services/update.service.dart';
@@ -40,6 +42,8 @@ import 'package:bookology/ui/components/home_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
+import 'package:bookology/ui/widgets/error.widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -64,11 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshController(initialRefresh: false);
   final _apiService = ApiService();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
+  final FirestoreService _firestoreService =
+      FirestoreService(FirebaseFirestore.instance);
   late Future<List<Object>?> _feed;
   late BannerAd _ad;
   List<Object> _homeFeed = [];
   String _currentLocation = '';
   bool isDarkMode = false;
+  List<SavedBookModel> _savedBookList = [];
 
   @override
   void initState() {
@@ -88,6 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
     var brightness = SchedulerBinding.instance!.window.platformBrightness;
     setState(() {
       isDarkMode = brightness == Brightness.dark;
+    });
+    await _firestoreService.getSavedBook().then((value) {
+      setState(() {
+        _savedBookList = value;
+      });
     });
     UpdateService(context).checkForAppUpdate();
     _ad = BannerAd(
@@ -133,6 +145,11 @@ class _HomeScreenState extends State<HomeScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
             if (homeFeed.connectionState == ConnectionState.done) {
+              if (homeFeed.hasError) {
+                return const Error(
+                  message: 'An Error Occurred!',
+                );
+              }
               if (homeFeed.hasData) {
                 return SmartRefresher(
                   controller: _refreshController,
@@ -261,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
             iconWidget: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: book.uploaderId != _authService.currentUser()!.uid
+                color: book.uploader.userId != _authService.currentUser()!.uid
                     ? ColorsConstant.lightDangerBackgroundColor
                     : Theme.of(context).brightness == Brightness.light
                         ? Colors.grey.shade200
@@ -271,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Icon(
                 Icons.report_gmailerrorred,
-                color: book.uploaderId != _authService.currentUser()!.uid
+                color: book.uploader.userId != _authService.currentUser()!.uid
                     ? Theme.of(context).colorScheme.error
                     : Theme.of(context).brightness == Brightness.light
                         ? Colors.grey
@@ -279,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             onTap: () {
-              if (book.uploaderId != _authService.currentUser()!.uid) {
+              if (book.uploader.userId != _authService.currentUser()!.uid) {
                 ShareService().shareBook(
                   book: book,
                 );
@@ -313,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
             iconWidget: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: book.uploaderId != _authService.currentUser()!.uid
+                color: book.uploader.userId != _authService.currentUser()!.uid
                     ? Theme.of(context).buttonTheme.colorScheme!.background
                     : Theme.of(context).brightness == Brightness.light
                         ? Colors.grey.shade200
@@ -322,27 +339,43 @@ class _HomeScreenState extends State<HomeScreen> {
                     BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
               ),
               child: Icon(
-                Icons.bookmark_border,
-                color: book.uploaderId != _authService.currentUser()!.uid
+                _savedBookList
+                        .where((element) => element.bookId == book.bookId)
+                        .isNotEmpty
+                    ? Icons.bookmark
+                    : Icons.bookmark_border,
+                color: book.uploader.userId != _authService.currentUser()!.uid
                     ? Theme.of(context).buttonTheme.colorScheme!.primary
                     : Theme.of(context).brightness == Brightness.light
                         ? Colors.grey
                         : Colors.grey.shade900,
               ),
             ),
-            onTap: () {
-              if (book.uploaderId != _authService.currentUser()!.uid) {
-                ShareService().shareBook(
-                  book: book,
-                );
+            onTap: () async {
+              // if (book.uploader.userId != _authService.currentUser()!.uid) {
+              if (_savedBookList
+                  .where((element) => element.bookId == book.bookId)
+                  .isEmpty) {
+                await _firestoreService.saveBook(bookId: book.bookId);
+                setState(() {
+                  _savedBookList
+                      .add(SavedBookModel.fromJson({'bookId': book.bookId}));
+                });
+              } else {
+                await _firestoreService.removedSavedBook(bookId: book.bookId);
+                setState(() {
+                  _savedBookList
+                      .removeWhere((element) => element.bookId == book.bookId);
+                });
               }
+              //}
             },
           ),
         ],
         actionPane: const SlidableBehindActionPane(),
         child: BookCard(
           showMenu: false,
-          buttonText: _authService.currentUser()!.uid == book.uploaderId
+          buttonText: _authService.currentUser()!.uid == book.uploader.userId
               ? 'Edit'
               : 'View',
           id: book.bookId,
@@ -352,7 +385,6 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) => BookViewer(
-                  themeMode: widget.themeMode,
                   id: book.bookId,
                   book: book,
                 ),
@@ -383,8 +415,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onRefresh() async {
     setState(() {
       _homeFeed.clear();
+      _savedBookList.clear();
       _feed = getFeed();
       _refreshController.refreshCompleted();
+    });
+    await _firestoreService.getSavedBook().then((value) {
+      setState(() {
+        _savedBookList = value;
+      });
     });
   }
 

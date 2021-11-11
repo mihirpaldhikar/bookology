@@ -224,7 +224,9 @@ class _BookCardState extends State<BookCard> {
                                   fontWeight: FontWeight.normal,
                                   fontSize: 15,
                                   decoration: TextDecoration.lineThrough,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor,
                                 ),
                               ),
                             ],

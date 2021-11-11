@@ -59,15 +59,17 @@ class BottomSheetManager {
           },
         ),
         Visibility(
-          visible:
-              authService.currentUser()!.uid == book.uploaderId ? false : true,
+          visible: authService.currentUser()!.uid == book.uploader.userId
+              ? false
+              : true,
           child: const SizedBox(
             height: 20,
           ),
         ),
         Visibility(
-          visible:
-              authService.currentUser()!.uid == book.uploaderId ? false : true,
+          visible: authService.currentUser()!.uid == book.uploader.userId
+              ? false
+              : true,
           child: OutLinedButton(
             text: 'Report this book',
             alignContent: MainAxisAlignment.start,

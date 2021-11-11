@@ -137,7 +137,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: _logo(context),
                       ),
                       const SizedBox(
-                        height: 180,
+                        height: 130,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -235,7 +235,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               },
                             ),
                             const SizedBox(
-                              height: 100,
+                              height: 30,
                             ),
                             InkWell(
                               borderRadius: BorderRadius.circular(5),

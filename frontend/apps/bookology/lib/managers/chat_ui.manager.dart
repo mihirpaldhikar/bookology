@@ -69,7 +69,7 @@ class LightChatUi extends ChatTheme {
             ),
             attachmentButtonIcon: const Icon(
               Icons.add,
-              color: Colors.white,
+              color: Colors.black,
             ),
             inputTextColor: Colors.black,
             inputTextStyle: GoogleFonts.poppins(),

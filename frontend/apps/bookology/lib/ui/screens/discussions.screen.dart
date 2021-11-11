@@ -160,10 +160,13 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Text(
+                          Text(
                             StringConstants.wordNoDiscussions,
                             style: TextStyle(
                               fontSize: 20,
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
                             ),
                           ),
                           const SizedBox(

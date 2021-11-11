@@ -29,7 +29,7 @@ dependencies:
   geolocator: ^7.7.1
   geocoding: ^2.0.1
   firebase_messaging: ^11.1.0
-  flutter_local_notifications: ^9.0.3
+  flutter_local_notifications: ^9.1.0
   flutter_typeahead: ^3.2.1
   image_cropper: ^1.4.1
   cross_file: ^0.3.2
@@ -63,6 +63,7 @@ dependencies:
   blobs: ^2.0.0
   firebase_app_check: ^0.0.3
   flutter_app_feedback: ^0.0.3
+  simple_animations: ^4.0.1
 
 dev_dependencies:
   flutter_test:

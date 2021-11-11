@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/currency.manager.dart';
@@ -48,13 +47,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BookViewer extends StatefulWidget {
   final BookModel book;
   final String id;
-  final AdaptiveThemeMode themeMode;
 
   const BookViewer({
     Key? key,
     required this.book,
     required this.id,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -70,16 +67,7 @@ class _BookViewerState extends State<BookViewer> {
   final CurrencyManager _currencyManager = CurrencyManager();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
   RequestModel _requestData = RequestModel(accepted: false, roomId: 'null');
-  String _username = 'loading...';
-  String _userID = '';
-  String _userFirstName = 'loading...';
-  String _userLastName = '';
-  String _uploadedOn = 'loading...';
-  String _location = 'loading...';
-  String _userProfilePicture = '';
-  String _bookCondition = 'loading...';
-  bool _isVerified = false;
-  bool _isLoadingCompleted = false;
+
   int _currentPage = 0;
   String _currencySymbol = '';
   late BannerAd _ad;
@@ -132,8 +120,7 @@ class _BookViewerState extends State<BookViewer> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    await _getBookInfo();
-    if (widget.book.uploaderId != _authService.currentUser()!.uid) {
+    if (widget.book.uploader.userId != _authService.currentUser()!.uid) {
       _requestData = await _firestoreService.getRequest(
         bookID: widget.book.bookId,
         userID: _authService.currentUser()!.uid,
@@ -202,10 +189,10 @@ class _BookViewerState extends State<BookViewer> {
                 ),
               ),
               Visibility(
-                visible:
-                    widget.book.uploaderId == _authService.currentUser()!.uid
-                        ? true
-                        : false,
+                visible: widget.book.uploader.userId ==
+                        _authService.currentUser()!.uid
+                    ? true
+                    : false,
                 child: Tooltip(
                   message: StringConstants.hintEditBook,
                   child: SizedBox(
@@ -240,10 +227,10 @@ class _BookViewerState extends State<BookViewer> {
                 ),
               ),
               Visibility(
-                visible:
-                    widget.book.uploaderId == _authService.currentUser()!.uid
-                        ? true
-                        : false,
+                visible: widget.book.uploader.userId ==
+                        _authService.currentUser()!.uid
+                    ? true
+                    : false,
                 child: Tooltip(
                   message: StringConstants.hintShareBook,
                   child: SizedBox(
@@ -306,10 +293,10 @@ class _BookViewerState extends State<BookViewer> {
                 ),
               ),
               Visibility(
-                visible:
-                    widget.book.uploaderId != _authService.currentUser()!.uid
-                        ? true
-                        : false,
+                visible: widget.book.uploader.userId !=
+                        _authService.currentUser()!.uid
+                    ? true
+                    : false,
                 child: Tooltip(
                   message: StringConstants.hintReportBook,
                   child: IconButton(
@@ -485,7 +472,7 @@ class _BookViewerState extends State<BookViewer> {
                                     width: 10,
                                   ),
                                   Text(
-                                    _location,
+                                    widget.book.location,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .inputDecorationTheme
@@ -497,7 +484,7 @@ class _BookViewerState extends State<BookViewer> {
                                 ],
                               ),
                               Visibility(
-                                visible: widget.book.uploaderId !=
+                                visible: widget.book.uploader.userId !=
                                         _authService.currentUser()!.uid
                                     ? true
                                     : false,
@@ -506,7 +493,7 @@ class _BookViewerState extends State<BookViewer> {
                                 ),
                               ),
                               Visibility(
-                                visible: widget.book.uploaderId !=
+                                visible: widget.book.uploader.userId !=
                                         _authService.currentUser()!.uid
                                     ? true
                                     : false,
@@ -517,96 +504,92 @@ class _BookViewerState extends State<BookViewer> {
                                         ? 'Requested'
                                         : _enquireButtonText,
                                     textColor: Colors.black,
-                                    backgroundColor: _isLoadingCompleted
-                                        ? _isRequestAccepted
-                                            ? Colors.green[100]
-                                            : Colors.orange[100]
+                                    backgroundColor: _isRequestAccepted
+                                        ? Colors.green[100]
                                         : Colors.orange[100],
                                     onPressed: () async {
-                                      if (_isLoadingCompleted) {
-                                        if (_enquireButtonText == 'Enquire') {
+                                      if (_enquireButtonText == 'Enquire') {
+                                        DialogsManager(context)
+                                            .sendDiscussionRequestDialog(
+                                                onRequestSend: () async {
+                                          Navigator.pop(context);
                                           DialogsManager(context)
-                                              .sendDiscussionRequestDialog(
-                                                  onRequestSend: () async {
-                                            Navigator.pop(context);
-                                            DialogsManager(context)
-                                                .showProgressDialog(
-                                              content: 'Sending request...',
-                                              contentColor: Theme.of(context)
-                                                  .primaryColor,
-                                              progressColor: Theme.of(context)
-                                                  .primaryColor,
-                                            );
-                                            final isSuccess = await _apiService
-                                                .sendEnquiryNotification(
-                                              userID: _authService
-                                                  .currentUser()!
-                                                  .uid,
-                                              receiverID: _userID,
-                                              bookId: widget.book.bookId,
-                                              userName: _cacheService
-                                                  .getCurrentUserNameCache(),
-                                            );
-                                            setState(() {
-                                              _isEnquireyButonClicked = true;
-                                              _enquireButtonText = 'Requested';
-                                            });
-                                            await _firestoreService
-                                                .createRequest(
-                                              bookID: widget.book.bookId,
-                                              userID: _authService
-                                                  .currentUser()!
-                                                  .uid,
-                                            );
-                                            if (isSuccess) {
-                                              Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showSuccessToast(
-                                                message:
-                                                    'Discussions Request Sent',
-                                              );
-                                            } else {
-                                              Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showErrorToast(
-                                                      message:
-                                                          'An error occurred');
-                                            }
+                                              .showProgressDialog(
+                                            content: 'Sending request...',
+                                            contentColor:
+                                                Theme.of(context).primaryColor,
+                                            progressColor:
+                                                Theme.of(context).primaryColor,
+                                          );
+                                          final isSuccess = await _apiService
+                                              .sendEnquiryNotification(
+                                            userID:
+                                                _authService.currentUser()!.uid,
+                                            receiverID:
+                                                widget.book.uploader.userId,
+                                            bookId: widget.book.bookId,
+                                            userName: _cacheService
+                                                .getCurrentUserNameCache(),
+                                          );
+                                          setState(() {
+                                            _isEnquireyButonClicked = true;
+                                            _enquireButtonText = 'Requested';
                                           });
-                                        } else {
-                                          if (_enquireButtonText != 'Discuss') {
-                                            ToastManager(context).showToast(
-                                              message: 'Request Already Sent',
+                                          await _firestoreService.createRequest(
+                                            bookID: widget.book.bookId,
+                                            userID:
+                                                _authService.currentUser()!.uid,
+                                          );
+                                          if (isSuccess) {
+                                            Navigator.pop(context);
+                                            ToastManager(context)
+                                                .showSuccessToast(
+                                              message:
+                                                  'Discussions Request Sent',
                                             );
+                                          } else {
+                                            Navigator.pop(context);
+                                            ToastManager(context)
+                                                .showErrorToast(
+                                                    message:
+                                                        'An error occurred');
                                           }
+                                        });
+                                      } else {
+                                        if (_enquireButtonText != 'Discuss') {
+                                          ToastManager(context).showToast(
+                                            message: 'Request Already Sent',
+                                          );
                                         }
+                                      }
 
-                                        if (_isRequestAccepted == true) {
-                                          final room = await _firestoreService
-                                              .getRoomData(
-                                            roomId: _requestData.roomId,
-                                          );
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                                room: room,
-                                                roomTitle:
-                                                    '$_userFirstName $_userLastName',
-                                                userName: _username,
-                                                isVerified: _isVerified,
-                                                userProfileImage:
-                                                    _userProfilePicture,
-                                              ),
+                                      if (_isRequestAccepted == true) {
+                                        final room =
+                                            await _firestoreService.getRoomData(
+                                          roomId: _requestData.roomId,
+                                        );
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatPage(
+                                              room: room,
+                                              roomTitle:
+                                                  '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
+                                              userName:
+                                                  widget.book.uploader.username,
+                                              isVerified:
+                                                  widget.book.uploader.verified,
+                                              userProfileImage: widget.book
+                                                  .uploader.profilePictureUrl,
                                             ),
-                                          );
-                                        }
+                                          ),
+                                        );
                                       }
                                     },
                                   ),
                                 ),
                               ),
                               Visibility(
-                                visible: widget.book.uploaderId !=
+                                visible: widget.book.uploader.userId !=
                                         _authService.currentUser()!.uid
                                     ? true
                                     : false,
@@ -615,7 +598,7 @@ class _BookViewerState extends State<BookViewer> {
                                 ),
                               ),
                               Visibility(
-                                visible: widget.book.uploaderId !=
+                                visible: widget.book.uploader.userId !=
                                         _authService.currentUser()!.uid
                                     ? true
                                     : false,
@@ -629,7 +612,7 @@ class _BookViewerState extends State<BookViewer> {
                                 ),
                               ),
                               Visibility(
-                                visible: widget.book.uploaderId !=
+                                visible: widget.book.uploader.userId !=
                                         _authService.currentUser()!.uid
                                     ? true
                                     : false,
@@ -850,7 +833,8 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      _bookCondition,
+                                      widget
+                                          .book.additionalInformation.condition,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -920,7 +904,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      '$_userFirstName $_userLastName',
+                                      '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -953,7 +937,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     Text(
-                                      '@$_username',
+                                      '@${widget.book.uploader.username}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
@@ -966,7 +950,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 5,
                                     ),
                                     Visibility(
-                                      visible: _isVerified,
+                                      visible: widget.book.uploader.verified,
                                       child: const Icon(
                                         Icons.verified,
                                         color: Colors.blue,
@@ -999,7 +983,7 @@ class _BookViewerState extends State<BookViewer> {
                                       width: 15,
                                     ),
                                     AutoSizeText(
-                                      _uploadedOn,
+                                      widget.book.createdOn.date,
                                       maxLines: 4,
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
@@ -1077,24 +1061,5 @@ class _BookViewerState extends State<BookViewer> {
         ),
       ),
     );
-  }
-
-  Future<String> _getBookInfo() async {
-    final bookData = await _apiService.getBookByID(
-        bookID: widget.id.contains('@') ? widget.id.split('@')[0] : widget.id);
-    setState(() {
-      _isLoadingCompleted = true;
-      _userID = bookData['uploader']['user_id'];
-      _username = bookData['uploader']['username'];
-      _bookCondition = bookData['additional_information']['condition'];
-      _location = bookData['location'] ?? 'Unknown';
-      _uploadedOn = '${bookData['created_on']['date']}';
-      _userFirstName = bookData['uploader']['first_name'];
-      _userLastName = bookData['uploader']['last_name'];
-      _isVerified = bookData['uploader']['verified'];
-      _userProfilePicture = bookData['uploader']['profile_picture_url'];
-    });
-
-    return bookData['uploader']['user_id'];
   }
 }

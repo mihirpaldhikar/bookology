@@ -44,7 +44,7 @@ Widget offlineScreen({required BuildContext context}) {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 25,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -55,7 +55,7 @@ Widget offlineScreen({required BuildContext context}) {
             'The content will automatically be loaded once network '
             'connection is available.',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).inputDecorationTheme.fillColor,
               fontSize: 15,
             ),
             textAlign: TextAlign.center,

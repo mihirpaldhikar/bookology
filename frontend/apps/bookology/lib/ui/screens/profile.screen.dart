@@ -37,9 +37,11 @@ import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
+import 'package:bookology/ui/screens/saved.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/collapsable_fab.widget.dart';
+import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:bookology/ui/widgets/marquee.widget.dart';
 import 'package:bookology/ui/widgets/outlined_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -235,6 +237,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                 builder:
                     (BuildContext context, AsyncSnapshot<UserModel> userData) {
                   if (userData.connectionState == ConnectionState.done) {
+                    if (userData.hasError) {
+                      return const Error(
+                        message: 'An Error Occurred!',
+                      );
+                    }
                     if (userData.hasData) {
                       if (userData.data!.books.isEmpty) {
                         return _profileWithoutBooks(userData);
@@ -545,11 +552,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                     SizedBox(
                       width: 150,
                       child: OutLinedButton(
-                        text: 'Account Settings',
+                        text: 'Saved Books',
                         backgroundColor: Theme.of(context).cardTheme.color,
                         outlineWidth: 0.5,
                         textColor: Theme.of(context).colorScheme.primary,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const SavedScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -599,7 +614,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) => BookViewer(
-                  themeMode: widget.themeMode,
                   id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
                   book: userData.data!.books[index - 1],
                 ),
