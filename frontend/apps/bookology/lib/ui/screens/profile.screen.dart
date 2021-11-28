@@ -581,29 +581,22 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 17, right: 17),
       child: Slidable(
-        actionPane: const SlidableBehindActionPane(),
-        secondaryActions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).buttonTheme.colorScheme!.background,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.share,
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
-              ),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  Theme.of(context).buttonTheme.colorScheme!.primary,
+              icon: Icons.share,
+              onPressed: (context) {
+                ShareService().shareBook(
+                  book: userData.data!.books[index - 1],
+                );
+              },
             ),
-            onTap: () {
-              ShareService().shareBook(
-                book: userData.data!.books[index - 1],
-              );
-            },
-          ),
-        ],
+          ],
+        ),
         child: BookCard(
           showMenu: false,
           buttonText: 'Edit',

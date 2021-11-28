@@ -22,7 +22,6 @@
 
 import 'dart:developer';
 
-import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/saved_book.model.dart';
 import 'package:bookology/services/api.service.dart';
@@ -128,71 +127,51 @@ class _SavedScreenState extends State<SavedScreen> {
         top: 5,
       ),
       child: Slidable(
-        secondaryActions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).buttonTheme.colorScheme!.background,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.share,
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
-              ),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  Theme.of(context).buttonTheme.colorScheme!.primary,
+              icon: Icons.share,
+              onPressed: (context) {
+                ShareService().shareBook(
+                  book: book,
+                );
+              },
             ),
-            onTap: () {
-              ShareService().shareBook(
-                book: book,
-              );
-            },
-          ),
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey.shade200
-                    : Colors.grey.shade400,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                _savedBookList
-                        .where((element) => element.bookId == book.bookId)
-                        .isNotEmpty
-                    ? Icons.bookmark
-                    : Icons.bookmark_border,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey
-                    : Colors.grey.shade900,
-              ),
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  Theme.of(context).buttonTheme.colorScheme!.primary,
+              icon: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              onPressed: (context) async {
+                // if (book.uploader.userId != _authService.currentUser()!.uid) {
+                if (_savedBookList
+                    .where((element) => element.bookId == book.bookId)
+                    .isEmpty) {
+                  await _firestoreService.saveBook(bookId: book.bookId);
+                  setState(() {
+                    _savedBookList
+                        .add(SavedBookModel.fromJson({'bookId': book.bookId}));
+                  });
+                } else {
+                  await _firestoreService.removedSavedBook(bookId: book.bookId);
+                  setState(() {
+                    _savedBookList.removeWhere(
+                        (element) => element.bookId == book.bookId);
+                  });
+                }
+                //}
+              },
             ),
-            onTap: () async {
-              // if (book.uploader.userId != _authService.currentUser()!.uid) {
-              if (_savedBookList
-                  .where((element) => element.bookId == book.bookId)
-                  .isEmpty) {
-                await _firestoreService.saveBook(bookId: book.bookId);
-                setState(() {
-                  _savedBookList
-                      .add(SavedBookModel.fromJson({'bookId': book.bookId}));
-                });
-              } else {
-                await _firestoreService.removedSavedBook(bookId: book.bookId);
-                setState(() {
-                  _savedBookList
-                      .removeWhere((element) => element.bookId == book.bookId);
-                });
-              }
-              //}
-            },
-          ),
-        ],
-        actionPane: const SlidableBehindActionPane(),
+          ],
+        ),
         child: BookCard(
           showMenu: false,
           id: book.bookId,

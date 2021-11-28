@@ -23,7 +23,6 @@
 import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -272,107 +271,77 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: Slidable(
-        actions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: book.uploader.userId != _authService.currentUser()!.uid
-                    ? ColorsConstant.lightDangerBackgroundColor
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade400,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.report_gmailerrorred,
-                color: book.uploader.userId != _authService.currentUser()!.uid
-                    ? Theme.of(context).colorScheme.error
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey
-                        : Colors.grey.shade900,
-              ),
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  book.uploader.userId != _authService.currentUser()!.uid
+                      ? Theme.of(context).colorScheme.error
+                      : Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey
+                          : Colors.grey.shade900,
+              icon: Icons.report_gmailerrorred,
+              onPressed: (context) {
+                if (book.uploader.userId != _authService.currentUser()!.uid) {
+                  ShareService().shareBook(
+                    book: book,
+                  );
+                }
+              },
             ),
-            onTap: () {
-              if (book.uploader.userId != _authService.currentUser()!.uid) {
+          ],
+        ),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  Theme.of(context).buttonTheme.colorScheme!.primary,
+              icon: Icons.share,
+              onPressed: (context) {
                 ShareService().shareBook(
                   book: book,
                 );
-              }
-            },
-          ),
-        ],
-        secondaryActions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).buttonTheme.colorScheme!.background,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.share,
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
-              ),
+              },
             ),
-            onTap: () {
-              ShareService().shareBook(
-                book: book,
-              );
-            },
-          ),
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: book.uploader.userId != _authService.currentUser()!.uid
-                    ? Theme.of(context).buttonTheme.colorScheme!.background
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade400,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                _savedBookList
-                        .where((element) => element.bookId == book.bookId)
-                        .isNotEmpty
-                    ? Icons.bookmark
-                    : Icons.bookmark_border,
-                color: book.uploader.userId != _authService.currentUser()!.uid
-                    ? Theme.of(context).buttonTheme.colorScheme!.primary
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey
-                        : Colors.grey.shade900,
-              ),
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  book.uploader.userId != _authService.currentUser()!.uid
+                      ? Theme.of(context).buttonTheme.colorScheme!.primary
+                      : Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey
+                          : Colors.grey.shade900,
+              icon: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              onPressed: (context) async {
+                // if (book.uploader.userId != _authService.currentUser()!.uid) {
+                if (_savedBookList
+                    .where((element) => element.bookId == book.bookId)
+                    .isEmpty) {
+                  await _firestoreService.saveBook(bookId: book.bookId);
+                  setState(() {
+                    _savedBookList
+                        .add(SavedBookModel.fromJson({'bookId': book.bookId}));
+                  });
+                } else {
+                  await _firestoreService.removedSavedBook(bookId: book.bookId);
+                  setState(() {
+                    _savedBookList.removeWhere(
+                        (element) => element.bookId == book.bookId);
+                  });
+                }
+                //}
+              },
             ),
-            onTap: () async {
-              // if (book.uploader.userId != _authService.currentUser()!.uid) {
-              if (_savedBookList
-                  .where((element) => element.bookId == book.bookId)
-                  .isEmpty) {
-                await _firestoreService.saveBook(bookId: book.bookId);
-                setState(() {
-                  _savedBookList
-                      .add(SavedBookModel.fromJson({'bookId': book.bookId}));
-                });
-              } else {
-                await _firestoreService.removedSavedBook(bookId: book.bookId);
-                setState(() {
-                  _savedBookList
-                      .removeWhere((element) => element.bookId == book.bookId);
-                });
-              }
-              //}
-            },
-          ),
-        ],
-        actionPane: const SlidableBehindActionPane(),
+          ],
+        ),
         child: BookCard(
           showMenu: false,
           buttonText: _authService.currentUser()!.uid == book.uploader.userId

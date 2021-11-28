@@ -78,9 +78,11 @@ class NotificationService {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(firebaseNotificationChannel);
+
     if (initialMessage != null) {
       _handleNotification(initialMessage);
     }
+
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotification);
   }

@@ -22,7 +22,6 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -198,29 +197,21 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                           right: 17,
                         ),
                         child: Slidable(
-                          secondaryActions: [
-                            IconSlideAction(
-                              color: Colors.transparent,
-                              iconWidget: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color:
-                                      ColorsConstant.lightDangerBackgroundColor,
-                                  borderRadius: BorderRadius.circular(
-                                      ValuesConstant.secondaryBorderRadius),
-                                ),
-                                child: Icon(
-                                  Icons.delete_forever,
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
+                          startActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            dismissible: DismissiblePane(onDismissed: () {}),
+                            children: [
+                              SlidableAction(
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.red,
+                                icon: Icons.delete_forever,
+                                onPressed: (context) {
+                                  DialogsManager(context)
+                                      .showDeleteDiscussionDialog(room);
+                                },
                               ),
-                              onTap: () {
-                                DialogsManager(context)
-                                    .showDeleteDiscussionDialog(room);
-                              },
-                            ),
-                          ],
-                          actionPane: const SlidableBehindActionPane(),
+                            ],
+                          ),
                           child: Card(
                             child: Container(
                               decoration: BoxDecoration(
