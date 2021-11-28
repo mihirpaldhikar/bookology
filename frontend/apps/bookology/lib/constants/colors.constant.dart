@@ -23,57 +23,63 @@
 import 'package:flutter/material.dart';
 
 class ColorsConstant {
-  static const MaterialColor primarySwatch = MaterialColor(
-    0xff2E79F3,
-    {
-      50: Color(0xFF4285F4),
-      100: Color(0xFF2E79F3),
-      200: Color(0xFF196CF2),
-      300: Color(0xFF0D61E7),
-      400: Color(0xFF0C58D2),
-      500: Color(0xFF0B4FBD),
-      600: Color(0xFF0A46A8),
-      700: Color(0xFF093E93),
-      800: Color(0xFF07357E),
-      900: Color(0xFF062C69),
-    },
+  static const lightColorScheme = ColorScheme(
+    brightness: Brightness.light,
+    primary: Color(0xff0056D3),
+    onPrimary: Color(0xffFFFFFF),
+    primaryContainer: Color(0xffD9E2FF),
+    onPrimaryContainer: Color(0xff001848),
+    secondary: Color(0xff585E71),
+    onSecondary: Color(0xffFFFFFF),
+    secondaryContainer: Color(0xffDCE2F9),
+    onSecondaryContainer: Color(0xff151B2C),
+    tertiary: Color(0xff735572),
+    onTertiary: Color(0xffFFFFFF),
+    tertiaryContainer: Color(0xffFDD7F9),
+    onTertiaryContainer: Color(0xff2A122C),
+    error: Color(0xffBA1B1B),
+    errorContainer: Color(0xffFFDAD4),
+    onError: Color(0xffFFFFFF),
+    onErrorContainer: Color(0xff410001),
+    background: Color(0xffFDFBFF),
+    onBackground: Color(0xff1B1B1E),
+    surface: Color(0xffFDFBFF),
+    onSurface: Color(0xff1B1B1E),
+    surfaceVariant: Color(0xffE2E2EC),
+    onSurfaceVariant: Color(0xff44464E),
+    outline: Color(0xff757780),
+    onInverseSurface: Color(0xffF2F0F5),
+    inverseSurface: Color(0xff303033),
+    inversePrimary: Color(0xffB0C6FF),
   );
 
-  static const Color lightAccentColor = Color(0xff2E79F3);
-  static const Color darkAccentColor = Color(0xff275bb1);
-
-  static const Color lightSecondaryColor = Color(0xFFF2F6FE);
-  static const Color darkSecondaryColor = Color(0xFF2D2D31);
-
-  static const Color dangerBorderColor = Colors.redAccent;
-
-  static const Color lightDangerBackgroundColor = Color(0xFFFFCDD2);
-  static const Color darkDangerBackgroundColor = Color(0xFF921C23);
-
-  static const Color lightBackgroundColor = Color(0xFFFFFFFF);
-  static const Color darkBackgroundColor = Color(0xFF000000);
-
-  static const Color darkColor = Color(0xFF07357E);
-
-  static const Color lightCardColor = Colors.white;
-  static const Color darkCardColor = Colors.black;
-
-  static const Color appBarButtonsBackground = Color(0xFF4285F4);
-
-  static const Color buttonTextColor = lightAccentColor;
-
-  static const Color lightAppBarColor = Color(0xFFF2F6FE);
-  static const Color darkAppBarColor = darkSecondaryColor;
-
-  static const Color lightStatusBarColor = lightSecondaryColor;
-  static const Color darkStatusBarColor = darkSecondaryColor;
-
-  static const Color lightThemeContentColor = Colors.black;
-  static const Color darkThemeContentColor = Colors.white;
-  static const Color lightThemeButtonColor = Color(0xFFBBDEFB);
-  static const Color darkThemeButtonColor = Color(0xff0c465e);
-  static const Color lightThemeBottomNavigationBarBackgroundColor =
-      lightSecondaryColor;
-  static const Color darkThemeBottomNavigationBarBackgroundColor =
-      darkSecondaryColor;
+  static const darkColorScheme = ColorScheme(
+    brightness: Brightness.dark,
+    primary: Color(0xffB0C6FF),
+    onPrimary: Color(0xff002B73),
+    primaryContainer: Color(0xff0040A2),
+    onPrimaryContainer: Color(0xffD9E2FF),
+    secondary: Color(0xffC0C6DD),
+    onSecondary: Color(0xff2A3041),
+    secondaryContainer: Color(0xff404658),
+    onSecondaryContainer: Color(0xffDCE2F9),
+    tertiary: Color(0xffE0BBDD),
+    onTertiary: Color(0xff412742),
+    tertiaryContainer: Color(0xff593D59),
+    onTertiaryContainer: Color(0xffFDD7F9),
+    error: Color(0xffFFB4A9),
+    errorContainer: Color(0xff930006),
+    onError: Color(0xff680003),
+    onErrorContainer: Color(0xffFFDAD4),
+    background: Color(0xff1B1B1E),
+    onBackground: Color(0xffE4E2E6),
+    surface: Color(0xff1B1B1E),
+    onSurface: Color(0xffE4E2E6),
+    surfaceVariant: Color(0xff44464E),
+    onSurfaceVariant: Color(0xffC5C6D0),
+    outline: Color(0xff8F909A),
+    onInverseSurface: Color(0xff1B1B1E),
+    inverseSurface: Color(0xffE4E2E6),
+    inversePrimary: Color(0xff0056D3),
+  );
 }

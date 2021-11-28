@@ -25,7 +25,7 @@ import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/models/book.model.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +79,7 @@ class _BookCardState extends State<BookCard> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                          color: Colors.grey,
+                          color: Theme.of(context).colorScheme.outline,
                           width: 0.5,
                         ),
                       ),
@@ -181,7 +181,7 @@ class _BookCardState extends State<BookCard> {
                             ),
                           ),
                           const SizedBox(
-                            height: 15,
+                            height: 20,
                           ),
                           Row(
                             children: [
@@ -204,12 +204,9 @@ class _BookCardState extends State<BookCard> {
                                 maxLines: 4,
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
-                                  color: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .fillColor,
                                 ),
                               ),
                               const SizedBox(
@@ -232,7 +229,7 @@ class _BookCardState extends State<BookCard> {
                             ],
                           ),
                           const SizedBox(
-                            height: 3,
+                            height: 5,
                           ),
                           AutoSizeText(
                             'You Save $currencySymbol ${saving.toString()}',
@@ -246,19 +243,12 @@ class _BookCardState extends State<BookCard> {
                             ),
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.04,
+                            height: MediaQuery.of(context).size.height * 0.06,
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: OutLinedButton(
-                              text: widget.buttonText!,
-                              textColor: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .primary,
-                              outlineWidth: 0,
-                              onPressed: widget.onClicked,
-                            ),
+                          RoundedButton(
+                            text: widget.buttonText!,
+                            outlineWidth: 1,
+                            onPressed: widget.onClicked,
                           )
                         ],
                       ),

@@ -35,7 +35,7 @@ import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,7 +63,7 @@ class _BookViewerState extends State<BookViewer> {
   final ApiService _apiService = ApiService();
   final FirestoreService _firestoreService =
       FirestoreService(FirebaseFirestore.instance);
-  final CacheService _cacheService = CacheService();
+  final PreferencesManager _cacheService = PreferencesManager();
   final CurrencyManager _currencyManager = CurrencyManager();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
   RequestModel _requestData = RequestModel(accepted: false, roomId: 'null');
@@ -499,7 +499,7 @@ class _BookViewerState extends State<BookViewer> {
                                     : false,
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
-                                  child: OutLinedButton(
+                                  child: RoundedButton(
                                     text: _isEnquireyButonClicked
                                         ? 'Requested'
                                         : _enquireButtonText,
@@ -604,7 +604,7 @@ class _BookViewerState extends State<BookViewer> {
                                     : false,
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
-                                  child: OutLinedButton(
+                                  child: RoundedButton(
                                       text: StringConstants.wordAddToWishList,
                                       textColor: Colors.black,
                                       backgroundColor: Colors.tealAccent[100],

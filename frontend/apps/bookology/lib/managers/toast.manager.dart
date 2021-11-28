@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -90,7 +89,7 @@ class ToastManager {
       textColor: Colors.black,
       iconColor: Colors.black,
       icon: Icons.error_outline_outlined,
-      backGroundColor: ColorsConstant.lightDangerBackgroundColor,
+      backGroundColor: Theme.of(context).colorScheme.errorContainer,
       durationSeconds: 3,
     );
   }

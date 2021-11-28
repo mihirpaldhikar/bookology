@@ -20,14 +20,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/managers/screen.manager.dart';
-import 'package:bookology/managers/theme.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/app.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/notification.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/auth.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/login.screen.dart';
@@ -37,19 +37,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
 class AppManager extends StatefulWidget {
-  final AdaptiveThemeMode saveThemeMode;
-
   const AppManager({
     Key? key,
-    required this.saveThemeMode,
   }) : super(key: key);
 
   @override
@@ -90,19 +85,14 @@ class _AppManagerState extends State<AppManager> {
           initialData: null,
         ),
       ],
-      child: App(
-        savedThemeMode: widget.saveThemeMode,
-      ),
+      child: const App(),
     );
   }
 }
 
 class App extends StatefulWidget {
-  final AdaptiveThemeMode savedThemeMode;
-
   const App({
     Key? key,
-    required this.savedThemeMode,
   }) : super(key: key);
 
   @override
@@ -110,70 +100,28 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    var brightness = SchedulerBinding.instance!.window.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
-    if (widget.savedThemeMode == AdaptiveThemeMode.light ||
-        widget.savedThemeMode == AdaptiveThemeMode.dark) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarIconBrightness:
-              widget.savedThemeMode == AdaptiveThemeMode.dark
-                  ? Brightness.light
-                  : Brightness.dark,
-          statusBarColor: widget.savedThemeMode == AdaptiveThemeMode.dark
-              ? const Color(0xff1A1C1E)
-              : const Color(0xffFDFCFF),
-          systemNavigationBarColor:
-              widget.savedThemeMode == AdaptiveThemeMode.dark
-                  ? const Color(0xff1A1C1E)
-                  : const Color(0xffFDFCFF),
-        ),
-      );
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarIconBrightness:
-              isDarkMode ? Brightness.light : Brightness.dark,
-          statusBarColor:
-              isDarkMode ? const Color(0xff1A1C1E) : const Color(0xffFDFCFF),
-          systemNavigationBarColor:
-              isDarkMode ? const Color(0xff1A1C1E) : const Color(0xffFDFCFF),
-        ),
-      );
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+
     final auth = Provider.of<AuthService>(context);
-    return RestartWidget(
-      child: AdaptiveTheme(
-        light: ThemeManager.lightTheme,
-        dark: ThemeManager.darkTheme,
-        initial: widget.savedThemeMode,
-        builder: (theme, darkTheme) => MaterialApp(
-          navigatorKey: navigatorKey,
+    return ChangeNotifierProvider(
+      create: (context) => BookologyThemeProvider(),
+      builder: (context, _) {
+        final themeMode =
+            Provider.of<BookologyThemeProvider>(context).themeMode;
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Bookology',
-          darkTheme: darkTheme,
-          theme: theme,
-          themeMode: widget.savedThemeMode == AdaptiveThemeMode.system
-              ? ThemeMode.system
-              : widget.savedThemeMode == AdaptiveThemeMode.light
-                  ? ThemeMode.light
-                  : ThemeMode.dark,
+          home: auth.isUserSignedIn() ? const ScreenManager() : const AuthScreen(),
+          theme: BookologyTheme.getThemeData(
+            colorScheme: ColorsConstant.lightColorScheme,
+          ),
+          darkTheme: BookologyTheme.getThemeData(
+            colorScheme: ColorsConstant.darkColorScheme,
+          ),
+          themeMode: themeMode,
           routes: {
-            '/home': (context) => ScreenManager(
-                  themeMode: widget.savedThemeMode,
-                ),
+            '/home': (context) => const ScreenManager(),
             '/profile': (context) => const ViewManager(
                   screenIndex: 3,
                 ),
@@ -183,47 +131,9 @@ class _AppState extends State<App> {
             '/auth': (context) => const AuthScreen(),
             '/verify': (context) => const VerifyEmailScreen(),
           },
-          home: auth.isUserSignedIn()
-              ? ScreenManager(
-                  themeMode: widget.savedThemeMode,
-                )
-              : const AuthScreen(),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-class RestartWidget extends StatefulWidget {
-  const RestartWidget({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_RestartWidgetState>()!.restartApp();
-  }
-
-  @override
-  _RestartWidgetState createState() => _RestartWidgetState();
-}
-
-class _RestartWidgetState extends State<RestartWidget> {
-  Key key = UniqueKey();
-
-  void restartApp() {
-    setState(() {
-      key = UniqueKey();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: widget.child,
-    );
-  }
-}

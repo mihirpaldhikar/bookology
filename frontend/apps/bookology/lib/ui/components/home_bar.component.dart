@@ -32,7 +32,6 @@ import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomeBar extends StatefulWidget {
@@ -48,7 +47,7 @@ class HomeBar extends StatefulWidget {
 }
 
 class _HomeBarState extends State<HomeBar> {
-  final cacheService = CacheService();
+  final cacheService = PreferencesManager();
   var top = 0.0;
   bool isCollapsed = false;
 
@@ -84,7 +83,10 @@ class _HomeBarState extends State<HomeBar> {
                       child: Text(
                         StringConstants.appName,
                         textAlign: TextAlign.start,
-                        style: Theme.of(context).appBarTheme.titleTextStyle,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -116,9 +118,7 @@ class _HomeBarState extends State<HomeBar> {
                             child: Icon(
                               Icons.add,
                               size: 25,
-                              color: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
+                              color: Theme.of(context).colorScheme
                                   .primary,
                             ),
                           ),
@@ -266,7 +266,7 @@ class _HomeBarState extends State<HomeBar> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.primary ,
                               ),
                             ),
                             const Spacer(),
@@ -378,20 +378,15 @@ class _HomeBarState extends State<HomeBar> {
                           child: RichText(
                             text: TextSpan(
                               text: 'Good ${greeting()},\n',
-                              style: GoogleFonts.poppins(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
+                                color: Theme.of(context).inputDecorationTheme.fillColor
                               ),
                               children: [
                                 TextSpan(
                                   text: '${auth.currentUser()!.displayName}!',
-                                  style: GoogleFonts.poppins(
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 25,
                                   ),

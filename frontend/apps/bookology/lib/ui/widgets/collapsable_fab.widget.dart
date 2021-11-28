@@ -55,10 +55,7 @@ class CollapsableFab extends StatefulWidget {
 
   /// Double value to set the boundary value when scroll animation is triggered
   final double? limitIndicator;
-
-  /// Color to set the button background color
-  final Color? color;
-
+  
   const CollapsableFab(
       {Key? key,
       required this.icon,
@@ -70,8 +67,7 @@ class CollapsableFab extends StatefulWidget {
       this.height = 60.0,
       this.duration = const Duration(milliseconds: 250),
       this.curve,
-      this.limitIndicator = 10.0,
-      this.color = Colors.blueAccent})
+      this.limitIndicator = 10.0,})
       : super(key: key);
 
   @override
@@ -130,7 +126,7 @@ class _CollapsableFabState extends State<CollapsableFab> {
           height: widget.height,
           width: _onTop ? widget.width : widget.height,
           decoration: BoxDecoration(
-              color: widget.color,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(ValuesConstant.borderRadius)),
           child: _onTop
               ? Center(

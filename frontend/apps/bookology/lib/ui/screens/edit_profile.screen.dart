@@ -31,7 +31,7 @@ import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,7 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _bioController = TextEditingController();
-  final CacheService _cacheService = CacheService();
+  final PreferencesManager _cacheService = PreferencesManager();
   String _imageURL = '';
 
   bool _isImageUpdated = false;
@@ -111,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: SizedBox(
                       width: 100,
                       height: 20,
-                      child: OutLinedButton(
+                      child: RoundedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             DialogsManager(context).showProgressDialog(

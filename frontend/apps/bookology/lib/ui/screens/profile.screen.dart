@@ -32,6 +32,7 @@ import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/share.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/components/profile_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
@@ -43,11 +44,12 @@ import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/collapsable_fab.widget.dart';
 import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:bookology/ui/widgets/marquee.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -68,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isCurrentUser = false;
   final _apiService = ApiService();
   final _authService = AuthService(FirebaseAuth.instance);
-  final _cacheService = CacheService();
+  final _cacheService = PreferencesManager();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final PageController _pageController = PageController();
@@ -121,6 +123,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
+    final _isDarkMode = Provider.of<BookologyThemeProvider>(context)
+        .isDarkTheme(context: context);
     return StreamBuilder<ConnectivityStatus>(
       initialData: ConnectivityStatus.cellular,
       stream: ConnectivityService().connectionStatusController.stream,
@@ -136,19 +140,16 @@ class _ProfileScreenState extends State<ProfileScreen>
               width: 160,
               scrollController: _fabController,
               duration: const Duration(milliseconds: 200),
-              color: Theme.of(context).colorScheme.primaryVariant,
               icon: Icon(
                 Icons.add,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+                color: _isDarkMode ? Colors.black : Colors.white,
               ),
               text: Text(
                 'New Book',
                 style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
+                      ? Colors.white
+                      : Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -212,18 +213,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                         height: 40,
                         padding: const EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .background,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(100),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.menu_outlined,
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .primary,
                         ),
                       ),
                     ),
@@ -410,10 +404,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                     '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
-                      color: Theme.of(context).inputDecorationTheme.fillColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -422,9 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                   Text(
                     userData.data!.userInformation.bio.toString(),
-                    style: TextStyle(
-                      color: Theme.of(context).inputDecorationTheme.fillColor,
-                    ),
+                    style: const TextStyle(),
                     textAlign: TextAlign.center,
                   )
                 ],
@@ -518,11 +509,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     SizedBox(
                       width: 150,
-                      child: OutLinedButton(
+                      child: RoundedButton(
                         text: 'Edit Profile',
-                        textColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor: Theme.of(context).cardTheme.color,
-                        outlineWidth: 0.5,
+                        outlineWidth: 1,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -551,11 +540,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                     SizedBox(
                       width: 150,
-                      child: OutLinedButton(
+                      child: RoundedButton(
                         text: 'Saved Books',
-                        backgroundColor: Theme.of(context).cardTheme.color,
-                        outlineWidth: 0.5,
-                        textColor: Theme.of(context).colorScheme.primary,
+                        outlineWidth: 1,
                         onPressed: () {
                           Navigator.push(
                             context,

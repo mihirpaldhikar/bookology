@@ -22,14 +22,13 @@
 
 import 'package:blobs/blobs.dart';
 import 'package:bookology/constants/strings.constant.dart';
-import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -42,10 +41,19 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
   final AuthHandler _authHandler = AuthHandler();
-  final CacheService _cacheService = CacheService();
+  final PreferencesManager _cacheService = PreferencesManager();
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+      ),
+    );
     final auth = Provider.of<AuthService>(context);
     return _isLoading
         ? const Scaffold(
@@ -61,13 +69,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -90,
                     right: -200,
                     child: Opacity(
-                      opacity: 0.3,
+                      opacity: 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
-                            color: Theme.of(context)
-                                .buttonTheme
-                                .colorScheme!
-                                .background),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         id: const ['6-6-1481'],
                         size: 500,
                       ),
@@ -77,13 +83,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -10,
                     left: -30,
                     child: Opacity(
-                      opacity: 0.3,
+                      opacity: 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
-                            color: Theme.of(context)
-                                .buttonTheme
-                                .colorScheme!
-                                .background),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         id: const ['6-6-47'],
                         size: 100,
                       ),
@@ -93,29 +97,25 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -10,
                     left: -120,
                     child: Opacity(
-                      opacity: 0.3,
+                      opacity: 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
-                            color: Theme.of(context)
-                                .buttonTheme
-                                .colorScheme!
-                                .background),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         id: const ['6-6-47'],
                         size: 350,
                       ),
                     ),
                   ),
                   Positioned(
-                    top: 200,
+                    bottom: -170,
                     right: -120,
                     child: Opacity(
-                      opacity: 0.3,
+                      opacity: 0.2,
                       child: Blob.fromID(
                         styles: BlobStyles(
-                            color: Theme.of(context)
-                                .buttonTheme
-                                .colorScheme!
-                                .background),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         id: const ['6-6-49'],
                         size: 350,
                       ),
@@ -146,89 +146,46 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         child: Column(
                           children: [
-                            GestureDetector(
-                              child: Container(
-                                padding: const EdgeInsets.only(
-                                  top: 10,
-                                  bottom: 10,
-                                  right: 8,
-                                  left: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .buttonTheme
-                                      .colorScheme!
-                                      .background,
-                                  borderRadius: BorderRadius.circular(
-                                    ValuesConstant.secondaryBorderRadius,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    SvgPicture.asset(
-                                        'assets/svg/google_logo.svg'),
-                                    const SizedBox(
-                                      width: 50,
-                                    ),
-                                    Text(
-                                      StringConstants.hintContinueWithGoogle,
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .buttonTheme
-                                            .colorScheme!
-                                            .primary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () async {
-                                _cacheService.setIntroScreenView(seen: false);
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await auth.signInWithGoogle().then(
-                                  (value) async {
-                                    if (value == true) {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-                                      await Navigator.pushReplacementNamed(
-                                          context, '/home');
-                                    } else {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
+                            RoundedButton(
+                                onPressed: () async {
+                                  _cacheService.setIntroScreenView(seen: false);
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await auth.signInWithGoogle().then(
+                                    (value) async {
+                                      if (value == true) {
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                        await Navigator.pushReplacementNamed(
+                                            context, '/home');
+                                      } else {
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
 
-                                      _authHandler.firebaseError(
-                                        value: value,
-                                        context: context,
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            ),
+                                        _authHandler.firebaseError(
+                                          value: value,
+                                          context: context,
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                                spaceBetween: 30,
+                                outlineWidth: 1,
+                                icon: SvgPicture.asset(
+                                    'assets/svg/google_logo.svg'),
+                                text: StringConstants.hintContinueWithGoogle),
                             const SizedBox(
                               height: 30,
                             ),
-                            OutLinedButton(
+                            RoundedButton(
                               text: StringConstants.wordLogin,
-                              icon: Icons.mail_outline_rounded,
-                              iconColor: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .primary,
-                              textColor: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .primary,
-                              alignContent: MainAxisAlignment.start,
-                              spaceBetween: 115,
+                              outlineWidth: 1,
+                              icon: const Icon(Icons.mail_outline_rounded),
+                              spaceBetween: 40,
                               onPressed: () {
                                 _cacheService.setIntroScreenView(seen: false);
                                 Navigator.pushNamed(context, '/login');
@@ -236,6 +193,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             const SizedBox(
                               height: 30,
+                            ),
+                            Text(
+                              StringConstants.or,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 25,
                             ),
                             InkWell(
                               borderRadius: BorderRadius.circular(5),
@@ -246,27 +212,41 @@ class _AuthScreenState extends State<AuthScreen> {
                               child: RichText(
                                 text: TextSpan(
                                   text: StringConstants.hintCreateNewAccount,
-                                  style: GoogleFonts.poppins(
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: ' ${StringConstants.wordSignUp}',
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
                                             .primary,
+                                        decoration: TextDecoration.underline
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
+                            const SizedBox(
+                              height: 70,
+                            ),
+                            Text(
+                              StringConstants.appCopyright,
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
                           ],
                         ),
-                      )
+                      ),
+
                     ],
                   ),
                 ],

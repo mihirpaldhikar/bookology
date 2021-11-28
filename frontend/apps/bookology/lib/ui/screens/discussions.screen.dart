@@ -91,16 +91,13 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       margin: const EdgeInsets.only(right: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSecondary,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius:
               BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.people_outlined,
           size: 40,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black,
         ),
       ),
     );

@@ -24,6 +24,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/components/fade_indexed_stack.component.dart';
 import 'package:bookology/ui/screens/discussions.screen.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
@@ -32,6 +33,7 @@ import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ViewManager extends StatefulWidget {
@@ -52,7 +54,7 @@ class ViewManager extends StatefulWidget {
 
 class _ViewManagerState extends State<ViewManager> {
   int screenIndex = 0;
-  final cacheService = CacheService();
+  final cacheService = PreferencesManager();
 
   @override
   void initState() {
@@ -67,6 +69,15 @@ class _ViewManagerState extends State<ViewManager> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+      ),
+    );
     final auth = Provider.of<AuthService>(context);
     return auth.currentUser()!.emailVerified != true
         ? const VerifyEmailScreen()
@@ -80,11 +91,10 @@ class _ViewManagerState extends State<ViewManager> {
                 screenIndex = index;
               }),
               destinations: [
-                NavigationDestination(
-                  icon: const Icon(Icons.home_outlined),
+                const NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
                   selectedIcon: Icon(
                     Icons.home,
-                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationHome,
                 ),
@@ -96,11 +106,10 @@ class _ViewManagerState extends State<ViewManager> {
                   ),
                   label: StringConstants.navigationSearch,
                 ),
-                NavigationDestination(
-                  icon: const Icon(Icons.question_answer_outlined),
+                const NavigationDestination(
+                  icon: Icon(Icons.question_answer_outlined),
                   selectedIcon: Icon(
                     Icons.question_answer,
-                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationDiscussions,
                 ),
@@ -118,8 +127,11 @@ class _ViewManagerState extends State<ViewManager> {
                 duration: const Duration(milliseconds: 300),
                 index: screenIndex,
                 children: [
-                  HomeScreen(
-                    themeMode: widget.themeMode!,
+                  ChangeNotifierProvider(
+                    create: (context) => BookologyThemeProvider(),
+                    builder: (context, _) {
+                      return const HomeScreen();
+                    },
                   ),
                   const SearchScreen(),
                   DiscussionsScreen(themeMode: widget.themeMode!),

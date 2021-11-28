@@ -28,7 +28,7 @@ import 'package:bookology/services/app.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -206,15 +206,14 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   launchURL(
                                     url: StringConstants.urlPrivacyPolicy,
                                   );
                                 },
                                 text: StringConstants.wordPrivacyPolicy,
-                                icon: Icons.security_outlined,
-                                iconColor: Colors.green,
+                                icon: const Icon(Icons.security_outlined),
                                 textColor: Colors.green,
                                 backgroundColor: Colors.green.shade50,
                               ),
@@ -224,22 +223,14 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   launchURL(
                                     url: _googlePlayStoreUrl,
                                   );
                                 },
                                 text: StringConstants.wordCheckForUpdates,
-                                icon: FontAwesomeIcons.googlePlay,
-                                iconColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                                textColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
+                                icon: const FaIcon(FontAwesomeIcons.googlePlay),
                               ),
                             ),
                             const SizedBox(
@@ -247,7 +238,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   final screenshot =
                                       await FeedbackScreenshot(context)
@@ -311,15 +302,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                   );
                                 },
                                 text: StringConstants.wordSendFeedback,
-                                icon: Icons.feedback_outlined,
-                                iconColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                                textColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
+                                icon: const Icon(Icons.feedback_outlined),
                               ),
                             ),
                             const SizedBox(

@@ -38,7 +38,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
-  final _cacheService = CacheService();
+  final _cacheService = PreferencesManager();
   final SecretsManager _secretsManager = SecretsManager();
   final client = http.Client();
 

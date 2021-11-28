@@ -150,7 +150,7 @@ class AuthService {
     try {
       await _firebaseAuth.signOut();
       //await SecretsManager().removeAllSecrets();
-      await CacheService().clearCacheStorage();
+      await PreferencesManager().clearCacheStorage();
       return true;
     } on FirebaseAuthException catch (error, stackTrace) {
       await Sentry.captureException(

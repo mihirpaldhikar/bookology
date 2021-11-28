@@ -45,7 +45,7 @@ class FileAttachmentButton extends StatelessWidget {
         bottom: 5,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(100),
       ),
       child: Center(

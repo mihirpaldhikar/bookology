@@ -46,19 +46,17 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   final _introKey = GlobalKey<IntroductionScreenState>();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
-  final CacheService _cacheService = CacheService();
+  final PreferencesManager _cacheService = PreferencesManager();
 
   @override
   Widget build(BuildContext context) {
     final _pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         fontSize: 28.0,
         fontWeight: FontWeight.w700,
-        color: Theme.of(context).inputDecorationTheme.fillColor,
       ),
-      bodyTextStyle: TextStyle(
+      bodyTextStyle: const TextStyle(
         fontSize: 19.0,
-        color: Theme.of(context).primaryColor,
       ),
       descriptionPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       pageColor: Theme.of(context).scaffoldBackgroundColor,
@@ -66,19 +64,17 @@ class _IntroScreenState extends State<IntroScreen> {
     );
     final List<PageViewModel> introPages = [
       PageViewModel(
-        titleWidget: Text(
+        titleWidget: const Text(
           "Welcome to Bookology!",
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
-        bodyWidget: Text(
+        bodyWidget: const Text(
           'Find the books you want nearby.',
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).inputDecorationTheme.fillColor,
           ),
         ),
         decoration: _pageDecoration,
@@ -92,12 +88,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Help Others",
-        bodyWidget: Text(
+        bodyWidget: const Text(
           'Upload the books you don\'t want anymore and give it to some one in need.',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
-          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -110,12 +103,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Location based Recommendations",
-        bodyWidget: Text(
+        bodyWidget: const Text(
           'Bookology uses your approximate location to show you books listed near you.',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
-          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -128,12 +118,9 @@ class _IntroScreenState extends State<IntroScreen> {
       ),
       PageViewModel(
         title: "Complete your Profile",
-        bodyWidget: Text(
+        bodyWidget: const Text(
           'By completing profile, your are ready to start uploading the books! and other users trusts on your uploaded books. ',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
-          ),
         ),
         decoration: _pageDecoration,
         image: Center(
@@ -173,12 +160,10 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).buttonTheme.colorScheme!.background,
+              color: Theme.of(context).colorScheme.primary,
               border: Border.all(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
-                width: 0.5,
+                color: Theme.of(context).colorScheme.outline,
+                width: 1,
               ),
               borderRadius:
                   BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
@@ -186,7 +171,7 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Text(
               'Next',
               style: TextStyle(
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -201,11 +186,9 @@ class _IntroScreenState extends State<IntroScreen> {
               left: 8,
             ),
             decoration: BoxDecoration(
-              color: Theme.of(context).buttonTheme.colorScheme!.background,
+              color: Theme.of(context).colorScheme.primary,
               border: Border.all(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                color: Theme.of(context).colorScheme.outline,
                 width: 0.5,
               ),
               borderRadius:
@@ -214,7 +197,7 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Text(
               'Next',
               style: TextStyle(
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),

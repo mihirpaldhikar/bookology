@@ -22,7 +22,6 @@
 
 import 'dart:async';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -51,11 +50,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const HomeScreen({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -238,10 +234,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: index == 0
-                      ? Theme.of(context).buttonTheme.colorScheme!.background
-                      : Theme.of(context).cardTheme.color,
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.background,
                   border: Border.all(
-                    color: Colors.grey,
+                    color: Theme.of(context).colorScheme.outline,
                     width: 0.5,
                   ),
                   borderRadius:
@@ -249,11 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Text(
                   StringConstants.listBookCategories[index],
-                  style: TextStyle(
-                    color: index == 0
-                        ? Theme.of(context).buttonTheme.colorScheme!.primary
-                        : Theme.of(context).inputDecorationTheme.fillColor,
-                  ),
+                  style: const TextStyle(),
                 ),
               ),
             ),

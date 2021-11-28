@@ -21,20 +21,21 @@
  */
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet_view.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/auth.service.dart';
+import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/share.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
 import 'package:bookology/ui/screens/settings.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class BottomSheetManager {
   final BuildContext context;
@@ -45,11 +46,9 @@ class BottomSheetManager {
   void showBookSelectionBottomSheet({required BookModel book}) {
     BottomSheetViewManager(context).createBottomSheet(
       contents: [
-        OutLinedButton(
+        RoundedButton(
           text: 'Share this book',
-          icon: Icons.share_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.share_outlined),
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -70,15 +69,68 @@ class BottomSheetManager {
           visible: authService.currentUser()!.uid == book.uploader.userId
               ? false
               : true,
-          child: OutLinedButton(
+          child: RoundedButton(
             text: 'Report this book',
             alignContent: MainAxisAlignment.start,
-            icon: Icons.report_outlined,
-            iconColor: Colors.redAccent,
-            textColor: Colors.redAccent,
-            backgroundColor: ColorsConstant.lightDangerBackgroundColor,
+            icon: Icon(
+              Icons.report_outlined,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            textColor: Theme.of(context).colorScheme.error,
             onPressed: () {},
           ),
+        ),
+      ],
+    );
+  }
+
+  void showThemeBottomSheet() {
+    BottomSheetViewManager(context).createBottomSheet(
+      title: 'Choose Theme',
+      contents: [
+        StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            ThemeMode _theme = PreferencesManager().getCurrentTheme();
+            final _themeProvider =
+                Provider.of<BookologyThemeProvider>(context, listen: true);
+            return Column(
+              children: [
+                RadioListTile(
+                  title: const Text('Always in light theme'),
+                  value: ThemeMode.light,
+                  groupValue: _theme,
+                  onChanged: (ThemeMode? value) {
+                    setState(() {
+                      _theme = value!;
+                      _themeProvider.setTheme(theme: _theme);
+                    });
+                  },
+                ),
+                RadioListTile(
+                  title: const Text('Always in dark theme'),
+                  value: ThemeMode.dark,
+                  groupValue: _theme,
+                  onChanged: (ThemeMode? value) {
+                    setState(() {
+                      _theme = value!;
+                      _themeProvider.setTheme(theme: _theme);
+                    });
+                  },
+                ),
+                RadioListTile(
+                  title: const Text('Same as device theme'),
+                  value: ThemeMode.system,
+                  groupValue: _theme,
+                  onChanged: (ThemeMode? value) {
+                    setState(() {
+                      _theme = value!;
+                      _themeProvider.setTheme(theme: _theme);
+                    });
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -90,20 +142,16 @@ class BottomSheetManager {
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           text: 'Settings',
-          icon: Icons.settings_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.settings_outlined),
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => SettingsScreen(
-                  themeMode: themeMode,
-                ),
+                builder: (BuildContext context) => const SettingsScreen(),
               ),
             );
           },
@@ -111,11 +159,9 @@ class BottomSheetManager {
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           text: 'About',
-          icon: Icons.info_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.info_outlined),
           alignContent: MainAxisAlignment.start,
           onPressed: () {
             Navigator.pop(context);
@@ -130,7 +176,7 @@ class BottomSheetManager {
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           onPressed: () {
             Navigator.pop(context);
             DialogsManager(context).showLogoutDialog(onLogoutClicked: () {
@@ -143,9 +189,7 @@ class BottomSheetManager {
             });
           },
           text: StringConstants.wordLogout,
-          icon: Icons.logout_outlined,
-          iconColor: Colors.black,
-          backgroundColor: ColorsConstant.lightDangerBackgroundColor,
+          icon: const Icon(Icons.logout_outlined),
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -221,7 +265,7 @@ class BottomSheetManager {
             ],
           ),
         ),
-        OutLinedButton(
+        RoundedButton(
           text: 'Update',
           textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           align: Alignment.center,
@@ -231,7 +275,7 @@ class BottomSheetManager {
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           text: 'Remind me later',
           align: Alignment.center,
           textColor: Colors.black,
@@ -252,23 +296,19 @@ class BottomSheetManager {
     BottomSheetViewManager(context).createBottomSheet(
       title: 'Pick Image From',
       contents: [
-        OutLinedButton(
+        RoundedButton(
           onPressed: onCameraPressed,
           text: 'Camera',
-          icon: Icons.photo_camera_outlined,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.photo_camera_outlined),
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           onPressed: onGalleryPressed,
           text: 'Gallery',
-          icon: Icons.collections_outlined,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.collections_outlined),
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -282,23 +322,21 @@ class BottomSheetManager {
     BottomSheetViewManager(context).createBottomSheet(
       title: 'Pick Attachment From',
       contents: [
-        OutLinedButton(
+        RoundedButton(
           onPressed: onImagePressed,
           text: StringConstants.wordImage,
           textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          icon: Icons.image_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.image_outlined),
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
           height: 20,
         ),
-        OutLinedButton(
+        RoundedButton(
           onPressed: onFilePressed,
           text: StringConstants.wordFile,
           textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          icon: Icons.note_add_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.note_add_outlined),
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -328,17 +366,13 @@ class BottomSheetManager {
           textAlign: TextAlign.left,
           text: TextSpan(
             text: '${StringConstants.wordIsbn}:  ',
-            style: GoogleFonts.poppins(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: isbn,
-                style: GoogleFonts.poppins(
-                  fontSize: 17,
-                ),
               ),
             ],
           ),
@@ -349,15 +383,14 @@ class BottomSheetManager {
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordBookName}:  ',
-            style: GoogleFonts.poppins(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookName,
-                style: GoogleFonts.poppins(
+                style: const TextStyle(
                   fontSize: 17,
                 ),
               ),
@@ -370,7 +403,7 @@ class BottomSheetManager {
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordAuthor}:  ',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               color: Theme.of(context).inputDecorationTheme.fillColor,
               fontWeight: FontWeight.bold,
               fontSize: 17,
@@ -378,7 +411,7 @@ class BottomSheetManager {
             children: [
               TextSpan(
                 text: bookAuthor,
-                style: GoogleFonts.poppins(
+                style: const TextStyle(
                   fontSize: 17,
                 ),
               ),
@@ -391,15 +424,14 @@ class BottomSheetManager {
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordPublisher}:  ',
-            style: GoogleFonts.poppins(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookPublisher,
-                style: GoogleFonts.poppins(
+                style: const TextStyle(
                   fontSize: 17,
                 ),
               ),
@@ -414,15 +446,14 @@ class BottomSheetManager {
           maxLines: 3,
           text: TextSpan(
             text: '${StringConstants.wordDescription}:  ',
-            style: GoogleFonts.poppins(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookDescription.trim(),
-                style: GoogleFonts.poppins(
+                style: const TextStyle(
                   fontSize: 17,
                 ),
               ),
@@ -437,15 +468,14 @@ class BottomSheetManager {
             RichText(
               text: TextSpan(
                 text: '${StringConstants.wordOriginalPrice}:  ',
-                style: GoogleFonts.poppins(
-                  color: Theme.of(context).inputDecorationTheme.fillColor,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
                 children: [
                   TextSpan(
                     text: bookOriginalPrice,
-                    style: GoogleFonts.poppins(
+                    style: const TextStyle(
                       fontSize: 17,
                     ),
                   ),
@@ -458,7 +488,7 @@ class BottomSheetManager {
             RichText(
               text: TextSpan(
                 text: '${StringConstants.wordSellingPrice}:  ',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   color: Theme.of(context).inputDecorationTheme.fillColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
@@ -466,7 +496,7 @@ class BottomSheetManager {
                 children: [
                   TextSpan(
                     text: bookSellingPrice,
-                    style: GoogleFonts.poppins(
+                    style: const TextStyle(
                       fontSize: 17,
                     ),
                   ),
@@ -538,12 +568,10 @@ class BottomSheetManager {
         const SizedBox(
           height: 40,
         ),
-        OutLinedButton(
+        RoundedButton(
           text: StringConstants.wordUpload,
           onPressed: onUploadClicked,
-          icon: Icons.cloud_upload_outlined,
-          iconColor: Theme.of(context).buttonTheme.colorScheme!.primary,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          icon: const Icon(Icons.cloud_upload_outlined),
         ),
         const SizedBox(
           height: 20,

@@ -23,9 +23,10 @@
 import 'package:blobs/blobs.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:bookology/utils/validator.util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -40,6 +41,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+      ),
+    );
     final _auth = Provider.of<AuthService>(context);
     final _formKey = GlobalKey<FormState>();
     final _emailController = TextEditingController();
@@ -234,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               right: 50,
                               left: 50,
                             ),
-                            child: OutLinedButton(
+                            child: RoundedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   try {

@@ -46,7 +46,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   late Future<List<NotificationModel>?> _notifications;
   final ApiService _apiService = ApiService();
-  final CacheService _cacheService = CacheService();
+  final PreferencesManager _cacheService = PreferencesManager();
 
   @override
   void initState() {

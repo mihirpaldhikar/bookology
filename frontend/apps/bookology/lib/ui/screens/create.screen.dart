@@ -33,7 +33,7 @@ import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:bookology/utils/random_string_generator.util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -191,7 +191,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                     ),
                                     SizedBox(
                                       width: 100,
-                                      child: OutLinedButton(
+                                      child: RoundedButton(
                                         text: _nextStep,
                                         textColor: Theme.of(context)
                                             .buttonTheme
@@ -1271,11 +1271,6 @@ class _CreateScreenState extends State<CreateScreen> {
                       value: value,
                       child: Text(
                         value,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          color:
-                              Theme.of(context).inputDecorationTheme.fillColor,
-                        ),
                       ),
                     );
                   }).toList(),
