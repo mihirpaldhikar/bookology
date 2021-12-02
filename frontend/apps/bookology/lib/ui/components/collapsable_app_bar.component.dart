@@ -45,6 +45,7 @@ class _CollapsableAppBarState extends State<CollapsableAppBar> {
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
+      physics: const BouncingScrollPhysics(),
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           SliverAppBar(
@@ -61,18 +62,21 @@ class _CollapsableAppBarState extends State<CollapsableAppBar> {
                 } else {
                   isCollapsed = false;
                 }
-                return FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(
-                    left: widget.automaticallyImplyLeading!
-                        ? isCollapsed
-                            ? 60
-                            : 20
-                        : 20,
-                    bottom: 15,
-                  ),
-                  title: Text(
-                    widget.title,
-                    style: Theme.of(context).appBarTheme.titleTextStyle,
+                return Container(
+                  color: Theme.of(context).colorScheme.background,
+                  child: FlexibleSpaceBar(
+                    titlePadding: EdgeInsets.only(
+                      left: widget.automaticallyImplyLeading!
+                          ? isCollapsed
+                              ? 60
+                              : 20
+                          : 20,
+                      bottom: 15,
+                    ),
+                    title: Text(
+                      widget.title,
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                    ),
                   ),
                 );
               },

@@ -20,10 +20,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/services/update.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/components/fade_indexed_stack.component.dart';
 import 'package:bookology/ui/screens/discussions.screen.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
@@ -32,18 +33,17 @@ import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ViewManager extends StatefulWidget {
   final int screenIndex;
   final bool isUserProfileUpdated;
-  final AdaptiveThemeMode? themeMode;
 
   const ViewManager({
     Key? key,
     required this.screenIndex,
     this.isUserProfileUpdated = false,
-    this.themeMode = AdaptiveThemeMode.system,
   }) : super(key: key);
 
   @override
@@ -52,21 +52,26 @@ class ViewManager extends StatefulWidget {
 
 class _ViewManagerState extends State<ViewManager> {
   int screenIndex = 0;
-  final cacheService = CacheService();
+  final cacheService = PreferencesManager();
 
   @override
   void initState() {
+    UpdateService(context).checkForAppUpdate();
     screenIndex = widget.screenIndex;
     super.initState();
   }
 
   @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+      ),
+    );
     final auth = Provider.of<AuthService>(context);
     return auth.currentUser()!.emailVerified != true
         ? const VerifyEmailScreen()
@@ -81,15 +86,20 @@ class _ViewManagerState extends State<ViewManager> {
               }),
               destinations: [
                 NavigationDestination(
-                  icon: const Icon(Icons.home_outlined),
-                  selectedIcon: Icon(
+                  icon: Icon(
+                    Icons.home_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  selectedIcon: const Icon(
                     Icons.home,
-                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationHome,
                 ),
                 NavigationDestination(
-                  icon: const Icon(Icons.search_outlined),
+                  icon: Icon(
+                    Icons.search_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                   selectedIcon: Icon(
                     Icons.search,
                     color: Theme.of(context).buttonTheme.colorScheme!.primary,
@@ -97,10 +107,12 @@ class _ViewManagerState extends State<ViewManager> {
                   label: StringConstants.navigationSearch,
                 ),
                 NavigationDestination(
-                  icon: const Icon(Icons.question_answer_outlined),
-                  selectedIcon: Icon(
+                  icon: Icon(
+                    Icons.question_answer_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  selectedIcon: const Icon(
                     Icons.question_answer,
-                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationDiscussions,
                 ),
@@ -118,12 +130,15 @@ class _ViewManagerState extends State<ViewManager> {
                 duration: const Duration(milliseconds: 300),
                 index: screenIndex,
                 children: [
-                  HomeScreen(
-                    themeMode: widget.themeMode!,
+                  ChangeNotifierProvider(
+                    create: (context) => BookologyThemeProvider(),
+                    builder: (context, _) {
+                      return const HomeScreen();
+                    },
                   ),
                   const SearchScreen(),
-                  DiscussionsScreen(themeMode: widget.themeMode!),
-                  ProfileScreen(themeMode: widget.themeMode!),
+                  const DiscussionsScreen(),
+                  const ProfileScreen(),
                 ],
               ),
             ),

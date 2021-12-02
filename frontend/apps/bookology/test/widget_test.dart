@@ -20,31 +20,31 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    //await tester.pumpWidget(const MyApp());
+  testWidgets('Create a No Network widget and check if it renders properly',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      Builder(
+        builder: (BuildContext context) {
+          // The builder function must return a widget.
+          return MaterialApp(home: offlineScreen(context: context));
+        },
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final noNetwork = find.text('No Network!');
+    final noNetworkDesc = find.text(
+      'The content will automatically be loaded once network '
+      'connection is available.',
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(noNetwork, findsOneWidget);
+    expect(noNetworkDesc, findsOneWidget);
   });
 }

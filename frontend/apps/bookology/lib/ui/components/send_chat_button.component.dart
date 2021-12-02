@@ -21,7 +21,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/src/widgets/inherited_l10n.dart';
 
 /// A class that represents send button widget
 class SendChatButton extends StatelessWidget {
@@ -43,7 +42,7 @@ class SendChatButton extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.zero,
         child: Tooltip(
-          message: InheritedL10n.of(context).l10n.sendButtonAccessibilityLabel,
+          message: 'Send',
           child: TextButton(
             child: Text(
               'Send',

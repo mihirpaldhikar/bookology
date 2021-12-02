@@ -21,8 +21,9 @@
  */
 
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,15 @@ class VerifyEmailScreen extends StatefulWidget {
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarColor: Theme.of(context).colorScheme.background,
+        systemNavigationBarColor: Theme.of(context).colorScheme.background,
+      ),
+    );
     final _auth = Provider.of<AuthService>(context);
     return Scaffold(
       body: SafeArea(
@@ -88,7 +98,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   height: 50,
                 ),
                 Center(
-                  child: OutLinedButton(
+                  child: RoundedButton(
                     onPressed: () async {
                       if (await _auth.isEmailVerified() == true) {
                         await Navigator.pushReplacementNamed(context, '/home');

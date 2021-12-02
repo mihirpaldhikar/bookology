@@ -20,9 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
@@ -41,11 +39,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class DiscussionsScreen extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const DiscussionsScreen({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -92,16 +87,15 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       margin: const EdgeInsets.only(right: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSecondary,
-          borderRadius:
-              BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.secondaryBorderRadius,
+          ),
         ),
         child: Icon(
           Icons.people_outlined,
           size: 40,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -125,13 +119,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
           return offlineScreen(context: context);
         } else {
           return Scaffold(
-            // appBar: AppBar(
-            //   title: Text(
-            //     StringConstants.navigationDiscussions,
-            //     style: Theme.of(context).appBarTheme.titleTextStyle,
-            //   ),
-            //   automaticallyImplyLeading: false,
-            // ),
             body: CollapsableAppBar(
               title: StringConstants.navigationDiscussions,
               automaticallyImplyLeading: false,
@@ -160,10 +147,13 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Text(
+                          Text(
                             StringConstants.wordNoDiscussions,
                             style: TextStyle(
                               fontSize: 20,
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
                             ),
                           ),
                           const SizedBox(
@@ -184,7 +174,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
 
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
-                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final room = snapshot.data![index];
@@ -195,29 +185,20 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                           right: 17,
                         ),
                         child: Slidable(
-                          secondaryActions: [
-                            IconSlideAction(
-                              color: Colors.transparent,
-                              iconWidget: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color:
-                                      ColorsConstant.lightDangerBackgroundColor,
-                                  borderRadius: BorderRadius.circular(
-                                      ValuesConstant.secondaryBorderRadius),
-                                ),
-                                child: Icon(
-                                  Icons.delete_forever,
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
+                          startActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                backgroundColor: Colors.transparent,
+                                foregroundColor: Colors.red,
+                                icon: Icons.delete_forever,
+                                onPressed: (context) {
+                                  DialogsManager(context)
+                                      .showDeleteDiscussionDialog(room);
+                                },
                               ),
-                              onTap: () {
-                                DialogsManager(context)
-                                    .showDeleteDiscussionDialog(room);
-                              },
-                            ),
-                          ],
-                          actionPane: const SlidableBehindActionPane(),
+                            ],
+                          ),
                           child: Card(
                             child: Container(
                               decoration: BoxDecoration(
@@ -310,10 +291,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                   DateTime.now(),
                                                 ),
                                                 style: TextStyle(
-                                                  color: widget.themeMode ==
-                                                          AdaptiveThemeMode.dark
-                                                      ? const Color(0xffc9c3c3)
-                                                      : Colors.grey.shade600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
                                                 ),
                                               ),
                                             ),

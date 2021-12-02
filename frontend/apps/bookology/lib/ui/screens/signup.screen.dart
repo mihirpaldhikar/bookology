@@ -23,8 +23,8 @@
 import 'package:blobs/blobs.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
-import 'package:bookology/utils/validator.utli.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
+import 'package:bookology/utils/validator.util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,21 +54,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
         : GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              ),
               body: SafeArea(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     Positioned(
                       top: -90,
                       right: -200,
                       child: Opacity(
-                        opacity: 0.3,
+                        opacity: 0.05,
                         child: Blob.fromID(
                           styles: BlobStyles(
-                              color: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .background),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           id: const ['6-6-1481'],
                           size: 500,
                         ),
@@ -78,13 +79,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       top: -10,
                       left: -30,
                       child: Opacity(
-                        opacity: 0.3,
+                        opacity: 0.05,
                         child: Blob.fromID(
                           styles: BlobStyles(
-                              color: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .background),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           id: const ['6-6-47'],
                           size: 100,
                         ),
@@ -94,13 +93,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       bottom: -100,
                       left: -120,
                       child: Opacity(
-                        opacity: 0.3,
+                        opacity: 0.05,
                         child: Blob.fromID(
                           styles: BlobStyles(
-                              color: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .background),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           id: const ['6-6-47'],
                           size: 350,
                         ),
@@ -110,13 +107,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       bottom: -200,
                       right: -120,
                       child: Opacity(
-                        opacity: 0.3,
+                        opacity: 0.05,
                         child: Blob.fromID(
                           styles: BlobStyles(
-                              color: Theme.of(context)
-                                  .buttonTheme
-                                  .colorScheme!
-                                  .background),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           id: const ['6-6-49'],
                           size: 350,
                         ),
@@ -134,34 +129,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           const SizedBox(
                             height: 50,
                           ),
-                          Center(
-                            child: Text(
-                              'Create Account',
-                              style: TextStyle(
-                                fontStyle: Theme.of(context)
-                                    .textTheme
-                                    .headline4!
-                                    .fontStyle,
-                                fontWeight: FontWeight.bold,
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline4!
-                                    .fontSize,
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
-                              ),
+                          Text(
+                            'Create New Account',
+                            style: TextStyle(
+                              fontStyle: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .fontStyle,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .fontSize,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                           const SizedBox(
-                            height: 150,
+                            height: 120,
                           ),
                           TextFormField(
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .inputDecorationTheme
-                                  .fillColor,
-                            ),
                             decoration: InputDecoration(
                                 labelText: "Email",
                                 fillColor: Colors.white,
@@ -193,11 +179,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: 40,
                           ),
                           TextFormField(
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .inputDecorationTheme
-                                  .fillColor,
-                            ),
                             decoration: InputDecoration(
                                 labelText: "Password",
                                 fillColor: Colors.white,
@@ -234,7 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               right: 50,
                               left: 50,
                             ),
-                            child: OutLinedButton(
+                            child: RoundedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   try {
@@ -274,9 +255,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 }
                               },
                               text: 'Sign Up',
-                              textColor: Theme.of(context)
-                                  .inputDecorationTheme
-                                  .fillColor,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              textColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              inverted: true,
+                              icon: Icon(
+                                Icons.arrow_forward,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                           ),
                         ],
