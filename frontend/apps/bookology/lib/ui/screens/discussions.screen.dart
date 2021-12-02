@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
@@ -40,11 +39,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class DiscussionsScreen extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const DiscussionsScreen({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -92,12 +88,14 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius:
-              BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.secondaryBorderRadius,
+          ),
         ),
-        child: const Icon(
+        child: Icon(
           Icons.people_outlined,
           size: 40,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -121,13 +119,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
           return offlineScreen(context: context);
         } else {
           return Scaffold(
-            // appBar: AppBar(
-            //   title: Text(
-            //     StringConstants.navigationDiscussions,
-            //     style: Theme.of(context).appBarTheme.titleTextStyle,
-            //   ),
-            //   automaticallyImplyLeading: false,
-            // ),
             body: CollapsableAppBar(
               title: StringConstants.navigationDiscussions,
               automaticallyImplyLeading: false,
@@ -183,7 +174,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
 
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
-                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final room = snapshot.data![index];
@@ -196,7 +187,6 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                         child: Slidable(
                           startActionPane: ActionPane(
                             motion: const ScrollMotion(),
-                            dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
                               SlidableAction(
                                 backgroundColor: Colors.transparent,
@@ -301,10 +291,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                   DateTime.now(),
                                                 ),
                                                 style: TextStyle(
-                                                  color: widget.themeMode ==
-                                                          AdaptiveThemeMode.dark
-                                                      ? const Color(0xffc9c3c3)
-                                                      : Colors.grey.shade600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
                                                 ),
                                               ),
                                             ),

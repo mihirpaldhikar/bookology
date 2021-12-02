@@ -22,6 +22,7 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/toast.manager.dart';
@@ -35,6 +36,7 @@ import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/page_view_indicator.component.dart';
 import 'package:bookology/ui/screens/chat.screen.dart';
+import 'package:bookology/ui/widgets/coloured_icon.widget.dart';
 import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,11 +49,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BookViewer extends StatefulWidget {
   final BookModel book;
   final String id;
+  final bool isSaveBook;
 
   const BookViewer({
     Key? key,
     required this.book,
     required this.id,
+    required this.isSaveBook,
   }) : super(key: key);
 
   @override
@@ -74,11 +78,13 @@ class _BookViewerState extends State<BookViewer> {
   bool _isAdLoaded = false;
   bool _isRequestAccepted = false;
   bool _isEnquireyButonClicked = false;
+  bool _isBookSaved = false;
   String _enquireButtonText = 'Enquire';
 
   @override
   void initState() {
     super.initState();
+    _isBookSaved = widget.isSaveBook;
     _ad = BannerAd(
       adUnitId: kReleaseMode
           ? 'ca-app-pub-6991839116816523/2352963576'
@@ -152,9 +158,9 @@ class _BookViewerState extends State<BookViewer> {
   Widget build(BuildContext context) {
     int saving = int.parse(widget.book.pricing.originalPrice) -
         int.parse(widget.book.pricing.sellingPrice);
-    return Hero(
-      tag: widget.id,
-      child: Material(
+    return Scaffold(
+      body: Hero(
+        tag: widget.id,
         child: Scaffold(
           appBar: AppBar(
             actions: [
@@ -173,16 +179,12 @@ class _BookViewerState extends State<BookViewer> {
                       height: 40,
                       padding: const EdgeInsets.all(0),
                       decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .buttonTheme
-                            .colorScheme!
-                            .background,
+                        color: Theme.of(context).colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Icon(
                         Icons.share_outlined,
-                        color:
-                            Theme.of(context).buttonTheme.colorScheme!.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -208,18 +210,12 @@ class _BookViewerState extends State<BookViewer> {
                         height: 40,
                         padding: const EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .background,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Icon(
                           Icons.edit_outlined,
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -276,16 +272,12 @@ class _BookViewerState extends State<BookViewer> {
                         height: 40,
                         padding: const EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .background,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Icon(
                           Icons.delete_forever_outlined,
-                          color:
-                              Theme.of(context).buttonTheme.colorScheme!.error,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ),
@@ -298,12 +290,28 @@ class _BookViewerState extends State<BookViewer> {
                     ? true
                     : false,
                 child: Tooltip(
-                  message: StringConstants.hintReportBook,
-                  child: IconButton(
-                    onPressed: () async {},
-                    icon: Icon(
-                      Icons.report_outlined,
-                      color: Theme.of(context).buttonTheme.colorScheme!.error,
+                  message: StringConstants.hintEditBook,
+                  child: SizedBox(
+                    width: 60,
+                    child: IconButton(
+                      onPressed: () {
+                        ShareService().shareBook(
+                          book: widget.book,
+                        );
+                      },
+                      icon: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Icon(
+                          Icons.report_outlined,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -314,18 +322,18 @@ class _BookViewerState extends State<BookViewer> {
             child: Column(
               children: [
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: ListView.builder(
+                    itemCount: 1,
+                    scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.only(
-                      bottom: 30,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 600,
-                          child: PageView.builder(
+                    itemBuilder: (context, index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 600,
+                            child: PageView.builder(
                               controller: _pageController,
                               itemCount: widget
                                   .book.additionalInformation.images.length,
@@ -333,679 +341,688 @@ class _BookViewerState extends State<BookViewer> {
                               itemBuilder: (context, index) {
                                 bool activePage = index == _currentPage;
                                 return _imagePager(
-                                    active: activePage,
-                                    image: widget.book.additionalInformation
-                                        .images[index]);
-                              }),
-                        ),
-                        Center(
-                          child: PageViewIndicator(
-                            length:
-                                widget.book.additionalInformation.images.length,
-                            currentIndex: _currentPage,
-                            currentColor: Theme.of(context).colorScheme.primary,
-                            currentSize: 10,
-                            otherSize: 5,
+                                  active: activePage,
+                                  image: widget
+                                      .book.additionalInformation.images[index],
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 20,
+                          Center(
+                            child: PageViewIndicator(
+                              length: widget
+                                  .book.additionalInformation.images.length,
+                              currentIndex: _currentPage,
+                              currentColor:
+                                  Theme.of(context).colorScheme.primary,
+                              currentSize: 10,
+                              otherSize: 5,
+                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AutoSizeText(
-                                widget.book.bookInformation.name,
-                                maxLines: 4,
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                  color: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .fillColor,
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              AutoSizeText(
-                                '${StringConstants.wordBy} ${widget.book.bookInformation.author}',
-                                maxLines: 4,
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 20,
-                                  color: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .fillColor,
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Row(
-                                children: [
-                                  AutoSizeText(
-                                    '${StringConstants.wordPrice}:',
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  AutoSizeText(
-                                    '$_currencySymbol ${widget.book.pricing.sellingPrice}',
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  AutoSizeText(
-                                    widget.book.pricing.originalPrice,
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 23,
-                                      decoration: TextDecoration.lineThrough,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              AutoSizeText(
-                                '${StringConstants.wordYouSave} $_currencySymbol ${saving.toString()}',
-                                maxLines: 4,
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.place_outlined,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 20,
+                              right: 20,
+                              top: 20,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AutoSizeText(
+                                  widget.book.bookInformation.name,
+                                  maxLines: 4,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
                                     color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
-                                    size: 30,
+                                        .colorScheme
+                                        .onBackground,
                                   ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    widget.book.location,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Visibility(
-                                visible: widget.book.uploader.userId !=
-                                        _authService.currentUser()!.uid
-                                    ? true
-                                    : false,
-                                child: const SizedBox(
-                                  height: 40,
+                                  textAlign: TextAlign.start,
                                 ),
-                              ),
-                              Visibility(
-                                visible: widget.book.uploader.userId !=
-                                        _authService.currentUser()!.uid
-                                    ? true
-                                    : false,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: RoundedButton(
-                                    text: _isEnquireyButonClicked
-                                        ? 'Requested'
-                                        : _enquireButtonText,
-                                    textColor: Colors.black,
-                                    backgroundColor: _isRequestAccepted
-                                        ? Colors.green[100]
-                                        : Colors.orange[100],
-                                    onPressed: () async {
-                                      if (_enquireButtonText == 'Enquire') {
-                                        DialogsManager(context)
-                                            .sendDiscussionRequestDialog(
-                                                onRequestSend: () async {
-                                          Navigator.pop(context);
-                                          DialogsManager(context)
-                                              .showProgressDialog(
-                                            content: 'Sending request...',
-                                            contentColor:
-                                                Theme.of(context).primaryColor,
-                                            progressColor:
-                                                Theme.of(context).primaryColor,
-                                          );
-                                          final isSuccess = await _apiService
-                                              .sendEnquiryNotification(
-                                            userID:
-                                                _authService.currentUser()!.uid,
-                                            receiverID:
-                                                widget.book.uploader.userId,
-                                            bookId: widget.book.bookId,
-                                            userName: _cacheService
-                                                .getCurrentUserNameCache(),
-                                          );
-                                          setState(() {
-                                            _isEnquireyButonClicked = true;
-                                            _enquireButtonText = 'Requested';
-                                          });
-                                          await _firestoreService.createRequest(
-                                            bookID: widget.book.bookId,
-                                            userID:
-                                                _authService.currentUser()!.uid,
-                                          );
-                                          if (isSuccess) {
-                                            Navigator.pop(context);
-                                            ToastManager(context)
-                                                .showSuccessToast(
-                                              message:
-                                                  'Discussions Request Sent',
-                                            );
-                                          } else {
-                                            Navigator.pop(context);
-                                            ToastManager(context)
-                                                .showErrorToast(
-                                                    message:
-                                                        'An error occurred');
-                                          }
-                                        });
-                                      } else {
-                                        if (_enquireButtonText != 'Discuss') {
-                                          ToastManager(context).showToast(
-                                            message: 'Request Already Sent',
-                                          );
-                                        }
-                                      }
-
-                                      if (_isRequestAccepted == true) {
-                                        final room =
-                                            await _firestoreService.getRoomData(
-                                          roomId: _requestData.roomId,
-                                        );
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => ChatPage(
-                                              room: room,
-                                              roomTitle:
-                                                  '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
-                                              userName:
-                                                  widget.book.uploader.username,
-                                              isVerified:
-                                                  widget.book.uploader.verified,
-                                              userProfileImage: widget.book
-                                                  .uploader.profilePictureUrl,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Visibility(
-                                visible: widget.book.uploader.userId !=
-                                        _authService.currentUser()!.uid
-                                    ? true
-                                    : false,
-                                child: const SizedBox(
-                                  height: 30,
-                                ),
-                              ),
-                              Visibility(
-                                visible: widget.book.uploader.userId !=
-                                        _authService.currentUser()!.uid
-                                    ? true
-                                    : false,
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: RoundedButton(
-                                      text: StringConstants.wordAddToWishList,
-                                      textColor: Colors.black,
-                                      backgroundColor: Colors.tealAccent[100],
-                                      onPressed: () {}),
-                                ),
-                              ),
-                              Visibility(
-                                visible: widget.book.uploader.userId !=
-                                        _authService.currentUser()!.uid
-                                    ? true
-                                    : false,
-                                child: const SizedBox(
-                                  height: 40,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.description_outlined,
-                                    size: 30,
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  AutoSizeText(
-                                    StringConstants.wordDescription,
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 25,
-                                  right: 20,
-                                  top: 20,
-                                  bottom: 40,
-                                ),
-                                child: AutoSizeText(
-                                  widget.book.additionalInformation.description,
-                                  maxLines: 40,
+                                AutoSizeText(
+                                  '${StringConstants.wordBy} ${widget.book.bookInformation.author}',
+                                  maxLines: 4,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 15,
+                                    fontSize: 20,
                                     color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
+                                        .colorScheme
+                                        .onBackground,
                                   ),
                                   textAlign: TextAlign.start,
                                 ),
-                              ),
-                              const Divider(
-                                thickness: 2,
-                                height: 30,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.auto_stories_outlined,
-                                    size: 30,
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  AutoSizeText(
-                                    StringConstants.wordBookDetails,
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 20,
+                                const SizedBox(
+                                  height: 30,
                                 ),
-                                child: Row(
+                                Row(
                                   children: [
-                                    Text(
-                                      '${StringConstants.wordIsbn} :',
+                                    AutoSizeText(
+                                      '${StringConstants.wordPrice}:',
+                                      maxLines: 4,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      widget.book.bookInformation.isbn,
-                                      style: GoogleFonts.ibmPlexMono(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 10,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${StringConstants.wordAuthor} :',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      widget.book.bookInformation.author,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${StringConstants.wordPublisher} :',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      widget.book.bookInformation.publisher,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${StringConstants.wordBookCondition} :',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      widget
-                                          .book.additionalInformation.condition,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              const Divider(
-                                thickness: 2,
-                                height: 30,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.account_circle_outlined,
-                                    size: 30,
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  AutoSizeText(
-                                    StringConstants.wordUploadDetails,
-                                    maxLines: 4,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 20,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${StringConstants.wordName} :',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 10,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${StringConstants.wordUsername} :',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      '@${widget.book.uploader.username}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .secondary,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Visibility(
-                                      visible: widget.book.uploader.verified,
-                                      child: const Icon(
-                                        Icons.verified,
-                                        color: Colors.blue,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  top: 10,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      StringConstants.wordUploadedOn,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
+                                            .onBackground,
                                       ),
                                     ),
                                     const SizedBox(
                                       width: 15,
                                     ),
                                     AutoSizeText(
-                                      widget.book.createdOn.date,
+                                      '$_currencySymbol ${widget.book.pricing.sellingPrice}',
                                       maxLines: 4,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 28,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    AutoSizeText(
+                                      widget.book.pricing.originalPrice,
+                                      maxLines: 4,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 23,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                AutoSizeText(
+                                  '${StringConstants.wordYouSave} $_currencySymbol ${saving.toString()}',
+                                  maxLines: 4,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Row(
+                                  children: [
+                                    ColoredIcon(
+                                      icon: Icon(
+                                        Icons.place_outlined,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                      margin: const EdgeInsets.only(
+                                        right: 10,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      widget.book.location,
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: widget.book.uploader.userId !=
+                                          _authService.currentUser()!.uid
+                                      ? true
+                                      : false,
+                                  child: const SizedBox(
+                                    height: 40,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: widget.book.uploader.userId !=
+                                          _authService.currentUser()!.uid
+                                      ? true
+                                      : false,
+                                  child: RoundedButton(
+                                      text: _isEnquireyButonClicked
+                                          ? 'Requested'
+                                          : _enquireButtonText,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      textColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      onPressed: () async {
+                                        if (_enquireButtonText == 'Enquire') {
+                                          DialogsManager(context)
+                                              .sendDiscussionRequestDialog(
+                                                  onRequestSend: () async {
+                                            Navigator.pop(context);
+                                            DialogsManager(context)
+                                                .showProgressDialog(
+                                              content: 'Sending request...',
+                                              contentColor: Theme.of(context)
+                                                  .primaryColor,
+                                              progressColor: Theme.of(context)
+                                                  .primaryColor,
+                                            );
+                                            final isSuccess = await _apiService
+                                                .sendEnquiryNotification(
+                                              userID: _authService
+                                                  .currentUser()!
+                                                  .uid,
+                                              receiverID:
+                                                  widget.book.uploader.userId,
+                                              bookId: widget.book.bookId,
+                                              userName: _cacheService
+                                                  .getCurrentUserNameCache(),
+                                            );
+                                            setState(() {
+                                              _isEnquireyButonClicked = true;
+                                              _enquireButtonText = 'Requested';
+                                            });
+                                            await _firestoreService
+                                                .createRequest(
+                                              bookID: widget.book.bookId,
+                                              userID: _authService
+                                                  .currentUser()!
+                                                  .uid,
+                                            );
+                                            if (isSuccess) {
+                                              Navigator.pop(context);
+                                              ToastManager(context)
+                                                  .showSuccessToast(
+                                                message:
+                                                    'Discussions Request Sent',
+                                              );
+                                            } else {
+                                              Navigator.pop(context);
+                                              ToastManager(context)
+                                                  .showErrorToast(
+                                                      message:
+                                                          'An error occurred');
+                                            }
+                                          });
+                                        } else {
+                                          if (_enquireButtonText != 'Discuss') {
+                                            ToastManager(context).showToast(
+                                              message: 'Request Already Sent',
+                                            );
+                                          }
+                                        }
+
+                                        if (_isRequestAccepted == true) {
+                                          final room = await _firestoreService
+                                              .getRoomData(
+                                            roomId: _requestData.roomId,
+                                          );
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                room: room,
+                                                roomTitle:
+                                                    '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
+                                                userName: widget
+                                                    .book.uploader.username,
+                                                isVerified: widget
+                                                    .book.uploader.verified,
+                                                userProfileImage: widget.book
+                                                    .uploader.profilePictureUrl,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }),
+                                ),
+                                Visibility(
+                                  visible: widget.book.uploader.userId !=
+                                          _authService.currentUser()!.uid
+                                      ? true
+                                      : false,
+                                  child: const SizedBox(
+                                    height: 30,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: widget.book.uploader.userId !=
+                                          _authService.currentUser()!.uid
+                                      ? true
+                                      : false,
+                                  child: RoundedButton(
+                                    text: _isBookSaved
+                                        ? 'Removed for Saved'
+                                        : StringConstants.wordAddToSaved,
+                                    outlineWidth: ValuesConstant.outlineWidth,
+                                    textColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    onPressed: () async {
+                                      if (_isBookSaved) {
+                                        setState(() {
+                                          _isBookSaved = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Removed from Saved',
+                                            ),
+                                            duration: Duration(
+                                              seconds: 2,
+                                            ),
+                                          ),
+                                        );
+                                        await _firestoreService
+                                            .removedSavedBook(
+                                                bookId: widget.book.bookId);
+                                      } else {
+                                        setState(() {
+                                          _isBookSaved = true;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Added to Saved',
+                                            ),
+                                            duration: Duration(
+                                              seconds: 2,
+                                            ),
+                                          ),
+                                        );
+                                        await _firestoreService.saveBook(
+                                            bookId: widget.book.bookId);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: widget.book.uploader.userId !=
+                                          _authService.currentUser()!.uid
+                                      ? true
+                                      : false,
+                                  child: const SizedBox(
+                                    height: 40,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 40,
+                                ),
+                                ExpansionTile(
+                                  tilePadding: EdgeInsets.zero,
+                                  leading: ColoredIcon(
+                                    icon: Icon(
+                                      Icons.description_outlined,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    margin: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                  ),
+                                  childrenPadding: const EdgeInsets.only(
+                                    left: 30,
+                                    top: 30,
+                                    bottom: 30,
+                                  ),
+                                  title: AutoSizeText(
+                                    StringConstants.wordDescription,
+                                    maxLines: 4,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  children: [
+                                    AutoSizeText(
+                                      widget.book.additionalInformation
+                                          .description,
+                                      maxLines: 40,
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 15,
                                         color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
+                                            .colorScheme
+                                            .onBackground,
                                       ),
+                                      textAlign: TextAlign.start,
                                     ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ExpansionTile(
+                                  tilePadding: EdgeInsets.zero,
+                                  leading: ColoredIcon(
+                                    icon: Icon(
+                                      Icons.auto_stories_outlined,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    margin: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                  ),
+                                  title: AutoSizeText(
+                                    StringConstants.wordBookDetails,
+                                    maxLines: 4,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  childrenPadding: const EdgeInsets.only(
+                                    left: 30,
+                                    top: 30,
+                                    bottom: 30,
+                                  ),
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordIsbn} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          widget.book.bookInformation.isbn,
+                                          style: GoogleFonts.ibmPlexMono(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordAuthor} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          widget.book.bookInformation.author,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordPublisher} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          widget.book.bookInformation.publisher,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordBookCondition} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          widget.book.additionalInformation
+                                              .condition,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ExpansionTile(
+                                  leading: ColoredIcon(
+                                    icon: Icon(
+                                      Icons.account_circle_outlined,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    margin: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                  ),
+                                  tilePadding: EdgeInsets.zero,
+                                  title: AutoSizeText(
+                                    StringConstants.wordUploadDetails,
+                                    maxLines: 4,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  childrenPadding: const EdgeInsets.only(
+                                    left: 30,
+                                    top: 30,
+                                    bottom: 30,
+                                  ),
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordName} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          '${widget.book.uploader.firstName} ${widget.book.uploader.lastName}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${StringConstants.wordUsername} :',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        Text(
+                                          '@${widget.book.uploader.username}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Visibility(
+                                          visible:
+                                              widget.book.uploader.verified,
+                                          child: const Icon(
+                                            Icons.verified,
+                                            color: Colors.blue,
+                                            size: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          StringConstants.wordUploadedOn,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15,
+                                        ),
+                                        AutoSizeText(
+                                          widget.book.createdOn.date,
+                                          maxLines: 4,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    },
                   ),
                 ),
                 Visibility(

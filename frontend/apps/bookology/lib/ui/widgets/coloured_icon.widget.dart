@@ -20,59 +20,40 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 
-class Dialogue extends StatelessWidget {
-  final String dialogueType;
-  final String title;
-  final String description;
-  final Widget actions;
+class ColoredIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Icon icon;
+  final EdgeInsets? margin;
 
-  const Dialogue({
+  const ColoredIcon({
     Key? key,
-    required this.dialogueType,
-    required this.title,
-    required this.description,
-    required this.actions,
+    this.width = 45,
+    this.height = 45,
+    required this.icon,
+    this.margin = EdgeInsets.zero,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-        child: Column(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            actions,
-          ],
+      margin: margin,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.secondaryBorderRadius,
+          ),
         ),
+        child: icon,
       ),
     );
   }

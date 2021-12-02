@@ -86,9 +86,9 @@ class _SavedScreenState extends State<SavedScreen> {
                       child: Text(
                         'No Saved Books',
                         style: TextStyle(
-                            color: Theme.of(context)
-                                .inputDecorationTheme
-                                .fillColor),
+                          color:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                        ),
                       ),
                     ),
                   );
@@ -183,6 +183,9 @@ class _SavedScreenState extends State<SavedScreen> {
                 builder: (BuildContext context) => BookViewer(
                   id: book.bookId,
                   book: book,
+                  isSaveBook: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty,
                 ),
               ),
             );

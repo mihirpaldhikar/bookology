@@ -75,8 +75,8 @@ class PreferencesManager {
     final _theme = themeMode == ThemeMode.dark
         ? 'dark'
         : themeMode == ThemeMode.system
-        ? 'system'
-        : 'light';
+            ? 'system'
+            : 'light';
     _preferences.write('currentTheme', _theme);
   }
 
@@ -84,8 +84,8 @@ class PreferencesManager {
     final _theme = _preferences.read('currentTheme') == 'dark'
         ? ThemeMode.dark
         : _preferences.read('currentTheme') == 'system'
-        ? ThemeMode.system
-        : ThemeMode.light;
+            ? ThemeMode.system
+            : ThemeMode.light;
     return _theme;
   }
 

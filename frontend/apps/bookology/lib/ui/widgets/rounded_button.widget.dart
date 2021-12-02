@@ -59,12 +59,12 @@ class _RoundedButtonState extends State<RoundedButton> {
 
   @override
   Widget build(BuildContext context) {
-    const double borderRadius = ValuesConstant.secondaryBorderRadius;
+    const double borderRadius = ValuesConstant.buttonBorderRadius;
     if (widget.backgroundColor == null) {
-      backgroundColor = Theme.of(context).colorScheme.primaryContainer;
+      backgroundColor = Colors.transparent;
     } else {
       if (widget.textColor == null) {
-        textColor = Theme.of(context).colorScheme.onTertiary;
+        textColor = Theme.of(context).colorScheme.primary;
       } else {
         backgroundColor = widget.backgroundColor!;
         textColor = widget.textColor!;
@@ -89,113 +89,113 @@ class _RoundedButtonState extends State<RoundedButton> {
             border: Border.all(
               color: widget.outlineWidth == 0.0
                   ? Colors.transparent
-                  : Theme.of(context).colorScheme.outline,
+                  : Theme.of(context).colorScheme.primary,
               width: widget.outlineWidth!,
             ),
           ),
           child: widget.inverted!
               ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: widget.alignContent!,
-            children: [
-              Visibility(
-                visible: widget.text.hashCode != 2011,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 100,
-                  ),
-                  child: Text(
-                    widget.text,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize:
-                      Theme.of(context).textTheme.button!.fontSize,
-                      fontStyle:
-                      Theme.of(context).textTheme.button!.fontStyle,
-                      color: widget.textColor,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: widget.alignContent!,
+                  children: [
+                    Visibility(
+                      visible: widget.text.hashCode != 2011,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 0,
+                        ),
+                        child: Text(
+                          widget.text,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                Theme.of(context).textTheme.button!.fontSize,
+                            fontStyle:
+                                Theme.of(context).textTheme.button!.fontStyle,
+                            color: widget.textColor,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: widget.icon.hashCode != 2011 &&
-                    widget.text.hashCode != 2011,
-                child: SizedBox(
-                  width: widget.spaceBetween,
-                ),
-              ),
-              Visibility(
-                visible: widget.icon.hashCode != 2011,
-                child: widget.icon == null
-                    ? const Visibility(
-                  visible: false,
-                  child: SizedBox(
-                    width: 0,
-                    height: 0,
-                  ),
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011 &&
+                          widget.text.hashCode != 2011,
+                      child: SizedBox(
+                        width: widget.spaceBetween,
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011,
+                      child: widget.icon == null
+                          ? const Visibility(
+                              visible: false,
+                              child: SizedBox(
+                                width: 0,
+                                height: 0,
+                              ),
+                            )
+                          : widget.icon!,
+                    ),
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011 &&
+                          widget.text.hashCode != 2011,
+                      child: SizedBox(
+                        width: widget.spaceBetween,
+                      ),
+                    ),
+                  ],
                 )
-                    : widget.icon!,
-              ),
-              Visibility(
-                visible: widget.icon.hashCode != 2011 &&
-                    widget.text.hashCode != 2011,
-                child: SizedBox(
-                  width: widget.spaceBetween,
-                ),
-              ),
-            ],
-          )
               : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: widget.alignContent!,
-            children: [
-              Visibility(
-                visible: widget.icon.hashCode != 2011,
-                child: widget.icon == null
-                    ? const Visibility(
-                  visible: false,
-                  child: SizedBox(
-                    width: 0,
-                    height: 0,
-                  ),
-                )
-                    : widget.icon!,
-              ),
-              Visibility(
-                visible: widget.icon.hashCode != 2011 &&
-                    widget.text.hashCode != 2011,
-                child: SizedBox(
-                  width: widget.spaceBetween,
-                ),
-              ),
-              Visibility(
-                visible: widget.text.hashCode != 2011,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: widget.text.hashCode != 2011 ? 3 : 0,
-                  ),
-                  child: Text(
-                    widget.text,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize:
-                      Theme.of(context).textTheme.button!.fontSize,
-                      fontStyle:
-                      Theme.of(context).textTheme.button!.fontStyle,
-                      color: widget.textColor,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: widget.alignContent!,
+                  children: [
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011,
+                      child: widget.icon == null
+                          ? const Visibility(
+                              visible: false,
+                              child: SizedBox(
+                                width: 0,
+                                height: 0,
+                              ),
+                            )
+                          : widget.icon!,
                     ),
-                  ),
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011 &&
+                          widget.text.hashCode != 2011,
+                      child: SizedBox(
+                        width: widget.spaceBetween,
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.text.hashCode != 2011,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: widget.text.hashCode != 2011 ? 3 : 0,
+                        ),
+                        child: Text(
+                          widget.text,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize:
+                                Theme.of(context).textTheme.button!.fontSize,
+                            fontStyle:
+                                Theme.of(context).textTheme.button!.fontStyle,
+                            color: widget.textColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: widget.icon.hashCode != 2011 &&
+                          widget.text.hashCode != 2011,
+                      child: SizedBox(
+                        width: widget.spaceBetween,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Visibility(
-                visible: widget.icon.hashCode != 2011 &&
-                    widget.text.hashCode != 2011,
-                child: SizedBox(
-                  width: widget.spaceBetween,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

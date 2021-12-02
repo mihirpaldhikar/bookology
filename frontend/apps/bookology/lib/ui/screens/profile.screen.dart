@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:blobs/blobs.dart';
 import 'package:bookology/constants/values.constants.dart';
@@ -38,13 +37,11 @@ import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
-import 'package:bookology/ui/screens/saved.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/collapsable_fab.widget.dart';
 import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:bookology/ui/widgets/marquee.widget.dart';
-import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -53,11 +50,8 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const ProfileScreen({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -67,7 +61,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late Future<UserModel> _userData;
-  bool _isCurrentUser = false;
   final _apiService = ApiService();
   final _authService = AuthService(FirebaseAuth.instance);
   final _cacheService = PreferencesManager();
@@ -123,8 +116,6 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    final _isDarkMode = Provider.of<BookologyThemeProvider>(context)
-        .isDarkTheme(context: context);
     return StreamBuilder<ConnectivityStatus>(
       initialData: ConnectivityStatus.cellular,
       stream: ConnectivityService().connectionStatusController.stream,
@@ -137,20 +128,18 @@ class _ProfileScreenState extends State<ProfileScreen>
           onNotification: _handleScrollNotification,
           child: Scaffold(
             floatingActionButton: CollapsableFab(
-              width: 160,
+              width: 135,
               scrollController: _fabController,
               duration: const Duration(milliseconds: 200),
               icon: Icon(
                 Icons.add,
-                color: _isDarkMode ? Colors.black : Colors.white,
+                color: Theme.of(context).colorScheme.primary,
               ),
               text: Text(
-                'New Book',
+                'Add Book',
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               onPress: () {
@@ -165,6 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             appBar: AppBar(
               automaticallyImplyLeading: false,
               elevation: 0,
+              backgroundColor: Colors.transparent,
               title: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Marquee(
@@ -198,14 +188,29 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
               actions: [
                 Tooltip(
-                  message: 'More Options',
+                  message: 'Edit Profile',
                   child: SizedBox(
                     width: 60,
                     child: IconButton(
-                      onPressed: () {
-                        BottomSheetManager(context)
-                            .showMoreProfileMenuBottomSheet(
-                          themeMode: widget.themeMode,
+                      onPressed: () async {
+                        final userInfo = await _userData;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(
+                              userID: _authService.currentUser()!.uid,
+                              profilePicture: _authService
+                                  .currentUser()!
+                                  .photoURL
+                                  .toString(),
+                              userName: userInfo.userInformation.username,
+                              isVerified: userInfo.userInformation.verified,
+                              bio: userInfo.userInformation.bio,
+                              firstName: userInfo.userInformation.firstName,
+                              lastName: userInfo.userInformation.lastName,
+                              isInitialUpdate: false,
+                            ),
+                          ),
                         );
                       },
                       icon: Container(
@@ -216,8 +221,37 @@ class _ProfileScreenState extends State<ProfileScreen>
                           color: Theme.of(context).colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(100),
                         ),
-                        child: const Icon(
+                        child: Icon(
+                          Icons.edit_outlined,
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Tooltip(
+                  message: 'More Options',
+                  child: SizedBox(
+                    width: 60,
+                    child: IconButton(
+                      onPressed: () {
+                        BottomSheetManager(context)
+                            .showMoreProfileMenuBottomSheet();
+                      },
+                      icon: Container(
+                        width: 40,
+                        height: 40,
+                        padding: const EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Icon(
                           Icons.menu_outlined,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -266,7 +300,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       onRefresh: _onRefresh,
       onLoading: _onLoading,
       child: ListView.builder(
-        // padding: const EdgeInsets.only(top: 20, left: 17, right: 17),
         controller: _fabController,
         scrollDirection: Axis.vertical,
         physics: const BouncingScrollPhysics(),
@@ -319,14 +352,17 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   _profileSection(AsyncSnapshot<UserModel> userData) {
+    final _isDarkMode = Provider.of<BookologyThemeProvider>(context)
+        .isDarkTheme(context: context);
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Positioned(
           top: -5,
           bottom: -9,
           left: -20,
           child: Opacity(
-            opacity: 0.1,
+            opacity: _isDarkMode ? 0.05 : 0.1,
             child: Blob.fromID(
               styles: BlobStyles(
                 color: Theme.of(context).colorScheme.primary,
@@ -340,7 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           top: -25,
           right: -55,
           child: Opacity(
-            opacity: 0.1,
+            opacity: _isDarkMode ? 0.05 : 0.1,
             child: Blob.fromID(
               styles: BlobStyles(
                 color: Theme.of(context).colorScheme.primary,
@@ -351,10 +387,10 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Positioned(
-          bottom: -80,
+          bottom: -160,
           left: -130,
           child: Opacity(
-            opacity: 0.1,
+            opacity: _isDarkMode ? 0.05 : 0.1,
             child: Blob.fromID(
               styles: BlobStyles(
                 color: Theme.of(context).colorScheme.primary,
@@ -365,10 +401,10 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Positioned(
-          bottom: -90,
+          bottom: -100,
           right: -300,
           child: Opacity(
-            opacity: 0.1,
+            opacity: _isDarkMode ? 0.05 : 0.1,
             child: Blob.fromID(
               styles: BlobStyles(
                 color: Theme.of(context).colorScheme.primary,
@@ -387,7 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
             CircularImage(
               image: userData.data!.userInformation.profilePicture.toString(),
-              radius: 100,
+              radius: 130,
             ),
             const SizedBox(
               height: 30,
@@ -428,7 +464,11 @@ class _ProfileScreenState extends State<ProfileScreen>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Card(
+                Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius:
+                          BorderRadius.circular(ValuesConstant.borderRadius)),
                   child: InkWell(
                     borderRadius:
                         BorderRadius.circular(ValuesConstant.borderRadius),
@@ -461,7 +501,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                   ),
                 ),
-                Card(
+                Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius:
+                          BorderRadius.circular(ValuesConstant.borderRadius)),
                   child: InkWell(
                     borderRadius:
                         BorderRadius.circular(ValuesConstant.borderRadius),
@@ -495,68 +539,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Visibility(
-              visible: _isCurrentUser,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      child: RoundedButton(
-                        text: 'Edit Profile',
-                        outlineWidth: 1,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditProfileScreen(
-                                userID: _authService.currentUser()!.uid,
-                                profilePicture: _authService
-                                    .currentUser()!
-                                    .photoURL
-                                    .toString(),
-                                userName:
-                                    userData.data!.userInformation.username,
-                                isVerified:
-                                    userData.data!.userInformation.verified,
-                                bio: userData.data!.userInformation.bio,
-                                firstName:
-                                    userData.data!.userInformation.firstName,
-                                lastName:
-                                    userData.data!.userInformation.lastName,
-                                isInitialUpdate: false,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: RoundedButton(
-                        text: 'Saved Books',
-                        outlineWidth: 1,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const SavedScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),
@@ -596,6 +578,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 builder: (BuildContext context) => BookViewer(
                   id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
                   book: userData.data!.books[index - 1],
+                  isSaveBook: false,
                 ),
               ),
             );
@@ -612,15 +595,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     if (_cacheService.getCurrentUserNameCache() ==
         data!.userInformation.username) {
       setState(
-        () {
-          _isCurrentUser = true;
-        },
+        () {},
       );
     } else {
       setState(
-        () {
-          _isCurrentUser = false;
-        },
+        () {},
       );
     }
     return data;

@@ -80,6 +80,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 }
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
                   itemCount: notifications.data!.length,
                   padding: const EdgeInsets.only(
                     top: 30,
@@ -98,8 +99,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                         color: Theme.of(context).cardTheme.color,
                         border: Border.all(
-                          color: Colors.grey,
-                          width: 0.5,
+                          color: Theme.of(context).colorScheme.outline,
+                          width: ValuesConstant.outlineWidth,
                         ),
                       ),
                       child: InkWell(
@@ -179,8 +180,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 height: 50,
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.onSecondary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 child: Icon(
@@ -190,9 +192,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   color: notifications
                                           .data![index].notification.seen
                                       ? Colors.green.shade800
-                                      : Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
+                                      : Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                               const SizedBox(

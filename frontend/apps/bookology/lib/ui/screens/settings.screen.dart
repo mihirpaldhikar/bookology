@@ -89,8 +89,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.grey,
-                        width: 0.5,
+                        color: Theme.of(context).colorScheme.outline,
+                        width: ValuesConstant.outlineWidth,
                       ),
                       color: Theme.of(context).cardTheme.color,
                       borderRadius: BorderRadius.circular(
@@ -124,9 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               child: Icon(
                                 appSettings[index].settingIcon,
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
+                                color: Theme.of(context).colorScheme.primary,
                                 size: 30,
                               ),
                             ),
@@ -141,8 +139,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   appSettings[index].settingName,
                                   style: TextStyle(
                                     color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
+                                        .colorScheme
+                                        .onBackground,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -151,8 +149,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   appSettings[index].settingDescription,
                                   style: TextStyle(
                                     color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
+                                        .colorScheme
+                                        .onBackground,
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
                                   ),

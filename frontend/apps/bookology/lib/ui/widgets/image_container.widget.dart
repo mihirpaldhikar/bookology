@@ -22,6 +22,7 @@
 
 import 'dart:io';
 
+import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
 
 class ImagePlaceholder extends StatefulWidget {
@@ -44,8 +45,8 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
         borderRadius: BorderRadius.circular(_borderRadius),
         color: Theme.of(context).cardTheme.color,
         border: Border.all(
-          color: Colors.grey,
-          width: 0.5,
+          color: Theme.of(context).colorScheme.primary,
+          width: ValuesConstant.outlineWidth,
         ),
       ),
       child: InkWell(
@@ -54,7 +55,7 @@ class _ImagePlaceholderState extends State<ImagePlaceholder> {
         child: Center(
           child: Icon(
             Icons.add,
-            color: Theme.of(context).inputDecorationTheme.fillColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

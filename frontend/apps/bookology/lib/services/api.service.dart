@@ -155,7 +155,6 @@ class ApiService {
           'user-identifier-key': await _firestoreService.getAccessToken()
         },
       );
-
       if (request.statusCode == 200) {
         final Iterable response = jsonDecode(request.body);
         final books = List<BookModel>.from(
@@ -407,10 +406,7 @@ class ApiService {
           'Content-type': 'application/json',
         },
         body: jsonEncode(
-          {
-            "book_id": bookId,
-            "room_icon": "lops"
-          },
+          {"book_id": bookId, "room_icon": "lops"},
         ),
       );
       final response = jsonDecode(request.body);

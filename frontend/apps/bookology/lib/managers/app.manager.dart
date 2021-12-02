@@ -34,9 +34,11 @@ import 'package:bookology/ui/screens/login.screen.dart';
 import 'package:bookology/ui/screens/signup.screen.dart';
 import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
@@ -59,11 +61,6 @@ class _AppManagerState extends State<AppManager> {
   }
 
   @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -78,6 +75,9 @@ class _AppManagerState extends State<AppManager> {
         ),
         Provider(
           create: (_) => AppService(),
+        ),
+        Provider(
+          create: (_) => BookologyThemeProvider(),
         ),
         StreamProvider(
           create: (context) =>
@@ -100,40 +100,83 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   @override
   Widget build(BuildContext context) {
-
     final auth = Provider.of<AuthService>(context);
     return ChangeNotifierProvider(
       create: (context) => BookologyThemeProvider(),
       builder: (context, _) {
         final themeMode =
             Provider.of<BookologyThemeProvider>(context).themeMode;
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: auth.isUserSignedIn() ? const ScreenManager() : const AuthScreen(),
-          theme: BookologyTheme.getThemeData(
-            colorScheme: ColorsConstant.lightColorScheme,
-          ),
-          darkTheme: BookologyTheme.getThemeData(
-            colorScheme: ColorsConstant.darkColorScheme,
-          ),
-          themeMode: themeMode,
-          routes: {
-            '/home': (context) => const ScreenManager(),
-            '/profile': (context) => const ViewManager(
-                  screenIndex: 3,
-                ),
-            '/create': (context) => const CreateScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/signup': (context) => const SignUpScreen(),
-            '/auth': (context) => const AuthScreen(),
-            '/verify': (context) => const VerifyEmailScreen(),
+        return DynamicColorBuilder(
+          builder: (CorePalette? corePalette) {
+            // One can create ColorSchemes from scratch, but we'll start from the
+            // default schemes.
+            ColorScheme lightColorScheme = ColorsConstant.lightColorScheme;
+            ColorScheme darkColorScheme = ColorsConstant.darkColorScheme;
+
+            if (corePalette != null) {
+              // On Android S+ devices, use the 40 and 80 tones of the dynamic
+              // primary tonal palette for the light and dark schemes, respectively.
+              lightColorScheme = lightColorScheme.copyWith(
+                brightness: Brightness.light,
+                primary: Color(corePalette.primary.get(40)),
+                secondary: Color(corePalette.secondary.get(40)),
+                tertiary: Color(corePalette.tertiary.get(40)),
+                error: Color(corePalette.error.get(40)),
+                errorContainer: Color(corePalette.error.get(90)),
+                primaryContainer: Color(corePalette.primary.get(90)),
+                onPrimary: Color(corePalette.primary.get(100)),
+                onPrimaryContainer: Color(corePalette.primary.get(0)),
+              );
+              darkColorScheme = darkColorScheme.copyWith(
+                brightness: Brightness.dark,
+                primary: Color(corePalette.primary.get(80)),
+                secondary: Color(corePalette.secondary.get(80)),
+                tertiary: Color(corePalette.tertiary.get(80)),
+                error: Color(corePalette.error.get(80)),
+                primaryContainer: Color(corePalette.secondary.get(20)),
+                onPrimary: Color(corePalette.primary.get(0)),
+                onPrimaryContainer: Color(corePalette.primary.get(100)),
+              );
+
+              // Harmonize the dynamic color schemes' error and onError colors
+              // (which are built-in semantic colors).
+              lightColorScheme = lightColorScheme.harmonized();
+              darkColorScheme = darkColorScheme.harmonized();
+            } else {
+              // Otherwise, use a fallback scheme and customize as needed.
+              lightColorScheme = lightColorScheme;
+              darkColorScheme = darkColorScheme;
+            }
+
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: auth.isUserSignedIn()
+                  ? const ScreenManager()
+                  : const AuthScreen(),
+              theme: BookologyTheme.getThemeData(
+                colorScheme: lightColorScheme,
+              ),
+              darkTheme: BookologyTheme.getThemeData(
+                colorScheme: darkColorScheme,
+              ),
+              themeMode: themeMode,
+              routes: {
+                '/home': (context) => const ScreenManager(),
+                '/profile': (context) => const ViewManager(
+                      screenIndex: 3,
+                    ),
+                '/create': (context) => const CreateScreen(),
+                '/login': (context) => const LoginScreen(),
+                '/signup': (context) => const SignUpScreen(),
+                '/auth': (context) => const AuthScreen(),
+                '/verify': (context) => const VerifyEmailScreen(),
+              },
+            );
           },
         );
       },
     );
   }
 }
-

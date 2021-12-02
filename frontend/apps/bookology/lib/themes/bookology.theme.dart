@@ -23,6 +23,7 @@
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BookologyThemeProvider extends ChangeNotifier {
@@ -54,6 +55,7 @@ class BookologyTheme {
           : Colors.black54,
       snackBarTheme: SnackBarThemeData(
         contentTextStyle: TextStyle(
+          fontFamily: 'Poppins',
           color: colorScheme.brightness == Brightness.light
               ? Colors.white
               : Colors.black,
@@ -64,7 +66,7 @@ class BookologyTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            ValuesConstant.borderRadius,
+            ValuesConstant.buttonBorderRadius,
           ),
         ),
       ),
@@ -85,15 +87,11 @@ class BookologyTheme {
       ),
       cardTheme: CardTheme(
         elevation: 0,
-        color: ThemeData.from(
-          colorScheme: colorScheme,
-        ).colorScheme.onInverseSurface,
+        color: colorScheme.surface,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: ThemeData.from(
-              colorScheme: colorScheme,
-            ).colorScheme.outline,
-            width: 1,
+            color: colorScheme.outline,
+            width: ValuesConstant.outlineWidth,
           ),
           borderRadius: BorderRadius.circular(
             ValuesConstant.borderRadius,
@@ -103,21 +101,23 @@ class BookologyTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.surface,
-        height: 70,
+        ).colorScheme.background,
+        height: 80,
         indicatorColor: ThemeData.from(
           colorScheme: colorScheme,
         ).colorScheme.primaryContainer,
         iconTheme: MaterialStateProperty.all(
           IconThemeData(
-            color: colorScheme.brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
+            color: colorScheme.primary,
           ),
         ),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: MaterialStateProperty.all(
-          const TextStyle(),
+          TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.normal,
+            color: colorScheme.onBackground,
+          ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -125,32 +125,45 @@ class BookologyTheme {
             ? Colors.black
             : Colors.white,
       ),
+      radioTheme: RadioThemeData(
+        fillColor: MaterialStateProperty.all(colorScheme.primary),
+      ),
+      checkboxTheme: CheckboxThemeData(
+          fillColor: MaterialStateProperty.all(colorScheme.primary),
+          checkColor: MaterialStateProperty.all(colorScheme.onPrimary)),
+      switchTheme: SwitchThemeData(
+          trackColor: MaterialStateProperty.all(colorScheme.outline),
+          thumbColor: MaterialStateProperty.all(colorScheme.primary)),
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
           color: colorScheme.brightness == Brightness.light
               ? Colors.black
               : Colors.white,
         ),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness: colorScheme.brightness == Brightness.dark
+              ? Brightness.light
+              : Brightness.dark,
+          statusBarColor: colorScheme.background,
+          systemNavigationBarColor: colorScheme.background,
+        ),
         elevation: 0,
         backgroundColor: ThemeData.from(
           colorScheme: colorScheme,
         ).colorScheme.background,
         actionsIconTheme: IconThemeData(
-          color: colorScheme.brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          color: colorScheme.onBackground,
         ),
         titleTextStyle: GoogleFonts.poppins(
-          color: colorScheme.brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          color: colorScheme.onBackground,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
       dialogTheme: DialogTheme(
         backgroundColor: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.surface,
+        ).colorScheme.background,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(ValuesConstant.borderRadius),
@@ -191,10 +204,10 @@ class BookologyTheme {
         ),
         backgroundColor: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.surface,
+        ).colorScheme.background,
         modalBackgroundColor: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.surface,
+        ).colorScheme.background,
       ),
       popupMenuTheme: PopupMenuThemeData(
         shape: RoundedRectangleBorder(
@@ -202,11 +215,10 @@ class BookologyTheme {
         ),
         color: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.onSurface,
+        ).colorScheme.surface,
         textStyle: TextStyle(
-          color: colorScheme.brightness == Brightness.light
-              ? Colors.black
-              : Colors.white,
+          fontFamily: 'Poppins',
+          color: colorScheme.onBackground,
           fontWeight: FontWeight.normal,
         ),
         enableFeedback: true,
@@ -214,5 +226,4 @@ class BookologyTheme {
       colorScheme: colorScheme,
     );
   }
-
 }

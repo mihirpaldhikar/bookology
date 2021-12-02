@@ -20,16 +20,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/bottom_sheet_view.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
-import 'package:bookology/models/book.model.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
-import 'package:bookology/services/share.service.dart';
 import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
+import 'package:bookology/ui/screens/saved.screen.dart';
 import 'package:bookology/ui/screens/settings.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/rounded_button.widget.dart';
@@ -39,50 +38,9 @@ import 'package:provider/provider.dart';
 
 class BottomSheetManager {
   final BuildContext context;
-  final AuthService authService = AuthService(FirebaseAuth.instance);
+  final authService = AuthService(FirebaseAuth.instance);
 
   BottomSheetManager(this.context);
-
-  void showBookSelectionBottomSheet({required BookModel book}) {
-    BottomSheetViewManager(context).createBottomSheet(
-      contents: [
-        RoundedButton(
-          text: 'Share this book',
-          icon: const Icon(Icons.share_outlined),
-          alignContent: MainAxisAlignment.start,
-          onPressed: () {
-            Navigator.pop(context);
-            ShareService().shareBook(
-              book: book,
-            );
-          },
-        ),
-        Visibility(
-          visible: authService.currentUser()!.uid == book.uploader.userId
-              ? false
-              : true,
-          child: const SizedBox(
-            height: 20,
-          ),
-        ),
-        Visibility(
-          visible: authService.currentUser()!.uid == book.uploader.userId
-              ? false
-              : true,
-          child: RoundedButton(
-            text: 'Report this book',
-            alignContent: MainAxisAlignment.start,
-            icon: Icon(
-              Icons.report_outlined,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            textColor: Theme.of(context).colorScheme.error,
-            onPressed: () {},
-          ),
-        ),
-      ],
-    );
-  }
 
   void showThemeBottomSheet() {
     BottomSheetViewManager(context).createBottomSheet(
@@ -136,16 +94,34 @@ class BottomSheetManager {
     );
   }
 
-  void showMoreProfileMenuBottomSheet({required AdaptiveThemeMode themeMode}) {
+  void showMoreProfileMenuBottomSheet() {
     BottomSheetViewManager(context).createBottomSheet(
       contents: [
         const SizedBox(
           height: 20,
         ),
         RoundedButton(
+          text: 'Saved Books',
+          icon: const Icon(Icons.bookmark_border),
+          alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const SavedScreen(),
+              ),
+            );
+          },
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        RoundedButton(
           text: 'Settings',
           icon: const Icon(Icons.settings_outlined),
           alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
           onPressed: () {
             Navigator.pop(context);
             Navigator.push(
@@ -157,12 +133,13 @@ class BottomSheetManager {
           },
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         RoundedButton(
           text: 'About',
           icon: const Icon(Icons.info_outlined),
           alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
           onPressed: () {
             Navigator.pop(context);
             Navigator.push(
@@ -174,7 +151,7 @@ class BottomSheetManager {
           },
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         RoundedButton(
           onPressed: () {
@@ -191,6 +168,7 @@ class BottomSheetManager {
           text: StringConstants.wordLogout,
           icon: const Icon(Icons.logout_outlined),
           alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
         ),
         const SizedBox(
           height: 30,
@@ -267,7 +245,8 @@ class BottomSheetManager {
         ),
         RoundedButton(
           text: 'Update',
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
+          textColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           align: Alignment.center,
           alignContent: MainAxisAlignment.center,
           onPressed: onUpdateClicked,
@@ -278,11 +257,10 @@ class BottomSheetManager {
         RoundedButton(
           text: 'Remind me later',
           align: Alignment.center,
-          textColor: Colors.black,
           alignContent: MainAxisAlignment.center,
-          backgroundColor: Theme.of(context).brightness == Brightness.light
-              ? Colors.grey.shade300
-              : Colors.grey.shade600,
+          backgroundColor: Colors.transparent,
+          outlineWidth: ValuesConstant.outlineWidth,
+          textColor: Theme.of(context).colorScheme.primary,
           onPressed: onCancelClicked,
         ),
       ],
@@ -300,6 +278,7 @@ class BottomSheetManager {
           onPressed: onCameraPressed,
           text: 'Camera',
           icon: const Icon(Icons.photo_camera_outlined),
+          backgroundColor: Colors.transparent,
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
@@ -309,6 +288,7 @@ class BottomSheetManager {
           onPressed: onGalleryPressed,
           text: 'Gallery',
           icon: const Icon(Icons.collections_outlined),
+          backgroundColor: Colors.transparent,
           alignContent: MainAxisAlignment.start,
         ),
       ],
@@ -325,9 +305,9 @@ class BottomSheetManager {
         RoundedButton(
           onPressed: onImagePressed,
           text: StringConstants.wordImage,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           icon: const Icon(Icons.image_outlined),
           alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
         ),
         const SizedBox(
           height: 20,
@@ -335,9 +315,9 @@ class BottomSheetManager {
         RoundedButton(
           onPressed: onFilePressed,
           text: StringConstants.wordFile,
-          textColor: Theme.of(context).buttonTheme.colorScheme!.primary,
           icon: const Icon(Icons.note_add_outlined),
           alignContent: MainAxisAlignment.start,
+          backgroundColor: Colors.transparent,
         ),
       ],
     );
@@ -366,7 +346,8 @@ class BottomSheetManager {
           textAlign: TextAlign.left,
           text: TextSpan(
             text: '${StringConstants.wordIsbn}:  ',
-            style: const TextStyle(
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -383,7 +364,8 @@ class BottomSheetManager {
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordBookName}:  ',
-            style: const TextStyle(
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
@@ -404,14 +386,15 @@ class BottomSheetManager {
           text: TextSpan(
             text: '${StringConstants.wordAuthor}:  ',
             style: TextStyle(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
+              color: Theme.of(context).colorScheme.onBackground,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookAuthor,
-                style: const TextStyle(
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontSize: 17,
                 ),
               ),
@@ -424,15 +407,17 @@ class BottomSheetManager {
         RichText(
           text: TextSpan(
             text: '${StringConstants.wordPublisher}:  ',
-            style: const TextStyle(
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onBackground,
               fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookPublisher,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 17,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
             ],
@@ -446,15 +431,17 @@ class BottomSheetManager {
           maxLines: 3,
           text: TextSpan(
             text: '${StringConstants.wordDescription}:  ',
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onBackground,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                 text: bookDescription.trim(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 17,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
               ),
             ],
@@ -468,15 +455,17 @@ class BottomSheetManager {
             RichText(
               text: TextSpan(
                 text: '${StringConstants.wordOriginalPrice}:  ',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ),
                 children: [
                   TextSpan(
                     text: bookOriginalPrice,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
                 ],
@@ -489,15 +478,16 @@ class BottomSheetManager {
               text: TextSpan(
                 text: '${StringConstants.wordSellingPrice}:  ',
                 style: TextStyle(
-                  color: Theme.of(context).inputDecorationTheme.fillColor,
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
                 children: [
                   TextSpan(
                     text: bookSellingPrice,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
                 ],
@@ -515,9 +505,10 @@ class BottomSheetManager {
             Text(
               'Book Images:',
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Theme.of(context).inputDecorationTheme.fillColor),
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -571,7 +562,12 @@ class BottomSheetManager {
         RoundedButton(
           text: StringConstants.wordUpload,
           onPressed: onUploadClicked,
-          icon: const Icon(Icons.cloud_upload_outlined),
+          icon: Icon(
+            Icons.cloud_upload_outlined,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          textColor: Theme.of(context).colorScheme.onPrimary,
         ),
         const SizedBox(
           height: 20,

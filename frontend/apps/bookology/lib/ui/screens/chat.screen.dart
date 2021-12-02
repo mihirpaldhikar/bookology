@@ -277,22 +277,20 @@ class _ChatPageState extends State<ChatPage> {
           ),
           PopupMenuButton(
             onSelected: menuAction,
-            itemBuilder: (BuildContext itemBuilder) =>
-                StringConstants.menuDeleteDiscussion
-                    .map(
-                      (value) => PopupMenuItem(
+            itemBuilder: (BuildContext itemBuilder) => StringConstants
+                .menuDeleteDiscussion
+                .map(
+                  (value) => PopupMenuItem(
                     child: Text(
                       value,
                       style: TextStyle(
-                        color: Theme.of(context)
-                            .inputDecorationTheme
-                            .fillColor,
+                        color: Theme.of(context).inputDecorationTheme.fillColor,
                       ),
                     ),
                     value: value,
                   ),
                 )
-                    .toList(),
+                .toList(),
           ),
         ],
       ),
@@ -305,8 +303,7 @@ class _ChatPageState extends State<ChatPage> {
             stream: FirebaseChatCore.instance.messages(snapshot.data!),
             builder: (context, snapshot) {
               return Chat(
-                  emojiEnlargementBehavior:
-                  EmojiEnlargementBehavior.multi,
+                  emojiEnlargementBehavior: EmojiEnlargementBehavior.multi,
                   hideBackgroundOnEmojiMessages: true,
                   customBottomWidget: DiscussionsInput(
                     roomId: widget.room.id,
@@ -317,9 +314,7 @@ class _ChatPageState extends State<ChatPage> {
                   showUserAvatars: true,
                   showUserNames: false,
                   usePreviewData: true,
-                  theme: Theme.of(context).brightness == Brightness.dark
-                      ? DarkChatUi(context: context)
-                      : LightChatUi(context: context),
+                  theme: ChatUiTheme(context: context),
                   bubbleBuilder: _bubbleBuilder,
                   isAttachmentUploading: _isAttachmentUploading,
                   messages: snapshot.data ?? [],
@@ -328,8 +323,7 @@ class _ChatPageState extends State<ChatPage> {
                   onMessageLongPress: (value) async {
                     if (FirebaseAuth.instance.currentUser!.uid ==
                         value.author.id) {
-                      DialogsManager(context)
-                          .showUnsendMessageDialog(value);
+                      DialogsManager(context).showUnsendMessageDialog(value);
                     }
                   },
                   onPreviewDataFetched: _handlePreviewDataFetched,
@@ -365,12 +359,8 @@ class _ChatPageState extends State<ChatPage> {
       nipRadius: 3,
       color: _authService.currentUser()!.uid != message.author.id ||
               message.type == types.MessageType.image
-          ? Theme.of(context).brightness == Brightness.light
-              ? LightChatUi(context: context).secondaryColor
-              : DarkChatUi(context: context).secondaryColor
-          : Theme.of(context).brightness == Brightness.light
-              ? LightChatUi(context: context).primaryColor
-              : DarkChatUi(context: context).primaryColor,
+          ? ChatUiTheme(context: context).secondaryColor
+          : ChatUiTheme(context: context).primaryColor,
       margin: nextMessageInGroup
           ? const BubbleEdges.symmetric(horizontal: 6)
           : null,

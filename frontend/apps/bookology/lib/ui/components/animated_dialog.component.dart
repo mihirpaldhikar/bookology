@@ -20,7 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/ui/widgets/coloured_icon.widget.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedDialog extends StatefulWidget {
@@ -86,18 +86,13 @@ class AnimatedDialogState extends State<AnimatedDialog>
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              ColoredIcon(
+                icon: widget.dialogIcon,
                 margin: const EdgeInsets.only(
                   top: 20,
                 ),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(
-                    ValuesConstant.secondaryBorderRadius,
-                  ),
-                ),
-                child: widget.dialogIcon,
+                width: 60,
+                height: 60,
               ),
               const SizedBox(
                 height: 20,
@@ -107,7 +102,7 @@ class AnimatedDialogState extends State<AnimatedDialog>
                   Text(
                     widget.title,
                     style: TextStyle(
-                      color: Theme.of(context).inputDecorationTheme.fillColor,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
                     ),

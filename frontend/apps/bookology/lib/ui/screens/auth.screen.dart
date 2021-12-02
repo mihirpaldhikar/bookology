@@ -22,9 +22,11 @@
 
 import 'package:blobs/blobs.dart';
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/auth_error.handler.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/ui/widgets/app_logo.widget.dart';
 import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -69,7 +71,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -90,
                     right: -200,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: 0.05,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -83,7 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -10,
                     left: -30,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: 0.05,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -97,7 +99,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: -10,
                     left: -120,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: 0.05,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -111,7 +113,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     bottom: -170,
                     right: -120,
                     child: Opacity(
-                      opacity: 0.2,
+                      opacity: 0.05,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -132,9 +134,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: 130,
+                          top: 50,
                         ),
-                        child: _logo(context),
+                        child: AppLogo(context: context),
                       ),
                       const SizedBox(
                         height: 130,
@@ -147,44 +149,50 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: Column(
                           children: [
                             RoundedButton(
-                                onPressed: () async {
-                                  _cacheService.setIntroScreenView(seen: false);
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await auth.signInWithGoogle().then(
-                                    (value) async {
-                                      if (value == true) {
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                        await Navigator.pushReplacementNamed(
-                                            context, '/home');
-                                      } else {
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
+                              onPressed: () async {
+                                _cacheService.setIntroScreenView(seen: false);
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await auth.signInWithGoogle().then(
+                                  (value) async {
+                                    if (value == true) {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                      await Navigator.pushReplacementNamed(
+                                          context, '/home');
+                                    } else {
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
 
-                                        _authHandler.firebaseError(
-                                          value: value,
-                                          context: context,
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                                spaceBetween: 30,
-                                outlineWidth: 1,
-                                icon: SvgPicture.asset(
-                                    'assets/svg/google_logo.svg'),
-                                text: StringConstants.hintContinueWithGoogle),
+                                      _authHandler.firebaseError(
+                                        value: value,
+                                        context: context,
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                              spaceBetween: 30,
+                              outlineWidth: ValuesConstant.outlineWidth,
+                              icon: SvgPicture.asset(
+                                  'assets/svg/google_logo.svg'),
+                              text: StringConstants.hintContinueWithGoogle,
+                              textColor: Theme.of(context).colorScheme.primary,
+                            ),
                             const SizedBox(
                               height: 30,
                             ),
                             RoundedButton(
                               text: StringConstants.wordLogin,
-                              outlineWidth: 1,
-                              icon: const Icon(Icons.mail_outline_rounded),
+                              textColor: Theme.of(context).colorScheme.primary,
+                              outlineWidth: ValuesConstant.outlineWidth,
+                              icon: Icon(
+                                Icons.mail_outline_rounded,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                               spaceBetween: 40,
                               onPressed: () {
                                 _cacheService.setIntroScreenView(seen: false);
@@ -212,8 +220,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               child: RichText(
                                 text: TextSpan(
                                   text: StringConstants.hintCreateNewAccount,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                    fontFamily: 'Poppins',
                                   ),
                                   children: [
                                     TextSpan(
@@ -222,7 +234,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .primary,
-                                        decoration: TextDecoration.underline
+                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
                                   ],
@@ -246,7 +258,6 @@ class _AuthScreenState extends State<AuthScreen> {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ],
@@ -254,27 +265,4 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           );
   }
-}
-
-Widget _logo(BuildContext context) {
-  return Column(
-    children: [
-      Image.asset(
-        'assets/icons/splash.icon.png',
-        width: 150,
-        height: 150,
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      Text(
-        StringConstants.appSlogan,
-        style: TextStyle(
-          color: Theme.of(context).inputDecorationTheme.fillColor,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ],
-  );
 }

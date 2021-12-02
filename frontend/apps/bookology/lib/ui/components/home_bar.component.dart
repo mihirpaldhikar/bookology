@@ -28,6 +28,7 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
@@ -54,6 +55,8 @@ class _HomeBarState extends State<HomeBar> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
+    final _isDarkMode = Provider.of<BookologyThemeProvider>(context)
+        .isDarkTheme(context: context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(
         FocusNode(),
@@ -107,19 +110,21 @@ class _HomeBarState extends State<HomeBar> {
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.grey,
-                                width: 0.5,
+                                color: Theme.of(context).colorScheme.primary,
+                                width: ValuesConstant.outlineWidth,
                               ),
                               borderRadius: BorderRadius.circular(100),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                             ),
                             child: Icon(
                               Icons.add,
                               size: 25,
-                              color: Theme.of(context).colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
@@ -142,13 +147,16 @@ class _HomeBarState extends State<HomeBar> {
                             top: 6,
                           ),
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.grey,
-                                width: 0.5,
+                                color: Theme.of(context).colorScheme.primary,
+                                width: ValuesConstant.outlineWidth,
                               ),
                               borderRadius: BorderRadius.circular(100),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
                             ),
                             child: Badge(
                               showBadge: false,
@@ -194,7 +202,7 @@ class _HomeBarState extends State<HomeBar> {
                     bottom: -9,
                     left: -20,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: _isDarkMode ? 0.05 : 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -208,7 +216,7 @@ class _HomeBarState extends State<HomeBar> {
                     top: -25,
                     right: -55,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: _isDarkMode ? 0.05 : 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -222,7 +230,7 @@ class _HomeBarState extends State<HomeBar> {
                     bottom: -180,
                     left: -130,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: _isDarkMode ? 0.05 : 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -236,7 +244,7 @@ class _HomeBarState extends State<HomeBar> {
                     bottom: -210,
                     right: -190,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: _isDarkMode ? 0.05 : 0.1,
                       child: Blob.fromID(
                         styles: BlobStyles(
                           color: Theme.of(context).colorScheme.primary,
@@ -266,7 +274,7 @@ class _HomeBarState extends State<HomeBar> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
-                                color: Theme.of(context).colorScheme.primary ,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                             const Spacer(),
@@ -291,10 +299,9 @@ class _HomeBarState extends State<HomeBar> {
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                        width: 0.5,
-                                      ),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
                                     ),
                                     child: Icon(
                                       Icons.add,
@@ -329,10 +336,9 @@ class _HomeBarState extends State<HomeBar> {
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                        width: 0.5,
-                                      ),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
                                     ),
                                     child: Badge(
                                       showBadge: false,
@@ -366,8 +372,6 @@ class _HomeBarState extends State<HomeBar> {
                           height: 35,
                         ),
                         CircularImage(
-                          outLineWidth: 0.5,
-                          outlineColor: Theme.of(context).colorScheme.primary,
                           image: auth.currentUser()!.photoURL.toString(),
                           radius: 75,
                         ),
@@ -379,10 +383,12 @@ class _HomeBarState extends State<HomeBar> {
                             text: TextSpan(
                               text: 'Good ${greeting()},\n',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: Theme.of(context).inputDecorationTheme.fillColor
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  fontFamily: 'Poppins',
+                                  color: Theme.of(context)
+                                      .inputDecorationTheme
+                                      .fillColor),
                               children: [
                                 TextSpan(
                                   text: '${auth.currentUser()!.displayName}!',

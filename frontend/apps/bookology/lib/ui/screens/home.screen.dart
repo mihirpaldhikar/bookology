@@ -34,7 +34,6 @@ import 'package:bookology/services/connectivity.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/share.service.dart';
-import 'package:bookology/services/update.service.dart';
 import 'package:bookology/ui/components/home_bar.component.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
@@ -44,7 +43,6 @@ import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -87,16 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    var brightness = SchedulerBinding.instance!.window.platformBrightness;
-    setState(() {
-      isDarkMode = brightness == Brightness.dark;
-    });
     await _firestoreService.getSavedBook().then((value) {
       setState(() {
         _savedBookList = value;
       });
     });
-    UpdateService(context).checkForAppUpdate();
     _ad = BannerAd(
       size: AdSize(
         width: MediaQuery.of(context).size.width.toInt(),
@@ -156,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onLoading: _onLoading,
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
                     slivers: [
                       SliverAppBar(
                         elevation: 0,
@@ -207,7 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
       width: MediaQuery.of(context).size.width,
       height: 60,
       child: ListView.builder(
-        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(
@@ -234,18 +225,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: index == 0
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context).colorScheme.background,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outline,
-                    width: 0.5,
-                  ),
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.surface,
                   borderRadius:
                       BorderRadius.circular(ValuesConstant.borderRadius),
+                  border: Border.all(
+                    color: index == 0
+                        ? Colors.transparent
+                        : Theme.of(context).colorScheme.outline,
+                    width: 1,
+                  ),
                 ),
                 child: Text(
                   StringConstants.listBookCategories[index],
-                  style: const TextStyle(),
+                  style: TextStyle(
+                    color: index == 0
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).inputDecorationTheme.fillColor,
+                  ),
                 ),
               ),
             ),
@@ -317,17 +314,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (_savedBookList
                     .where((element) => element.bookId == book.bookId)
                     .isEmpty) {
-                  await _firestoreService.saveBook(bookId: book.bookId);
                   setState(() {
                     _savedBookList
                         .add(SavedBookModel.fromJson({'bookId': book.bookId}));
                   });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Added to Saved',
+                      ),
+                      duration: Duration(
+                        seconds: 2,
+                      ),
+                    ),
+                  );
+                  await _firestoreService.saveBook(bookId: book.bookId);
                 } else {
-                  await _firestoreService.removedSavedBook(bookId: book.bookId);
                   setState(() {
                     _savedBookList.removeWhere(
                         (element) => element.bookId == book.bookId);
                   });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Removed from Saved',
+                      ),
+                      duration: Duration(
+                        seconds: 2,
+                      ),
+                    ),
+                  );
+                  await _firestoreService.removedSavedBook(bookId: book.bookId);
                 }
                 //}
               },
@@ -348,6 +365,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (BuildContext context) => BookViewer(
                   id: book.bookId,
                   book: book,
+                  isSaveBook: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty,
                 ),
               ),
             );

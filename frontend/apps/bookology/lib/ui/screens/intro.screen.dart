@@ -51,7 +51,8 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     final _pageDecoration = PageDecoration(
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
+        color: Theme.of(context).colorScheme.primary,
         fontSize: 28.0,
         fontWeight: FontWeight.w700,
       ),
@@ -64,13 +65,7 @@ class _IntroScreenState extends State<IntroScreen> {
     );
     final List<PageViewModel> introPages = [
       PageViewModel(
-        titleWidget: const Text(
-          "Welcome to Bookology!",
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: 'Welcome to Bookology!',
         bodyWidget: const Text(
           'Find the books you want nearby.',
           style: TextStyle(
@@ -78,11 +73,14 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
         ),
         decoration: _pageDecoration,
-        image: const Center(
-          child: Image(
-            image: AssetImage('assets/icons/splash.icon.png'),
-            width: 250,
-            height: 250,
+        image: Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(200),
+            child: SvgPicture.asset(
+              'assets/icons/bookology.icon.svg',
+              width: 250,
+              height: 250,
+            ),
           ),
         ),
       ),
@@ -162,11 +160,12 @@ class _IntroScreenState extends State<IntroScreen> {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary,
               border: Border.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 1,
+                color: Theme.of(context).colorScheme.primary,
+                width: 0,
               ),
-              borderRadius:
-                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              borderRadius: BorderRadius.circular(
+                ValuesConstant.buttonBorderRadius,
+              ),
             ),
             child: Text(
               'Next',
@@ -188,11 +187,12 @@ class _IntroScreenState extends State<IntroScreen> {
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary,
               border: Border.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 0.5,
+                color: Theme.of(context).colorScheme.primary,
+                width: 0,
               ),
-              borderRadius:
-                  BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+              borderRadius: BorderRadius.circular(
+                ValuesConstant.buttonBorderRadius,
+              ),
             ),
             child: Text(
               'Next',

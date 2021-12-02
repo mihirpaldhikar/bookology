@@ -20,10 +20,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
+import 'package:bookology/services/update.service.dart';
 import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/components/fade_indexed_stack.component.dart';
 import 'package:bookology/ui/screens/discussions.screen.dart';
@@ -39,13 +39,11 @@ import 'package:provider/provider.dart';
 class ViewManager extends StatefulWidget {
   final int screenIndex;
   final bool isUserProfileUpdated;
-  final AdaptiveThemeMode? themeMode;
 
   const ViewManager({
     Key? key,
     required this.screenIndex,
     this.isUserProfileUpdated = false,
-    this.themeMode = AdaptiveThemeMode.system,
   }) : super(key: key);
 
   @override
@@ -58,13 +56,9 @@ class _ViewManagerState extends State<ViewManager> {
 
   @override
   void initState() {
+    UpdateService(context).checkForAppUpdate();
     screenIndex = widget.screenIndex;
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
   }
 
   @override
@@ -91,24 +85,33 @@ class _ViewManagerState extends State<ViewManager> {
                 screenIndex = index;
               }),
               destinations: [
-                const NavigationDestination(
-                  icon: Icon(Icons.home_outlined),
-                  selectedIcon: Icon(
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.home_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  selectedIcon: const Icon(
                     Icons.home,
                   ),
                   label: StringConstants.navigationHome,
                 ),
                 NavigationDestination(
-                  icon: const Icon(Icons.search_outlined),
+                  icon: Icon(
+                    Icons.search_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                   selectedIcon: Icon(
                     Icons.search,
                     color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationSearch,
                 ),
-                const NavigationDestination(
-                  icon: Icon(Icons.question_answer_outlined),
-                  selectedIcon: Icon(
+                NavigationDestination(
+                  icon: Icon(
+                    Icons.question_answer_outlined,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  selectedIcon: const Icon(
                     Icons.question_answer,
                   ),
                   label: StringConstants.navigationDiscussions,
@@ -134,8 +137,8 @@ class _ViewManagerState extends State<ViewManager> {
                     },
                   ),
                   const SearchScreen(),
-                  DiscussionsScreen(themeMode: widget.themeMode!),
-                  ProfileScreen(themeMode: widget.themeMode!),
+                  const DiscussionsScreen(),
+                  const ProfileScreen(),
                 ],
               ),
             ),

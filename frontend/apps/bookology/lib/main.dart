@@ -48,8 +48,7 @@ Future<void> main() async {
     appRunner: () => runApp(
       Provider.value(
         value: AdsService(adsM),
-        builder: (context, child) => const AppManager(
-        ),
+        builder: (context, child) => const AppManager(),
       ),
     ),
   );

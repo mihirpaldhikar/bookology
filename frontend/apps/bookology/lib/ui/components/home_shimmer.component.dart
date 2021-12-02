@@ -22,6 +22,7 @@
 
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -50,7 +51,7 @@ Widget homeShimmer({
                     ? const Color(0xFF1D1C1C)
                     : const Color(0xFFE0E0E0),
                 highlightColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF4B4949)
+                    ? const Color(0xFF3B3B3B)
                     : const Color(0xFFF5F5F5),
                 child: Column(
                   children: [
@@ -230,9 +231,13 @@ Widget homeShimmer({
         );
       } else {
         return Container(
-          height: 250,
           width: double.infinity,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: 20,
+          ),
           margin: const EdgeInsets.only(
             bottom: 20,
             left: 17,
@@ -241,116 +246,117 @@ Widget homeShimmer({
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
-              color: Colors.grey,
-              width: 0.5,
+              color: Theme.of(context).colorScheme.outline,
+              width: ValuesConstant.outlineWidth,
             ),
             borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
           ),
           child: Shimmer.fromColors(
-              enabled: true,
-              baseColor: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1D1C1C)
-                  : const Color(0xFFE0E0E0),
-              highlightColor: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF4B4949)
-                  : const Color(0xFFF5F5F5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 150,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
+            enabled: true,
+            baseColor: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF1D1C1C)
+                : const Color(0xFFE0E0E0),
+            highlightColor: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF3B3B3B)
+                : const Color(0xFFF5F5F5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    Container(
+                      width: 150,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 170,
+                  height: 20,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 130,
+                  height: 10,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 15,
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: 150,
-                          height: 15,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          width: 120,
-                          height: 15,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Container(
-                          width: 140,
-                          height: 10,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 10,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 30,
-                              height: 10,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 30,
-                              height: 10,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Container(
-                          width: 100,
-                          height: 10,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: 170,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                                ValuesConstant.secondaryBorderRadius),
-                          ),
-                        )
-                      ],
+                    const SizedBox(
+                      width: 5,
                     ),
-                  )
-                ],
-              )),
+                    Container(
+                      width: 70,
+                      height: 10,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: 70,
+                      height: 10,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 150,
+                  height: 15,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  width: 150,
+                  height: 15,
+                  color: Colors.white,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                RoundedButton(
+                  text: 'View',
+                  textColor: Theme.of(context).colorScheme.onPrimary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  onPressed: () {},
+                )
+              ],
+            ),
+          ),
         );
       }
     },

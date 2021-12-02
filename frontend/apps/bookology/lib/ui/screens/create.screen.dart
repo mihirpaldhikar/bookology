@@ -21,6 +21,7 @@
  */
 
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/handlers/image.handler.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/currency.manager.dart';
@@ -194,9 +195,10 @@ class _CreateScreenState extends State<CreateScreen> {
                                       child: RoundedButton(
                                         text: _nextStep,
                                         textColor: Theme.of(context)
-                                            .buttonTheme
-                                            .colorScheme!
+                                            .colorScheme
                                             .primary,
+                                        outlineWidth:
+                                            ValuesConstant.outlineWidth,
                                         onPressed: () async {
                                           continued();
                                           if (_currentStep == 4) {
@@ -1261,9 +1263,11 @@ class _CreateScreenState extends State<CreateScreen> {
                   width: 10,
                 ),
                 DropdownButton<String>(
-                  //elevation: 5,
-                  style: const TextStyle(color: Colors.black),
-                  borderRadius: BorderRadius.circular(20),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontFamily: 'Poppins'),
+                  borderRadius:
+                      BorderRadius.circular(ValuesConstant.borderRadius),
                   alignment: AlignmentDirectional.topCenter,
                   items: StringConstants.listBookCondition
                       .map<DropdownMenuItem<String>>((String value) {
