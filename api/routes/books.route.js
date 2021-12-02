@@ -1,17 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/book.model');
-const {BooksCollection, UsersCollection} = require('../managers/collection.manager');
+const {
+  BooksCollection,
+  UsersCollection,
+  RoomsCollection,
+  NotificationsCollection,
+} = require('../managers/collection.manager');
 const jwt = require('jsonwebtoken');
 const {verifyUser} = require('../middlewares/verify.middleware');
 const {firebaseAdmin} = require('../configs/firebase.config');
+const apiCache = require('apicache');
 
-router.get('/', verifyUser, async (request, response, next) => {
+const cache = apiCache.middleware;
+
+router.get('/', cache('2 minutes'), verifyUser, async (request, response, next) => {
   try {
-    await BooksCollection.find().sort({$natural: -1}).toArray(function(error, books) {
-      response.status(200).json(books.map((book) => {
-        return Book.getBooklet(book);
-      }));
+    const bookDataList = [];
+    await BooksCollection.find().sort({$natural: -1}).toArray(async function(error, books) {
+      for (let i = 0; i < books.length; i++) {
+        const userId = books[i].uploader_id;
+        const userData = await UsersCollection.findOne({_id: userId});
+        const bookData = Book.getBookletWithUploader(books[i], userData);
+        bookDataList.push(bookData);
+      }
+      response.status(200).json(bookDataList);
     });
   } catch (error) {
     response.status(500).json({
@@ -23,7 +36,7 @@ router.get('/', verifyUser, async (request, response, next) => {
   }
 });
 
-router.get('/:bookId', verifyUser, async (request, response, next) => {
+router.get('/:bookId', cache('2 minutes'), verifyUser, async (request, response, next) => {
   try {
     const book = await BooksCollection.findOne({_id: request.params.bookId});
     if (book == null) {
@@ -228,6 +241,28 @@ router.delete('/delete/:bookID', verifyUser, async (request, response, next) => 
         await firebaseAdmin.storage().bucket(process.env.CLOUD_STORAGE_BUCKET_NAME).deleteFiles({
           prefix: `Users/${authData.user_id}/BooksImages/${book.additional_information.images_collection_id}/`,
           force: true,
+        });
+        await NotificationsCollection.remove({
+          'metadata.book_id': request.params.bookID,
+        });
+        await RoomsCollection.find({book_id: request.params.bookID}).toArray(async function(error, rooms) {
+          if (rooms.length > 0 || true || rooms.length !== 0) {
+            for (let i = 0; i < rooms.length; i++) {
+              const room = rooms[i];
+              await firebaseAdmin.firestore().collection('users').doc(room.users[1])
+                .collection('requests').doc(request.params.bookID).delete();
+              await firebaseAdmin.firestore().collection('users').doc()
+                .collection('saved').doc(request.params.bookID).delete();
+
+              await RoomsCollection.findOneAndDelete({_id: room.room_id});
+
+              await firebaseAdmin.storage().bucket(process.env.CLOUD_STORAGE_BUCKET_NAME).deleteFiles({
+                prefix: `rooms/${room.room_id}/`,
+                force: true,
+              });
+              await firebaseAdmin.firestore().collection('rooms').doc(room.room_id).delete();
+            }
+          }
         });
         response.status(200).json({
           result: {
