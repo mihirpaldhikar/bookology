@@ -20,13 +20,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/biomertics.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/animated_dialog.component.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:bookology/utils/validator.util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,9 +62,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Delete',
-            backgroundColor: Colors.red[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
               await firestoreService.deleteDiscussionRoom(
@@ -73,9 +75,10 @@ class DialogsManager {
           const SizedBox(
             height: 20,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -104,9 +107,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Unsend',
-            backgroundColor: Colors.red[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.error,
             onPressed: () async {
               Navigator.of(context).pop();
               await firestoreService.unsendMessage(
@@ -120,9 +124,10 @@ class DialogsManager {
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -141,20 +146,18 @@ class DialogsManager {
       context: context,
       builder: (context) => AnimatedDialog(
         title: 'Secured Connection',
-        content: [
+        content: const [
           Text(
             'This discussion is end-to-end secured. '
             'No one even Bookology can read the ongoing '
             'discussions.',
-            style: TextStyle(
-              color: Theme.of(context).inputDecorationTheme.fillColor,
-            ),
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'OK',
-            backgroundColor: Colors.green[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -185,9 +188,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'OK',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -217,9 +221,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'OK',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -250,9 +255,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Next',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: onPressed,
           )
         ],
@@ -278,17 +284,19 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Delete',
-            backgroundColor: Colors.red[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.error,
             onPressed: onDelete,
           ),
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -356,16 +364,19 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Accept',
-            backgroundColor: Colors.green[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: onRequestAccepted,
           ),
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Reject',
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -395,16 +406,19 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Request',
-            backgroundColor: Colors.green[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: onRequestSend,
           ),
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -471,9 +485,10 @@ class DialogsManager {
           ),
         ],
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Send Reset Link',
-            backgroundColor: Colors.green[100],
+            outlineWidth: ValuesConstant.outlineWidth,
+            textColor: Theme.of(context).colorScheme.primary,
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 final result = await AuthService(FirebaseAuth.instance)
@@ -491,9 +506,10 @@ class DialogsManager {
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: ValuesConstant.outlineWidth,
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -516,18 +532,19 @@ class DialogsManager {
       builder: (context) => AnimatedDialog(
         title: 'Send Attachment?',
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Send',
-            textColor: Colors.black,
-            backgroundColor: Colors.green.shade100,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: ValuesConstant.outlineWidth,
             onPressed: onSendClicked,
           ),
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: 2,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -556,18 +573,19 @@ class DialogsManager {
       builder: (context) => AnimatedDialog(
         title: 'Logout',
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Confirm',
-            textColor: Colors.black,
-            backgroundColor: Colors.green.shade100,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: ValuesConstant.outlineWidth,
             onPressed: onLogoutClicked,
           ),
           const SizedBox(
             height: 15,
           ),
-          OutLinedButton(
+          RoundedButton(
             text: 'Cancel',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: ValuesConstant.outlineWidth,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -597,10 +615,10 @@ class DialogsManager {
       builder: (context) => AnimatedDialog(
         title: 'Location Permission',
         actions: [
-          OutLinedButton(
+          RoundedButton(
             text: 'Allow',
-            textColor: Theme.of(context).inputDecorationTheme.fillColor,
-            backgroundColor: Colors.green.shade100,
+            textColor: Theme.of(context).colorScheme.primary,
+            outlineWidth: ValuesConstant.outlineWidth,
             onPressed: onOpenSettingsClicked,
           ),
         ],
@@ -620,7 +638,7 @@ class DialogsManager {
   }
 
   void showBiometricsSelectionDialog() async {
-    bool _isBiometricsEnabled = CacheService().isBiometricsEnabled();
+    bool _isBiometricsEnabled = PreferencesManager().isBiometricsEnabled();
     final List<BiometricType> availableBiometrics =
         await BiometricsService(context).getAvailableBiometrics();
     showDialog(
@@ -720,10 +738,10 @@ class DialogsManager {
             )
           ],
           actions: [
-            OutLinedButton(
+            RoundedButton(
               text: 'Done',
-              textColor: Colors.black,
-              backgroundColor: Colors.green.shade100,
+              textColor: Theme.of(context).colorScheme.primary,
+              outlineWidth: ValuesConstant.outlineWidth,
               onPressed: () async {
                 if (_isBiometricsEnabled) {
                   if (await BiometricsService(this.context)
@@ -740,7 +758,7 @@ class DialogsManager {
                             },
                             onBioAuthCompleted: (isVerified) {
                               if (isVerified) {
-                                CacheService().setIsBiometricEnabled(
+                                PreferencesManager().setIsBiometricEnabled(
                                     isEnabled: isVerified);
                                 ToastManager(this.context).showSuccessToast(
                                     message:
@@ -756,7 +774,7 @@ class DialogsManager {
                             });
                   }
                 } else {
-                  CacheService().setIsBiometricEnabled(isEnabled: false);
+                  PreferencesManager().setIsBiometricEnabled(isEnabled: false);
                   Navigator.of(this.context).pop();
                 }
               },
@@ -764,9 +782,10 @@ class DialogsManager {
             const SizedBox(
               height: 15,
             ),
-            OutLinedButton(
+            RoundedButton(
               text: 'Cancel',
-              textColor: Theme.of(context).inputDecorationTheme.fillColor,
+              outlineWidth: ValuesConstant.outlineWidth,
+              textColor: Theme.of(context).colorScheme.primary,
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -20,57 +20,76 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
-class CacheService {
-  final _cacheStorage = GetStorage();
+class PreferencesManager {
+  final _preferences = GetStorage();
 
   void setCurrentUser({required String userName, bool? isVerified}) {
-    _cacheStorage.write('userName', userName);
-    _cacheStorage.write('isVerified', isVerified);
+    _preferences.write('userName', userName);
+    _preferences.write('isVerified', isVerified);
   }
 
   void setNewNotificationNumber({required int count}) {
-    _cacheStorage.write('newNotificationNumber', count);
+    _preferences.write('newNotificationNumber', count);
   }
 
   void setOldNotificationNumber({required int count}) {
-    _cacheStorage.write('oldNotificationNumber', count);
+    _preferences.write('oldNotificationNumber', count);
   }
 
   int getNewNotificationNumber() {
-    return _cacheStorage.read('newNotificationNumber');
+    return _preferences.read('newNotificationNumber');
   }
 
   int getOldNotificationNumber() {
-    return _cacheStorage.read('oldNotificationNumber');
+    return _preferences.read('oldNotificationNumber');
   }
 
   String getCurrentUserNameCache() {
-    return _cacheStorage.read('userName');
+    return _preferences.read('userName');
   }
 
   void setIntroScreenView({required bool seen}) {
-    _cacheStorage.write('seenIntroScreen', seen);
+    _preferences.write('seenIntroScreen', seen);
   }
 
   bool isIntroScreenSeen() {
-    return _cacheStorage.read('seenIntroScreen') ?? false;
+    return _preferences.read('seenIntroScreen') ?? false;
   }
 
   bool getCurrentIsVerifiedCache() {
-    return _cacheStorage.read('isVerified') ?? false;
+    return _preferences.read('isVerified') ?? false;
   }
 
   void setIsBiometricEnabled({required bool isEnabled}) {
-    _cacheStorage.write('biometrics_enabled', isEnabled);
+    _preferences.write('biometrics_enabled', isEnabled);
   }
 
   bool isBiometricsEnabled() {
-    return _cacheStorage.read('biometrics_enabled') ?? false;
+    return _preferences.read('biometrics_enabled') ?? false;
+  }
+
+  void setCurrentThemeMode({required ThemeMode themeMode}) {
+    final _theme = themeMode == ThemeMode.dark
+        ? 'dark'
+        : themeMode == ThemeMode.system
+            ? 'system'
+            : 'light';
+    _preferences.write('currentTheme', _theme);
+  }
+
+  ThemeMode getCurrentTheme() {
+    final _theme = _preferences.read('currentTheme') == 'dark'
+        ? ThemeMode.dark
+        : _preferences.read('currentTheme') == 'system'
+            ? ThemeMode.system
+            : ThemeMode.light;
+    return _theme;
   }
 
   Future<void> clearCacheStorage() async {
-    await _cacheStorage.erase();
+    await _preferences.erase();
   }
 }

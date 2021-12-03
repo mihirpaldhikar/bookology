@@ -20,10 +20,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/ui/widgets/coloured_icon.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class AnimatedDialog extends StatefulWidget {
   final Color? iconBackgroundColor;
@@ -50,16 +48,6 @@ class AnimatedDialogState extends State<AnimatedDialog>
   Color iconBackgroundColor = Colors.transparent;
   late AnimationController controller;
   late Animation<double> scaleAnimation;
-  bool isDarkMode = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    var brightness = SchedulerBinding.instance!.window.platformBrightness;
-    setState(() {
-      isDarkMode = brightness == Brightness.dark;
-    });
-  }
 
   @override
   void initState() {
@@ -78,96 +66,84 @@ class AnimatedDialogState extends State<AnimatedDialog>
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
-      builder: (_, mode, child) {
-        if (widget.iconBackgroundColor.hashCode == 4290502395) {
-          iconBackgroundColor =
-              Theme.of(context).buttonTheme.colorScheme!.background;
-        } else {
-          iconBackgroundColor = widget.iconBackgroundColor!;
-        }
-        return ScaleTransition(
-          scale: scaleAnimation,
-          child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 20,
-                right: 15,
-                left: 15,
+    if (widget.iconBackgroundColor.hashCode == 4290502395) {
+      iconBackgroundColor =
+          Theme.of(context).buttonTheme.colorScheme!.background;
+    } else {
+      iconBackgroundColor = widget.iconBackgroundColor!;
+    }
+    return ScaleTransition(
+      scale: scaleAnimation,
+      child: Dialog(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20,
+            right: 15,
+            left: 15,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ColoredIcon(
+                icon: widget.dialogIcon,
+                margin: const EdgeInsets.only(
+                  top: 20,
+                ),
+                width: 60,
+                height: 60,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              const SizedBox(
+                height: 20,
+              ),
+              Wrap(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 20,
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color:
-                          Theme.of(context).buttonTheme.colorScheme!.background,
-                      borderRadius: BorderRadius.circular(
-                        ValuesConstant.secondaryBorderRadius,
-                      ),
-                    ),
-                    child: widget.dialogIcon,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Wrap(
-                    children: [
-                      Text(
-                        widget.title,
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).inputDecorationTheme.fillColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: widget.content,
-                      ),
+                  Text(
+                    widget.title,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 15,
-                      right: 15,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: widget.actions,
-                    ),
-                  )
                 ],
               ),
-            ),
+              const SizedBox(
+                height: 15,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: widget.content,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 15,
+                  right: 15,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widget.actions,
+                ),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

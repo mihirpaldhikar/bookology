@@ -56,23 +56,19 @@ class CollapsableFab extends StatefulWidget {
   /// Double value to set the boundary value when scroll animation is triggered
   final double? limitIndicator;
 
-  /// Color to set the button background color
-  final Color? color;
-
-  const CollapsableFab(
-      {Key? key,
-      required this.icon,
-      required this.text,
-      required this.onPress,
-      required this.scrollController,
-      this.elevation = 5.0,
-      this.width = 120.0,
-      this.height = 60.0,
-      this.duration = const Duration(milliseconds: 250),
-      this.curve,
-      this.limitIndicator = 10.0,
-      this.color = Colors.blueAccent})
-      : super(key: key);
+  const CollapsableFab({
+    Key? key,
+    required this.icon,
+    required this.text,
+    required this.onPress,
+    required this.scrollController,
+    this.elevation = 5.0,
+    this.width = 120.0,
+    this.height = 60.0,
+    this.duration = const Duration(milliseconds: 250),
+    this.curve,
+    this.limitIndicator = 10.0,
+  }) : super(key: key);
 
   @override
   _CollapsableFabState createState() => _CollapsableFabState();
@@ -122,7 +118,9 @@ class _CollapsableFabState extends State<CollapsableFab> {
       child: Card(
         elevation: widget.elevation,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.borderRadius,
+          ),
         ),
         child: AnimatedContainer(
           curve: widget.curve ?? Curves.easeInOut,
@@ -130,8 +128,11 @@ class _CollapsableFabState extends State<CollapsableFab> {
           height: widget.height,
           width: _onTop ? widget.width : widget.height,
           decoration: BoxDecoration(
-              color: widget.color,
-              borderRadius: BorderRadius.circular(ValuesConstant.borderRadius)),
+            color: Theme.of(context).colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(
+              ValuesConstant.buttonBorderRadius,
+            ),
+          ),
           child: _onTop
               ? Center(
                   child: Wrap(
@@ -140,7 +141,7 @@ class _CollapsableFabState extends State<CollapsableFab> {
                     children: [
                       widget.icon!,
                       const SizedBox(
-                        width: 20,
+                        width: 10,
                       ),
                       widget.text!
                     ],

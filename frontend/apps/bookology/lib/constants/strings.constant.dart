@@ -35,8 +35,8 @@ class StringConstants {
   static const String wordDelete = 'Delete';
   static const String wordClose = 'Close';
   static const String wordLogout = 'Logout';
-  static const String wordSignUp = 'Sign Up';
-  static const String wordLogin = 'Login';
+  static const String wordSignUp = 'Sign Up!';
+  static const String wordLogin = 'Continue With Email';
   static const String wordSupport = 'Support';
   static const String wordSearch = 'Search';
   static const String wordDone = 'Done';
@@ -46,7 +46,7 @@ class StringConstants {
   static const String wordPrice = 'Price';
   static const String wordYouSave = 'You Save';
   static const String wordEnquire = 'Enquire';
-  static const String wordAddToWishList = 'Add to Wish list';
+  static const String wordAddToSaved = 'Add to Saved';
   static const String wordBookLocation = 'Book Location';
   static const String wordDescription = 'Description';
   static const String wordBookDetails = 'Book Details';
@@ -88,8 +88,7 @@ class StringConstants {
 
   // Hints Constants
   static const String hintCreateNewBook = 'Create new Book';
-  static const String hintCreateNewAccount =
-      'Create new Don\'t have an account?';
+  static const String hintCreateNewAccount = 'Don\'t have a Bookology account?';
   static const String hintContinueWithGoogle = 'Continue With Google';
   static const String hintEditBook = 'Edit Book';
   static const String hintDeleteBook = 'Delete Book';
@@ -179,4 +178,7 @@ class StringConstants {
   static const Set<String> menuDeleteDiscussion = {
     'Delete Discussions',
   };
+
+  // Others Constants
+  static const String or = '-- OR --';
 }

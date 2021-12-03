@@ -35,9 +35,11 @@ void main() {
     expect(emailValidator2, false);
   });
 
-  test('Verifies the if the given password is a valid password or not', () async {
+  test('Verifies the if the given password is a valid password or not',
+      () async {
     // Test the valid password
-    final passwordValidator1 = Validator().validatePassword('@!THISisATestPassword1234');
+    final passwordValidator1 =
+        Validator().validatePassword('@!THISisATestPassword1234');
     expect(passwordValidator1, true);
 
     // Test the invalid password

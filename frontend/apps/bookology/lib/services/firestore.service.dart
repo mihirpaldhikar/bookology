@@ -20,8 +20,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'dart:developer';
+
 import 'package:bookology/models/app.model.dart';
 import 'package:bookology/models/request.model.dart';
+import 'package:bookology/models/saved_book.model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -286,5 +289,56 @@ class FirestoreService {
     final appDetails =
         await _firestore.collection('configs').doc('app_details').get();
     return AppModel.fromJson(appDetails.data()!);
+  }
+
+  Future<bool> saveBook({required String bookId}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_firebaseAuth.currentUser!.uid)
+          .collection('saved')
+          .doc(bookId)
+          .set(
+        {
+          'bookId': bookId,
+        },
+      );
+
+      return true;
+    } catch (error, stackTrace) {
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> removedSavedBook({required String bookId}) async {
+    await _firestore
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('saved')
+        .doc(bookId)
+        .delete();
+  }
+
+  Future<List<SavedBookModel>> getSavedBook() async {
+    final data = await _firestore
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .collection('saved')
+        .get();
+    final savedBooks = data.docs;
+    final savedBookList = List<SavedBookModel>.from(
+      savedBooks.map(
+        (notification) {
+          return SavedBookModel.fromJson(notification);
+        },
+      ),
+    );
+
+    log(savedBookList.length.toString());
+    return savedBookList;
   }
 }

@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bookology/managers/app.manager.dart';
 import 'package:bookology/services/ads.service.dart';
 import 'package:bookology/services/startup.service.dart';
@@ -35,8 +34,6 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final savedThemeMode =
-      await AdaptiveTheme.getThemeMode() ?? AdaptiveThemeMode.light;
   await dotenv.load(fileName: 'app.config.env');
   final adsM = MobileAds.instance.initialize();
   await StartUpService().startService();
@@ -51,9 +48,7 @@ Future<void> main() async {
     appRunner: () => runApp(
       Provider.value(
         value: AdsService(adsM),
-        builder: (context, child) => AppManager(
-          saveThemeMode: savedThemeMode,
-        ),
+        builder: (context, child) => const AppManager(),
       ),
     ),
   );

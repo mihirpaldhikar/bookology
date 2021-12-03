@@ -1,28 +1,5 @@
-/*
- * Copyright 2021 Mihir Paldhikar
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation the
- *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is furnished
- *  to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies
- *  or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-
 class BookModel {
-  String bookId = '';
-  String uploaderId = '';
+  String bookId = 'Nil Book ID';
   BookInformation bookInformation = BookInformation(
     isbn: '',
     name: '',
@@ -32,6 +9,7 @@ class BookModel {
   AdditionalInformation additionalInformation = AdditionalInformation(
     description: '',
     condition: '',
+    categories: [],
     imagesCollectionId: '',
     images: [],
   );
@@ -47,30 +25,29 @@ class BookModel {
   Slugs slugs = Slugs(
     name: '',
   );
+  Uploader uploader = Uploader(
+    userId: '',
+    username: '',
+    verified: false,
+    profilePictureUrl: '',
+    firstName: '',
+    lastName: '',
+  );
   String location = '';
 
-  BookModel(
-      {required String bookId,
-      required String uploaderId,
-      required BookInformation bookInformation,
-      required AdditionalInformation additionalInformation,
-      required Pricing pricing,
-      required CreatedOn createdOn,
-      required Slugs slugs,
-      required String location}) {
-    bookId = bookId;
-    uploaderId = uploaderId;
-    bookInformation = bookInformation;
-    additionalInformation = additionalInformation;
-    pricing = pricing;
-    createdOn = createdOn;
-    slugs = slugs;
-    location = location;
-  }
+  BookModel({
+    required this.bookId,
+    required this.bookInformation,
+    required this.additionalInformation,
+    required this.pricing,
+    required this.createdOn,
+    required this.slugs,
+    required this.uploader,
+    required this.location,
+  });
 
   BookModel.fromJson(Map<String, dynamic> json) {
     bookId = json['book_id'];
-    uploaderId = json['uploader_id'];
     bookInformation = (json['book_information'] != null
         ? BookInformation.fromJson(json['book_information'])
         : null)!;
@@ -83,18 +60,21 @@ class BookModel {
         ? CreatedOn.fromJson(json['created_on'])
         : null)!;
     slugs = (json['slugs'] != null ? Slugs.fromJson(json['slugs']) : null)!;
+    uploader = (json['uploader'] != null
+        ? Uploader.fromJson(json['uploader'])
+        : null)!;
     location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['book_id'] = bookId;
-    data['uploader_id'] = uploaderId;
     data['book_information'] = bookInformation.toJson();
     data['additional_information'] = additionalInformation.toJson();
     data['pricing'] = pricing.toJson();
     data['created_on'] = createdOn.toJson();
     data['slugs'] = slugs.toJson();
+    data['uploader'] = uploader.toJson();
     data['location'] = location;
     return data;
   }
@@ -106,16 +86,12 @@ class BookInformation {
   String author = '';
   String publisher = '';
 
-  BookInformation(
-      {required String isbn,
-      required String name,
-      required String author,
-      required String publisher}) {
-    isbn = isbn;
-    name = name;
-    author = author;
-    publisher = publisher;
-  }
+  BookInformation({
+    required this.isbn,
+    required this.name,
+    required this.author,
+    required this.publisher,
+  });
 
   BookInformation.fromJson(Map<String, dynamic> json) {
     isbn = json['isbn'];
@@ -137,23 +113,22 @@ class BookInformation {
 class AdditionalInformation {
   String description = '';
   String condition = '';
+  List<dynamic> categories = [];
   String imagesCollectionId = '';
   List<String> images = [];
 
-  AdditionalInformation(
-      {required String description,
-      required String condition,
-      required String imagesCollectionId,
-      required List<String> images}) {
-    description = description;
-    condition = condition;
-    imagesCollectionId = imagesCollectionId;
-    images = images;
-  }
+  AdditionalInformation({
+    required this.description,
+    required this.condition,
+    required this.categories,
+    required this.imagesCollectionId,
+    required this.images,
+  });
 
   AdditionalInformation.fromJson(Map<String, dynamic> json) {
     description = json['description'];
     condition = json['condition'];
+    categories = json['categories'].cast<dynamic>();
     imagesCollectionId = json['images_collection_id'];
     images = json['images'].cast<String>();
   }
@@ -162,6 +137,7 @@ class AdditionalInformation {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['description'] = description;
     data['condition'] = condition;
+    data['categories'] = categories;
     data['images_collection_id'] = imagesCollectionId;
     data['images'] = images;
     return data;
@@ -173,14 +149,11 @@ class Pricing {
   String sellingPrice = '';
   String currency = '';
 
-  Pricing(
-      {required String originalPrice,
-      required String sellingPrice,
-      required String currency}) {
-    originalPrice = originalPrice;
-    sellingPrice = sellingPrice;
-    currency = currency;
-  }
+  Pricing({
+    required this.originalPrice,
+    required this.sellingPrice,
+    required this.currency,
+  });
 
   Pricing.fromJson(Map<String, dynamic> json) {
     originalPrice = json['original_price'];
@@ -201,10 +174,10 @@ class CreatedOn {
   String date = '';
   String time = '';
 
-  CreatedOn({required String date, required String time}) {
-    date = date;
-    time = time;
-  }
+  CreatedOn({
+    required this.date,
+    required this.time,
+  });
 
   CreatedOn.fromJson(Map<String, dynamic> json) {
     date = json['date'];
@@ -220,11 +193,11 @@ class CreatedOn {
 }
 
 class Slugs {
-  String name = '';
+  late String name;
 
-  Slugs({required String name}) {
-    name = name;
-  }
+  Slugs({
+    required this.name,
+  });
 
   Slugs.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -233,6 +206,44 @@ class Slugs {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
+    return data;
+  }
+}
+
+class Uploader {
+  String userId = '';
+  String username = '';
+  bool verified = false;
+  String profilePictureUrl = '';
+  String firstName = '';
+  String lastName = '';
+
+  Uploader({
+    required this.userId,
+    required this.username,
+    required this.verified,
+    required this.profilePictureUrl,
+    required this.firstName,
+    required this.lastName,
+  });
+
+  Uploader.fromJson(Map<String, dynamic> json) {
+    userId = json['user_id'];
+    username = json['username'];
+    verified = json['verified'];
+    profilePictureUrl = json['profile_picture_url'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['username'] = username;
+    data['verified'] = verified;
+    data['profile_picture_url'] = profilePictureUrl;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
     return data;
   }
 }

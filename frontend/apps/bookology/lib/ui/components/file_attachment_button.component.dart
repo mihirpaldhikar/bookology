@@ -45,14 +45,12 @@ class FileAttachmentButton extends StatelessWidget {
         bottom: 5,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(100),
       ),
       child: Center(
         child: IconButton(
-          icon: Theme.of(context).brightness == Brightness.light
-              ? LightChatUi(context: context).attachmentButtonIcon!
-              : DarkChatUi(context: context).attachmentButtonIcon!,
+          icon: ChatUiTheme(context: context).attachmentButtonIcon!,
           onPressed: onPressed,
           padding: EdgeInsets.zero,
           tooltip: 'Send Media',

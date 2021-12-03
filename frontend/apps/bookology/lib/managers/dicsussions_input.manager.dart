@@ -117,10 +117,7 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
           backgroundColor: Colors.transparent,
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation<Color>(
-            Theme.of(context).brightness == Brightness.light
-                ? LightChatUi(context: context).inputTextColor
-                : DarkChatUi(context: context).inputTextColor,
-          ),
+              ChatUiTheme(context: context).inputTextColor),
         ),
       );
     } else {
@@ -175,20 +172,12 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                   color: Colors.grey,
                   width: 0.5,
                 ),
-                borderRadius: Theme.of(context).brightness == Brightness.light
-                    ? LightChatUi(context: context).inputBorderRadius
-                    : DarkChatUi(context: context).inputBorderRadius,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? LightChatUi(context: context).inputBackgroundColor
-                    : DarkChatUi(context: context).inputBackgroundColor,
+                borderRadius: ChatUiTheme(context: context).inputBorderRadius,
+                color: ChatUiTheme(context: context).inputBackgroundColor,
               ),
               child: Material(
-                borderRadius: Theme.of(context).brightness == Brightness.light
-                    ? LightChatUi(context: context).inputBorderRadius
-                    : DarkChatUi(context: context).inputBorderRadius,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? LightChatUi(context: context).inputBackgroundColor
-                    : DarkChatUi(context: context).inputBackgroundColor,
+                borderRadius: ChatUiTheme(context: context).inputBorderRadius,
+                color: ChatUiTheme(context: context).inputBackgroundColor,
                 child: Row(
                   children: [
                     if (widget.onAttachmentPressed != null) _leftWidget(),
@@ -199,22 +188,13 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration.collapsed(
-                          hintStyle:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? LightChatUi(context: context)
-                                      .inputTextStyle
-                                      .copyWith(
-                                        color: LightChatUi(context: context)
-                                            .inputTextColor
-                                            .withOpacity(0.5),
-                                      )
-                                  : DarkChatUi(context: context)
-                                      .inputTextStyle
-                                      .copyWith(
-                                        color: DarkChatUi(context: context)
-                                            .inputTextColor
-                                            .withOpacity(0.5),
-                                      ),
+                          hintStyle: ChatUiTheme(context: context)
+                              .inputTextStyle
+                              .copyWith(
+                                color: ChatUiTheme(context: context)
+                                    .inputTextColor
+                                    .withOpacity(0.5),
+                              ),
                           hintText: 'Message...',
                         ),
                         focusNode: _inputFocusNode,

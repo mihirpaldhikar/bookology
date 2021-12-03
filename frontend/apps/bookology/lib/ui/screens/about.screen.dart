@@ -27,8 +27,9 @@ import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/app.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/screens/search.screen.dart';
+import 'package:bookology/ui/widgets/app_logo.widget.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/outlined_button.widget.dart';
+import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:bookology/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -93,7 +94,7 @@ class _AboutScreenState extends State<AboutScreen> {
               paragraph.text,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).inputDecorationTheme.fillColor,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ));
@@ -103,7 +104,7 @@ class _AboutScreenState extends State<AboutScreen> {
             child: Text(
               paragraph.text,
               style: TextStyle(
-                color: Theme.of(context).inputDecorationTheme.fillColor,
+                color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ));
@@ -125,13 +126,13 @@ class _AboutScreenState extends State<AboutScreen> {
         title: Text(
           key,
           style: TextStyle(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
+            color: Theme.of(context).colorScheme.onBackground,
           ),
         ),
         subtitle: Text(
           '$count licenses',
           style: TextStyle(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
+            color: Theme.of(context).colorScheme.onBackground,
           ),
         ),
         children: <Widget>[...value],
@@ -160,7 +161,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     child: CircularProgressIndicator(),
                   )
                 : ListView.separated(
-                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
                     itemCount: _licenses.length + 1,
                     separatorBuilder: (context, index) => const Divider(),
                     itemBuilder: (context, index) {
@@ -172,11 +173,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Image.asset(
-                              'assets/icons/splash.icon.png',
-                              width: 150,
-                              height: 150,
-                            ),
+                            AppLogo(context: context),
                             const SizedBox(
                               height: 20,
                             ),
@@ -206,17 +203,21 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   launchURL(
                                     url: StringConstants.urlPrivacyPolicy,
                                   );
                                 },
                                 text: StringConstants.wordPrivacyPolicy,
-                                icon: Icons.security_outlined,
-                                iconColor: Colors.green,
-                                textColor: Colors.green,
-                                backgroundColor: Colors.green.shade50,
+                                textColor:
+                                    Theme.of(context).colorScheme.primary,
+                                outlineWidth: ValuesConstant.outlineWidth,
+                                spaceBetween: 40,
+                                icon: Icon(
+                                  Icons.security_outlined,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -224,22 +225,20 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   launchURL(
                                     url: _googlePlayStoreUrl,
                                   );
                                 },
                                 text: StringConstants.wordCheckForUpdates,
-                                icon: FontAwesomeIcons.googlePlay,
-                                iconColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                                textColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
+                                textColor:
+                                    Theme.of(context).colorScheme.primary,
+                                outlineWidth: ValuesConstant.outlineWidth,
+                                icon: FaIcon(
+                                  FontAwesomeIcons.googlePlay,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -247,7 +246,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             ),
                             SizedBox(
                               width: 250,
-                              child: OutLinedButton(
+                              child: RoundedButton(
                                 onPressed: () async {
                                   final screenshot =
                                       await FeedbackScreenshot(context)
@@ -311,15 +310,14 @@ class _AboutScreenState extends State<AboutScreen> {
                                   );
                                 },
                                 text: StringConstants.wordSendFeedback,
-                                icon: Icons.feedback_outlined,
-                                iconColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                                textColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
+                                outlineWidth: ValuesConstant.outlineWidth,
+                                spaceBetween: 35,
+                                textColor:
+                                    Theme.of(context).colorScheme.primary,
+                                icon: Icon(
+                                  Icons.feedback_outlined,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -366,13 +364,10 @@ class _AboutScreenState extends State<AboutScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  CircularImage(
+                                  const CircularImage(
                                     image:
                                         'https://firebasestorage.googleapis.com/v0/b/bookology-dev.appspot.com/o/System%2FTeams%2FMihir%20Paldhikar.jpg?alt=media&token=80456c7c-b880-4420-8971-640bb05ea275',
                                     radius: 100,
-                                    outlineColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    outLineWidth: 2,
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -383,8 +378,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
+                                          .colorScheme
+                                          .onBackground,
                                     ),
                                   ),
                                   const SizedBox(
@@ -396,8 +391,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
+                                          .colorScheme
+                                          .onBackground,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -408,8 +403,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                     '🙋‍♂️  Hey there! I am Mihir Paldhikar. \n You can connect with me on all social platforms with the user id @imihirpaldhikar',
                                     style: TextStyle(
                                       color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
+                                          .colorScheme
+                                          .onBackground,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -454,10 +449,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                         },
                                         icon: Icon(
                                           FontAwesomeIcons.github,
-                                          color: Theme.of(context)
-                                                      .inputDecorationTheme
-                                                      .fillColor ==
-                                                  Colors.white
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
                                               ? Colors.white
                                               : Colors.black,
                                           size: 35,
@@ -480,99 +473,14 @@ class _AboutScreenState extends State<AboutScreen> {
                                 ],
                               ),
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                                top: 20,
-                                bottom: 20,
-                              ),
-                              margin: const EdgeInsets.only(
-                                left: 17,
-                                right: 17,
-                                top: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).cardTheme.color,
-                                borderRadius: BorderRadius.circular(
-                                  ValuesConstant.borderRadius,
-                                ),
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.person_outline_outlined,
-                                    color: Theme.of(context)
-                                        .inputDecorationTheme
-                                        .fillColor,
-                                    size: 60,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Nandini Gusani',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Designer',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                      color: Theme.of(context)
-                                          .inputDecorationTheme
-                                          .fillColor,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () async {
-                                          launchURL(
-                                              url:
-                                                  'https://instagram.com/imihirpaldhikar');
-                                        },
-                                        icon: const Icon(
-                                          FontAwesomeIcons.instagram,
-                                          color: Colors.red,
-                                          size: 35,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
                             const SizedBox(
                               height: 40,
                             ),
                             Text(
                               StringConstants.appCopyright,
                               style: TextStyle(
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -597,9 +505,8 @@ class _AboutScreenState extends State<AboutScreen> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context)
-                                    .inputDecorationTheme
-                                    .fillColor,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                               ),
                             ),
                           ],

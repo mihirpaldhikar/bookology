@@ -23,6 +23,7 @@
 import 'dart:convert';
 
 import 'package:bookology/managers/secrets.manager.dart';
+import 'package:bookology/models/book.model.dart' as book;
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/notification.model.dart' as notification;
 import 'package:bookology/models/notification.model.dart';
@@ -37,7 +38,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ApiService {
   final _firestoreService = FirestoreService(FirebaseFirestore.instance);
-  final _cacheService = CacheService();
+  final _cacheService = PreferencesManager();
   final SecretsManager _secretsManager = SecretsManager();
   final client = http.Client();
 
@@ -88,7 +89,8 @@ class ApiService {
   Future<UserModel?> getUserProfile({required String userID}) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
-      final requestURL = Uri.parse('$apiURL/users/$userID?with_books=true');
+      final requestURL =
+          Uri.parse('$apiURL/users/uuid/$userID?with_books=true');
       final request = await client.get(
         requestURL,
         headers: <String, String>{
@@ -122,18 +124,88 @@ class ApiService {
         },
       );
       final Iterable response = jsonDecode(request.body);
-
       if (request.statusCode == 200) {
         final books = List<BookModel>.from(
-          response
-              .map(
-                (book) => BookModel.fromJson(book),
-              )
-              .toList(),
+          response.map(
+            (notification) {
+              return BookModel.fromJson(notification);
+            },
+          ),
         );
 
         return books;
       }
+    } catch (error, stackTrace) {
+      client.close();
+      await Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  Future<List<BookModel>?> getSavedBooks() async {
+    try {
+      final String? apiURL = await _secretsManager.getApiUrl();
+      final requestURL = Uri.parse('$apiURL/users/saved');
+      final request = await client.get(
+        requestURL,
+        headers: <String, String>{
+          'user-identifier-key': await _firestoreService.getAccessToken()
+        },
+      );
+      if (request.statusCode == 200) {
+        final Iterable response = jsonDecode(request.body);
+        final books = List<BookModel>.from(
+          response.map(
+            (notification) {
+              return BookModel.fromJson(notification);
+            },
+          ),
+        );
+
+        return books;
+      }
+      return [
+        BookModel(
+          bookId: 'Nil Book ID',
+          bookInformation: BookInformation(
+            isbn: '',
+            name: '',
+            author: '',
+            publisher: '',
+          ),
+          additionalInformation: book.AdditionalInformation(
+            description: '',
+            condition: '',
+            categories: [],
+            imagesCollectionId: '',
+            images: [],
+          ),
+          pricing: Pricing(
+            originalPrice: '',
+            sellingPrice: '',
+            currency: '',
+          ),
+          createdOn: book.CreatedOn(
+            date: '',
+            time: '',
+          ),
+          slugs: book.Slugs(
+            name: '',
+          ),
+          uploader: Uploader(
+            userId: '',
+            username: '',
+            verified: false,
+            profilePictureUrl: '',
+            firstName: '',
+            lastName: '',
+          ),
+          location: '',
+        )
+      ];
     } catch (error, stackTrace) {
       client.close();
       await Sentry.captureException(
@@ -225,7 +297,7 @@ class ApiService {
             "author": bookAuthor,
             "publisher": bookPublisher,
             "description": bookDescription,
-            "categories": "All",
+            "categories": ['All'],
             "original_price": bookOriginalPrice,
             "selling_price": bookSellingPrice,
             "currency": bookCurrency,
@@ -334,9 +406,7 @@ class ApiService {
           'Content-type': 'application/json',
         },
         body: jsonEncode(
-          {
-            "book_id": bookId,
-          },
+          {"book_id": bookId, "room_icon": "lops"},
         ),
       );
       final response = jsonDecode(request.body);
@@ -365,7 +435,7 @@ class ApiService {
   }) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
-      final requestURL = Uri.parse('$apiURL/users/$userID');
+      final requestURL = Uri.parse('$apiURL/users/uuid/$userID');
       final response = await client.put(
         requestURL,
         headers: <String, String>{

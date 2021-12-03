@@ -22,37 +22,34 @@
 
 import 'dart:async';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:bookology/constants/colors.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/book.model.dart';
+import 'package:bookology/models/saved_book.model.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/connectivity.service.dart';
+import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/services/share.service.dart';
-import 'package:bookology/services/update.service.dart';
 import 'package:bookology/ui/components/home_bar.component.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
+import 'package:bookology/ui/widgets/error.widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const HomeScreen({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -64,11 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshController(initialRefresh: false);
   final _apiService = ApiService();
   final AuthService _authService = AuthService(FirebaseAuth.instance);
+  final FirestoreService _firestoreService =
+      FirestoreService(FirebaseFirestore.instance);
   late Future<List<Object>?> _feed;
   late BannerAd _ad;
   List<Object> _homeFeed = [];
   String _currentLocation = '';
   bool isDarkMode = false;
+  List<SavedBookModel> _savedBookList = [];
 
   @override
   void initState() {
@@ -85,11 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    var brightness = SchedulerBinding.instance!.window.platformBrightness;
-    setState(() {
-      isDarkMode = brightness == Brightness.dark;
+    await _firestoreService.getSavedBook().then((value) {
+      setState(() {
+        _savedBookList = value;
+      });
     });
-    UpdateService(context).checkForAppUpdate();
     _ad = BannerAd(
       size: AdSize(
         width: MediaQuery.of(context).size.width.toInt(),
@@ -133,6 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
             if (homeFeed.connectionState == ConnectionState.done) {
+              if (homeFeed.hasError) {
+                return const Error(
+                  message: 'An Error Occurred!',
+                );
+              }
               if (homeFeed.hasData) {
                 return SmartRefresher(
                   controller: _refreshController,
@@ -144,7 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onLoading: _onLoading,
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
                     slivers: [
                       SliverAppBar(
                         elevation: 0,
@@ -195,7 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
       width: MediaQuery.of(context).size.width,
       height: 60,
       child: ListView.builder(
-        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(
@@ -222,20 +225,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: index == 0
-                      ? Theme.of(context).buttonTheme.colorScheme!.background
-                      : Theme.of(context).cardTheme.color,
-                  border: Border.all(
-                    color: Colors.grey,
-                    width: 0.5,
-                  ),
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.surface,
                   borderRadius:
                       BorderRadius.circular(ValuesConstant.borderRadius),
+                  border: Border.all(
+                    color: index == 0
+                        ? Colors.transparent
+                        : Theme.of(context).colorScheme.outline,
+                    width: 1,
+                  ),
                 ),
                 child: Text(
                   StringConstants.listBookCategories[index],
                   style: TextStyle(
                     color: index == 0
-                        ? Theme.of(context).buttonTheme.colorScheme!.primary
+                        ? Theme.of(context).colorScheme.onPrimary
                         : Theme.of(context).inputDecorationTheme.fillColor,
                   ),
                 ),
@@ -255,94 +260,100 @@ class _HomeScreenState extends State<HomeScreen> {
         top: 5,
       ),
       child: Slidable(
-        actions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: book.uploaderId != _authService.currentUser()!.uid
-                    ? ColorsConstant.lightDangerBackgroundColor
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade400,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.report_gmailerrorred,
-                color: book.uploaderId != _authService.currentUser()!.uid
-                    ? Theme.of(context).colorScheme.error
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey
-                        : Colors.grey.shade900,
-              ),
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  book.uploader.userId != _authService.currentUser()!.uid
+                      ? Theme.of(context).colorScheme.error
+                      : Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey
+                          : Colors.grey.shade900,
+              icon: Icons.report_gmailerrorred,
+              onPressed: (context) {
+                if (book.uploader.userId != _authService.currentUser()!.uid) {
+                  ShareService().shareBook(
+                    book: book,
+                  );
+                }
+              },
             ),
-            onTap: () {
-              if (book.uploaderId != _authService.currentUser()!.uid) {
+          ],
+        ),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  Theme.of(context).buttonTheme.colorScheme!.primary,
+              icon: Icons.share,
+              onPressed: (context) {
                 ShareService().shareBook(
                   book: book,
                 );
-              }
-            },
-          ),
-        ],
-        secondaryActions: [
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).buttonTheme.colorScheme!.background,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.share,
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
-              ),
+              },
             ),
-            onTap: () {
-              ShareService().shareBook(
-                book: book,
-              );
-            },
-          ),
-          IconSlideAction(
-            color: Colors.transparent,
-            iconWidget: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: book.uploaderId != _authService.currentUser()!.uid
-                    ? Theme.of(context).buttonTheme.colorScheme!.background
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade400,
-                borderRadius:
-                    BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-              ),
-              child: Icon(
-                Icons.bookmark_border,
-                color: book.uploaderId != _authService.currentUser()!.uid
-                    ? Theme.of(context).buttonTheme.colorScheme!.primary
-                    : Theme.of(context).brightness == Brightness.light
-                        ? Colors.grey
-                        : Colors.grey.shade900,
-              ),
+            SlidableAction(
+              backgroundColor: Colors.transparent,
+              foregroundColor:
+                  book.uploader.userId != _authService.currentUser()!.uid
+                      ? Theme.of(context).buttonTheme.colorScheme!.primary
+                      : Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey
+                          : Colors.grey.shade900,
+              icon: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              onPressed: (context) async {
+                // if (book.uploader.userId != _authService.currentUser()!.uid) {
+                if (_savedBookList
+                    .where((element) => element.bookId == book.bookId)
+                    .isEmpty) {
+                  setState(() {
+                    _savedBookList
+                        .add(SavedBookModel.fromJson({'bookId': book.bookId}));
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Added to Saved',
+                      ),
+                      duration: Duration(
+                        seconds: 2,
+                      ),
+                    ),
+                  );
+                  await _firestoreService.saveBook(bookId: book.bookId);
+                } else {
+                  setState(() {
+                    _savedBookList.removeWhere(
+                        (element) => element.bookId == book.bookId);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Removed from Saved',
+                      ),
+                      duration: Duration(
+                        seconds: 2,
+                      ),
+                    ),
+                  );
+                  await _firestoreService.removedSavedBook(bookId: book.bookId);
+                }
+                //}
+              },
             ),
-            onTap: () {
-              if (book.uploaderId != _authService.currentUser()!.uid) {
-                ShareService().shareBook(
-                  book: book,
-                );
-              }
-            },
-          ),
-        ],
-        actionPane: const SlidableBehindActionPane(),
+          ],
+        ),
         child: BookCard(
           showMenu: false,
-          buttonText: _authService.currentUser()!.uid == book.uploaderId
+          buttonText: _authService.currentUser()!.uid == book.uploader.userId
               ? 'Edit'
               : 'View',
           id: book.bookId,
@@ -352,9 +363,11 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) => BookViewer(
-                  themeMode: widget.themeMode,
                   id: book.bookId,
                   book: book,
+                  isSaveBook: _savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isNotEmpty,
                 ),
               ),
             );
@@ -383,8 +396,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void _onRefresh() async {
     setState(() {
       _homeFeed.clear();
+      _savedBookList.clear();
       _feed = getFeed();
       _refreshController.refreshCompleted();
+    });
+    await _firestoreService.getSavedBook().then((value) {
+      setState(() {
+        _savedBookList = value;
+      });
     });
   }
 

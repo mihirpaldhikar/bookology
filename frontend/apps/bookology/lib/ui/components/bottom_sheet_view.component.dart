@@ -54,7 +54,7 @@ class _BottomSheetViewState extends State<BottomSheetView> {
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: dragIndicator(),
+              child: dragIndicator(context: context),
             ),
             Visibility(
               visible: widget.title!.isEmpty ? false : true,

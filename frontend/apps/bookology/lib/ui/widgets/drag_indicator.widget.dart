@@ -22,7 +22,7 @@
 
 import 'package:flutter/material.dart';
 
-Widget dragIndicator() {
+Widget dragIndicator({required BuildContext context}) {
   return Container(
     width: 40,
     height: 5,

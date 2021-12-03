@@ -20,7 +20,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
@@ -31,11 +30,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ScreenManager extends StatefulWidget {
-  final AdaptiveThemeMode themeMode;
-
   const ScreenManager({
     Key? key,
-    required this.themeMode,
   }) : super(key: key);
 
   @override
@@ -45,11 +41,11 @@ class ScreenManager extends StatefulWidget {
 class _ScreenManagerState extends State<ScreenManager>
     with AfterLayoutMixin<ScreenManager> {
   Future checkFirstSeen() async {
-    final CacheService cacheService = CacheService();
+    final PreferencesManager cacheService = PreferencesManager();
     bool _seen = (cacheService.isIntroScreenSeen());
 
     if (_seen) {
-      if (CacheService().isBiometricsEnabled()) {
+      if (PreferencesManager().isBiometricsEnabled()) {
         await BiometricsService(context).authenticateWithBiometrics(
             bioAuthReason: 'Please authenticate in order to continue.',
             useOnlyBiometrics: true,
