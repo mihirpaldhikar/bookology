@@ -180,9 +180,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                       final room = snapshot.data![index];
                       return Padding(
                         padding: const EdgeInsets.only(
-                          top: 20,
-                          left: 17,
-                          right: 17,
+                          top: 15,
+                          left: 5,
+                          right: 5,
                         ),
                         child: Slidable(
                           startActionPane: ActionPane(

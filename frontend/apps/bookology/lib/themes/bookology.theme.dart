@@ -86,13 +86,9 @@ class BookologyTheme {
         enableFeedback: true,
       ),
       cardTheme: CardTheme(
-        elevation: 0,
+        elevation: 1,
         color: colorScheme.surface,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: colorScheme.outline,
-            width: ValuesConstant.outlineWidth,
-          ),
           borderRadius: BorderRadius.circular(
             ValuesConstant.borderRadius,
           ),

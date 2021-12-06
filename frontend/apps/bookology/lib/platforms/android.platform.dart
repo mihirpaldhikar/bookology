@@ -20,42 +20,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/managers/chat_ui_theme.manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-/// A class that represents attachment button widget
-class FileAttachmentButton extends StatelessWidget {
-  /// Creates attachment button widget
-  const FileAttachmentButton({
-    Key? key,
-    this.onPressed,
-  }) : super(key: key);
+class AndroidPlatform {
+  static const platform = MethodChannel('samples.flutter.dev/battery');
 
-  /// Callback for attachment button tap event
-  final void Function()? onPressed;
+  Future<dynamic> notifyTextTheme({required Color textColor}) async {
+    try {
+      await platform.invokeMethod(
+        'setTextColor',
+        {
+          "color": textColor.value,
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 50,
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.only(
-        top: 5,
-        bottom: 5,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(
-        child: IconButton(
-          icon: ChatUiThemeManager(context: context).attachmentButtonIcon!,
-          onPressed: onPressed,
-          padding: EdgeInsets.zero,
-          tooltip: 'Send Media',
-        ),
-      ),
-    );
+  Future<void> showToast(
+      {required String message, required int duration}) async {
+    try {
+      await platform.invokeMethod(
+        'showToast',
+        {
+          "message": message,
+          "duration": duration,
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
   }
 }

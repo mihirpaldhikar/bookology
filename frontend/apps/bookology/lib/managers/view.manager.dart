@@ -21,6 +21,7 @@
  */
 
 import 'package:bookology/constants/strings.constant.dart';
+import 'package:bookology/platforms/android.platform.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/services/update.service.dart';
@@ -59,6 +60,13 @@ class _ViewManagerState extends State<ViewManager> {
     UpdateService(context).checkForAppUpdate();
     screenIndex = widget.screenIndex;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    await AndroidPlatform().notifyTextTheme(
+        textColor: Colors.grey.shade600);
   }
 
   @override

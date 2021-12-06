@@ -25,8 +25,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ChatUiTheme extends ChatTheme {
-  ChatUiTheme({required BuildContext context})
+class ChatUiThemeManager extends ChatTheme {
+  ChatUiThemeManager({required BuildContext context})
       : super(
           primaryColor: Theme.of(context).colorScheme.primary,
           secondaryColor: Theme.of(context).colorScheme.secondary,

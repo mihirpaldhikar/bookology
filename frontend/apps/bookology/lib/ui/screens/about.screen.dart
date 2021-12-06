@@ -287,7 +287,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             ToastManager(context)
-                                                .showSuccessToast(
+                                                .showToast(
                                                     message:
                                                         'Feedback submitted');
                                             Navigator.of(context).pop();
@@ -297,7 +297,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                             Navigator.pop(context);
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            ToastManager(context).showErrorToast(
+                                            ToastManager(context).showToast(
                                                 message:
                                                     'Failed to submit feedback');
                                             Navigator.of(context).pop();

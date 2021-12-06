@@ -59,12 +59,12 @@ class _ScreenManagerState extends State<ScreenManager>
                 );
               } else {
                 ToastManager(context)
-                    .showErrorToast(message: 'Biometrics verification failed.');
+                    .showToast(message: 'Biometrics verification failed.');
               }
             },
             onBioAuthError: (PlatformException error) {
               ToastManager(context)
-                  .showErrorToast(message: 'An error occurred.');
+                  .showToast(message: 'An error occurred.');
             });
       } else {
         Navigator.of(context).pushReplacement(

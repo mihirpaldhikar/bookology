@@ -48,9 +48,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
 
     // COMPLETE: Create a NativeAd instance
     _ad = NativeAd(
-      adUnitId: kReleaseMode
-          ? 'ca-app-pub-6991839116816523/3520713190'
-          : 'ca-app-pub-3940256099942544/2247696110',
+      adUnitId: kReleaseMode ? NativeAd.testAdUnitId : NativeAd.testAdUnitId,
       factoryId: 'googleNativeAdsCard',
       request: const AdRequest(),
       listener: NativeAdListener(
@@ -72,6 +70,7 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     _ad.load();
   }
 
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -79,9 +78,9 @@ class _NativeInlineAdState extends State<NativeInlineAd>
       return Container(
         height: 270,
         margin: const EdgeInsets.only(
-          left: 15,
-          right: 15,
-          top: 5,
+          left: 5,
+          right: 5,
+          top: 15,
         ),
         alignment: Alignment.center,
         child: Card(
@@ -103,12 +102,17 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                         bottom: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.yellow.shade100,
+                        color: Theme.of(context).colorScheme.tertiary,
                         borderRadius: BorderRadius.circular(
                           ValuesConstant.secondaryBorderRadius,
                         ),
                       ),
-                      child: const Text(StringConstants.wordAdvertisement),
+                      child: Text(
+                        StringConstants.wordAdvertisement,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onTertiary,
+                        ),
+                      ),
                     ),
                     InkWell(
                       onTap: () {
@@ -117,20 +121,13 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                       child: Container(
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .background,
                           borderRadius: BorderRadius.circular(
                             ValuesConstant.secondaryBorderRadius,
                           ),
                         ),
                         child: Icon(
                           Icons.help_outline_outlined,
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .primary,
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
                       ),
                     ),

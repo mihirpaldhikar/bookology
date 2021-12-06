@@ -21,6 +21,7 @@
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookology/constants/android.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/currency.manager.dart';
@@ -29,6 +30,7 @@ import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/request.model.dart';
+import 'package:bookology/platforms/android.platform.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -126,6 +128,7 @@ class _BookViewerState extends State<BookViewer> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    await AndroidPlatform().showToast(message: "Hello from native toast", duration: Toast.lengthLong);
     if (widget.book.uploader.userId != _authService.currentUser()!.uid) {
       _requestData = await _firestoreService.getRequest(
         bookID: widget.book.bookId,
@@ -263,7 +266,7 @@ class _BookViewerState extends State<BookViewer> {
                           }
                           if (result == false) {
                             ToastManager(this.context)
-                                .showErrorToast(message: 'An Error Occurred!');
+                                .showToast(message: 'An Error Occurred!');
                           }
                         });
                       },
@@ -324,6 +327,8 @@ class _BookViewerState extends State<BookViewer> {
                 Expanded(
                   child: ListView.builder(
                     itemCount: 1,
+                    cacheExtent: 9999999999999999999999999.0,
+                    semanticChildCount: 1,
                     scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -560,14 +565,14 @@ class _BookViewerState extends State<BookViewer> {
                                             if (isSuccess) {
                                               Navigator.pop(context);
                                               ToastManager(context)
-                                                  .showSuccessToast(
+                                                  .showToast(
                                                 message:
                                                     'Discussions Request Sent',
                                               );
                                             } else {
                                               Navigator.pop(context);
                                               ToastManager(context)
-                                                  .showErrorToast(
+                                                  .showToast(
                                                       message:
                                                           'An error occurred');
                                             }

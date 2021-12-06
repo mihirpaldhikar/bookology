@@ -21,109 +21,71 @@
  */
 
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/models/user.model.dart';
+import 'package:bookology/ui/widgets/circular_image.widget.dart';
 import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-Widget profileShimmer({
-  required BuildContext context,
-}) {
+Widget profileShimmer(AsyncSnapshot<UserModel> userData) {
   return ListView.builder(
-    padding: const EdgeInsets.only(
-      top: 20,
-      left: 0,
-      right: 0,
-    ),
     scrollDirection: Axis.vertical,
     physics: const BouncingScrollPhysics(),
     itemCount: 6,
     itemBuilder: (context, index) {
       if (index == 0) {
-        return Shimmer.fromColors(
-          enabled: true,
-          baseColor: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF1D1C1C)
-              : const Color(0xFFE0E0E0),
-          highlightColor: Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF3B3B3B)
-              : const Color(0xFFF5F5F5),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(100),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                  ),
+                  child: CircularImage(
+                    image: userData.data!.userInformation.profilePicture
+                        .toString(),
+                    radius: 90,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 15,
-                      color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 25,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius:
+                      BorderRadius.circular(ValuesConstant.borderRadius),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 200,
-                      height: 10,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      width: 100,
-                      height: 10,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Card(
                     child: InkWell(
                       borderRadius:
-                          BorderRadius.circular(ValuesConstant.borderRadius),
+                      BorderRadius.circular(ValuesConstant.borderRadius),
                       onTap: () {},
                       child: Container(
                         padding: const EdgeInsets.only(
                           left: 20,
                           right: 20,
-                          top: 10,
-                          bottom: 10,
+                          top: 8,
+                          bottom: 8,
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              '',
+                              userData.data!.books.length.toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Theme.of(context).colorScheme.primary,
-                                fontSize: 30,
+                                fontSize: 20,
                               ),
                             ),
                             Text(
@@ -137,46 +99,91 @@ Widget profileShimmer({
                       ),
                     ),
                   ),
-                  Card(
-                    child: InkWell(
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 20),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
                       borderRadius:
-                          BorderRadius.circular(ValuesConstant.borderRadius),
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                      BorderRadius.circular(ValuesConstant.borderRadius)),
+                  child: InkWell(
+                    borderRadius:
+                    BorderRadius.circular(ValuesConstant.borderRadius),
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 8,
+                        bottom: 8,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            userData.data!.books.length.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
-                            Text(
-                              'Points',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                          ),
+                          Text(
+                            'Points',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 15,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${userData.data!.userInformation.firstName.toString()} ${userData.data!.userInformation.lastName.toString()}',
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: Theme.of(context).colorScheme.onBackground),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      userData.data!.userInformation.bio.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  )
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
         );
       } else {
         return Container(

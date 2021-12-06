@@ -36,11 +36,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeBar extends StatefulWidget {
-  final String currentLocation;
-
   const HomeBar({
     Key? key,
-    required this.currentLocation,
   }) : super(key: key);
 
   @override
@@ -57,359 +54,267 @@ class _HomeBarState extends State<HomeBar> {
     final auth = Provider.of<AuthService>(context);
     final _isDarkMode = Provider.of<BookologyThemeProvider>(context)
         .isDarkTheme(context: context);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(
-        FocusNode(),
-      ),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          top = constraints.biggest.height;
-          if (top == 56.0) {
-            isCollapsed = true;
-          } else {
-            isCollapsed = false;
-          }
-          return FlexibleSpaceBar(
-            titlePadding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              bottom: 10,
-            ),
-            title: Visibility(
-                visible: isCollapsed,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        StringConstants.appName,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        top = constraints.biggest.height;
+        if (top == 56.0) {
+          isCollapsed = true;
+        } else {
+          isCollapsed = false;
+        }
+        return FlexibleSpaceBar(
+          titlePadding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: 10,
+          ),
+          title: Visibility(
+              visible: isCollapsed,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      StringConstants.appName,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Spacer(),
-                    Tooltip(
-                      message: 'Upload New Book',
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 20,
-                          top: 6,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CreateScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: ValuesConstant.outlineWidth,
-                              ),
-                              borderRadius: BorderRadius.circular(100),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              size: 25,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
+                  ),
+                  const Spacer(),
+                  Tooltip(
+                    message: 'Upload New Book',
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 20,
+                        top: 6,
                       ),
-                    ),
-                    Tooltip(
-                      message: 'Notifications',
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const NotificationScreen(),
+                              builder: (context) => const CreateScreen(),
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            right: 5,
-                            top: 6,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: ValuesConstant.outlineWidth,
+                            ),
+                            borderRadius: BorderRadius.circular(100),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer,
                           ),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: ValuesConstant.outlineWidth,
+                          child: Icon(
+                            Icons.add,
+                            size: 25,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Tooltip(
+                    message: 'Notifications',
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationScreen(),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 5,
+                          top: 6,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: ValuesConstant.outlineWidth,
+                            ),
+                            borderRadius: BorderRadius.circular(100),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer,
+                          ),
+                          child: Badge(
+                            showBadge: false,
+                            toAnimate: false,
+                            badgeColor: Colors.red,
+                            elevation: 0,
+                            badgeContent: const Text(
+                              '9+',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 10,
                               ),
-                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Icon(
+                              Icons.notifications_outlined,
+                              size: 25,
                               color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                            ),
-                            child: Badge(
-                              showBadge: false,
-                              toAnimate: false,
-                              badgeColor: Colors.red,
-                              elevation: 0,
-                              badgeContent: const Text(
-                                '9+',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              child: Icon(
-                                Icons.notifications_outlined,
-                                size: 25,
-                                color: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                              ),
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .primary,
                             ),
                           ),
                         ),
                       ),
-                    )
-                  ],
-                )),
-            background: Container(
-              height: 250.0,
-              decoration: BoxDecoration(
-                color: Theme.of(context).appBarTheme.backgroundColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(ValuesConstant.borderRadius),
-                  bottomRight: Radius.circular(ValuesConstant.borderRadius),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -5,
-                    bottom: -9,
-                    left: -20,
-                    child: Opacity(
-                      opacity: _isDarkMode ? 0.05 : 0.1,
-                      child: Blob.fromID(
-                        styles: BlobStyles(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        id: const ['9-6-292'],
-                        size: 100,
-                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: -25,
-                    right: -55,
-                    child: Opacity(
-                      opacity: _isDarkMode ? 0.05 : 0.1,
-                      child: Blob.fromID(
-                        styles: BlobStyles(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        id: const ['9-6-292'],
-                        size: 150,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -180,
-                    left: -130,
-                    child: Opacity(
-                      opacity: _isDarkMode ? 0.05 : 0.1,
-                      child: Blob.fromID(
-                        styles: BlobStyles(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        id: const ['6-6-331607'],
-                        size: 500,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -210,
-                    right: -190,
-                    child: Opacity(
-                      opacity: _isDarkMode ? 0.05 : 0.1,
-                      child: Blob.fromID(
-                        styles: BlobStyles(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        id: const ['8-6-984'],
-                        size: 500,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 10,
-                      bottom: 5,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              StringConstants.appName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                            const Spacer(),
-                            Tooltip(
-                              message: 'Upload New Book',
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 15,
-                                  top: 6,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CreateScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primaryContainer,
-                                    ),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 25,
-                                      color: Theme.of(context)
-                                          .buttonTheme
-                                          .colorScheme!
-                                          .primary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Tooltip(
-                              message: 'Notifications',
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const NotificationScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 5,
-                                    top: 6,
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primaryContainer,
-                                    ),
-                                    child: Badge(
-                                      showBadge: false,
-                                      toAnimate: false,
-                                      badgeColor: Colors.red,
-                                      elevation: 0,
-                                      badgeContent: const Text(
-                                        '9+',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        Icons.notifications_outlined,
-                                        size: 25,
-                                        color: Theme.of(context)
-                                            .buttonTheme
-                                            .colorScheme!
-                                            .primary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 35,
-                        ),
-                        CircularImage(
-                          image: auth.currentUser()!.photoURL.toString(),
-                          radius: 75,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 5,
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Good ${greeting()},\n',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                  fontFamily: 'Poppins',
-                                  color: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .fillColor),
-                              children: [
-                                TextSpan(
-                                  text: '${auth.currentUser()!.displayName}!',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  )
                 ],
+              )),
+          background: Container(
+            height: 250.0,
+            decoration: BoxDecoration(
+              color: Theme.of(context).appBarTheme.backgroundColor,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(ValuesConstant.borderRadius),
+                bottomRight: Radius.circular(ValuesConstant.borderRadius),
               ),
             ),
-          );
-        },
-      ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -5,
+                  bottom: -9,
+                  left: -20,
+                  child: Opacity(
+                    opacity: _isDarkMode ? 0.05 : 0.1,
+                    child: Blob.fromID(
+                      styles: BlobStyles(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      id: const ['9-6-292'],
+                      size: 100,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: -25,
+                  right: -55,
+                  child: Opacity(
+                    opacity: _isDarkMode ? 0.05 : 0.1,
+                    child: Blob.fromID(
+                      styles: BlobStyles(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      id: const ['9-6-292'],
+                      size: 150,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -180,
+                  left: -130,
+                  child: Opacity(
+                    opacity: _isDarkMode ? 0.05 : 0.1,
+                    child: Blob.fromID(
+                      styles: BlobStyles(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      id: const ['6-6-331607'],
+                      size: 500,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -210,
+                  right: -190,
+                  child: Opacity(
+                    opacity: _isDarkMode ? 0.05 : 0.1,
+                    child: Blob.fromID(
+                      styles: BlobStyles(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      id: const ['8-6-984'],
+                      size: 500,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 10,
+                    bottom: 5,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            StringConstants.appName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const Spacer(),
+
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 35,
+                      ),
+                      CircularImage(
+                        image: auth.currentUser()!.photoURL.toString(),
+                        radius: 75,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 5,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Good ${greeting()},\n',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                                fontFamily: 'Poppins',
+                                color: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor),
+                            children: [
+                              TextSpan(
+                                text: '${auth.currentUser()!.displayName}!',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -133,6 +133,7 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
+          scrollPhysics: const BouncingScrollPhysics(),
           key: _introKey,
           globalBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showDoneButton: true,

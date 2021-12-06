@@ -67,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             DialogsManager(context).showBiometricsSelectionDialog();
           } else {
             ToastManager(context)
-                .showErrorToast(message: 'Biometrics are not supported.');
+                .showToast(message: 'Biometrics are not supported.');
           }
         },
       ),

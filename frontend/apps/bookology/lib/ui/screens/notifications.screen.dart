@@ -136,7 +136,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 );
                                 if (result) {
                                   Navigator.pop(context);
-                                  ToastManager(context).showSuccessToast(
+                                  ToastManager(context).showToast(
                                       message: 'Discussions Created');
                                   Navigator.push(
                                     context,
@@ -147,7 +147,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   );
                                 } else {
                                   Navigator.pop(context);
-                                  ToastManager(context).showErrorToast(
+                                  ToastManager(context).showToast(
                                       message:
                                           'An Error Occurred while creating the Discussions');
                                 }

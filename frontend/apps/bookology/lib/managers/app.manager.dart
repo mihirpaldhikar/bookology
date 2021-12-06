@@ -57,7 +57,14 @@ class _AppManagerState extends State<AppManager> {
   @override
   void initState() {
     super.initState();
+
     NotificationService(FirebaseMessaging.instance).notificationManager();
+  }
+
+  @override
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
@@ -78,11 +85,6 @@ class _AppManagerState extends State<AppManager> {
         ),
         Provider(
           create: (_) => BookologyThemeProvider(),
-        ),
-        StreamProvider(
-          create: (context) =>
-              this.context.read<AuthService>().onAuthStateChanges,
-          initialData: null,
         ),
       ],
       child: const App(),
