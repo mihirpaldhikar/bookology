@@ -46,7 +46,7 @@ Color getUserAvatarNameColor(types.User user) {
 String getUserName(types.User user) =>
     '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 
-void launchURL({required String url}) async => await canLaunch(url)
+Future<void> launchURL({required String url}) async => await canLaunch(url)
     ? await launch(
         url,
         universalLinksOnly: true,

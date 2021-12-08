@@ -266,7 +266,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                       builder: (BuildContext context) =>
                                           FeedbackScreen(
                                         reportType: 'User initiated report',
-                                        isEmailEditable: true,
+                                        isEmailEditable: false,
                                         userId: FirebaseAuth
                                             .instance.currentUser!.uid,
                                         fromEmail: FirebaseAuth

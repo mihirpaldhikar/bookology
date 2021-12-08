@@ -24,16 +24,21 @@ import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/bottom_sheet_view.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
+import 'package:bookology/managers/toast.manager.dart';
+import 'package:bookology/services/app.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
 import 'package:bookology/ui/screens/saved.screen.dart';
+import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/settings.screen.dart';
 import 'package:bookology/ui/widgets/image_container.widget.dart';
 import 'package:bookology/ui/widgets/rounded_button.widget.dart';
+import 'package:bookology/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_feedback/flutter_app_feedback.dart';
 import 'package:provider/provider.dart';
 
 class BottomSheetManager {
@@ -106,6 +111,7 @@ class BottomSheetManager {
           alignContent: MainAxisAlignment.start,
           backgroundColor: Colors.transparent,
           onPressed: () {
+            Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -175,19 +181,84 @@ class BottomSheetManager {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const [
-            Text(
-              StringConstants.wordSupport,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
+          children: [
+            GestureDetector(
+              onTap: () async {
+                final _appService = await AppService().getAppInfo();
+                Navigator.pop(context);
+                await launchURL(
+                    url: 'mailto:imihirpaldhikar@gmail.com?'
+                        'subject=Bookology%20Support&'
+                        'body=App%20Version:%20${_appService.appVersion}\n'
+                        'Build%20Number:%20${_appService.appBuildNumber}\n\nI%20want%20help%20for ');
+              },
+              child: Text(
+                StringConstants.wordSupport,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 13,
+                ),
               ),
             ),
-            Text(
-              StringConstants.wordContactUs,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
+            GestureDetector(
+              onTap: () async {
+                Navigator.pop(context);
+                DialogsManager(context).showProgressDialog(content: 'Generating Report...');
+                final screenshot =
+                    await FeedbackScreenshot(context).captureScreen(
+                  screen: MediaQuery(
+                    data: const MediaQueryData(),
+                    child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      theme: Theme.of(context),
+                      home: const SearchScreen(),
+                    ),
+                  ),
+                );
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => FeedbackScreen(
+                      reportType: 'User initiated report',
+                      isEmailEditable: false,
+                      userId: FirebaseAuth.instance.currentUser!.uid,
+                      fromEmail: FirebaseAuth.instance.currentUser!.email,
+                      screenShotPath: screenshot,
+                      feedbackFooterText:
+                          'In order to improve the app, along with your feedback, Some System Logs will be sent to Developer.',
+                      onFeedbackSubmissionStarted: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        DialogsManager(context)
+                            .showProgressDialog(content: 'Submitting');
+                      },
+                      onFeedbackSubmitted: (bool result) {
+                        if (result) {
+                          Navigator.pop(context);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          ToastManager(context)
+                              .showToast(message: 'Feedback submitted');
+                          Navigator.of(context).pop();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        } else {
+                          Navigator.pop(context);
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          ToastManager(context)
+                              .showToast(message: 'Failed to submit feedback');
+                          Navigator.of(context).pop();
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                StringConstants.wordSendFeedback,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 13,
+                ),
               ),
             ),
           ],

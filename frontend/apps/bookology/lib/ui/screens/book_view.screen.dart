@@ -110,6 +110,9 @@ class _BookViewerState extends State<BookViewer> {
       ),
     );
     _ad.load();
+    setState(() {
+      _isRequestAccepted = _requestData.accepted;
+    });
     _pageController.addListener(() {
       int next = _pageController.page!.round();
 
@@ -128,18 +131,12 @@ class _BookViewerState extends State<BookViewer> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    await AndroidPlatform().showToast(message: "Hello from native toast", duration: Toast.lengthLong);
     if (widget.book.uploader.userId != _authService.currentUser()!.uid) {
       _requestData = await _firestoreService.getRequest(
         bookID: widget.book.bookId,
         userID: _authService.currentUser()!.uid,
       );
-      setState(() {
-        _currencySymbol = _currencyManager.getCurrencySymbol(
-          currency: widget.book.pricing.currency,
-        );
-        _isRequestAccepted = _requestData.accepted;
-      });
+
       if (_isRequestAccepted) {
         setState(() {
           _enquireButtonText = 'Discuss';
@@ -161,6 +158,9 @@ class _BookViewerState extends State<BookViewer> {
   Widget build(BuildContext context) {
     int saving = int.parse(widget.book.pricing.originalPrice) -
         int.parse(widget.book.pricing.sellingPrice);
+    _currencySymbol = _currencyManager.getCurrencySymbol(
+      currency: widget.book.pricing.currency,
+    );
     return Scaffold(
       body: Hero(
         tag: widget.id,
@@ -380,7 +380,7 @@ class _BookViewerState extends State<BookViewer> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 30,
                                     color: Theme.of(context)
                                         .colorScheme
@@ -398,7 +398,7 @@ class _BookViewerState extends State<BookViewer> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onBackground,
@@ -416,7 +416,7 @@ class _BookViewerState extends State<BookViewer> {
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                         fontSize: 20,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -433,7 +433,7 @@ class _BookViewerState extends State<BookViewer> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 28,
+                                        fontSize: 20,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground,
@@ -449,7 +449,7 @@ class _BookViewerState extends State<BookViewer> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 23,
+                                        fontSize: 15,
                                         decoration: TextDecoration.lineThrough,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -467,7 +467,7 @@ class _BookViewerState extends State<BookViewer> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.normal,
                                     color: Colors.green,
                                     fontSize: 18,
                                   ),
@@ -497,7 +497,7 @@ class _BookViewerState extends State<BookViewer> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                         fontSize: 20,
                                       ),
                                     ),
@@ -564,17 +564,14 @@ class _BookViewerState extends State<BookViewer> {
                                             );
                                             if (isSuccess) {
                                               Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showToast(
+                                              ToastManager(context).showToast(
                                                 message:
                                                     'Discussions Request Sent',
                                               );
                                             } else {
                                               Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showToast(
-                                                      message:
-                                                          'An error occurred');
+                                              ToastManager(context).showToast(
+                                                  message: 'An error occurred');
                                             }
                                           });
                                         } else {
@@ -704,7 +701,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -750,7 +747,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -904,7 +901,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,

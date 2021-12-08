@@ -278,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(
-              left: 10,
-              top: 25,
+              left: 15,
+              top: 23,
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
@@ -439,9 +439,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BookCard(
           showMenu: false,
-          buttonText: _authService.currentUser()!.uid == book.uploader.userId
-              ? 'Edit'
-              : 'View',
           id: book.bookId,
           book: book,
           onClicked: () {

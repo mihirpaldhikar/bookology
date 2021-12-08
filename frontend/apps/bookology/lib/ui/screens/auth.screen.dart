@@ -211,35 +211,24 @@ class _AuthScreenState extends State<AuthScreen> {
                             const SizedBox(
                               height: 25,
                             ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () {
+                            Text(
+                              StringConstants.hintCreateNewAccount,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            RoundedButton(
+                              onPressed: () {
                                 _cacheService.setIntroScreenView(seen: false);
                                 Navigator.pushNamed(context, '/signup');
                               },
-                              child: RichText(
-                                text: TextSpan(
-                                  text: StringConstants.hintCreateNewAccount,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' ${StringConstants.wordSignUp}',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              text: StringConstants.wordSignUp,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              textColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                             ),
                             const SizedBox(
                               height: 70,
@@ -251,6 +240,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 fontSize: 12,
                                 color: Theme.of(context).colorScheme.outline,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(
                               height: 20,

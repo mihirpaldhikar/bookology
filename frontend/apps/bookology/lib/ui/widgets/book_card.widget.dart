@@ -25,14 +25,12 @@ import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/currency.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class BookCard extends StatefulWidget {
+class BookCard extends StatelessWidget {
   final String id;
   final BookModel book;
-  final String? buttonText;
   final bool? showMenu;
   final VoidCallback onClicked;
 
@@ -41,28 +39,23 @@ class BookCard extends StatefulWidget {
     required this.id,
     required this.book,
     required this.onClicked,
-    this.buttonText = 'View',
     this.showMenu = true,
   }) : super(key: key);
 
   @override
-  _BookCardState createState() => _BookCardState();
-}
-
-class _BookCardState extends State<BookCard> {
-  @override
   Widget build(BuildContext context) {
-    int saving = int.parse(widget.book.pricing.originalPrice) -
-        int.parse(widget.book.pricing.sellingPrice);
+    int saving = int.parse(book.pricing.originalPrice) -
+        int.parse(book.pricing.sellingPrice);
 
     String currencySymbol = CurrencyManager()
-        .getCurrencySymbol(currency: widget.book.pricing.currency);
+        .getCurrencySymbol(currency: book.pricing.currency);
 
     return Hero(
-      tag: widget.id,
+      tag: id,
       child: Card(
         child: InkWell(
-          onTap: widget.onClicked,
+          borderRadius: BorderRadius.circular(ValuesConstant.buttonBorderRadius),
+          onTap: onClicked,
           child: Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(
@@ -80,14 +73,14 @@ class _BookCardState extends State<BookCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircularImage(
-                      image: widget.book.uploader.profilePictureUrl,
+                      image: book.uploader.profilePictureUrl,
                       radius: 30,
                     ),
                     const SizedBox(
                       width: 15,
                     ),
                     Text(
-                      widget.book.uploader.username,
+                      book.uploader.username,
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.onBackground),
@@ -95,10 +88,13 @@ class _BookCardState extends State<BookCard> {
                     const SizedBox(
                       width: 5,
                     ),
-                    const Icon(
-                      Icons.verified,
-                      color: Colors.blue,
-                      size: 17,
+                    Visibility(
+                      visible: book.uploader.verified,
+                      child: const Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                        size: 17,
+                      ),
                     )
                   ],
                 ),
@@ -117,7 +113,7 @@ class _BookCardState extends State<BookCard> {
                         memCacheHeight: 9999999,
                         memCacheWidth: 999999,
                         imageUrl:
-                            widget.book.additionalInformation.images.first,
+                            book.additionalInformation.images.first,
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
@@ -138,7 +134,7 @@ class _BookCardState extends State<BookCard> {
                         maxWidthDiskCache: 999999999,
                         memCacheHeight: 9999999,
                         memCacheWidth: 999999,
-                        imageUrl: widget.book.additionalInformation.images.last,
+                        imageUrl: book.additionalInformation.images.last,
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
@@ -155,16 +151,16 @@ class _BookCardState extends State<BookCard> {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 AutoSizeText(
-                  widget.book.bookInformation.name,
+                  book.bookInformation.name,
                   maxLines: 4,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     fontSize: 20,
                   ),
                 ),
@@ -187,7 +183,7 @@ class _BookCardState extends State<BookCard> {
                       width: 5,
                     ),
                     AutoSizeText(
-                      '$currencySymbol ${widget.book.pricing.sellingPrice}',
+                      '$currencySymbol ${book.pricing.sellingPrice}',
                       maxLines: 4,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -201,7 +197,7 @@ class _BookCardState extends State<BookCard> {
                       width: 10,
                     ),
                     AutoSizeText(
-                      widget.book.pricing.originalPrice,
+                      book.pricing.originalPrice,
                       maxLines: 4,
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -228,15 +224,6 @@ class _BookCardState extends State<BookCard> {
                     fontSize: 15,
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                RoundedButton(
-                  text: widget.buttonText!,
-                  textColor: Theme.of(context).colorScheme.primary,
-                  outlineWidth: ValuesConstant.outlineWidth,
-                  onPressed: widget.onClicked,
-                )
               ],
             ),
           ),

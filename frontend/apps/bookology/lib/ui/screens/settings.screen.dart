@@ -78,21 +78,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: StringConstants.navigationSettings,
           body: SizedBox(
             child: ListView.builder(
-                padding: const EdgeInsets.only(top: 60),
+                padding: const EdgeInsets.only(top: 20),
                 itemCount: appSettings.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     margin: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                      bottom: 30,
+                      left: 5,
+                      right: 5,
+                      bottom: 20,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outline,
-                        width: ValuesConstant.outlineWidth,
-                      ),
-                      color: Theme.of(context).cardTheme.color,
                       borderRadius: BorderRadius.circular(
                         ValuesConstant.borderRadius,
                       ),
@@ -142,7 +137,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         .colorScheme
                                         .onBackground,
                                     fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
                                 Text(

@@ -88,19 +88,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   itemBuilder: (BuildContext context, index) {
                     return Container(
                       margin: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
+                        left: 5,
+                        right: 5,
                         bottom: 10,
                         top: 10,
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                           ValuesConstant.borderRadius,
-                        ),
-                        color: Theme.of(context).cardTheme.color,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                          width: ValuesConstant.outlineWidth,
                         ),
                       ),
                       child: InkWell(
@@ -213,7 +208,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         fontWeight: notifications
                                                 .data![index].notification.seen
                                             ? FontWeight.normal
-                                            : FontWeight.bold,
+                                            : FontWeight.normal,
                                         fontSize: 17,
                                         color: Theme.of(context)
                                             .inputDecorationTheme
@@ -231,8 +226,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: Theme.of(context)
-                                            .inputDecorationTheme
-                                            .fillColor,
+                                            .colorScheme.outline,
                                       ),
                                     ),
                                   ],

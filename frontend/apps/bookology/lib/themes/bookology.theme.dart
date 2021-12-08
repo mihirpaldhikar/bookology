@@ -66,7 +66,7 @@ class BookologyTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            ValuesConstant.buttonBorderRadius,
+            ValuesConstant.secondaryBorderRadius,
           ),
         ),
       ),
@@ -153,7 +153,7 @@ class BookologyTheme {
         titleTextStyle: GoogleFonts.poppins(
           color: colorScheme.onBackground,
           fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
         ),
       ),
       dialogTheme: DialogTheme(

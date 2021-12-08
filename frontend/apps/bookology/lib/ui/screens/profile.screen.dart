@@ -521,7 +521,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
         child: BookCard(
           showMenu: false,
-          buttonText: 'Edit',
           id: '${userData.data!.books[index - 1].bookId.toString()}@${index.toString()}',
           book: userData.data!.books[index - 1],
           onClicked: () {

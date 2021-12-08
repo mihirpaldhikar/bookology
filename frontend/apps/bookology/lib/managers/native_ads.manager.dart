@@ -70,13 +70,12 @@ class _NativeInlineAdState extends State<NativeInlineAd>
     _ad.load();
   }
 
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
     if (_isAdLoaded) {
       return Container(
-        height: 270,
+        height: 300,
         margin: const EdgeInsets.only(
           left: 5,
           right: 5,
@@ -85,7 +84,12 @@ class _NativeInlineAdState extends State<NativeInlineAd>
         alignment: Alignment.center,
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: 20,
+          ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,25 +98,39 @@ class _NativeInlineAdState extends State<NativeInlineAd>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: 3,
-                        bottom: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.tertiary,
-                        borderRadius: BorderRadius.circular(
-                          ValuesConstant.secondaryBorderRadius,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.tertiary,
+                            borderRadius: BorderRadius.circular(
+                              ValuesConstant.secondaryBorderRadius,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Ad',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onTertiary),
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        StringConstants.wordAdvertisement,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onTertiary,
+                        const SizedBox(
+                          width: 15,
                         ),
-                      ),
+                        Text(
+                          StringConstants.wordAdvertisement,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color:
+                                  Theme.of(context).colorScheme.onBackground),
+                        ),
+                      ],
                     ),
                     InkWell(
                       onTap: () {
@@ -143,12 +161,12 @@ class _NativeInlineAdState extends State<NativeInlineAd>
         ),
       );
     }
-    return const SizedBox(
-      height: 0.0,
+    return SizedBox(
+      height: 50.0,
       child: Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(
-            Colors.grey,
+            Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

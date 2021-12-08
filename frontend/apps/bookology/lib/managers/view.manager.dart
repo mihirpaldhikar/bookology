@@ -116,11 +116,11 @@ class _ViewManagerState extends State<ViewManager> {
                 ),
                 NavigationDestination(
                   icon: Icon(
-                    Icons.question_answer_outlined,
+                    Icons.chat_outlined,
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
                   selectedIcon: const Icon(
-                    Icons.question_answer,
+                    Icons.chat,
                   ),
                   label: StringConstants.navigationDiscussions,
                 ),
