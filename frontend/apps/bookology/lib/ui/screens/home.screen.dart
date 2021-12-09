@@ -360,9 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icons.report_gmailerrorred,
               onPressed: (context) {
                 if (book.uploader.userId != _authService.currentUser()!.uid) {
-                  ShareService().shareBook(
-                    book: book,
-                  );
+                  //TODO: Report Book Logic
                 }
               },
             ),
@@ -376,8 +374,9 @@ class _HomeScreenState extends State<HomeScreen> {
               foregroundColor:
                   Theme.of(context).buttonTheme.colorScheme!.primary,
               icon: Icons.share,
-              onPressed: (context) {
-                ShareService().shareBook(
+              onPressed: (context) async {
+                await ShareService().shareBook(
+                  context: context,
                   book: book,
                 );
               },

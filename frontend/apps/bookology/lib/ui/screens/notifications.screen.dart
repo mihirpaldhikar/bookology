@@ -226,7 +226,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: Theme.of(context)
-                                            .colorScheme.outline,
+                                            .colorScheme
+                                            .outline,
                                       ),
                                     ),
                                   ],

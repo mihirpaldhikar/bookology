@@ -203,7 +203,8 @@ class BottomSheetManager {
             GestureDetector(
               onTap: () async {
                 Navigator.pop(context);
-                DialogsManager(context).showProgressDialog(content: 'Generating Report...');
+                DialogsManager(context)
+                    .showProgressDialog(content: 'Generating Report...');
                 final screenshot =
                     await FeedbackScreenshot(context).captureScreen(
                   screen: MediaQuery(

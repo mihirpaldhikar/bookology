@@ -24,18 +24,19 @@ import 'package:bookology/managers/app.manager.dart';
 import 'package:bookology/services/startup.service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: 'app.config.env');
-  final adsM = MobileAds.instance.initialize();
   await StartUpService().startService();
   await Firebase.initializeApp();
+  final PendingDynamicLinkData? initialLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
   await FirebaseAppCheck.instance.activate();
   await GetStorage.init();
   await SentryFlutter.init(
@@ -44,7 +45,9 @@ Future<void> main() async {
           'https://31374a6b13514ef28c9ecd9717e11a34@o796692.ingest.sentry.io/5972010';
     },
     appRunner: () => runApp(
-      const AppManager(),
+      AppManager(
+        dynamicLinkData: initialLink,
+      ),
     ),
   );
 }

@@ -47,14 +47,15 @@ class BookCard extends StatelessWidget {
     int saving = int.parse(book.pricing.originalPrice) -
         int.parse(book.pricing.sellingPrice);
 
-    String currencySymbol = CurrencyManager()
-        .getCurrencySymbol(currency: book.pricing.currency);
+    String currencySymbol =
+        CurrencyManager().getCurrencySymbol(currency: book.pricing.currency);
 
     return Hero(
       tag: id,
       child: Card(
         child: InkWell(
-          borderRadius: BorderRadius.circular(ValuesConstant.buttonBorderRadius),
+          borderRadius:
+              BorderRadius.circular(ValuesConstant.buttonBorderRadius),
           onTap: onClicked,
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -112,8 +113,7 @@ class BookCard extends StatelessWidget {
                         maxWidthDiskCache: 999999999,
                         memCacheHeight: 9999999,
                         memCacheWidth: 999999,
-                        imageUrl:
-                            book.additionalInformation.images.first,
+                        imageUrl: book.additionalInformation.images.first,
                         placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(

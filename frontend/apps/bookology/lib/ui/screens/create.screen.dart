@@ -418,10 +418,9 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   },
                                                 );
                                               } else {
-                                                ToastManager(context)
-                                                    .showToast(
-                                                        message: StringConstants
-                                                            .errorFieldsCompulsory);
+                                                ToastManager(context).showToast(
+                                                    message: StringConstants
+                                                        .errorFieldsCompulsory);
                                               }
                                             } else {
                                               ToastManager(context).showToast(

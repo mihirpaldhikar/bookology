@@ -215,8 +215,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                     setState(() {
                                       _groupOwner =
                                           '${element.firstName.toString()} ${element.lastName}';
-                                      _userName =
-                                          element.metadata!['userName'];
+                                      _userName = element.metadata!['userName'];
                                       _isVerified =
                                           element.metadata!['isVerified'];
                                       _userImageProfile = element.imageUrl!;
@@ -261,8 +260,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                 room.name ?? 'No Name',
                                                 maxLines: 2,
                                                 softWrap: false,
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: Theme.of(context)
@@ -284,8 +282,7 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                                                 context,
                                                 DateTime
                                                     .fromMicrosecondsSinceEpoch(
-                                                        room.updatedAt! *
-                                                            1000),
+                                                        room.updatedAt! * 1000),
                                                 DateTime.now(),
                                               ),
                                               style: TextStyle(

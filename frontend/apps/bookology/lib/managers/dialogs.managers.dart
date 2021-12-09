@@ -331,8 +331,8 @@ class DialogsManager {
               content,
               style: TextStyle(
                 fontFamily: 'Poppins',
-                color: contentColor ??
-                    Theme.of(context).colorScheme.onBackground,
+                color:
+                    contentColor ?? Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ),

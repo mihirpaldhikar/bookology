@@ -85,11 +85,11 @@ class _NativeInlineAdState extends State<NativeInlineAd>
         child: Card(
           child: Padding(
             padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 20,
-          ),
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,11 +162,16 @@ class _NativeInlineAdState extends State<NativeInlineAd>
       );
     }
     return SizedBox(
-      height: 50.0,
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-            Theme.of(context).colorScheme.primary,
+      height: 80.0,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 30,
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ),

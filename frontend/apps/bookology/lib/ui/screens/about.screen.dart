@@ -286,10 +286,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                             Navigator.pop(context);
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            ToastManager(context)
-                                                .showToast(
-                                                    message:
-                                                        'Feedback submitted');
+                                            ToastManager(context).showToast(
+                                                message: 'Feedback submitted');
                                             Navigator.of(context).pop();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();

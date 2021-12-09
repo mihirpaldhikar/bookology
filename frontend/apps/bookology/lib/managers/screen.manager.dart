@@ -26,12 +26,16 @@ import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/biomertics.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/intro.screen.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ScreenManager extends StatefulWidget {
+  final PendingDynamicLinkData? dynamicLinkData;
+
   const ScreenManager({
     Key? key,
+    this.dynamicLinkData,
   }) : super(key: key);
 
   @override
@@ -63,13 +67,15 @@ class _ScreenManagerState extends State<ScreenManager>
               }
             },
             onBioAuthError: (PlatformException error) {
-              ToastManager(context)
-                  .showToast(message: 'An error occurred.');
+              ToastManager(context).showToast(message: 'An error occurred.');
             });
       } else {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const ViewManager(screenIndex: 0),
+            builder: (context) => ViewManager(
+              screenIndex: 0,
+              dynamicLinkData: widget.dynamicLinkData,
+            ),
           ),
         );
       }

@@ -216,7 +216,7 @@ class ApiService {
     }
   }
 
-  Future<dynamic> getBookByID({required String bookID}) async {
+  Future<BookModel> getBookByID({required String bookID}) async {
     try {
       final String? apiURL = await _secretsManager.getApiUrl();
       final requestURL = Uri.parse('$apiURL/books/$bookID');
@@ -226,7 +226,7 @@ class ApiService {
           'user-identifier-key': await _firestoreService.getAccessToken()
         },
       );
-      return jsonDecode(response.body);
+      return book.BookModel.fromJson(jsonDecode(response.body));
     } catch (error, stackTrace) {
       client.close();
       await Sentry.captureException(

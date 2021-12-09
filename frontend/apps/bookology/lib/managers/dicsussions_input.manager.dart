@@ -172,12 +172,16 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                   color: Colors.grey,
                   width: 0.5,
                 ),
-                borderRadius: ChatUiThemeManager(context: context).inputBorderRadius,
-                color: ChatUiThemeManager(context: context).inputBackgroundColor,
+                borderRadius:
+                    ChatUiThemeManager(context: context).inputBorderRadius,
+                color:
+                    ChatUiThemeManager(context: context).inputBackgroundColor,
               ),
               child: Material(
-                borderRadius: ChatUiThemeManager(context: context).inputBorderRadius,
-                color: ChatUiThemeManager(context: context).inputBackgroundColor,
+                borderRadius:
+                    ChatUiThemeManager(context: context).inputBorderRadius,
+                color:
+                    ChatUiThemeManager(context: context).inputBackgroundColor,
                 child: Row(
                   children: [
                     if (widget.onAttachmentPressed != null) _leftWidget(),

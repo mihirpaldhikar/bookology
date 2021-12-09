@@ -36,17 +36,24 @@ import 'package:bookology/ui/screens/verify_email.screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_actions/quick_actions.dart';
+
+import '../ui/screens/dynamic_book.screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
 
 class AppManager extends StatefulWidget {
+  final PendingDynamicLinkData? dynamicLinkData;
+
   const AppManager({
     Key? key,
+    this.dynamicLinkData,
   }) : super(key: key);
 
   @override
@@ -57,13 +64,12 @@ class _AppManagerState extends State<AppManager> {
   @override
   void initState() {
     super.initState();
-
     NotificationService(FirebaseMessaging.instance).notificationManager();
+
   }
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -87,14 +93,18 @@ class _AppManagerState extends State<AppManager> {
           create: (_) => BookologyThemeProvider(),
         ),
       ],
-      child: const App(),
+      child: App(
+        dynamicLinkData: widget.dynamicLinkData,
+      ),
     );
   }
 }
 
 class App extends StatefulWidget {
+  final PendingDynamicLinkData? dynamicLinkData;
   const App({
     Key? key,
+    this.dynamicLinkData,
   }) : super(key: key);
 
   @override
@@ -165,7 +175,9 @@ class _AppState extends State<App> {
               ),
               themeMode: themeMode,
               routes: {
-                '/home': (context) => const ScreenManager(),
+                '/home': (context) => ScreenManager(
+                      dynamicLinkData: widget.dynamicLinkData,
+                    ),
                 '/profile': (context) => const ViewManager(
                       screenIndex: 3,
                     ),

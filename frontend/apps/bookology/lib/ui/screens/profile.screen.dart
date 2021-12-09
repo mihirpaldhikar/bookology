@@ -511,8 +511,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               foregroundColor:
                   Theme.of(context).buttonTheme.colorScheme!.primary,
               icon: Icons.share,
-              onPressed: (context) {
-                ShareService().shareBook(
+              onPressed: (context) async {
+                await ShareService().shareBook(
+                  context: context,
                   book: userData.data!.books[index - 1],
                 );
               },

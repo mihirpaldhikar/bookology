@@ -110,9 +110,8 @@ class _HomeBarState extends State<HomeBar> {
                               width: ValuesConstant.outlineWidth,
                             ),
                             borderRadius: BorderRadius.circular(100),
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                           ),
                           child: Icon(
                             Icons.add,
@@ -147,9 +146,8 @@ class _HomeBarState extends State<HomeBar> {
                               width: ValuesConstant.outlineWidth,
                             ),
                             borderRadius: BorderRadius.circular(100),
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                           ),
                           child: Badge(
                             showBadge: false,
@@ -271,7 +269,6 @@ class _HomeBarState extends State<HomeBar> {
                             ),
                           ),
                           const Spacer(),
-
                         ],
                       ),
                       const SizedBox(

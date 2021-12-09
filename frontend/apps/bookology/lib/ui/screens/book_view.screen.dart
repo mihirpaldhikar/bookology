@@ -21,7 +21,6 @@
  */
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:bookology/constants/android.constant.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/managers/currency.manager.dart';
@@ -30,7 +29,6 @@ import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/models/book.model.dart';
 import 'package:bookology/models/request.model.dart';
-import 'package:bookology/platforms/android.platform.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
@@ -172,8 +170,9 @@ class _BookViewerState extends State<BookViewer> {
                 child: SizedBox(
                   width: 60,
                   child: IconButton(
-                    onPressed: () {
-                      ShareService().shareBook(
+                    onPressed: () async {
+                      await ShareService().shareBook(
+                        context: context,
                         book: widget.book,
                       );
                     },
@@ -203,10 +202,8 @@ class _BookViewerState extends State<BookViewer> {
                   child: SizedBox(
                     width: 60,
                     child: IconButton(
-                      onPressed: () {
-                        ShareService().shareBook(
-                          book: widget.book,
-                        );
+                      onPressed: () async {
+                        //TODO: Create Logic to edit Book
                       },
                       icon: Container(
                         width: 40,
@@ -297,10 +294,8 @@ class _BookViewerState extends State<BookViewer> {
                   child: SizedBox(
                     width: 60,
                     child: IconButton(
-                      onPressed: () {
-                        ShareService().shareBook(
-                          book: widget.book,
-                        );
+                      onPressed: () async {
+                        //TODO: Create Logic to report book.
                       },
                       icon: Container(
                         width: 40,
@@ -345,7 +340,8 @@ class _BookViewerState extends State<BookViewer> {
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 bool activePage = index == _currentPage;
-                                return _imagePager(
+                                return imagePager(
+                                  context: context,
                                   active: activePage,
                                   image: widget
                                       .book.additionalInformation.images[index],
@@ -535,10 +531,6 @@ class _BookViewerState extends State<BookViewer> {
                                             DialogsManager(context)
                                                 .showProgressDialog(
                                               content: 'Sending request...',
-                                              contentColor: Theme.of(context)
-                                                  .primaryColor,
-                                              progressColor: Theme.of(context)
-                                                  .primaryColor,
                                             );
                                             final isSuccess = await _apiService
                                                 .sendEnquiryNotification(
@@ -1043,42 +1035,45 @@ class _BookViewerState extends State<BookViewer> {
       ),
     );
   }
+}
 
-  Widget _imagePager({required bool active, required String image}) {
-    final double blur = active ? 15 : 0;
-    final double offset = active ? 20 : 0;
-    final double top = active ? 50 : 100;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutQuint,
-      margin: EdgeInsets.only(top: top, bottom: 50, right: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).cardTheme.color,
-        boxShadow: [
-          BoxShadow(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1A1919)
-                  : const Color(0xFFEEEEEE),
-              blurRadius: blur,
-              offset: Offset(offset, offset))
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: CachedNetworkImage(
-          imageUrl: image,
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.grey,
-              ),
-              strokeWidth: 2,
+Widget imagePager(
+    {required BuildContext context,
+    required bool active,
+    required String image}) {
+  final double blur = active ? 15 : 0;
+  final double offset = active ? 20 : 0;
+  final double top = active ? 50 : 100;
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 500),
+    curve: Curves.easeOutQuint,
+    margin: EdgeInsets.only(top: top, bottom: 50, right: 30),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      color: Theme.of(context).cardTheme.color,
+      boxShadow: [
+        BoxShadow(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF1A1919)
+                : const Color(0xFFEEEEEE),
+            blurRadius: blur,
+            offset: Offset(offset, offset))
+      ],
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: CachedNetworkImage(
+        imageUrl: image,
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Colors.grey,
             ),
+            strokeWidth: 2,
           ),
-          fit: BoxFit.fill,
         ),
+        fit: BoxFit.fill,
       ),
-    );
-  }
+    ),
+  );
 }
