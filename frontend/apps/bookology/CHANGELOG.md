@@ -1,5 +1,4 @@
 ## What's new?
 
-* Hot Fix for version 0.1.1+5
-* Fixed the Ad Id
-* Updated the splash screen with the latest app logo.
+* Hot Fix for version 0.1.2+6
+* Fixed the bug related to the verified profiles.
