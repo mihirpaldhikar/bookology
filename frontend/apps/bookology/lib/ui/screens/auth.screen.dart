@@ -136,7 +136,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         padding: const EdgeInsets.only(
                           top: 50,
                         ),
-                        child: AppLogo(context: context),
+                        child: AppLogo(
+                          context: context,
+                          isSloganVisible: true,
+                        ),
                       ),
                       const SizedBox(
                         height: 130,

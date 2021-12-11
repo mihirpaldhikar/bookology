@@ -24,44 +24,67 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AppLogo extends StatelessWidget {
+  final bool? isSloganVisible;
   final BuildContext context;
 
-  const AppLogo({Key? key, required this.context}) : super(key: key);
+  const AppLogo({
+    Key? key,
+    required this.context,
+    this.isSloganVisible = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ClipRRect(
-          borderRadius:
-              BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-          child: SvgPicture.asset(
-            'assets/icons/bookology.icon.svg',
-            width: 150,
-            height: 150,
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(
+              ValuesConstant.secondaryBorderRadius,
+            ),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.primary,
+              width: ValuesConstant.outlineWidth,
+            ),
+          ),
+          padding: const EdgeInsets.all(20),
+          child: ClipRRect(
+            borderRadius:
+                BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
+            child: Icon(
+              Icons.book,
+              color: Theme.of(context).colorScheme.primary,
+              size: 80,
+            ),
           ),
         ),
-        const SizedBox(
-          height: 20,
+        Visibility(
+          visible: isSloganVisible!,
+          child: const SizedBox(
+            height: 20,
+          ),
         ),
-        AnimatedTextKit(
-          totalRepeatCount: 1,
-          displayFullTextOnTap: true,
-          animatedTexts: [
-            TyperAnimatedText(
-              StringConstants.appSlogan,
-              speed: const Duration(
-                milliseconds: 100,
-              ),
-              textStyle: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
+        Visibility(
+          visible: isSloganVisible!,
+          child: AnimatedTextKit(
+            totalRepeatCount: 1,
+            displayFullTextOnTap: true,
+            animatedTexts: [
+              TyperAnimatedText(
+                StringConstants.appSlogan,
+                speed: const Duration(
+                  milliseconds: 100,
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              )
+            ],
+          ),
         )
       ],
     );

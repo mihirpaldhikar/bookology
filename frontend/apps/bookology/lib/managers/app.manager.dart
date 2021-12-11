@@ -41,9 +41,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:provider/provider.dart';
-import 'package:quick_actions/quick_actions.dart';
-
-import '../ui/screens/dynamic_book.screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey(debugLabel: "Main Navigator");
@@ -65,7 +62,6 @@ class _AppManagerState extends State<AppManager> {
   void initState() {
     super.initState();
     NotificationService(FirebaseMessaging.instance).notificationManager();
-
   }
 
   @override
@@ -102,6 +98,7 @@ class _AppManagerState extends State<AppManager> {
 
 class App extends StatefulWidget {
   final PendingDynamicLinkData? dynamicLinkData;
+
   const App({
     Key? key,
     this.dynamicLinkData,

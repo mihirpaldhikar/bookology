@@ -28,6 +28,7 @@ import 'package:bookology/services/dynamic_link.service.dart';
 import 'package:bookology/services/update.service.dart';
 import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/components/fade_indexed_stack.component.dart';
+import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/discussions.screen.dart';
 import 'package:bookology/ui/screens/home.screen.dart';
 import 'package:bookology/ui/screens/profile.screen.dart';
@@ -77,17 +78,17 @@ class _ViewManagerState extends State<ViewManager> {
         icon: '@drawable/ic_notification',
       ),
       const ShortcutItem(
-        type: 'action_profile',
-        localizedTitle: 'Your Profile',
+        type: 'action_new_book',
+        localizedTitle: 'New Book',
         icon: '@drawable/ic_outline_account_circle',
       ),
     ]).then((value) {
       setState(() {
-        if (shortcut == 'action_profile') {
+        if (shortcut == 'action_new_book') {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const ViewManager(screenIndex: 3),
+              builder: (context) => const CreateScreen(),
             ),
           );
         }

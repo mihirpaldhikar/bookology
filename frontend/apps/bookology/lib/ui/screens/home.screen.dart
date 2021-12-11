@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return CollapsableAppBar(
                     actions: [
                       Tooltip(
-                        message: 'Edit Profile',
+                        message: 'New Book',
                         child: SizedBox(
                           width: 60,
                           child: IconButton(
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Tooltip(
-                        message: 'More Options',
+                        message: 'Notifications',
                         child: SizedBox(
                           width: 60,
                           child: IconButton(
@@ -395,43 +395,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? Icons.bookmark
                   : Icons.bookmark_border,
               onPressed: (context) async {
-                // if (book.uploader.userId != _authService.currentUser()!.uid) {
-                if (_savedBookList
-                    .where((element) => element.bookId == book.bookId)
-                    .isEmpty) {
-                  setState(() {
-                    _savedBookList
-                        .add(SavedBookModel.fromJson({'bookId': book.bookId}));
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Added to Saved',
+                if (book.uploader.userId != _authService.currentUser()!.uid) {
+                  if (_savedBookList
+                      .where((element) => element.bookId == book.bookId)
+                      .isEmpty) {
+                    setState(() {
+                      _savedBookList.add(
+                          SavedBookModel.fromJson({'bookId': book.bookId}));
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Added to Saved',
+                        ),
+                        duration: Duration(
+                          seconds: 2,
+                        ),
                       ),
-                      duration: Duration(
-                        seconds: 2,
+                    );
+                    await _firestoreService.saveBook(bookId: book.bookId);
+                  } else {
+                    setState(() {
+                      _savedBookList.removeWhere(
+                          (element) => element.bookId == book.bookId);
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Removed from Saved',
+                        ),
+                        duration: Duration(
+                          seconds: 2,
+                        ),
                       ),
-                    ),
-                  );
-                  await _firestoreService.saveBook(bookId: book.bookId);
-                } else {
-                  setState(() {
-                    _savedBookList.removeWhere(
-                        (element) => element.bookId == book.bookId);
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Removed from Saved',
-                      ),
-                      duration: Duration(
-                        seconds: 2,
-                      ),
-                    ),
-                  );
-                  await _firestoreService.removedSavedBook(bookId: book.bookId);
+                    );
+                    await _firestoreService.removedSavedBook(
+                        bookId: book.bookId);
+                  }
                 }
-                //}
               },
             ),
           ],

@@ -354,7 +354,7 @@ class BottomSheetManager {
           alignContent: MainAxisAlignment.start,
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         RoundedButton(
           onPressed: onGalleryPressed,
@@ -382,7 +382,7 @@ class BottomSheetManager {
           backgroundColor: Colors.transparent,
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         RoundedButton(
           onPressed: onFilePressed,

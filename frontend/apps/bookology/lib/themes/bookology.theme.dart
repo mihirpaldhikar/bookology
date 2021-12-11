@@ -111,7 +111,7 @@ class BookologyTheme {
         labelTextStyle: MaterialStateProperty.all(
           TextStyle(
             fontSize: 13,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
             color: colorScheme.onBackground,
           ),
         ),

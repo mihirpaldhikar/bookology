@@ -72,7 +72,6 @@ class DynamicLinkService {
       }
     }).onError((error) {
       // Handle errors
-      print(error);
       throw error;
     });
   }
