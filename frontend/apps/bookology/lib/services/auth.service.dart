@@ -91,6 +91,11 @@ class AuthService {
         authProvider: 'google',
       );
 
+      final currentUserData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid.toString())
+          .get();
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_firebaseAuth.currentUser?.uid)
@@ -103,7 +108,12 @@ class AuthService {
               _firebaseAuth.currentUser?.displayName.toString().split(' ')[1],
           'lastSeen': FieldValue.serverTimestamp(),
           'role': 'user',
-          'metadata': {'isNewUser': false},
+          'metadata': {
+            'isNewUser': false,
+            'userName':
+                _firebaseAuth.currentUser?.email.toString().split('@')[0],
+            'isVerified': await currentUserData.data()!['isVerified'] ?? false,
+          },
           'secrets': {
             'fcmToken': await NotificationService(FirebaseMessaging.instance)
                 .getMessagingToken(),
