@@ -66,7 +66,7 @@ class BookologyTheme {
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            ValuesConstant.buttonBorderRadius,
+            ValuesConstant.secondaryBorderRadius,
           ),
         ),
       ),
@@ -86,13 +86,9 @@ class BookologyTheme {
         enableFeedback: true,
       ),
       cardTheme: CardTheme(
-        elevation: 0,
+        elevation: 1,
         color: colorScheme.surface,
         shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: colorScheme.outline,
-            width: ValuesConstant.outlineWidth,
-          ),
           borderRadius: BorderRadius.circular(
             ValuesConstant.borderRadius,
           ),
@@ -115,7 +111,7 @@ class BookologyTheme {
         labelTextStyle: MaterialStateProperty.all(
           TextStyle(
             fontSize: 13,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w500,
             color: colorScheme.onBackground,
           ),
         ),
@@ -157,7 +153,7 @@ class BookologyTheme {
         titleTextStyle: GoogleFonts.poppins(
           color: colorScheme.onBackground,
           fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
         ),
       ),
       dialogTheme: DialogTheme(

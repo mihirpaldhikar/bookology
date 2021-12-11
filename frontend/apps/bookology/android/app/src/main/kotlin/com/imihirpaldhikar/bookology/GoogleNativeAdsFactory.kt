@@ -23,6 +23,8 @@
 package com.imihirpaldhikar.bookology
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -31,7 +33,8 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
-class GoogleNativeAdsFactory(private val context: Context) : GoogleMobileAdsPlugin.NativeAdFactory {
+class GoogleNativeAdsFactory(private val context: Context, val color: Int) :
+    GoogleMobileAdsPlugin.NativeAdFactory {
 
     override fun createNativeAd(
         nativeAd: NativeAd,
@@ -61,8 +64,9 @@ class GoogleNativeAdsFactory(private val context: Context) : GoogleMobileAdsPlug
             val headlineView = findViewById<TextView>(R.id.tv_list_tile_native_ad_headline)
             headlineView.text = nativeAd.headline
             this.headlineView = headlineView
-
+            headlineView.setTextColor(color)
             val bodyView = findViewById<TextView>(R.id.tv_list_tile_native_ad_body)
+            bodyView.setTextColor(color)
             with(bodyView) {
                 text = nativeAd.body
                 visibility = if (nativeAd.body.isNotEmpty()) View.VISIBLE else View.INVISIBLE
@@ -74,4 +78,6 @@ class GoogleNativeAdsFactory(private val context: Context) : GoogleMobileAdsPlug
 
         return nativeAdView
     }
+
+
 }

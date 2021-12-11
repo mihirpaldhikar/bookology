@@ -20,8 +20,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/constants/android.constant.dart';
+import 'package:bookology/platforms/android.platform.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ToastManager {
   final BuildContext context;
@@ -30,78 +31,8 @@ class ToastManager {
 
   void showToast({
     required String message,
-    int durationSeconds = 3,
-    IconData? icon,
-    Color? iconColor,
-    Color? textColor,
-    Color? backGroundColor,
-  }) {
-    FToast fToast;
-    fToast = FToast();
-    fToast.init(context);
-    fToast.showToast(
-      toastDuration: Duration(seconds: durationSeconds),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          color: backGroundColor ?? Colors.grey.shade100,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Visibility(
-              visible: icon.hashCode != 2011,
-              child: Icon(
-                icon,
-                color: iconColor,
-              ),
-            ),
-            const SizedBox(
-              width: 12.0,
-            ),
-            Text(
-              message,
-              style: TextStyle(
-                color: textColor ?? Colors.black,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showSuccessToast({required String message}) {
-    showToast(
-      message: message,
-      textColor: Colors.black,
-      iconColor: Colors.black,
-      icon: Icons.check_circle_outline_outlined,
-      backGroundColor: Colors.green[100],
-      durationSeconds: 3,
-    );
-  }
-
-  void showErrorToast({required String message}) {
-    showToast(
-      message: message,
-      textColor: Colors.black,
-      iconColor: Colors.black,
-      icon: Icons.error_outline_outlined,
-      backGroundColor: Theme.of(context).colorScheme.errorContainer,
-      durationSeconds: 3,
-    );
-  }
-
-  void showWarningToast({required String message}) {
-    showToast(
-      message: message,
-      textColor: Colors.black,
-      iconColor: Colors.black,
-      icon: Icons.error_outline_outlined,
-      backGroundColor: Colors.yellow.shade100,
-      durationSeconds: 3,
-    );
+    int duration = Toast.lengthShort,
+  }) async {
+    await AndroidPlatform().showToast(message: message, duration: duration);
   }
 }

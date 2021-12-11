@@ -22,14 +22,19 @@
 
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/models/book.model.dart';
+import 'package:bookology/services/dynamic_link.service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ShareService {
-  void shareBook({
+  Future<void> shareBook({
+    required BuildContext context,
     required BookModel book,
-  }) {
+  }) async {
+    final dynamicLink =
+        await DynamicLinkService().generateDynamicLink(bookId: book.bookId);
     Share.share(
-      'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.appName}. \nhttps://bookology.tech/book/${book.bookId}',
+      'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.appName}. \n$dynamicLink',
       subject:
           'Checkout ${book.bookInformation.name} By ${book.bookInformation.author} on ${StringConstants.appName}.',
     );

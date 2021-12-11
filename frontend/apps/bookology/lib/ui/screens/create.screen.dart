@@ -418,13 +418,12 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   },
                                                 );
                                               } else {
-                                                ToastManager(context)
-                                                    .showWarningToast(
-                                                        message: StringConstants
-                                                            .errorFieldsCompulsory);
+                                                ToastManager(context).showToast(
+                                                    message: StringConstants
+                                                        .errorFieldsCompulsory);
                                               }
                                             } else {
-                                              ToastManager(context).showErrorToast(
+                                              ToastManager(context).showToast(
                                                   message:
                                                       'Location Permission not granted.');
                                             }

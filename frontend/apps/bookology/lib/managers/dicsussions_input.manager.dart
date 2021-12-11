@@ -20,7 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/managers/chat_ui.manager.dart';
+import 'package:bookology/managers/chat_ui_theme.manager.dart';
 import 'package:bookology/services/firestore.service.dart';
 import 'package:bookology/ui/components/file_attachment_button.component.dart';
 import 'package:bookology/ui/components/send_chat_button.component.dart';
@@ -117,7 +117,7 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
           backgroundColor: Colors.transparent,
           strokeWidth: 2,
           valueColor: AlwaysStoppedAnimation<Color>(
-              ChatUiTheme(context: context).inputTextColor),
+              ChatUiThemeManager(context: context).inputTextColor),
         ),
       );
     } else {
@@ -172,12 +172,16 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                   color: Colors.grey,
                   width: 0.5,
                 ),
-                borderRadius: ChatUiTheme(context: context).inputBorderRadius,
-                color: ChatUiTheme(context: context).inputBackgroundColor,
+                borderRadius:
+                    ChatUiThemeManager(context: context).inputBorderRadius,
+                color:
+                    ChatUiThemeManager(context: context).inputBackgroundColor,
               ),
               child: Material(
-                borderRadius: ChatUiTheme(context: context).inputBorderRadius,
-                color: ChatUiTheme(context: context).inputBackgroundColor,
+                borderRadius:
+                    ChatUiThemeManager(context: context).inputBorderRadius,
+                color:
+                    ChatUiThemeManager(context: context).inputBackgroundColor,
                 child: Row(
                   children: [
                     if (widget.onAttachmentPressed != null) _leftWidget(),
@@ -188,10 +192,10 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration.collapsed(
-                          hintStyle: ChatUiTheme(context: context)
+                          hintStyle: ChatUiThemeManager(context: context)
                               .inputTextStyle
                               .copyWith(
-                                color: ChatUiTheme(context: context)
+                                color: ChatUiThemeManager(context: context)
                                     .inputTextColor
                                     .withOpacity(0.5),
                               ),

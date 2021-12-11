@@ -1,7 +1,7 @@
 name: bookology
 description: The Mobile Application for the Bookology.
 publish_to: 'none'
-version: 0.1.0+4
+version: 0.1.1+5
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
@@ -9,28 +9,25 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.4
-  google_mobile_ads: ^1.0.0
+  google_mobile_ads: ^1.0.1
   http: ^0.13.4
   firebase_core: ^1.10.0
-  firebase_auth: ^3.2.0
+  firebase_auth: ^3.3.3
   cloud_firestore: ^2.5.4
   provider: ^6.0.1
   google_fonts: ^2.1.0
   font_awesome_flutter: ^9.2.0
   google_sign_in: ^5.2.1
   flutter_svg: ^0.23.0+1
-  barcode_scan2: ^4.1.4
   cached_network_image: ^3.2.0
   image_picker: ^0.8.4+4
   photo_view: ^0.13.0
   pull_to_refresh: ^2.0.0
-  liquid_progress_indicator_ns: ^1.0.0
   auto_size_text: ^3.0.0
   geolocator: ^8.0.0
   geocoding: ^2.0.1
   firebase_messaging: ^11.1.0
   flutter_local_notifications: ^9.1.4
-  flutter_typeahead: ^3.2.3
   image_cropper: ^1.4.1
   cross_file: ^0.3.2
   firebase_storage: ^10.1.0
@@ -46,11 +43,9 @@ dependencies:
   introduction_screen: ^2.1.0
   after_layout: ^1.1.0
   badges: ^2.0.2
-  bottom_navy_bar: ^6.0.0
   package_info: ^2.0.2
   permission_handler: ^8.3.0
   dio: ^4.0.4
-  fluttertoast: ^8.0.8
   share_plus: ^3.0.4
   flutter_secure_storage: ^5.0.2
   flutter_dotenv: ^5.0.2
@@ -60,11 +55,13 @@ dependencies:
   local_auth: ^1.1.8
   flutter_slidable: ^1.1.0
   blobs: ^2.0.0
-  firebase_app_check: ^0.0.3
+  firebase_app_check: ^0.0.6+2
   flutter_app_feedback: ^0.0.3
   simple_animations: ^4.0.1
   dynamic_color: ^0.1.0
   animated_text_kit: ^4.2.1
+  firebase_dynamic_links: ^4.0.0
+  quick_actions: ^0.6.0+8
 
 dev_dependencies:
   flutter_test:

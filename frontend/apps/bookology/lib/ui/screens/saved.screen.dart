@@ -135,8 +135,9 @@ class _SavedScreenState extends State<SavedScreen> {
               foregroundColor:
                   Theme.of(context).buttonTheme.colorScheme!.primary,
               icon: Icons.share,
-              onPressed: (context) {
-                ShareService().shareBook(
+              onPressed: (context) async {
+                await ShareService().shareBook(
+                  context: context,
                   book: book,
                 );
               },

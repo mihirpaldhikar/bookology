@@ -26,12 +26,14 @@ class CollapsableAppBar extends StatefulWidget {
   final String title;
   final Widget body;
   final bool? automaticallyImplyLeading;
+  final List<Widget>? actions;
 
   const CollapsableAppBar({
     Key? key,
     required this.title,
     required this.body,
     this.automaticallyImplyLeading = true,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -50,10 +52,10 @@ class _CollapsableAppBarState extends State<CollapsableAppBar> {
         return <Widget>[
           SliverAppBar(
             automaticallyImplyLeading: widget.automaticallyImplyLeading!,
-            //titleSpacing: 0,
             expandedHeight: 150.0,
-            floating: false,
+            floating: true,
             pinned: true,
+            actions: widget.actions,
             flexibleSpace: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 top = constraints.biggest.height;

@@ -20,345 +20,284 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/strings.constant.dart';
+import 'package:badges/badges.dart';
 import 'package:bookology/constants/values.constants.dart';
-import 'package:bookology/ui/widgets/rounded_button.widget.dart';
+import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
+import 'package:bookology/ui/screens/create.screen.dart';
+import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-Widget homeShimmer({
-  required BuildContext context,
-}) {
-  return ListView.builder(
-    physics: const BouncingScrollPhysics(),
-    itemCount: 5,
-    padding: const EdgeInsets.only(
-      left: 0,
-      right: 0,
-      top: 10,
-    ),
-    itemBuilder: (context, index) {
-      if (index == 0) {
-        return Container(
-          height: 350.0,
-          width: double.infinity,
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              Shimmer.fromColors(
-                enabled: true,
-                baseColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF1D1C1C)
-                    : const Color(0xFFE0E0E0),
-                highlightColor: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF3B3B3B)
-                    : const Color(0xFFF5F5F5),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                StringConstants.appName,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                              const Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 15,
-                                  top: 6,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 25,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  right: 5,
-                                  top: 6,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: const Icon(
-                                    Icons.notifications_outlined,
-                                    size: 25,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 150,
-                                  height: 15,
-                                  color: Colors.white,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  width: 200,
-                                  height: 20,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 60,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              itemCount:
-                                  StringConstants.listBookCategories.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    top: 25,
-                                  ),
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(
-                                        ValuesConstant.borderRadius),
-                                    onTap: () {},
-                                    child: Container(
-                                      padding: const EdgeInsets.only(
-                                        left: 10,
-                                        right: 10,
-                                        top: 5,
-                                        bottom: 5,
-                                      ),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Theme.of(context).cardTheme.color,
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            ValuesConstant.borderRadius),
-                                      ),
-                                      child: Text(
-                                        StringConstants
-                                            .listBookCategories[index],
-                                        style: TextStyle(
-                                          color: index == 0
-                                              ? Theme.of(context)
-                                                  .buttonTheme
-                                                  .colorScheme!
-                                                  .primary
-                                              : Theme.of(context)
-                                                  .inputDecorationTheme
-                                                  .fillColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+import '../../constants/strings.constant.dart';
+
+Widget homeShimmer(BuildContext context, int selectedCategory) {
+  return CollapsableAppBar(
+    title: 'Bookology',
+    automaticallyImplyLeading: false,
+    actions: [
+      Tooltip(
+        message: 'Edit Profile',
+        child: SizedBox(
+          width: 60,
+          child: IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateScreen(),
+                ),
+              );
+            },
+            icon: Container(
+              width: 40,
+              height: 40,
+              padding: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).buttonTheme.colorScheme!.primary,
+              ),
+            ),
+          ),
+        ),
+      ),
+      Tooltip(
+        message: 'More Options',
+        child: SizedBox(
+          width: 60,
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
+            },
+            icon: Container(
+              width: 40,
+              height: 40,
+              padding: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Badge(
+                showBadge: false,
+                toAnimate: false,
+                badgeColor: Colors.red,
+                elevation: 0,
+                badgeContent: const Text(
+                  '9+',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 10,
+                  ),
+                ),
+                child: Icon(
+                  Icons.notifications_outlined,
+                  size: 25,
+                  color: Theme.of(context).buttonTheme.colorScheme!.primary,
                 ),
               ),
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 20,
-          ),
-          margin: const EdgeInsets.only(
-            bottom: 20,
-            left: 17,
-            right: 17,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outline,
-              width: ValuesConstant.outlineWidth,
-            ),
-            borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
-          ),
-          child: Shimmer.fromColors(
-            enabled: true,
-            baseColor: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF1D1C1C)
-                : const Color(0xFFE0E0E0),
-            highlightColor: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF3B3B3B)
-                : const Color(0xFFF5F5F5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    Container(
-                      width: 150,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: 170,
-                  height: 20,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 130,
-                  height: 10,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 15,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      width: 70,
-                      height: 10,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 70,
-                      height: 10,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 150,
-                  height: 15,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  width: 150,
-                  height: 15,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                RoundedButton(
-                  text: 'View',
-                  textColor: Theme.of(context).colorScheme.onPrimary,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  onPressed: () {},
-                )
-              ],
             ),
           ),
+        ),
+      ),
+    ],
+    body: ListView.builder(
+      cacheExtent: 9999999999999999999999999.0,
+      physics: const BouncingScrollPhysics(),
+      itemCount: 3,
+      padding: const EdgeInsets.only(
+        left: 0,
+        right: 0,
+        top: 10,
+      ),
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              itemCount: StringConstants.listBookCategories.length,
+              itemBuilder: (context, categoryIndex) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    top: 23,
+                  ),
+                  child: InkWell(
+                    borderRadius:
+                        BorderRadius.circular(ValuesConstant.borderRadius),
+                    onTap: () async {},
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: categoryIndex == selectedCategory
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.surface,
+                        borderRadius:
+                            BorderRadius.circular(ValuesConstant.borderRadius),
+                        border: Border.all(
+                          color: categoryIndex == selectedCategory
+                              ? Colors.transparent
+                              : Theme.of(context).colorScheme.outline,
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        StringConstants.listBookCategories[categoryIndex],
+                        style: TextStyle(
+                          color: categoryIndex == selectedCategory
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+        return Card(
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(
+              top: 30,
+              bottom: 20,
+              left: 17,
+              right: 17,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
+            ),
+            child: Shimmer.fromColors(
+              enabled: true,
+              baseColor: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF1D1C1C)
+                  : const Color(0xFFE0E0E0),
+              highlightColor: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF3B3B3B)
+                  : const Color(0xFFF5F5F5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100)),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Container(
+                        width: 170,
+                        height: 13,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      Container(
+                        width: 150,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 170,
+                    height: 20,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        width: 20,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 20,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 100,
+                    height: 10,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
-      }
-    },
+      },
+    ),
   );
 }

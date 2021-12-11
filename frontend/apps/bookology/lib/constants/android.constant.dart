@@ -20,42 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/managers/chat_ui_theme.manager.dart';
-import 'package:flutter/material.dart';
-
-/// A class that represents attachment button widget
-class FileAttachmentButton extends StatelessWidget {
-  /// Creates attachment button widget
-  const FileAttachmentButton({
-    Key? key,
-    this.onPressed,
-  }) : super(key: key);
-
-  /// Callback for attachment button tap event
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 50,
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.only(
-        top: 5,
-        bottom: 5,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(
-        child: IconButton(
-          icon: ChatUiThemeManager(context: context).attachmentButtonIcon!,
-          onPressed: onPressed,
-          padding: EdgeInsets.zero,
-          tooltip: 'Send Media',
-        ),
-      ),
-    );
-  }
+class Toast {
+  static const int lengthLong = 1;
+  static const int lengthShort = 0;
 }

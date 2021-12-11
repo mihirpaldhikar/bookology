@@ -108,6 +108,9 @@ class _BookViewerState extends State<BookViewer> {
       ),
     );
     _ad.load();
+    setState(() {
+      _isRequestAccepted = _requestData.accepted;
+    });
     _pageController.addListener(() {
       int next = _pageController.page!.round();
 
@@ -131,12 +134,7 @@ class _BookViewerState extends State<BookViewer> {
         bookID: widget.book.bookId,
         userID: _authService.currentUser()!.uid,
       );
-      setState(() {
-        _currencySymbol = _currencyManager.getCurrencySymbol(
-          currency: widget.book.pricing.currency,
-        );
-        _isRequestAccepted = _requestData.accepted;
-      });
+
       if (_isRequestAccepted) {
         setState(() {
           _enquireButtonText = 'Discuss';
@@ -158,6 +156,9 @@ class _BookViewerState extends State<BookViewer> {
   Widget build(BuildContext context) {
     int saving = int.parse(widget.book.pricing.originalPrice) -
         int.parse(widget.book.pricing.sellingPrice);
+    _currencySymbol = _currencyManager.getCurrencySymbol(
+      currency: widget.book.pricing.currency,
+    );
     return Scaffold(
       body: Hero(
         tag: widget.id,
@@ -169,8 +170,9 @@ class _BookViewerState extends State<BookViewer> {
                 child: SizedBox(
                   width: 60,
                   child: IconButton(
-                    onPressed: () {
-                      ShareService().shareBook(
+                    onPressed: () async {
+                      await ShareService().shareBook(
+                        context: context,
                         book: widget.book,
                       );
                     },
@@ -200,10 +202,8 @@ class _BookViewerState extends State<BookViewer> {
                   child: SizedBox(
                     width: 60,
                     child: IconButton(
-                      onPressed: () {
-                        ShareService().shareBook(
-                          book: widget.book,
-                        );
+                      onPressed: () async {
+                        //TODO: Create Logic to edit Book
                       },
                       icon: Container(
                         width: 40,
@@ -263,7 +263,7 @@ class _BookViewerState extends State<BookViewer> {
                           }
                           if (result == false) {
                             ToastManager(this.context)
-                                .showErrorToast(message: 'An Error Occurred!');
+                                .showToast(message: 'An Error Occurred!');
                           }
                         });
                       },
@@ -294,10 +294,8 @@ class _BookViewerState extends State<BookViewer> {
                   child: SizedBox(
                     width: 60,
                     child: IconButton(
-                      onPressed: () {
-                        ShareService().shareBook(
-                          book: widget.book,
-                        );
+                      onPressed: () async {
+                        //TODO: Create Logic to report book.
                       },
                       icon: Container(
                         width: 40,
@@ -324,6 +322,8 @@ class _BookViewerState extends State<BookViewer> {
                 Expanded(
                   child: ListView.builder(
                     itemCount: 1,
+                    cacheExtent: 9999999999999999999999999.0,
+                    semanticChildCount: 1,
                     scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -340,7 +340,8 @@ class _BookViewerState extends State<BookViewer> {
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 bool activePage = index == _currentPage;
-                                return _imagePager(
+                                return imagePager(
+                                  context: context,
                                   active: activePage,
                                   image: widget
                                       .book.additionalInformation.images[index],
@@ -375,7 +376,7 @@ class _BookViewerState extends State<BookViewer> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 30,
                                     color: Theme.of(context)
                                         .colorScheme
@@ -393,7 +394,7 @@ class _BookViewerState extends State<BookViewer> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onBackground,
@@ -411,7 +412,7 @@ class _BookViewerState extends State<BookViewer> {
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                         fontSize: 20,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -428,7 +429,7 @@ class _BookViewerState extends State<BookViewer> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 28,
+                                        fontSize: 20,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground,
@@ -444,7 +445,7 @@ class _BookViewerState extends State<BookViewer> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 23,
+                                        fontSize: 15,
                                         decoration: TextDecoration.lineThrough,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -462,7 +463,7 @@ class _BookViewerState extends State<BookViewer> {
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.normal,
                                     color: Colors.green,
                                     fontSize: 18,
                                   ),
@@ -492,7 +493,7 @@ class _BookViewerState extends State<BookViewer> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.normal,
                                         fontSize: 20,
                                       ),
                                     ),
@@ -530,10 +531,6 @@ class _BookViewerState extends State<BookViewer> {
                                             DialogsManager(context)
                                                 .showProgressDialog(
                                               content: 'Sending request...',
-                                              contentColor: Theme.of(context)
-                                                  .primaryColor,
-                                              progressColor: Theme.of(context)
-                                                  .primaryColor,
                                             );
                                             final isSuccess = await _apiService
                                                 .sendEnquiryNotification(
@@ -559,17 +556,14 @@ class _BookViewerState extends State<BookViewer> {
                                             );
                                             if (isSuccess) {
                                               Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showSuccessToast(
+                                              ToastManager(context).showToast(
                                                 message:
                                                     'Discussions Request Sent',
                                               );
                                             } else {
                                               Navigator.pop(context);
-                                              ToastManager(context)
-                                                  .showErrorToast(
-                                                      message:
-                                                          'An error occurred');
+                                              ToastManager(context).showToast(
+                                                  message: 'An error occurred');
                                             }
                                           });
                                         } else {
@@ -699,7 +693,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -745,7 +739,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -899,7 +893,7 @@ class _BookViewerState extends State<BookViewer> {
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 20,
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -1041,42 +1035,45 @@ class _BookViewerState extends State<BookViewer> {
       ),
     );
   }
+}
 
-  Widget _imagePager({required bool active, required String image}) {
-    final double blur = active ? 15 : 0;
-    final double offset = active ? 20 : 0;
-    final double top = active ? 50 : 100;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutQuint,
-      margin: EdgeInsets.only(top: top, bottom: 50, right: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).cardTheme.color,
-        boxShadow: [
-          BoxShadow(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1A1919)
-                  : const Color(0xFFEEEEEE),
-              blurRadius: blur,
-              offset: Offset(offset, offset))
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: CachedNetworkImage(
-          imageUrl: image,
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.grey,
-              ),
-              strokeWidth: 2,
+Widget imagePager(
+    {required BuildContext context,
+    required bool active,
+    required String image}) {
+  final double blur = active ? 15 : 0;
+  final double offset = active ? 20 : 0;
+  final double top = active ? 50 : 100;
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 500),
+    curve: Curves.easeOutQuint,
+    margin: EdgeInsets.only(top: top, bottom: 50, right: 30),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      color: Theme.of(context).cardTheme.color,
+      boxShadow: [
+        BoxShadow(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF1A1919)
+                : const Color(0xFFEEEEEE),
+            blurRadius: blur,
+            offset: Offset(offset, offset))
+      ],
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: CachedNetworkImage(
+        imageUrl: image,
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Colors.grey,
             ),
+            strokeWidth: 2,
           ),
-          fit: BoxFit.fill,
         ),
+        fit: BoxFit.fill,
       ),
-    );
-  }
+    ),
+  );
 }

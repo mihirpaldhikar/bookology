@@ -24,15 +24,19 @@ package com.imihirpaldhikar.bookology
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.FirebaseAppCheck.getInstance
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 
 class MainActivity : FlutterFragmentActivity() {
+
+    private val CHANNEL = "samples.flutter.dev/battery"
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
@@ -43,9 +47,30 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        GoogleMobileAdsPlugin.registerNativeAdFactory(
-            flutterEngine, "googleNativeAdsCard", GoogleNativeAdsFactory(applicationContext)
-        )
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL
+        ).setMethodCallHandler { call, result ->
+
+            if (call.method == "setTextColor") {
+                GoogleMobileAdsPlugin.registerNativeAdFactory(
+                    flutterEngine,
+                    "googleNativeAdsCard",
+                    GoogleNativeAdsFactory(applicationContext, color = call.argument("color")!!)
+                )
+            }
+
+            if (call.method == "showToast") {
+                Toast.makeText(
+                    applicationContext,
+                    call.argument("message"),
+                    if (call.argument<Int>("duration")!! == 1) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+
+        }
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
