@@ -266,7 +266,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                       builder: (BuildContext context) =>
                                           FeedbackScreen(
                                         reportType: 'User initiated report',
-                                        isEmailEditable: true,
+                                        isEmailEditable: false,
                                         userId: FirebaseAuth
                                             .instance.currentUser!.uid,
                                         fromEmail: FirebaseAuth
@@ -286,10 +286,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                             Navigator.pop(context);
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            ToastManager(context)
-                                                .showSuccessToast(
-                                                    message:
-                                                        'Feedback submitted');
+                                            ToastManager(context).showToast(
+                                                message: 'Feedback submitted');
                                             Navigator.of(context).pop();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
@@ -297,7 +295,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                             Navigator.pop(context);
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            ToastManager(context).showErrorToast(
+                                            ToastManager(context).showToast(
                                                 message:
                                                     'Failed to submit feedback');
                                             Navigator.of(context).pop();

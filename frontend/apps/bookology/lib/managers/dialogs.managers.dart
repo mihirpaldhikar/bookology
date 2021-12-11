@@ -330,8 +330,9 @@ class DialogsManager {
             child: Text(
               content,
               style: TextStyle(
-                color: contentColor ??
-                    Theme.of(context).inputDecorationTheme.fillColor,
+                fontFamily: 'Poppins',
+                color:
+                    contentColor ?? Theme.of(context).colorScheme.onBackground,
               ),
             ),
           ),
@@ -497,8 +498,9 @@ class DialogsManager {
                 );
                 if (result) {
                   Navigator.of(context).pop();
-                  ToastManager(context).showSuccessToast(
-                      message: 'Check the Email for the reset link.');
+                  ToastManager(context).showToast(
+                    message: 'Check the Email for the reset link.',
+                  );
                 }
               }
             },
@@ -760,16 +762,16 @@ class DialogsManager {
                               if (isVerified) {
                                 PreferencesManager().setIsBiometricEnabled(
                                     isEnabled: isVerified);
-                                ToastManager(this.context).showSuccessToast(
+                                ToastManager(this.context).showToast(
                                     message:
                                         'Biometric verified successfully.');
                               } else {
-                                ToastManager(this.context).showErrorToast(
+                                ToastManager(this.context).showToast(
                                     message: 'Biometrics verification failed.');
                               }
                             },
                             onBioAuthError: (PlatformException error) {
-                              ToastManager(this.context).showErrorToast(
+                              ToastManager(this.context).showToast(
                                   message: 'Biometrics verification failed.');
                             });
                   }

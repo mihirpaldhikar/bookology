@@ -25,7 +25,8 @@ class StringConstants {
   static const String appName = 'Bookology';
   static const String appSlogan = 'Find the books nearby.';
   static const String appUpdateAvailable = 'An App update is available.';
-  static const String appCopyright = 'Copyright \u00a9 2021 Mihir Paldhikar';
+  static const String appCopyright =
+      'Copyright \u00a9 2021 Mihir Paldhikar.\nAll Rights Reserved.';
 
   // Urls Constants
   static const String urlPrivacyPolicy =
@@ -71,7 +72,7 @@ class StringConstants {
   static const String wordPrivacyPolicy = 'Privacy Policy';
   static const String wordCheckForUpdates = 'Check for Updates';
   static const String wordSendFeedback = 'Send Feedback';
-  static const String wordAdvertisement = 'Advertisement';
+  static const String wordAdvertisement = 'Sponsored';
   static const String wordNoDiscussions = 'No Discussions';
   static const String wordYou = 'You';
 

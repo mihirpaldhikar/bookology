@@ -69,7 +69,7 @@ class _BottomSheetViewState extends State<BottomSheetView> {
                     widget.title.toString(),
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                       color: Theme.of(context).inputDecorationTheme.fillColor,
                     ),
                   ),

@@ -180,9 +180,9 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                       final room = snapshot.data![index];
                       return Padding(
                         padding: const EdgeInsets.only(
-                          top: 20,
-                          left: 17,
-                          right: 17,
+                          top: 15,
+                          left: 5,
+                          right: 5,
                         ),
                         child: Slidable(
                           startActionPane: ActionPane(
@@ -199,109 +199,105 @@ class _DiscussionsScreenState extends State<DiscussionsScreen> {
                               ),
                             ],
                           ),
-                          child: Card(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).cardTheme.color,
-                                borderRadius: BorderRadius.circular(
-                                    ValuesConstant.borderRadius),
-                              ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(
-                                    ValuesConstant.borderRadius),
-                                onTap: () {
-                                  for (var element in room.users) {
-                                    if (element.id.toString() !=
-                                        FirebaseAuth.instance.currentUser!.uid
-                                            .toString()) {
-                                      setState(() {
-                                        _groupOwner =
-                                            '${element.firstName.toString()} ${element.lastName}';
-                                        _userName =
-                                            element.metadata!['userName'];
-                                        _isVerified =
-                                            element.metadata!['isVerified'];
-                                        _userImageProfile = element.imageUrl!;
-                                      });
-                                    }
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                  ValuesConstant.borderRadius),
+                            ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(
+                                  ValuesConstant.borderRadius),
+                              onTap: () {
+                                for (var element in room.users) {
+                                  if (element.id.toString() !=
+                                      FirebaseAuth.instance.currentUser!.uid
+                                          .toString()) {
+                                    setState(() {
+                                      _groupOwner =
+                                          '${element.firstName.toString()} ${element.lastName}';
+                                      _userName = element.metadata!['userName'];
+                                      _isVerified =
+                                          element.metadata!['isVerified'];
+                                      _userImageProfile = element.imageUrl!;
+                                    });
                                   }
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        isVerified: _isVerified,
-                                        userName: _userName,
-                                        room: room,
-                                        roomTitle: _groupOwner,
-                                        userProfileImage: _userImageProfile,
-                                      ),
+                                }
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                      isVerified: _isVerified,
+                                      userName: _userName,
+                                      room: room,
+                                      roomTitle: _groupOwner,
+                                      userProfileImage: _userImageProfile,
                                     ),
-                                  );
-                                },
-                                onLongPress: () async {
-                                  DialogsManager(context)
-                                      .showDeleteDiscussionDialog(room);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    bottom: 10,
-                                    top: 10,
                                   ),
-                                  child: Row(
-                                    children: [
-                                      _buildAvatar(room),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Wrap(
-                                              children: [
-                                                AutoSizeText(
-                                                  room.name ?? 'No Name',
-                                                  maxLines: 2,
-                                                  softWrap: false,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .inputDecorationTheme
-                                                        .fillColor,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                right: 5,
-                                                top: 5,
-                                              ),
-                                              child: Text(
-                                                discussionLastUpdatedAt(
-                                                  context,
-                                                  DateTime
-                                                      .fromMicrosecondsSinceEpoch(
-                                                          room.updatedAt! *
-                                                              1000),
-                                                  DateTime.now(),
-                                                ),
+                                );
+                              },
+                              onLongPress: () async {
+                                DialogsManager(context)
+                                    .showDeleteDiscussionDialog(room);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  bottom: 10,
+                                  top: 10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    _buildAvatar(room),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Wrap(
+                                            children: [
+                                              AutoSizeText(
+                                                room.name ?? 'No Name',
+                                                maxLines: 2,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurface,
+                                                      .inputDecorationTheme
+                                                      .fillColor,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
                                                 ),
                                               ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 5,
+                                              top: 5,
                                             ),
-                                          ],
-                                        ),
+                                            child: Text(
+                                              discussionLastUpdatedAt(
+                                                context,
+                                                DateTime
+                                                    .fromMicrosecondsSinceEpoch(
+                                                        room.updatedAt! * 1000),
+                                                DateTime.now(),
+                                              ),
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .outline,
+                                                fontSize: 13,
+                                              ),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

@@ -20,26 +20,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+class AndroidPlatform {
+  static const platform = MethodChannel('samples.flutter.dev/battery');
 
-class AdsService {
-  Future<InitializationStatus> initializations;
-
-  AdsService(this.initializations);
-
-  String get nativeAdUnitID => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/2247696110'
-      : 'ca-app-pub-3940256099942544/2247696110';
-
-  NativeAdListener get nativeAdsListener => NativeAdListener(
-        onAdLoaded: (_) {},
-        onAdFailedToLoad: (ad, error) {
-          // Releases an ad resource when it fails to load
-          ad.dispose();
-
-          throw 'Ad load failed (code=${error.code} message=${error.message})';
+  Future<dynamic> notifyTextTheme({required Color textColor}) async {
+    try {
+      await platform.invokeMethod(
+        'setTextColor',
+        {
+          "color": textColor.value,
         },
       );
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> showToast(
+      {required String message, required int duration}) async {
+    try {
+      await platform.invokeMethod(
+        'showToast',
+        {
+          "message": message,
+          "duration": duration,
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

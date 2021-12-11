@@ -25,7 +25,7 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/managers/bottom_sheet.manager.dart';
-import 'package:bookology/managers/chat_ui.manager.dart';
+import 'package:bookology/managers/chat_ui_theme.manager.dart';
 import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/dicsussions_input.manager.dart';
 import 'package:bookology/services/auth.service.dart';
@@ -314,7 +314,7 @@ class _ChatPageState extends State<ChatPage> {
                   showUserAvatars: true,
                   showUserNames: false,
                   usePreviewData: true,
-                  theme: ChatUiTheme(context: context),
+                  theme: ChatUiThemeManager(context: context),
                   bubbleBuilder: _bubbleBuilder,
                   isAttachmentUploading: _isAttachmentUploading,
                   messages: snapshot.data ?? [],
@@ -359,8 +359,8 @@ class _ChatPageState extends State<ChatPage> {
       nipRadius: 3,
       color: _authService.currentUser()!.uid != message.author.id ||
               message.type == types.MessageType.image
-          ? ChatUiTheme(context: context).secondaryColor
-          : ChatUiTheme(context: context).primaryColor,
+          ? ChatUiThemeManager(context: context).secondaryColor
+          : ChatUiThemeManager(context: context).primaryColor,
       margin: nextMessageInGroup
           ? const BubbleEdges.symmetric(horizontal: 6)
           : null,

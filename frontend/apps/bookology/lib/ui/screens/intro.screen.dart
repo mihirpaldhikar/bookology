@@ -27,6 +27,7 @@ import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/screens/edit_profile.screen.dart';
+import 'package:bookology/ui/widgets/app_logo.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -73,13 +74,15 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
         ),
         decoration: _pageDecoration,
-        image: Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(200),
-            child: SvgPicture.asset(
-              'assets/icons/bookology.icon.svg',
-              width: 250,
-              height: 250,
+        image: Container(
+          padding: const EdgeInsets.all(120),
+          child: Center(
+            child: SizedBox(
+              width: 500,
+              height: 500,
+              child: AppLogo(
+                context: context,
+              ),
             ),
           ),
         ),
@@ -133,6 +136,7 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
+          scrollPhysics: const BouncingScrollPhysics(),
           key: _introKey,
           globalBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showDoneButton: true,

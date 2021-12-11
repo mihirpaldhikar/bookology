@@ -107,7 +107,7 @@ class _RoundedButtonState extends State<RoundedButton> {
                         child: Text(
                           widget.text,
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.normal,
                             fontSize:
                                 Theme.of(context).textTheme.button!.fontSize,
                             fontStyle:
@@ -177,7 +177,7 @@ class _RoundedButtonState extends State<RoundedButton> {
                         child: Text(
                           widget.text,
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.normal,
                             fontSize:
                                 Theme.of(context).textTheme.button!.fontSize,
                             fontStyle:
