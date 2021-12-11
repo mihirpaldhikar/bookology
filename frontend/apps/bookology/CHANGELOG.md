@@ -1,7 +1,5 @@
-# Bookology Changelogs
-
 ## What's new?
 
-* Added Dynamic Links for sharing the books.
-* Added Quick Actions for the launchers for quickly launch the specific part of the app.
-* Performance improvements and optimizations.
+* Hot Fix for version 0.1.1+5
+* Fixed the Ad Id
+* Updated the splash screen with the latest app logo.
