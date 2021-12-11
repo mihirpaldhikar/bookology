@@ -48,7 +48,9 @@ class _NativeInlineAdState extends State<NativeInlineAd>
 
     // COMPLETE: Create a NativeAd instance
     _ad = NativeAd(
-      adUnitId: kReleaseMode ? NativeAd.testAdUnitId : NativeAd.testAdUnitId,
+      adUnitId: kReleaseMode
+          ? 'ca-app-pub-6991839116816523/3520713190'
+          : NativeAd.testAdUnitId,
       factoryId: 'googleNativeAdsCard',
       request: const AdRequest(),
       listener: NativeAdListener(

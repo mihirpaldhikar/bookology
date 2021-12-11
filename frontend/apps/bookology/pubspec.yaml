@@ -86,8 +86,6 @@ flutter:
     - assets/svg/done.svg
     - assets/svg/hero.svg
     - assets/svg/error.svg
-    - assets/icons/bookology.icon.png
-    - assets/icons/bookology.icon.svg
     - assets/icons/bookology.splash.dark.png
     - assets/icons/bookology.splash.light.png
   fonts:
