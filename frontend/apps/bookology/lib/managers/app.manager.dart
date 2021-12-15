@@ -167,10 +167,10 @@ class _AppState extends State<App> {
                   ? const ScreenManager()
                   : const AuthScreen(),
               theme: BookologyTheme.getThemeData(
-                colorScheme: ColorsConstant.lightColorScheme,
+                colorScheme: lightColorScheme,
               ),
               darkTheme: BookologyTheme.getThemeData(
-                colorScheme: ColorsConstant.darkColorScheme,
+                colorScheme: darkColorScheme,
               ),
               themeMode: themeMode,
               routes: {
