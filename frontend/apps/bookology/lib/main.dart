@@ -21,10 +21,12 @@
  */
 
 import 'package:bookology/managers/app.manager.dart';
+import 'package:bookology/services/remote.service.dart';
 import 'package:bookology/services/startup.service.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_storage/get_storage.dart';
@@ -35,6 +37,14 @@ Future<void> main() async {
   await dotenv.load(fileName: 'app.config.env');
   await StartUpService().startService();
   await Firebase.initializeApp();
+  await RemoteConfig.instance.ensureInitialized();
+  await RemoteConfig.instance.setConfigSettings(
+    RemoteConfigSettings(
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(seconds: 1),
+    ),
+  );
+  await RemoteService().initialize();
   final PendingDynamicLinkData? initialLink =
       await FirebaseDynamicLinks.instance.getInitialLink();
   await FirebaseAppCheck.instance.activate();

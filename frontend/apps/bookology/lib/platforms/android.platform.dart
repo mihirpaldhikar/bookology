@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AndroidPlatform {
-  static const platform = MethodChannel('samples.flutter.dev/battery');
+  static const platform = MethodChannel('imihirpaldhikar.bookology/ads');
 
   Future<dynamic> notifyTextTheme({required Color textColor}) async {
     try {
@@ -32,21 +32,6 @@ class AndroidPlatform {
         'setTextColor',
         {
           "color": textColor.value,
-        },
-      );
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-  Future<void> showToast(
-      {required String message, required int duration}) async {
-    try {
-      await platform.invokeMethod(
-        'showToast',
-        {
-          "message": message,
-          "duration": duration,
         },
       );
     } catch (error) {

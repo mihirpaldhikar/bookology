@@ -22,8 +22,9 @@
 
 import 'package:badges/badges.dart';
 import 'package:bookology/constants/values.constants.dart';
+import 'package:bookology/festival/christmas.festival.dart';
+import 'package:bookology/services/remote.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
-import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -31,273 +32,256 @@ import 'package:shimmer/shimmer.dart';
 import '../../constants/strings.constant.dart';
 
 Widget homeShimmer(BuildContext context, int selectedCategory) {
-  return CollapsableAppBar(
-    title: 'Bookology',
-    automaticallyImplyLeading: false,
-    actions: [
-      Tooltip(
-        message: 'Edit Profile',
-        child: SizedBox(
-          width: 60,
-          child: IconButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateScreen(),
-                ),
-              );
-            },
-            icon: Container(
-              width: 40,
-              height: 40,
-              padding: const EdgeInsets.all(0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Icon(
-                Icons.add,
-                color: Theme.of(context).buttonTheme.colorScheme!.primary,
-              ),
-            ),
-          ),
-        ),
-      ),
-      Tooltip(
-        message: 'More Options',
-        child: SizedBox(
-          width: 60,
-          child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
-                ),
-              );
-            },
-            icon: Container(
-              width: 40,
-              height: 40,
-              padding: const EdgeInsets.all(0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Badge(
-                showBadge: false,
-                toAnimate: false,
-                badgeColor: Colors.red,
-                elevation: 0,
-                badgeContent: const Text(
-                  '9+',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 10,
+  return Stack(
+    children: [
+      CollapsableAppBar(
+        title: 'Bookology',
+        automaticallyImplyLeading: false,
+        actions: [
+          Tooltip(
+            message: 'Notifications',
+            child: SizedBox(
+              width: 60,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
+                icon: Container(
+                  width: 40,
+                  height: 40,
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                ),
-                child: Icon(
-                  Icons.notifications_outlined,
-                  size: 25,
-                  color: Theme.of(context).buttonTheme.colorScheme!.primary,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ],
-    body: ListView.builder(
-      cacheExtent: 9999999999999999999999999.0,
-      physics: const BouncingScrollPhysics(),
-      itemCount: 3,
-      padding: const EdgeInsets.only(
-        left: 0,
-        right: 0,
-        top: 10,
-      ),
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 60,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              itemCount: StringConstants.listBookCategories.length,
-              itemBuilder: (context, categoryIndex) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    top: 23,
-                  ),
-                  child: InkWell(
-                    borderRadius:
-                        BorderRadius.circular(ValuesConstant.borderRadius),
-                    onTap: () async {},
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: categoryIndex == selectedCategory
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.surface,
-                        borderRadius:
-                            BorderRadius.circular(ValuesConstant.borderRadius),
-                        border: Border.all(
-                          color: categoryIndex == selectedCategory
-                              ? Colors.transparent
-                              : Theme.of(context).colorScheme.outline,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        StringConstants.listBookCategories[categoryIndex],
-                        style: TextStyle(
-                          color: categoryIndex == selectedCategory
-                              ? Theme.of(context).colorScheme.onPrimary
-                              : Theme.of(context).colorScheme.onBackground,
-                        ),
+                  child: Badge(
+                    showBadge: false,
+                    toAnimate: false,
+                    badgeColor: Colors.red,
+                    elevation: 0,
+                    badgeContent: const Text(
+                      '9+',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 10,
                       ),
                     ),
+                    child: const Icon(
+                      Icons.notifications_outlined,
+                    ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
-          );
-        }
-        return Card(
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(
-              top: 30,
-              bottom: 20,
-              left: 17,
-              right: 17,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(ValuesConstant.borderRadius),
-            ),
-            child: Shimmer.fromColors(
-              enabled: true,
-              baseColor: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF1D1C1C)
-                  : const Color(0xFFE0E0E0),
-              highlightColor: Theme.of(context).brightness == Brightness.dark
-                  ? const Color(0xFF3B3B3B)
-                  : const Color(0xFFF5F5F5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+          ),
+        ],
+        body: ListView.builder(
+          cacheExtent: 9999999999999999999999999.0,
+          physics: const BouncingScrollPhysics(),
+          itemCount: 3,
+          padding: const EdgeInsets.only(
+            left: 0,
+            right: 0,
+            top: 10,
+          ),
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                  ),
+                  itemCount: StringConstants.listBookCategories.length,
+                  itemBuilder: (context, categoryIndex) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        top: 23,
+                      ),
+                      child: InkWell(
+                        borderRadius:
+                            BorderRadius.circular(ValuesConstant.borderRadius),
+                        onTap: () async {},
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: categoryIndex == selectedCategory
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                                ValuesConstant.borderRadius),
+                            border: Border.all(
+                              color: categoryIndex == selectedCategory
+                                  ? Colors.transparent
+                                  : Theme.of(context).colorScheme.outline,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            StringConstants.listBookCategories[categoryIndex],
+                            style: TextStyle(
+                              color: categoryIndex == selectedCategory
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+            return Card(
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(
+                  top: 30,
+                  bottom: 20,
+                  left: 17,
+                  right: 17,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius:
+                      BorderRadius.circular(ValuesConstant.borderRadius),
+                ),
+                child: Shimmer.fromColors(
+                  enabled: true,
+                  baseColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1D1C1C)
+                      : const Color(0xFFE0E0E0),
+                  highlightColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF3B3B3B)
+                          : const Color(0xFFF5F5F5),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100)),
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Container(
+                            width: 170,
+                            height: 13,
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(100)),
+                          ),
+                        ],
                       ),
                       const SizedBox(
-                        width: 15,
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          Container(
+                            width: 150,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       Container(
                         width: 170,
-                        height: 13,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      Container(
-                        width: 150,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: 170,
-                    height: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 10,
+                        height: 20,
                         color: Colors.white,
                       ),
                       const SizedBox(
-                        width: 5,
+                        height: 15,
                       ),
-                      Container(
-                        width: 20,
-                        height: 10,
-                        color: Colors.white,
+                      Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 10,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            width: 20,
+                            height: 10,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 20,
+                            height: 10,
+                            color: Colors.white,
+                          ),
+                        ],
                       ),
                       const SizedBox(
-                        width: 10,
+                        height: 10,
                       ),
                       Container(
-                        width: 20,
+                        width: 100,
                         height: 10,
                         color: Colors.white,
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: 100,
-                    height: 10,
-                    color: Colors.white,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        );
-      },
-    ),
+            );
+          },
+        ),
+      ),
+      Visibility(
+        visible: RemoteService().getBoolData(key: 'showFallingSnow'),
+        child: const SnowWidget(
+          child: SizedBox(),
+          isRunning: true,
+          totalSnow: 150,
+          speed: 0.5,
+        ),
+      ),
+    ],
   );
 }

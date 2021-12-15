@@ -79,11 +79,16 @@ class BookologyTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: ThemeData.from(
           colorScheme: colorScheme,
-        ).colorScheme.primary,
+        ).colorScheme.primaryContainer,
         foregroundColor: ThemeData.from(
           colorScheme: colorScheme,
         ).colorScheme.onPrimary,
         enableFeedback: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            ValuesConstant.borderRadius,
+          ),
+        ),
       ),
       cardTheme: CardTheme(
         elevation: 1,
@@ -104,15 +109,19 @@ class BookologyTheme {
         ).colorScheme.primaryContainer,
         iconTheme: MaterialStateProperty.all(
           IconThemeData(
-            color: colorScheme.primary,
+            color: colorScheme.brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
           ),
         ),
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         labelTextStyle: MaterialStateProperty.all(
           TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: colorScheme.onBackground,
+            color: colorScheme.brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
           ),
         ),
       ),

@@ -28,7 +28,7 @@ flutter_native_splash:
   # set.
   color_dark: "#000000"
   #background_image_dark: "assets/dark-background.png"
-  image_dark: assets/icons/bookology.splash.dark.png
+  image_dark: assets/icons/bookology.splash.light.png
 
   # The android, ios and web parameters can be used to disable generating a splash screen on a given
   # platform.
