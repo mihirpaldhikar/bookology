@@ -38,6 +38,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,8 @@ class AppManager extends StatefulWidget {
 }
 
 class _AppManagerState extends State<AppManager> {
+  final RemoteConfig remoteConfig = RemoteConfig.instance;
+
   @override
   void initState() {
     super.initState();
@@ -148,7 +151,6 @@ class _AppState extends State<App> {
                 onPrimary: Color(corePalette.primary.get(0)),
                 onPrimaryContainer: Color(corePalette.primary.get(100)),
               );
-
               // Harmonize the dynamic color schemes' error and onError colors
               // (which are built-in semantic colors).
               lightColorScheme = lightColorScheme.harmonized();

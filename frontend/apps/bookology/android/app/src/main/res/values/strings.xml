@@ -22,6 +22,7 @@
   -->
 
 <resources>
+    <string name="app_name">Bookology</string>
     <string name="ad">Ad</string>
     <string name="ad_image">Ad Image</string>
 </resources>

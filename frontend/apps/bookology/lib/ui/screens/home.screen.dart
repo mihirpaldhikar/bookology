@@ -38,7 +38,6 @@ import 'package:bookology/services/share.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/components/home_shimmer.component.dart';
 import 'package:bookology/ui/screens/book_view.screen.dart';
-import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/notifications.screen.dart';
 import 'package:bookology/ui/screens/offline.screen.dart';
 import 'package:bookology/ui/widgets/book_card.widget.dart';
@@ -46,6 +45,7 @@ import 'package:bookology/ui/widgets/error.widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -59,7 +59,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin<HomeScreen> {
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Object>?> _feed;
   List<Object> _homeFeed = [];
   int _selectedIndex = 0;
+  late AnimationController _hideFabAnimation;
 
   List<SavedBookModel> _savedBookList = [];
 
@@ -83,182 +85,189 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
     _feed = getFeed(sortBy: "All");
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration);
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.forward();
+            }
+            break;
+          case ScrollDirection.reverse:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.reverse();
+            }
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _hideFabAnimation.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<ConnectivityStatus>(
-        initialData: ConnectivityStatus.cellular,
-        stream: ConnectivityService().connectionStatusController.stream,
-        builder:
-            (BuildContext context, AsyncSnapshot<ConnectivityStatus> snapshot) {
-          if (snapshot.data == ConnectivityStatus.offline) {
-            return offlineScreen(context: context);
-          }
-          return FutureBuilder<List<Object>?>(
-            future: _feed,
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Object>?> homeFeed) {
-              if (homeFeed.connectionState == ConnectionState.waiting ||
-                  homeFeed.connectionState == ConnectionState.active) {
-                return homeShimmer(context, _selectedIndex);
-              }
-
-              if (homeFeed.connectionState == ConnectionState.done) {
-                if (homeFeed.hasError) {
-                  return const Error(
-                    message: 'An Error Occurred!',
-                  );
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: Scaffold(
+        floatingActionButton: ScaleTransition(
+          scale: _hideFabAnimation,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/create');
+            },
+            child: Icon(
+              Icons.add_outlined,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ),
+        body: StreamBuilder<ConnectivityStatus>(
+          initialData: ConnectivityStatus.cellular,
+          stream: ConnectivityService().connectionStatusController.stream,
+          builder: (BuildContext context,
+              AsyncSnapshot<ConnectivityStatus> snapshot) {
+            if (snapshot.data == ConnectivityStatus.offline) {
+              return offlineScreen(context: context);
+            }
+            return FutureBuilder<List<Object>?>(
+              future: _feed,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Object>?> homeFeed) {
+                if (homeFeed.connectionState == ConnectionState.waiting ||
+                    homeFeed.connectionState == ConnectionState.active) {
+                  return homeShimmer(context, _selectedIndex);
                 }
-                if (homeFeed.hasData) {
-                  return CollapsableAppBar(
-                    actions: [
-                      Tooltip(
-                        message: 'New Book',
-                        child: SizedBox(
-                          width: 60,
-                          child: IconButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const CreateScreen(),
-                                ),
-                              );
-                            },
-                            icon: Container(
-                              width: 40,
-                              height: 40,
-                              padding: const EdgeInsets.all(0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                color: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Tooltip(
-                        message: 'Notifications',
-                        child: SizedBox(
-                          width: 60,
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NotificationScreen(),
-                                ),
-                              );
-                            },
-                            icon: Container(
-                              width: 40,
-                              height: 40,
-                              padding: const EdgeInsets.all(0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Badge(
-                                showBadge: false,
-                                toAnimate: false,
-                                badgeColor: Colors.red,
-                                elevation: 0,
-                                badgeContent: const Text(
-                                  '9+',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 10,
+
+                if (homeFeed.connectionState == ConnectionState.done) {
+                  if (homeFeed.hasError) {
+                    return const Error(
+                      message: 'An Error Occurred!',
+                    );
+                  }
+                  if (homeFeed.hasData) {
+                    return CollapsableAppBar(
+                      actions: [
+                        Tooltip(
+                          message: 'Notifications',
+                          child: SizedBox(
+                            width: 60,
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationScreen(),
                                   ),
+                                );
+                              },
+                              icon: Container(
+                                width: 40,
+                                height: 40,
+                                padding: const EdgeInsets.all(0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
-                                child: Icon(
-                                  Icons.notifications_outlined,
-                                  size: 25,
-                                  color: Theme.of(context)
-                                      .buttonTheme
-                                      .colorScheme!
-                                      .primary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    automaticallyImplyLeading: false,
-                    title: 'Bookology',
-                    body: SmartRefresher(
-                      cacheExtent: 9999999999999999999999999.0,
-                      semanticChildCount: 999999999999999999,
-                      controller: _refreshController,
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      enablePullDown: true,
-                      header: const ClassicHeader(),
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: homeFeed.data!.length + 1,
-                          itemBuilder: (context, index) {
-                            if (homeFeed.data!.isEmpty) {
-                              return Column(
-                                children: [
-                                  bookCategories(),
-                                  SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height / 4,
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      _selectedIndex != 0
-                                          ? 'No Book with the\n\'${StringConstants.listBookCategories[_selectedIndex]}\' Category'
-                                          : 'No Books',
-                                      textAlign: TextAlign.center,
+                                child: Badge(
+                                  showBadge: false,
+                                  toAnimate: false,
+                                  badgeColor: Colors.red,
+                                  elevation: 0,
+                                  badgeContent: const Text(
+                                    '9+',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 10,
                                     ),
                                   ),
-                                ],
-                              );
-                            }
+                                  child: const Icon(
+                                    Icons.notifications_outlined,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      automaticallyImplyLeading: false,
+                      title: 'Bookology',
+                      body: SmartRefresher(
+                        cacheExtent: 9999999999999999999999999.0,
+                        semanticChildCount: 999999999999999999,
+                        controller: _refreshController,
+                        scrollDirection: Axis.vertical,
+                        physics: const BouncingScrollPhysics(),
+                        enablePullDown: true,
+                        header: const ClassicHeader(),
+                        onRefresh: _onRefresh,
+                        onLoading: _onLoading,
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: homeFeed.data!.length + 1,
+                            itemBuilder: (context, index) {
+                              if (homeFeed.data!.isEmpty) {
+                                return Column(
+                                  children: [
+                                    bookCategories(),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              4,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        _selectedIndex != 0
+                                            ? 'No Book with the\n\'${StringConstants.listBookCategories[_selectedIndex]}\' Category'
+                                            : 'No Books',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
 
-                            if (index == 0) {
-                              return bookCategories();
-                            }
-                            if (homeFeed.data![index - 1] is AdsModel) {
-                              return const NativeInlineAd();
-                            } else {
-                              return bookList(
-                                book: homeFeed.data![index - 1] as BookModel,
-                              );
-                            }
-                          }),
-                    ),
-                  );
+                              if (index == 0) {
+                                return bookCategories();
+                              }
+                              if (homeFeed.data![index - 1] is AdsModel) {
+                                return const NativeInlineAd();
+                              } else {
+                                return bookList(
+                                  book: homeFeed.data![index - 1] as BookModel,
+                                );
+                              }
+                            }),
+                      ),
+                    );
+                  }
                 }
-              }
 
-              return const SizedBox(
-                width: 0,
-                height: 0,
-              );
-            },
-          );
-        },
+                return const SizedBox(
+                  width: 0,
+                  height: 0,
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

@@ -20,13 +20,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import 'package:bookology/services/remote.service.dart';
+
 class StringConstants {
   // App Constants
   static const String appName = 'Bookology';
-  static const String appSlogan = 'Find the books nearby.';
+  static String appSlogan = RemoteService().getStringData(key: 'appSlogan');
   static const String appUpdateAvailable = 'An App update is available.';
-  static const String appCopyright =
-      'Copyright \u00a9 2021 Mihir Paldhikar.\nAll Rights Reserved.';
+  static String appCopyright =
+      'Copyright \u00a9 ${DateTime.now().year} Mihir Paldhikar.\nAll Rights Reserved.';
 
   // Urls Constants
   static const String urlPrivacyPolicy =
@@ -129,21 +131,7 @@ class StringConstants {
     'Okay',
     'Bad',
   ];
-  static const List<String> listCities = [
-    'Beirut',
-    'Damascus',
-    'San Fransisco',
-    'Rome',
-    'Los Angeles',
-    'Madrid',
-    'Bali',
-    'Barcelona',
-    'Paris',
-    'Bucharest',
-    'New York City',
-    'Philadelphia',
-    'Sydney',
-  ];
+
   static const List<String> listBookCategories = [
     'All',
     'Education & References',

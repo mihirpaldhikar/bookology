@@ -24,6 +24,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppLogo extends StatelessWidget {
   final bool? isSloganVisible;
@@ -41,23 +42,18 @@ class AppLogo extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(
               ValuesConstant.secondaryBorderRadius,
             ),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.primary,
-              width: ValuesConstant.outlineWidth,
-            ),
           ),
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(10),
           child: ClipRRect(
             borderRadius:
                 BorderRadius.circular(ValuesConstant.secondaryBorderRadius),
-            child: Icon(
-              Icons.book,
-              color: Theme.of(context).colorScheme.primary,
-              size: 80,
+            child: SvgPicture.asset(
+              'assets/icons/bookology.icon.svg',
+              width: 150,
+              height: 150,
             ),
           ),
         ),

@@ -19,8 +19,3 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
-class Toast {
-  static const int lengthLong = 1;
-  static const int lengthShort = 0;
-}

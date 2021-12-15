@@ -29,7 +29,6 @@ import 'package:bookology/managers/dialogs.managers.dart';
 import 'package:bookology/managers/toast.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/auth.service.dart';
-import 'package:bookology/services/isbn.service.dart';
 import 'package:bookology/services/location.service.dart';
 import 'package:bookology/ui/components/collapsable_app_bar.component.dart';
 import 'package:bookology/ui/screens/image_viewer.screen.dart';
@@ -52,7 +51,7 @@ class CreateScreen extends StatefulWidget {
 
 class _CreateScreenState extends State<CreateScreen> {
   bool _hasISBN = true;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _showBookImage1 = false;
   bool _showBookImage2 = false;
   bool _showBookImage3 = false;
@@ -87,8 +86,6 @@ class _CreateScreenState extends State<CreateScreen> {
   final _bookDescriptionController = TextEditingController();
   final _bookOriginalPriceController = TextEditingController();
   final _bookSellingPriceController = TextEditingController();
-
-  final _isbnService = IsbnService();
 
   final _apiService = ApiService();
 
@@ -196,9 +193,10 @@ class _CreateScreenState extends State<CreateScreen> {
                                         text: _nextStep,
                                         textColor: Theme.of(context)
                                             .colorScheme
+                                            .onPrimary,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
                                             .primary,
-                                        outlineWidth:
-                                            ValuesConstant.outlineWidth,
                                         onPressed: () async {
                                           continued();
                                           if (_currentStep == 4) {
@@ -457,7 +455,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       Text(
                                         'Book Info',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
@@ -468,8 +466,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                         'Fill the basic book info',
                                         style: TextStyle(
                                           color: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .fillColor,
+                                              .colorScheme
+                                              .outline,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -477,7 +475,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                   ),
                                 ],
                               ),
-                              content: bookInfo(),
+                              content: _bookInfo(),
                               isActive: _currentStep >= 0,
                               state: _currentStep >= 0
                                   ? StepState.complete
@@ -505,7 +503,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       Text(
                                         'Description',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
@@ -516,8 +514,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                         'Write the description of book',
                                         style: TextStyle(
                                           color: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .fillColor,
+                                              .colorScheme
+                                              .outline,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -551,7 +549,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       Text(
                                         'Pricing',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
@@ -562,8 +560,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                         'Write the price you want to sell the book at',
                                         style: TextStyle(
                                           color: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .fillColor,
+                                              .colorScheme
+                                              .outline,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -597,7 +595,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       Text(
                                         'Book Condition',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
@@ -608,8 +606,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                         'Select the condition of the book',
                                         style: TextStyle(
                                           color: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .fillColor,
+                                              .colorScheme
+                                              .outline,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -643,7 +641,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                       Text(
                                         'Book Images',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                           color: Theme.of(context)
                                               .colorScheme
@@ -654,8 +652,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                         'Upload the images of the book',
                                         style: TextStyle(
                                           color: Theme.of(context)
-                                              .inputDecorationTheme
-                                              .fillColor,
+                                              .colorScheme
+                                              .outline,
                                           fontSize: 12,
                                         ),
                                       ),
@@ -706,7 +704,7 @@ class _CreateScreenState extends State<CreateScreen> {
     }
   }
 
-  Widget bookInfo() {
+  Widget _bookInfo() {
     return Column(
       children: [
         Row(
@@ -749,6 +747,7 @@ class _CreateScreenState extends State<CreateScreen> {
               textAlign: TextAlign.end,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
+                decoration: TextDecoration.underline,
               ),
             ),
           ),
@@ -760,22 +759,6 @@ class _CreateScreenState extends State<CreateScreen> {
           visible: _hasISBN,
           child: Column(
             children: [
-              // SizedBox(
-              //   width: 150,
-              //   child: OutLinedButton(
-              //     onPressed: () {
-              //       _scan();
-              //     },
-              //     text: 'Scan',
-              //     textColor: Theme.of(context).primaryColor,
-              //     iconColor: Theme.of(context).primaryColor,
-              //     icon: Icons.qr_code_scanner,
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: 20,
-              // ),
-              // const Text('OR'),
               const SizedBox(
                 height: 20,
               ),
@@ -815,33 +798,9 @@ class _CreateScreenState extends State<CreateScreen> {
                           }
                         }
                       },
-                      onChanged: (value) async {
-                        if (value.length == 10) {
-                          setState(() {});
-                        } else {
-                          setState(() {});
-
-                          if (value.length == 13) {
-                            fetchBookData(value);
-                          }
-                        }
-                      },
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  // const SizedBox(
-                  //   width: 30,
-                  // ),
-                  // Visibility(
-                  //   visible: _showSearchButton,
-                  //   child: OutLinedButton(
-                  //     text: 'Search',
-                  //     icon: Icons.search,
-                  //     onPressed: () {
-                  //       fetchBookData(_isbnController.text);
-                  //     },
-                  //   ),
-                  // ),
                 ],
               ),
             ],
@@ -972,47 +931,6 @@ class _CreateScreenState extends State<CreateScreen> {
       },
       keyboardType: TextInputType.multiline,
     );
-  }
-
-  void fetchBookData(String isbn) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      await _isbnService.getBookInfo(isbn: isbn).then((value) async {
-        if (value.toString().contains("/authors/")) {
-          await _isbnService
-              .getBookAuthor(path: value['authors'][0]['key'].toString())
-              .then((value) {
-            setState(() {
-              _isLoading = false;
-              _bookAuthorController.text = value;
-            });
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-            _bookAuthorController.text = '';
-          });
-        }
-        setState(() {
-          _isbnController.text = value['isbn_13'][0].toString();
-          _bookNameController.text = value['title'].toString();
-        });
-      });
-    } catch (error) {
-      if (error.toString().contains('FormatException')) {
-        setState(() {
-          _isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-                'No book found with the ISBN. Please fill details manually.'),
-          ),
-        );
-      }
-    }
   }
 
   Widget bookPricing() {

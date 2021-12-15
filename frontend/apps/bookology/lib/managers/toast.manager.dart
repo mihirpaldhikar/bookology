@@ -20,9 +20,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:bookology/constants/android.constant.dart';
-import 'package:bookology/platforms/android.platform.dart';
 import 'package:flutter/material.dart';
+import 'package:native_toast/native_toast.dart';
 
 class ToastManager {
   final BuildContext context;
@@ -31,8 +30,8 @@ class ToastManager {
 
   void showToast({
     required String message,
-    int duration = Toast.lengthShort,
+    int duration = 0,
   }) async {
-    await AndroidPlatform().showToast(message: message, duration: duration);
+    await NativeToast().makeText(message: message, duration: duration);
   }
 }

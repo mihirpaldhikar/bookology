@@ -31,7 +31,6 @@ import 'package:bookology/managers/view.manager.dart';
 import 'package:bookology/services/api.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/ui/widgets/circular_image.widget.dart';
-import 'package:bookology/ui/widgets/rounded_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -104,12 +103,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   style: Theme.of(context).appBarTheme.titleTextStyle,
                 ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            Tooltip(
+              message: 'Notifications',
               child: SizedBox(
-                width: 100,
-                height: 20,
-                child: RoundedButton(
+                width: 60,
+                child: IconButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       DialogsManager(context).showProgressDialog(
@@ -205,12 +203,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       }
                     }
                   },
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  textColor: Theme.of(context).colorScheme.onPrimary,
-                  text: StringConstants.wordDone,
+                  icon: const Icon(
+                    Icons.done,
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
         body: SafeArea(

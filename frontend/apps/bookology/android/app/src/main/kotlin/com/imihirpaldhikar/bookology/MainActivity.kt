@@ -25,6 +25,9 @@ package com.imihirpaldhikar.bookology
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Toast
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.FirebaseAppCheck.getInstance
@@ -36,11 +39,34 @@ import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 class MainActivity : FlutterFragmentActivity() {
 
-    private val CHANNEL = "samples.flutter.dev/battery"
+
+    companion object {
+        const val APP_UPDATE_REQUEST = 1
+        private const val CHANNEL = "imihirpaldhikar.bookology/ads"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         FirebaseApp.initializeApp(this)
+
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    APP_UPDATE_REQUEST,
+                )
+            }
+        }
         val firebaseAppCheck: FirebaseAppCheck = getInstance()
         firebaseAppCheck.setTokenAutoRefreshEnabled(true)
     }
