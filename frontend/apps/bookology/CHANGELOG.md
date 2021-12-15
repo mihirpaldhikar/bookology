@@ -1,4 +1,6 @@
 ## What's new?
 
-* Hot Fix for version 0.1.2+6
-* Fixed the bug related to the verified profiles.
+* Added Falling Snow Animation a Winter and Christmas Easter Egg.
+* Added support for Android API Level 32.
+* Fixed random crashing of the app.
+* Bugs fixes and stability improvements.
