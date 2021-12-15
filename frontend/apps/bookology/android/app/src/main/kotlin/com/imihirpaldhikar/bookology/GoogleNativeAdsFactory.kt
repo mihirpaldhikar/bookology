@@ -23,8 +23,6 @@
 package com.imihirpaldhikar.bookology
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -69,7 +67,8 @@ class GoogleNativeAdsFactory(private val context: Context, val color: Int) :
             bodyView.setTextColor(color)
             with(bodyView) {
                 text = nativeAd.body
-                visibility = if (nativeAd.body.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+                visibility =
+                    if (nativeAd.body?.isNotEmpty() == true) View.VISIBLE else View.INVISIBLE
             }
             this.bodyView = bodyView
 

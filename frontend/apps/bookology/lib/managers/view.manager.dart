@@ -137,14 +137,16 @@ class _ViewManagerState extends State<ViewManager> {
                 milliseconds: 400,
               ),
               selectedIndex: screenIndex,
-              onDestinationSelected: (index) => setState(() {
-                screenIndex = index;
-              }),
+              onDestinationSelected: (index) => setState(
+                () {
+                  screenIndex = index;
+                },
+              ),
               destinations: [
                 NavigationDestination(
                   icon: Icon(
                     Icons.home_outlined,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.outline,
                   ),
                   selectedIcon: const Icon(
                     Icons.home,
@@ -154,18 +156,17 @@ class _ViewManagerState extends State<ViewManager> {
                 NavigationDestination(
                   icon: Icon(
                     Icons.search_outlined,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.outline,
                   ),
-                  selectedIcon: Icon(
+                  selectedIcon: const Icon(
                     Icons.search,
-                    color: Theme.of(context).buttonTheme.colorScheme!.primary,
                   ),
                   label: StringConstants.navigationSearch,
                 ),
                 NavigationDestination(
                   icon: Icon(
                     Icons.chat_outlined,
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.outline,
                   ),
                   selectedIcon: const Icon(
                     Icons.chat,

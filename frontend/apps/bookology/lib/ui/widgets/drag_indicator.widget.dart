@@ -24,14 +24,14 @@ import 'package:flutter/material.dart';
 
 Widget dragIndicator({required BuildContext context}) {
   return Container(
-    width: 40,
+    width: 30,
     height: 5,
     margin: const EdgeInsets.only(
       top: 10,
       bottom: 20,
     ),
     decoration: BoxDecoration(
-      color: Colors.grey.shade400,
+      color: Theme.of(context).colorScheme.outline,
       borderRadius: BorderRadius.circular(100),
     ),
   );

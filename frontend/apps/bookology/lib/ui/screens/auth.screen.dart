@@ -142,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 130,
+                        height: 100,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(

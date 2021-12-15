@@ -331,7 +331,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                     .inputDecorationTheme
                                     .fillColor,
                                 fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(
@@ -356,8 +356,8 @@ class _AboutScreenState extends State<AboutScreen> {
                                   ValuesConstant.borderRadius,
                                 ),
                                 border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
+                                  color: Theme.of(context).colorScheme.outline,
+                                  width: ValuesConstant.outlineWidth,
                                 ),
                               ),
                               child: Column(
@@ -374,7 +374,7 @@ class _AboutScreenState extends State<AboutScreen> {
                                     'Mihir Paldhikar',
                                     style: TextStyle(
                                       fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onBackground,
@@ -479,17 +479,18 @@ class _AboutScreenState extends State<AboutScreen> {
                               style: TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onBackground,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(
                               height: 40,
                             ),
-                            const Text(
+                            Text(
                               StringConstants.sentenceAppNotice,
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: Theme.of(context).colorScheme.outline,
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -502,7 +503,7 @@ class _AboutScreenState extends State<AboutScreen> {
                               'Licenses',
                               style: TextStyle(
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w500,
                                 color:
                                     Theme.of(context).colorScheme.onBackground,
                               ),

@@ -44,6 +44,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -128,15 +129,13 @@ class _ProfileScreenState extends State<ProfileScreen>
               width: 135,
               scrollController: _fabController,
               duration: const Duration(milliseconds: 200),
-              icon: Icon(
+              icon: const Icon(
                 Icons.add,
-                color: Theme.of(context).colorScheme.primary,
               ),
-              text: Text(
+              text: const Text(
                 'Add Book',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               onPress: () {
@@ -210,21 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                         );
                       },
-                      icon: Container(
-                        width: 40,
-                        height: 40,
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Icon(
-                          Icons.edit_outlined,
-                          color: Theme.of(context)
-                              .buttonTheme
-                              .colorScheme!
-                              .primary,
-                        ),
+                      icon: const Icon(
+                        Icons.edit_outlined,
                       ),
                     ),
                   ),
@@ -238,18 +224,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                         BottomSheetManager(context)
                             .showMoreProfileMenuBottomSheet();
                       },
-                      icon: Container(
-                        width: 40,
-                        height: 40,
-                        padding: const EdgeInsets.all(0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Icon(
-                          Icons.menu_outlined,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      icon: const Icon(
+                        Icons.menu_outlined,
                       ),
                     ),
                   ),
@@ -320,7 +296,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       onRefresh: _onRefresh,
       onLoading: _onLoading,
       child: ListView.builder(
-        //padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
         scrollDirection: Axis.vertical,
         physics: const BouncingScrollPhysics(),
         itemCount: 2,
@@ -330,14 +305,23 @@ class _ProfileScreenState extends State<ProfileScreen>
           } else {
             return SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 250,
-              child: Center(
-                child: Text(
-                  'No Books',
-                  style: TextStyle(
-                    color: Theme.of(context).inputDecorationTheme.fillColor,
+              height: 500,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/svg/empty.svg',
+                    width: 100,
+                    height: 100,
                   ),
-                ),
+                  Text(
+                    'No Books',
+                    style: TextStyle(
+                      color: Theme.of(context).inputDecorationTheme.fillColor,
+                    ),
+                  ),
+                ],
               ),
             );
           }
@@ -373,7 +357,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius:
                       BorderRadius.circular(ValuesConstant.borderRadius),
                 ),
@@ -384,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   child: Container(
                     padding: const EdgeInsets.only(
                       left: 20,
-                      right: 20,
+                      right: 0,
                       top: 8,
                       bottom: 8,
                     ),
@@ -394,16 +377,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                       children: [
                         Text(
                           userData.data!.books.length.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
                             fontSize: 20,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Books',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -415,7 +397,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             Container(
               margin: const EdgeInsets.only(right: 20),
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius:
                       BorderRadius.circular(ValuesConstant.borderRadius)),
               child: InkWell(
@@ -435,16 +416,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                     children: [
                       Text(
                         userData.data!.books.length.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
                           fontSize: 20,
-                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Points',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 15,
                         ),
                       ),
@@ -471,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 17,
                     color: Theme.of(context).colorScheme.onBackground),
                 textAlign: TextAlign.center,

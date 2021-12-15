@@ -75,7 +75,9 @@ class _IntroScreenState extends State<IntroScreen> {
         ),
         decoration: _pageDecoration,
         image: Container(
-          padding: const EdgeInsets.all(120),
+          padding: const EdgeInsets.only(
+            top: 100,
+          ),
           child: Center(
             child: SizedBox(
               width: 500,
@@ -221,12 +223,15 @@ class _IntroScreenState extends State<IntroScreen> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid.toString())
         .get();
-
-    final isNewUser = await currentUserData.data()!['isNewUser'] ?? true;
-    if (isNewUser) {
+    final isNewUser =
+        await currentUserData.data()!['metadata']['isNewUser'] ?? true;
+    if (!isNewUser) {
       _cacheService.setIntroScreenView(
         seen: true,
       );
+      _cacheService.setCurrentUser(
+          userName: await currentUserData.data()!['metadata']['userName'],
+          isVerified: await currentUserData.data()!['metadata']['isVerified']);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

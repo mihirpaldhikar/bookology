@@ -163,19 +163,8 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                             book: book.data!,
                           );
                         },
-                        icon: Container(
-                          width: 40,
-                          height: 40,
-                          padding: const EdgeInsets.all(0),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Icon(
-                            Icons.share_outlined,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                        icon: const Icon(
+                          Icons.share_outlined,
                         ),
                       ),
                     ),
@@ -193,20 +182,8 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                           onPressed: () async {
                             //TODO: Create Logic to edit Book
                           },
-                          icon: Container(
-                            width: 40,
-                            height: 40,
-                            padding: const EdgeInsets.all(0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                          icon: const Icon(
+                            Icons.edit_outlined,
                           ),
                         ),
                       ),
@@ -256,20 +233,9 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                               }
                             });
                           },
-                          icon: Container(
-                            width: 40,
-                            height: 40,
-                            padding: const EdgeInsets.all(0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Icon(
-                              Icons.delete_forever_outlined,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
+                          icon: Icon(
+                            Icons.delete_forever_outlined,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ),
@@ -288,19 +254,9 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                           onPressed: () async {
                             //TODO: Create Logic to report book.
                           },
-                          icon: Container(
-                            width: 40,
-                            height: 40,
-                            padding: const EdgeInsets.all(0),
-                            decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).colorScheme.errorContainer,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Icon(
-                              Icons.report_outlined,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
+                          icon: Icon(
+                            Icons.report_outlined,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ),
@@ -487,7 +443,7 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                                                 .colorScheme
                                                 .onBackground,
                                             fontWeight: FontWeight.normal,
-                                            fontSize: 20,
+                                            fontSize: 15,
                                           ),
                                         ),
                                       ],
@@ -696,17 +652,14 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                                         top: 30,
                                         bottom: 30,
                                       ),
-                                      title: AutoSizeText(
+                                      title: const AutoSizeText(
                                         StringConstants.wordDescription,
                                         maxLines: 4,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.normal,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 20,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
                                         ),
                                         textAlign: TextAlign.start,
                                       ),
@@ -744,17 +697,14 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                                           right: 10,
                                         ),
                                       ),
-                                      title: AutoSizeText(
+                                      title: const AutoSizeText(
                                         StringConstants.wordBookDetails,
                                         maxLines: 4,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.normal,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 20,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
                                         ),
                                         textAlign: TextAlign.start,
                                       ),
@@ -901,17 +851,14 @@ class _DynamicBookScreenState extends State<DynamicBookScreen> {
                                         ),
                                       ),
                                       tilePadding: EdgeInsets.zero,
-                                      title: AutoSizeText(
+                                      title: const AutoSizeText(
                                         StringConstants.wordUploadDetails,
                                         maxLines: 4,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.normal,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 20,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
                                         ),
                                         textAlign: TextAlign.start,
                                       ),
