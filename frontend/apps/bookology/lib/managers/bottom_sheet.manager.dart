@@ -30,6 +30,7 @@ import 'package:bookology/services/auth.service.dart';
 import 'package:bookology/services/cache.service.dart';
 import 'package:bookology/themes/bookology.theme.dart';
 import 'package:bookology/ui/screens/about.screen.dart';
+import 'package:bookology/ui/screens/create.screen.dart';
 import 'package:bookology/ui/screens/saved.screen.dart';
 import 'package:bookology/ui/screens/search.screen.dart';
 import 'package:bookology/ui/screens/settings.screen.dart';
@@ -97,6 +98,31 @@ class BottomSheetManager {
         ),
       ],
     );
+  }
+
+  void showBookUploadTypeBottomSheet() {
+    BottomSheetViewManager(context).createBottomSheet(contents: [
+      GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CreateScreen()));
+        },
+        child: const ListTile(
+          title: Text("E-Book"),
+          leading: Icon(Icons.library_books_outlined),
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CreateScreen()));
+        },
+        child: const ListTile(
+          title: Text("Paperback"),
+          leading: Icon(Icons.book_outlined),
+        ),
+      ),
+    ]);
   }
 
   void showMoreProfileMenuBottomSheet() {

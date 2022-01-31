@@ -26,6 +26,7 @@ import 'package:badges/badges.dart';
 import 'package:bookology/constants/strings.constant.dart';
 import 'package:bookology/constants/values.constants.dart';
 import 'package:bookology/enums/connectivity.enum.dart';
+import 'package:bookology/managers/bottom_sheet.manager.dart';
 import 'package:bookology/managers/native_ads.manager.dart';
 import 'package:bookology/models/ads.model.dart';
 import 'package:bookology/models/book.model.dart';
@@ -129,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen>
           scale: _hideFabAnimation,
           child: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/create');
+              BottomSheetManager(context).showBookUploadTypeBottomSheet();
             },
             child: Icon(
               Icons.add_outlined,
