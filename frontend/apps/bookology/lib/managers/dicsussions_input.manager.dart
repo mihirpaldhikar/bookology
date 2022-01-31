@@ -151,6 +151,7 @@ class _DiscussionsInputState extends State<DiscussionsInput> {
                     TextPosition(offset: _newValue.length),
                   ),
                 );
+                return null;
               },
             ),
           },

@@ -111,6 +111,7 @@ class ApiService {
       );
       rethrow;
     }
+    return null;
   }
 
   Future<List<BookModel>?> getBooks() async {
@@ -143,6 +144,7 @@ class ApiService {
       );
       rethrow;
     }
+    return null;
   }
 
   Future<List<BookModel>?> getSavedBooks() async {
@@ -382,6 +384,7 @@ class ApiService {
       );
       rethrow;
     }
+    return null;
   }
 
   Future<bool> sendEnquiryNotification({
