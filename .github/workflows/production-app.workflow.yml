@@ -21,7 +21,7 @@ jobs:
       - name: Install & Setup Flutter SDK
         uses: subosito/flutter-action@master
         with:
-          flutter-version: '2.8.0'
+          flutter-version: '2.5.0'
           channel: 'stable'
       - name: Install & Setup Ruby
         uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
